@@ -8,14 +8,44 @@ import UpcomingEvents from '@/components/UpcomingEvents'
 import PastEvents from '@/components/PastEvents'
 import GlobalEvents from '@/components/GlobalEvents'
 import Partners from '@/components/Partners'
+import JsonLd from '@/components/JsonLd'
 import { siteConfig } from '@/content/site.config'
+import { upcomingEvents } from '@/content/events'
 import { useI18n } from '@/lib/i18n'
+
+function buildHomeJsonLd() {
+  const org = {
+    '@type': 'Organization',
+    name: siteConfig.communityName,
+    url: siteConfig.cursorCommunityUrl,
+  }
+
+  const eventItems = upcomingEvents.map((event) => ({
+    '@type': 'Event',
+    name: event.title,
+    startDate: event.date,
+    location: {
+      '@type': 'Place',
+      name: event.location,
+    },
+    organizer: org,
+    ...(event.lumaUrl ? { url: event.lumaUrl } : {}),
+    eventAttendanceMode: 'https://schema.org/OfflineEventAttendanceMode',
+    eventStatus: 'https://schema.org/EventScheduled',
+  }))
+
+  return {
+    '@context': 'https://schema.org',
+    '@graph': [org, ...eventItems],
+  }
+}
 
 export default function Home() {
   const { t } = useI18n()
 
   return (
     <main className="min-h-screen bg-cursor-bg text-cursor-text scroll-smooth">
+      <JsonLd data={buildHomeJsonLd()} />
       <HeroHeader />
 
       <div className="max-w-3xl mx-auto px-6 py-16 md:py-24">
