@@ -193,6 +193,12 @@ npm run start
 
 See `CONTRIBUTING.md`.
 
+## Sites Using This Template
+
+- [cursorthailand.com](https://cursorthailand.com)
+
+Using this template? Open a PR to add your site here.
+
 ## Credits
 
 Designed and implemented by [Luis Fernando Romero Calero](https://lfrc.me) and [Cursor](https://cursor.com).
