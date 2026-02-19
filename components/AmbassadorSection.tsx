@@ -33,7 +33,7 @@ export default function AmbassadorSection() {
         {t('ambassadors.title', { communityName: siteConfig.communityName })}
       </h2>
 
-      <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-4">
+      <div className="flex flex-wrap justify-center gap-4">
         {ambassadors.map((ambassador, index) => {
           const links = [
             { kind: 'x' as const, href: ambassador.links.x },
@@ -49,11 +49,17 @@ export default function AmbassadorSection() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: '-50px' }}
               transition={{ duration: 0.3, delay: index * 0.07 }}
-              className="bg-cursor-bg-dark border border-cursor-border rounded-md p-5"
+              className="bg-cursor-bg-dark border border-cursor-border rounded-md p-5 min-w-[280px] max-w-[360px] flex-1"
             >
               <div className="flex items-center gap-4">
-                <div className="relative w-14 h-14 rounded-full overflow-hidden border border-cursor-border-emphasis">
-                  <Image src={ambassador.photo} alt={ambassador.name} fill className="object-cover" sizes="56px" />
+                <div className="relative w-14 h-14 min-w-14 min-h-14 shrink-0 rounded-full overflow-hidden border-2 border-white">
+                  <Image
+                    src={ambassador.photo}
+                    alt={ambassador.name}
+                    fill
+                    className={`object-cover ${ambassador.photoPosition === 'top' ? 'object-top' : 'object-center'}`}
+                    sizes="56px"
+                  />
                 </div>
                 <div>
                   <p className="text-cursor-text font-medium">{ambassador.name}</p>

@@ -26,6 +26,8 @@ export interface Ambassador {
   name: string
   role?: string
   photo: string
+  /** Optional: 'top' for portrait photos to frame face, 'center' default */
+  photoPosition?: 'top' | 'center'
   links: SocialLinks
 }
 

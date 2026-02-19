@@ -50,7 +50,7 @@ export default function Home() {
 
       <div className="max-w-3xl mx-auto px-6 py-16 md:py-24">
         <AmbassadorSection />
-        <FeaturedSection />
+        {/* <FeaturedSection /> */}
         <UpcomingEvents />
         <PastEvents />
         <GlobalEvents />
