@@ -3,7 +3,7 @@ import { RecapData } from '@/lib/types'
 // REPLACE: Copy this file, rename the slug, and replace all sample recap content.
 export const exampleEventRecap: RecapData = {
   slug: 'example-event',
-  title: 'Cafe Cursor YourCity - Recap',
+  title: 'Cafe Cursor Serbia - Recap',
   date: 'February 14, 2026',
   attendees: 38,
   summary: [

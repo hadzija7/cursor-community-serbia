@@ -2,9 +2,9 @@
 // REPLACE: Keep links and names community-specific.
 export const siteConfig = {
   communityName: 'Cursor Community',
-  communityNameLocal: 'YourCity',
-  city: 'Your City',
-  country: 'Your Country',
+  communityNameLocal: 'Serbia',
+  city: 'Serbia',
+  country: 'Serbia',
   lumaUrl: 'https://lu.ma/cursor-community',
   cursorCommunityUrl: 'https://cursor.com/community',
   defaultLocale: 'en',

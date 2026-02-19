@@ -30,9 +30,9 @@ export const exampleDeck: Slide[] = [
         code={`export const events = [
   {
     id: 'event-1',
-    title: 'Cafe Cursor YourCity',
+    title: 'Cafe Cursor Serbia',
     date: '2026-03-21',
-    location: 'Your City, Your Country',
+    location: 'Serbia, Serbia',
     status: 'upcoming',
   },
 ]`}

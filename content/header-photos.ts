@@ -5,7 +5,7 @@ import { HeaderPhoto } from '@/lib/types'
 // Desktop grid: 4 columns x 4 rows (16 cells).
 export const headerPhotos: HeaderPhoto[] = [
   {
-    src: '/images/events/cursor-event-01.jpg',
+    src: '/images/events/cursorcafe1.jpg',
     alt: 'Cursor community event group photo',
     row: 1,
     col: 1,
@@ -14,14 +14,14 @@ export const headerPhotos: HeaderPhoto[] = [
     mobile: { row: 1, col: 1, rowSpan: 2, colSpan: 2 },
   },
   {
-    src: '/images/events/cursor-event-02.jpg',
+    src: '/images/events/cursorcafe2.jpg',
     alt: 'Cursor meetup participants working together',
     row: 1,
     col: 3,
     mobile: { row: 3, col: 1 },
   },
   {
-    src: '/images/events/cursor-event-04.jpg',
+    src: '/images/events/cursorcafe4.jpg',
     alt: 'Cursor community photo from event',
     row: 1,
     col: 4,
@@ -29,14 +29,14 @@ export const headerPhotos: HeaderPhoto[] = [
     mobileHidden: true,
   },
   {
-    src: '/images/events/cursor-event-03.jpg',
+    src: '/images/events/cursorcafe3.jpg',
     alt: 'Cursor workshop moment during session',
     row: 2,
     col: 3,
     mobile: { row: 3, col: 2 },
   },
   {
-    src: '/images/events/cursor-event-05.jpg',
+    src: '/images/events/cursorcafe5.jpg',
     alt: 'Cursor meetup attendees in discussion',
     row: 3,
     col: 1,
@@ -44,7 +44,7 @@ export const headerPhotos: HeaderPhoto[] = [
     mobileHidden: true,
   },
   {
-    src: '/images/events/cursor-event-07.jpg',
+    src: '/images/events/cursorcafe7.jpg',
     alt: 'Cursor community moment from social share',
     row: 3,
     col: 2,
@@ -53,7 +53,7 @@ export const headerPhotos: HeaderPhoto[] = [
     mobileHidden: true,
   },
   {
-    src: '/images/events/cursor-event-06.jpg',
+    src: '/images/events/cursorcafe6.jpg',
     alt: 'Cursor event participants and speakers',
     row: 3,
     col: 4,
