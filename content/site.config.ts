@@ -5,7 +5,7 @@ export const siteConfig = {
   communityNameLocal: 'Serbia',
   city: 'Serbia',
   country: 'Serbia',
-  lumaUrl: 'https://lu.ma/cursor-community',
+  lumaUrl: 'https://luma.com/cursorcommunity',
   cursorCommunityUrl: 'https://cursor.com/community',
   defaultLocale: 'en',
   locales: ['en'],

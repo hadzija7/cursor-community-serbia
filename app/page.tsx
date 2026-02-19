@@ -6,7 +6,6 @@ import AmbassadorSection from '@/components/AmbassadorSection'
 import FeaturedSection from '@/components/FeaturedSection'
 import UpcomingEvents from '@/components/UpcomingEvents'
 import PastEvents from '@/components/PastEvents'
-import GlobalEvents from '@/components/GlobalEvents'
 import Partners from '@/components/Partners'
 import JsonLd from '@/components/JsonLd'
 import { siteConfig } from '@/content/site.config'
@@ -53,7 +52,6 @@ export default function Home() {
         {/* <FeaturedSection /> */}
         <UpcomingEvents />
         <PastEvents />
-        <GlobalEvents />
 
         <motion.footer
           initial={{ opacity: 0 }}
@@ -62,7 +60,7 @@ export default function Home() {
           transition={{ duration: 0.5 }}
           className="mt-24 pt-8 border-t border-cursor-border text-center"
         >
-          <Partners />
+          {/* <Partners /> */}
           <p className="text-cursor-text-muted text-sm mb-3">{siteConfig.footerTagline || t('footer.madeWith')}</p>
           <div className="flex items-center justify-center gap-4">
             <a
