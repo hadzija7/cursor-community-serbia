@@ -10,6 +10,7 @@ export const cafecursorBelgrade1Recap: RecapData = {
   ], 
   photoCredits: [
     { name: 'Goran Petković' },
+    { name: 'Kristina Savić' },
   ],
   photos: [
     {
