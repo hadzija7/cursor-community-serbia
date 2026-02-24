@@ -12,6 +12,8 @@ import { siteConfig } from '@/content/site.config'
 import { upcomingEvents } from '@/content/events'
 import { useI18n } from '@/lib/i18n'
 
+const intentionalCiFailure =
+
 function buildHomeJsonLd() {
   const org = {
     '@type': 'Organization',
