@@ -8,11 +8,11 @@ import './globals.css'
 const GA_ID = 'G-TJRWP2YTM2'
 
 export const metadata: Metadata = {
-  title: `${siteConfig.communityName} | Cursor Ambassador Site`,
-  description: 'Reusable Cursor Ambassador website template for local communities.',
+  title: `${siteConfig.communityName} ${siteConfig.communityNameLocal} | Cursor Ambassador Site`,
+  description: 'Cursor Community Serbia — the official local community for Cursor AI enthusiasts in Serbia. Join meetups, workshops, and connect with fellow developers.',
   openGraph: {
-    title: siteConfig.communityName,
-    description: 'Reusable Cursor Ambassador website template for local communities.',
+    title: `${siteConfig.communityName} ${siteConfig.communityNameLocal}`,
+    description: 'Cursor Community Serbia — the official local community for Cursor AI enthusiasts in Serbia. Join meetups, workshops, and connect with fellow developers.',
     type: 'website',
   },
 }
