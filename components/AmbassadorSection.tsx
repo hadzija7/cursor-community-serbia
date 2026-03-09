@@ -29,7 +29,7 @@ export default function AmbassadorSection() {
       transition={{ duration: 0.5 }}
       className="mb-16"
     >
-      <h2 className="text-xs uppercase tracking-wider text-cursor-text-muted font-medium mb-4">
+      <h2 className="text-sm uppercase tracking-wider text-cursor-text-muted font-medium mb-6">
         {t('ambassadors.title', { communityName: siteConfig.communityName })}
       </h2>
 

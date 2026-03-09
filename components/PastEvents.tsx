@@ -23,7 +23,7 @@ export default function PastEvents() {
       transition={{ duration: 0.5 }}
       className="mb-16 scroll-mt-8"
     >
-      <h2 className="text-xs uppercase tracking-wider text-cursor-text-muted font-medium mb-4">
+      <h2 className="text-sm uppercase tracking-wider text-cursor-text-muted font-medium mb-6">
         {t('home.pastEvents')}
       </h2>
 

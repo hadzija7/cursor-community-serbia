@@ -52,6 +52,12 @@
     "numberCard": "random number card",
     "sameNumber": "the same number"
   },
+  "countdown": {
+    "days": "Days",
+    "hours": "Hours",
+    "minutes": "Minutes",
+    "seconds": "Seconds"
+  },
   "worldEvents": {
     "title": "Cafe Cursor around the world",
     "subtitle": "Same day, different timezones",

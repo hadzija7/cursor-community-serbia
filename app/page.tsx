@@ -2,6 +2,7 @@
 
 import { motion } from 'framer-motion'
 import HeroHeader from '@/components/HeroHeader'
+import EventCountdown from '@/components/EventCountdown'
 import AmbassadorSection from '@/components/AmbassadorSection'
 import FeaturedSection from '@/components/FeaturedSection'
 import UpcomingEvents from '@/components/UpcomingEvents'
@@ -46,6 +47,7 @@ export default function Home() {
     <main className="min-h-screen bg-cursor-bg text-cursor-text scroll-smooth">
       <JsonLd data={buildHomeJsonLd()} />
       <HeroHeader />
+      <EventCountdown />
 
       <div className="max-w-3xl mx-auto px-6 py-16 md:py-24">
         <AmbassadorSection />
