@@ -1,6 +1,7 @@
 import { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import EventRecap from '@/components/EventRecap'
+import Navbar from '@/components/Navbar'
 import JsonLd from '@/components/JsonLd'
 import { recapsBySlug } from '@/content/recaps'
 import { siteConfig } from '@/content/site.config'
@@ -73,7 +74,8 @@ export default async function RecapPage({ params }: RecapPageProps) {
   return (
     <main className="min-h-screen bg-cursor-bg text-cursor-text">
       {jsonLd && <JsonLd data={jsonLd} />}
-      <div className="max-w-5xl mx-auto px-6 py-12">
+      <Navbar />
+      <div className="max-w-5xl mx-auto px-6 pt-12 pb-12">
         <EventRecap recap={recap} />
       </div>
     </main>

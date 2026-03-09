@@ -2,6 +2,8 @@
 
 import { motion } from 'framer-motion'
 import Image from 'next/image'
+import Link from 'next/link'
+import { ArrowLeft } from 'lucide-react'
 import PhotoGallery from '@/components/PhotoGallery'
 import { RecapData } from '@/lib/types'
 import { useI18n } from '@/lib/i18n'
@@ -21,6 +23,13 @@ export default function EventRecap({ recap }: EventRecapProps) {
       className="mb-8"
     >
       <div className="bg-[#1B1913] border border-cursor-border rounded-lg p-8">
+        <Link
+          href="/"
+          className="inline-flex items-center gap-1.5 text-sm text-cursor-text-muted hover:text-cursor-text transition-colors mb-4"
+        >
+          <ArrowLeft className="w-4 h-4" />
+          Back
+        </Link>
         <h2 className="text-xl font-semibold text-cursor-text mb-2">{recap.title}</h2>
         <p className="text-cursor-text-muted text-sm mb-6">{recap.date}</p>
 
