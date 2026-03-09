@@ -13,7 +13,7 @@ export const cafecursorBelgrade1Recap: RecapData = {
   ],
   videoUrl: 'https://drive.google.com/file/d/14zfSexXbnUxbsqUDpJg3Civ2d6CbvORM/preview',
   photoCredits: [
-    { name: 'Goran Petković' },
+    { name: 'Kristina Savić' },
   ],
   photos: [
     {
