@@ -11,7 +11,7 @@ export const partners: Partner[] = [
     name: 'Office NS',
     logo: '/images/partners/office-ns.svg',
     url: 'https://spaceforwork.rs',
-    logoBg: '#ffffff',
+    logoBg: '#3F3F3F',
     logoHeight: 'h-10',
   },
   {
