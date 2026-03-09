@@ -1,6 +1,5 @@
 'use client'
 
-import Image from 'next/image'
 import { partners } from '@/content/partners'
 import { useI18n } from '@/lib/i18n'
 
@@ -26,11 +25,10 @@ export default function Partners() {
             className="group rounded-md px-6 py-3 hover:opacity-80 transition-opacity flex items-center"
             style={{ backgroundColor: partner.logoBg ?? '#ffffff' }}
           >
-            <Image
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
               src={partner.logo}
               alt={partner.name}
-              width={120}
-              height={36}
               className={`${partner.logoHeight ?? 'h-7'} w-auto object-contain group-hover:scale-105 transition-transform duration-200`}
             />
           </a>
