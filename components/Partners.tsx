@@ -16,14 +16,14 @@ export default function Partners() {
       <h3 className="text-sm uppercase tracking-wider text-cursor-text-muted font-medium mb-6">
         {t('footer.hostingPartners')}
       </h3>
-      <div className="flex flex-wrap gap-4">
+      <div className="flex flex-wrap items-stretch gap-4">
         {partners.map((partner) => (
           <a
             key={partner.name}
             href={partner.url}
             target="_blank"
             rel="noopener noreferrer"
-            className="group rounded-md px-6 py-3 hover:opacity-80 transition-opacity"
+            className="group rounded-md px-6 py-3 hover:opacity-80 transition-opacity flex items-center"
             style={{ backgroundColor: partner.logoBg ?? '#ffffff' }}
           >
             <Image
@@ -31,7 +31,7 @@ export default function Partners() {
               alt={partner.name}
               width={120}
               height={36}
-              className="h-7 w-auto object-contain group-hover:scale-105 transition-transform duration-200"
+              className={`${partner.logoHeight ?? 'h-7'} w-auto object-contain group-hover:scale-105 transition-transform duration-200`}
             />
           </a>
         ))}

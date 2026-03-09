@@ -7,4 +7,17 @@ export const partners: Partner[] = [
     url: 'https://startit.rs',
     logoBg: '#ffffff',
   },
+  {
+    name: 'Office NS',
+    logo: '/images/partners/office-ns.svg',
+    url: 'https://spaceforwork.rs',
+    logoBg: '#ffffff',
+    logoHeight: 'h-10',
+  },
+  {
+    name: 'Centrala Hub',
+    logo: '/images/partners/centrala-hub.svg',
+    url: 'https://centralahub.rs',
+    logoBg: '#ffffff',
+  },
 ]
