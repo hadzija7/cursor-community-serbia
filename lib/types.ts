@@ -79,6 +79,7 @@ export interface RecapData {
   attendees?: number
   summary: string[]
   host?: { name: string; logo: string; url?: string }
+  videoUrl?: string
   photoCredits?: RecapPhotoCredit[]
   photos: GalleryPhoto[]
 }

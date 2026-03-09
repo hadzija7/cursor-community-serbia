@@ -6,9 +6,11 @@ export const cafecursorNovisad1Recap: RecapData = {
   date: 'January 18, 2026',
   attendees: 46,
   summary: [
-    'Builders joined for a collaborative, practical day of AI-assisted development with Cursor.',
-    'People shared workflows, paired on projects, and exchanged tips that can be reused by future communities.',
-  ], 
+    'The first Cafe Cursor in Novi Sad was an intimate Sunday morning gathering of around 40 of the most passionate community members. Specialty coffee and tea set the tone for a relaxed, focused atmosphere.',
+    'The highlight was the Builders Interview experiment, where attendees shared what they are working on, their workflows, and how they use Cursor in practice. The smaller group made conversations deeper and more personal.',
+    'The Sunday morning format attracted people who were genuinely curious and motivated, which made the energy in the room feel special. A great foundation for what is next in Novi Sad.',
+  ],
+  videoUrl: 'https://www.youtube.com/embed/8AG-wBee_MY',
   photoCredits: [
     { name: 'Andjela Lukić', url: 'https://www.instagram.com/djidja_75' },
   ],

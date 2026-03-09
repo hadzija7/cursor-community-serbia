@@ -48,6 +48,27 @@ export default function EventRecap({ recap }: EventRecapProps) {
           ))}
         </div>
 
+        {recap.videoUrl && (
+          <div className="mt-6 rounded-lg overflow-hidden border border-cursor-border aspect-video">
+            {recap.videoUrl.startsWith('http') ? (
+              <iframe
+                src={recap.videoUrl}
+                allow="autoplay; encrypted-media"
+                allowFullScreen
+                className="w-full h-full"
+              />
+            ) : (
+              <video
+                src={recap.videoUrl}
+                controls
+                preload="metadata"
+                className="w-full h-full"
+                playsInline
+              />
+            )}
+          </div>
+        )}
+
         <PhotoGallery photos={recap.photos} embedded />
 
         {recap.photoCredits && recap.photoCredits.length > 0 ? (
