@@ -9,9 +9,9 @@ export const partners: Partner[] = [
   },
   {
     name: 'Office NS',
-    logo: '/images/partners/office-ns.svg',
+    logo: '/images/partners/office-ns.png',
     url: 'https://spaceforwork.rs',
-    logoBg: '#3F3F3F',
+    logoBg: '#ffffff',
     logoHeight: 'h-10',
   },
   {

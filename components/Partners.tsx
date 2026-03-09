@@ -22,7 +22,7 @@ export default function Partners() {
             href={partner.url}
             target="_blank"
             rel="noopener noreferrer"
-            className="group rounded-md px-6 py-3 hover:opacity-80 transition-opacity flex items-center"
+            className="group rounded-md overflow-hidden px-6 py-3 hover:opacity-80 transition-opacity flex items-center"
             style={{ backgroundColor: partner.logoBg ?? '#ffffff' }}
           >
             {/* eslint-disable-next-line @next/next/no-img-element */}
