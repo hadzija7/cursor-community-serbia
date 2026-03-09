@@ -8,13 +8,6 @@ export const partners: Partner[] = [
     logoBg: '#ffffff',
   },
   {
-    name: 'Office NS',
-    logo: '/images/partners/office-ns.png',
-    url: 'https://spaceforwork.rs',
-    logoBg: '#ffffff',
-    logoHeight: 'h-10',
-  },
-  {
     name: 'Centrala Hub',
     logo: '/images/partners/centrala-hub.svg',
     url: 'https://centralahub.rs',
