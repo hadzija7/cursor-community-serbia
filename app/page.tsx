@@ -54,6 +54,7 @@ export default function Home() {
         {/* <FeaturedSection /> */}
         <UpcomingEvents />
         <PastEvents />
+        <Partners />
 
         <motion.footer
           initial={{ opacity: 0 }}
@@ -62,7 +63,6 @@ export default function Home() {
           transition={{ duration: 0.5 }}
           className="mt-24 pt-8 border-t border-cursor-border text-center"
         >
-          {/* <Partners /> */}
           <p className="text-cursor-text-muted text-sm mb-3">{siteConfig.footerTagline || t('footer.madeWith')}</p>
           <div className="flex items-center justify-center gap-4">
             <a

@@ -13,30 +13,26 @@ export default function Partners() {
 
   return (
     <div className="mb-8">
-      <h3 className="text-xs uppercase tracking-wider text-cursor-text-muted font-medium mb-4">
+      <h3 className="text-sm uppercase tracking-wider text-cursor-text-muted font-medium mb-6">
         {t('footer.hostingPartners')}
       </h3>
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+      <div className="flex flex-wrap gap-4">
         {partners.map((partner) => (
           <a
             key={partner.name}
             href={partner.url}
             target="_blank"
             rel="noopener noreferrer"
-            className="bg-cursor-bg-dark border border-cursor-border rounded-md p-3 flex flex-col items-center justify-center gap-2 min-h-[96px] hover:border-cursor-border-emphasis transition-colors group"
+            className="group rounded-md px-6 py-3 hover:opacity-80 transition-opacity"
+            style={{ backgroundColor: partner.logoBg ?? '#ffffff' }}
           >
-            <div className="w-full rounded-sm overflow-hidden px-2 py-2" style={{ backgroundColor: partner.logoBg ?? '#ffffff' }}>
-              <div className={`relative ${partner.logoHeight ?? 'h-10'} w-full`}>
-                <Image
-                  src={partner.logo}
-                  alt={partner.name}
-                  fill
-                  className="object-contain group-hover:scale-105 transition-transform duration-200"
-                  sizes="(max-width: 768px) 45vw, 20vw"
-                />
-              </div>
-            </div>
-            <span className="text-[11px] text-cursor-text-muted">{partner.name}</span>
+            <Image
+              src={partner.logo}
+              alt={partner.name}
+              width={120}
+              height={36}
+              className="h-7 w-auto object-contain group-hover:scale-105 transition-transform duration-200"
+            />
           </a>
         ))}
       </div>
