@@ -38,10 +38,11 @@ export default function EventCountdown() {
     .slice()
     .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())[0]
 
-  const [time, setTime] = useState(() => (nextEvent ? getTimeLeft(nextEvent.date) : null))
+  const [time, setTime] = useState<ReturnType<typeof getTimeLeft> | null>(null)
 
   useEffect(() => {
     if (!nextEvent) return
+    setTime(getTimeLeft(nextEvent.date))
     const id = setInterval(() => setTime(getTimeLeft(nextEvent.date)), 1000)
     return () => clearInterval(id)
   }, [nextEvent])
