@@ -1,4 +1,5 @@
 import { siteConfig } from '@/content/site.config'
+import { getDb } from '@/lib/db'
 
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 
@@ -24,36 +25,77 @@ export async function POST(request: Request) {
     return toError('Please provide a valid email address.', 400)
   }
 
+  const db = getDb()
   const webhookUrl = process.env.MAILING_LIST_WEBHOOK_URL
-  if (!webhookUrl) {
-    return toError('Mailing list subscription is not configured.', 503)
-  }
 
-  const apiKey = process.env.MAILING_LIST_API_KEY
-  const headers: HeadersInit = {
-    'Content-Type': 'application/json',
-    ...(apiKey ? { 'x-api-key': apiKey } : {}),
-  }
-
-  try {
-    const upstream = await fetch(webhookUrl, {
-      method: 'POST',
-      headers,
-      body: JSON.stringify({
-        email,
-        source: 'website-subscribe-form',
-        community: siteConfig.communityName,
-        subscribedAt: new Date().toISOString(),
-      }),
-      cache: 'no-store',
-    })
-
-    if (!upstream.ok) {
-      return toError('Mailing list provider rejected the request.', 502)
+  if (db) {
+    try {
+      await db`
+        INSERT INTO subscribers (email, source, community)
+        VALUES (${email}, 'website-subscribe-form', ${siteConfig.communityName})
+        ON CONFLICT (email) DO NOTHING
+      `
+    } catch (err) {
+      console.error('Postgres subscribe error:', err)
+      return toError('Could not save subscription.', 500)
     }
-  } catch {
-    return toError('Could not reach mailing list provider.', 502)
+
+    if (webhookUrl) {
+      const apiKey = process.env.MAILING_LIST_API_KEY
+      const headers: HeadersInit = {
+        'Content-Type': 'application/json',
+        ...(apiKey ? { 'x-api-key': apiKey } : {}),
+      }
+      try {
+        await fetch(webhookUrl, {
+          method: 'POST',
+          headers,
+          body: JSON.stringify({
+            email,
+            source: 'website-subscribe-form',
+            community: siteConfig.communityName,
+            subscribedAt: new Date().toISOString(),
+          }),
+          cache: 'no-store',
+        })
+      } catch {
+        // Log but don't fail - Postgres write succeeded
+        console.error('Webhook notify failed:', webhookUrl)
+      }
+    }
+
+    return Response.json({ ok: true, message: 'Subscribed successfully.' })
   }
 
-  return Response.json({ ok: true, message: 'Subscribed successfully.' })
+  if (webhookUrl) {
+    const apiKey = process.env.MAILING_LIST_API_KEY
+    const headers: HeadersInit = {
+      'Content-Type': 'application/json',
+      ...(apiKey ? { 'x-api-key': apiKey } : {}),
+    }
+
+    try {
+      const upstream = await fetch(webhookUrl, {
+        method: 'POST',
+        headers,
+        body: JSON.stringify({
+          email,
+          source: 'website-subscribe-form',
+          community: siteConfig.communityName,
+          subscribedAt: new Date().toISOString(),
+        }),
+        cache: 'no-store',
+      })
+
+      if (!upstream.ok) {
+        return toError('Mailing list provider rejected the request.', 502)
+      }
+    } catch {
+      return toError('Could not reach mailing list provider.', 502)
+    }
+
+    return Response.json({ ok: true, message: 'Subscribed successfully.' })
+  }
+
+  return toError('Mailing list subscription is not configured.', 503)
 }

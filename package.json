@@ -7,9 +7,12 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint .",
-    "test": "vitest run"
+    "test": "vitest run",
+    "db:setup": "node --env-file=.env.local scripts/db-setup.mjs",
+    "db:query": "node --env-file=.env.local scripts/db-query.mjs"
   },
   "dependencies": {
+    "@neondatabase/serverless": "^1.0.2",
     "@vercel/analytics": "^1.6.1",
     "framer-motion": "^11.0.0",
     "lucide-react": "^0.460.0",

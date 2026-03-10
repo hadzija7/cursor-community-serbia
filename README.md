@@ -112,12 +112,20 @@ Edit `content/world-events.ts` entries (`src`, `location`, `date`, `alt`).
 
 A shareable subscribe page is available at `/subscribe`.
 
-To connect submissions to your mailing-list provider, configure:
+**Option A: Postgres (recommended)** — Store subscriptions in your database:
+
+1. Add a Postgres database via [Vercel Marketplace](https://vercel.com/marketplace?category=storage&search=postgres) (e.g. Neon). This injects `POSTGRES_URL` or `DATABASE_URL`.
+2. Run the schema in `db/schema.sql` on your database.
+3. Subscriptions are stored in the `subscribers` table.
+
+**Option B: Webhook** — Forward to an external endpoint:
 
 - `MAILING_LIST_WEBHOOK_URL`: endpoint that accepts a JSON payload with `email`, `source`, `community`, and `subscribedAt`.
 - `MAILING_LIST_API_KEY` (optional): sent as `x-api-key` header.
 
-Without `MAILING_LIST_WEBHOOK_URL`, the form stays visible but API submissions return a configuration error.
+If Postgres is configured, you can optionally also set `MAILING_LIST_WEBHOOK_URL` to notify an external service (e.g. Zapier) when someone subscribes.
+
+Without Postgres or a webhook, API submissions return a configuration error.
 
 ## Locale / i18n
 
