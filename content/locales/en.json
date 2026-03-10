@@ -27,6 +27,7 @@
     "submit": "Subscribe",
     "submitting": "Subscribing...",
     "success": "You are now on the mailing list.",
+    "alreadySubscribed": "You're already subscribed to our mailing list.",
     "invalidEmail": "Please enter a valid email address.",
     "genericError": "Something went wrong. Please try again.",
     "backToHome": "← Back to homepage"

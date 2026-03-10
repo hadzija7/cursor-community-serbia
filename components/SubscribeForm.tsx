@@ -41,13 +41,19 @@ export default function SubscribeForm() {
         body: JSON.stringify({ email: normalizedEmail }),
       })
 
-      const result = (await response.json()) as { ok?: boolean; message?: string }
+      const result = (await response.json()) as {
+        ok?: boolean
+        message?: string
+        alreadySubscribed?: boolean
+      }
       if (!response.ok || !result.ok) {
         throw new Error(result.message || t('subscribe.genericError'))
       }
 
       setFormState('success')
-      setMessage(t('subscribe.success'))
+      setMessage(
+        result.alreadySubscribed ? t('subscribe.alreadySubscribed') : t('subscribe.success')
+      )
       setEmail('')
     } catch (error) {
       setFormState('error')

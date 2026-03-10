@@ -29,18 +29,21 @@ export async function POST(request: Request) {
   const webhookUrl = process.env.MAILING_LIST_WEBHOOK_URL
 
   if (db) {
+    let inserted = false
     try {
-      await db`
+      const result = await db`
         INSERT INTO subscribers (email, source, community)
         VALUES (${email}, 'website-subscribe-form', ${siteConfig.communityName})
         ON CONFLICT (email) DO NOTHING
+        RETURNING id
       `
+      inserted = result.length > 0
     } catch (err) {
       console.error('Postgres subscribe error:', err)
       return toError('Could not save subscription.', 500)
     }
 
-    if (webhookUrl) {
+    if (webhookUrl && inserted) {
       const apiKey = process.env.MAILING_LIST_API_KEY
       const headers: HeadersInit = {
         'Content-Type': 'application/json',
@@ -64,7 +67,11 @@ export async function POST(request: Request) {
       }
     }
 
-    return Response.json({ ok: true, message: 'Subscribed successfully.' })
+    return Response.json({
+      ok: true,
+      message: 'Subscribed successfully.',
+      alreadySubscribed: !inserted,
+    })
   }
 
   if (webhookUrl) {
