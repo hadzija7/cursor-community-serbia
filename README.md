@@ -108,6 +108,17 @@ Edit `content/world-events.ts` entries (`src`, `location`, `date`, `alt`).
 
 `components/WorldEventsCarousel.tsx` renders this list directly.
 
+### 7) Mailing-list subscribe page
+
+A shareable subscribe page is available at `/subscribe`.
+
+To connect submissions to your mailing-list provider, configure:
+
+- `MAILING_LIST_WEBHOOK_URL`: endpoint that accepts a JSON payload with `email`, `source`, `community`, and `subscribedAt`.
+- `MAILING_LIST_API_KEY` (optional): sent as `x-api-key` header.
+
+Without `MAILING_LIST_WEBHOOK_URL`, the form stays visible but API submissions return a configuration error.
+
 ## Locale / i18n
 
 ### Current model

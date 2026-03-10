@@ -1,7 +1,5 @@
 import { MetadataRoute } from 'next'
-import { events } from '@/content/events'
 import { recapsBySlug } from '@/content/recaps'
-import { siteConfig } from '@/content/site.config'
 
 const BASE_URL =
   process.env.NEXT_PUBLIC_SITE_URL ||

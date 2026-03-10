@@ -8,46 +8,78 @@ interface DiagramSlideProps {
   caption?: string
 }
 
+interface DiagramState {
+  src: string
+  svgContent: string | null
+  error: string | null
+  loading: boolean
+}
+
 export default function DiagramSlide({ src, alt, caption }: DiagramSlideProps) {
-  const [svgContent, setSvgContent] = useState<string | null>(null)
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
+  const [state, setState] = useState<DiagramState>({
+    src,
+    svgContent: null,
+    loading: true,
+    error: null,
+  })
+  const loading = state.src !== src || state.loading
 
   useEffect(() => {
-    setLoading(true)
+    let active = true
+
     fetch(src)
       .then((res) => {
         if (!res.ok) throw new Error(`Fetch failed: ${res.status}`)
         return res.text()
       })
       .then((text) => {
-        setSvgContent(text)
-        setLoading(false)
+        if (!active) {
+          return
+        }
+
+        setState({
+          src,
+          svgContent: text,
+          loading: false,
+          error: null,
+        })
       })
       .catch((err) => {
-        setError(err.message)
-        setLoading(false)
+        if (!active) {
+          return
+        }
+
+        setState({
+          src,
+          svgContent: null,
+          loading: false,
+          error: err.message,
+        })
       })
+
+    return () => {
+      active = false
+    }
   }, [src])
 
   if (loading) {
     return <div className="animate-pulse text-cursor-text-muted py-12 text-center">Loading diagram...</div>
   }
 
-  if (error) {
+  if (state.error) {
     return (
       <div className="bg-cursor-accent-red-bg border border-cursor-border-emphasis rounded p-4 text-cursor-accent-red text-center">
-        <p>Error loading diagram: {error}</p>
+        <p>Error loading diagram: {state.error}</p>
         <p className="text-sm mt-2">Path: {src}</p>
       </div>
     )
   }
 
-  if (!svgContent) {
+  if (!state.svgContent) {
     return <div className="text-cursor-text-muted text-center py-12">{alt}</div>
   }
 
-  const modifiedSvg = svgContent.replace(
+  const modifiedSvg = state.svgContent.replace(
     /<svg([^>]*)>/,
     '<svg$1 width="100%" height="auto" style="max-width:100%;display:block;">'
   )
