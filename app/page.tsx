@@ -1,6 +1,7 @@
 'use client'
 
 import { motion } from 'framer-motion'
+import Link from 'next/link'
 import HeroHeader from '@/components/HeroHeader'
 import EventCountdown from '@/components/EventCountdown'
 import AmbassadorSection from '@/components/AmbassadorSection'
@@ -73,6 +74,10 @@ export default function Home() {
             >
               {t('footer.allEvents')}
             </a>
+            <span className="text-cursor-text-faint">·</span>
+            <Link href="/subscribe" className="text-cursor-text hover:text-cursor-text-muted transition-colors text-sm">
+              {t('subscribe.nav')}
+            </Link>
             <span className="text-cursor-text-faint">·</span>
             <a
               href={siteConfig.cursorCommunityUrl}

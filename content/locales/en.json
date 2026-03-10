@@ -18,6 +18,19 @@
     "allEvents": "All events on Luma",
     "madeWith": "Made with Cursor by ambassadors worldwide"
   },
+  "subscribe": {
+    "nav": "Subscribe",
+    "title": "Join our mailing list",
+    "description": "Get community updates and upcoming event announcements in your inbox.",
+    "emailLabel": "Email address",
+    "emailPlaceholder": "you@example.com",
+    "submit": "Subscribe",
+    "submitting": "Subscribing...",
+    "success": "You are now on the mailing list.",
+    "invalidEmail": "Please enter a valid email address.",
+    "genericError": "Something went wrong. Please try again.",
+    "backToHome": "← Back to homepage"
+  },
   "featured": {
     "defaultDescription": "A practical, hands-on workshop series for builders who want to learn Cursor with real workflows."
   },

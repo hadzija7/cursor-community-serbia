@@ -42,6 +42,12 @@ export default function Navbar() {
         >
           {t('home.pastEvents')}
         </Link>
+        <Link
+          href="/subscribe"
+          className="text-sm text-cursor-text-muted hover:text-cursor-text transition-colors"
+        >
+          {t('subscribe.nav')}
+        </Link>
         <LanguageToggle />
       </div>
     </nav>
