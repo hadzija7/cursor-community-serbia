@@ -65,8 +65,12 @@ export default function SlideLayout({
   }, [handleKeyDown])
 
   useEffect(() => {
-    setIsNavigating(false)
+    const resetNavigation = window.setTimeout(() => setIsNavigating(false), 0)
     localStorage.setItem(storageKey, String(currentSlide))
+
+    return () => {
+      window.clearTimeout(resetNavigation)
+    }
   }, [currentSlide, storageKey])
 
   return (

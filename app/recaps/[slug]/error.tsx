@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 
-export default function RecapError({ error, reset }: { error: Error & { digest?: string }; reset: () => void }) {
+export default function RecapError({ reset }: { error: Error & { digest?: string }; reset: () => void }) {
   return (
     <main className="min-h-screen bg-cursor-bg text-cursor-text flex flex-col items-center justify-center px-6">
       <h1 className="text-2xl font-semibold text-cursor-text mb-2">Something went wrong</h1>

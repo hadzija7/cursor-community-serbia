@@ -1,5 +1,5 @@
-import { fireEvent, render, screen } from '@testing-library/react'
-import { describe, expect, it, beforeEach } from 'vitest'
+import { cleanup, fireEvent, render, screen } from '@testing-library/react'
+import { describe, expect, it, beforeEach, afterEach } from 'vitest'
 import { I18nProvider, useI18n } from '@/lib/i18n'
 
 function I18nProbe() {
@@ -15,6 +15,10 @@ function I18nProbe() {
 }
 
 describe('i18n', () => {
+  afterEach(() => {
+    cleanup()
+  })
+
   beforeEach(() => {
     window.localStorage.clear()
   })
