@@ -1,226 +1,87 @@
-# Cursor Ambassador Evergreen Template
+# Cursor Community Serbia
 
-![Cursor Ambassador Banner](public/images/readme-banner.png)
+The official local community site for Cursor AI enthusiasts in Serbia. Join meetups, coworking days, and workshops across Novi Sad, Belgrade, Niš, and beyond.
 
-This repository is a configurable Next.js template for Cursor Ambassador community sites.
+## About
+
+Cursor Community Serbia connects developers, builders, and AI enthusiasts who use [Cursor](https://cursor.com) in their daily work. We host events, share learnings, and grow together as a community.
+
+**What we do:**
+- **Meetups & coworking** — In-person gatherings in major Serbian cities
+- **Education** — Presentations and resources for beginners and beyond
+- **Recaps** — Event highlights and photos from past meetups
+- **Community updates** — Stay in the loop via our mailing list
 
 ## Quick Start
 
 ```bash
-npm install
-npm run dev
+pnpm install
+pnpm dev
 ```
 
-Open `http://localhost:3000`.
+Open [http://localhost:3000](http://localhost:3000).
 
-## Project Structure
+## Key Features
 
-### App routes
+- **Homepage** — Upcoming events, countdown, past event recaps
+- **Education** (`/education`) — AI in Business presentation, Cursor Cheat Sheet, and more
+- **Subscribe** (`/subscribe`) — Join the mailing list for updates
+- **Recaps** (`/recaps/[slug]`) — Event photo galleries and highlights
+- **Slides** (`/slides/[id]`) — Optional workshop slide decks
 
-- `app/page.tsx`: homepage composition (hero, featured, events, ambassadors, partners, world events).
-- `app/recaps/[slug]/page.tsx`: dynamic recap page route.
-- `app/slides/[id]/page.tsx`: optional workshop slides route.
+## Commands
 
-### Core components
+| Task | Command |
+|------|---------|
+| Install | `pnpm install` |
+| Dev | `pnpm dev` |
+| Build | `pnpm build` |
+| Lint | `pnpm lint` |
+| Test | `pnpm test` |
+| DB setup | `pnpm db:setup` |
 
-- `components/HeroHeader.tsx`: top section + bento photo grid.
-- `components/FeaturedSection.tsx`: featured resource card.
-- `components/UpcomingEvents.tsx` and `components/PastEvents.tsx`: event lists.
-- `components/AmbassadorSection.tsx`: ambassador cards.
-- `components/Partners.tsx`: hosting partner cards/logos.
-- `components/WorldEventsCarousel.tsx`: global event photos.
+## Customization
 
-### Content-driven configuration (`content/`)
+Content is driven by files in `content/`:
 
-This template is content-first. Most customization is done by editing files in `content/`.
+- **`site.config.ts`** — Community name, Luma URL, locales
+- **`events.ts`** — Upcoming and past events
+- **`ambassadors.ts`** — Ambassador profiles
+- **`partners.ts`** — Host and sponsor logos
+- **`education.ts`** — Educational resources (presentations, PDFs, guides)
+- **`locales/`** — Translation dictionaries
 
-- `content/site.config.ts`: global site settings (community name, city/country, URLs, locales, footer text).
-- `content/header-photos.ts`: hero bento images (`src`, `alt`, `span`, `mobileHidden`).
-- `content/featured.ts`: featured card text + CTA.
-- `content/events.ts`: upcoming/past events and recap links.
-- `content/ambassadors.ts`: ambassador data and social links.
-- `content/partners.ts`: host/sponsor logos and URLs.
-- `content/world-events.ts`: world carousel entries.
-- `content/recaps/*.ts`: recap documents rendered by slug.
-- `content/locales/*.json`: translation dictionaries.
-- `content/locales/index.ts`: locale bundle registry consumed by `lib/i18n.tsx`.
+See `AGENTS.md` and `specs/` for detailed architecture and specs.
 
-## Customization Guide
+## Mailing List
 
-### 1) Site identity
+Subscriptions can use **Postgres** or a **Webhook**:
 
-Edit `content/site.config.ts`:
+- **Postgres:** Add a database via [Vercel Marketplace](https://vercel.com/marketplace?category=storage&search=postgres), run `db/schema.sql`, set `POSTGRES_URL` or `DATABASE_URL`
+- **Webhook:** Set `MAILING_LIST_WEBHOOK_URL` to forward signups to an external endpoint
 
-- `communityName`, `communityNameLocal`, `city`, `country`
-- `lumaUrl`, `cursorCommunityUrl`
-- `defaultLocale`, `locales`
-- `footerTagline`
-
-### 2) Hero bento grid
-
-Edit `content/header-photos.ts`.
-
-Each entry uses explicit grid coordinates (1-indexed) for deterministic placement on a 4-column x 4-row grid:
-
-- `src`: image path/URL
-- `alt`: accessibility text
-- `row`, `col`: starting row and column (required)
-- `rowSpan`, `colSpan`: how many rows/columns the tile occupies (default 1)
-- `mobile`: optional `{ row, col, rowSpan?, colSpan? }` override for the 2-column mobile grid
-- `mobileHidden`: optional boolean to hide on small screens
-
-Use local assets in `public/images/` for portability.
-
-### 3) Events and recaps
-
-Edit `content/events.ts`.
-
-- `status: 'upcoming' | 'past'` controls which list renders the event.
-- `lumaUrl` is used for registration links.
-- `recapPath` connects a past event to a recap route (for example `/recaps/example-event`).
-- `thumbnail` is shown in past event cards.
-
-To add a recap:
-
-1. Add a recap file in `content/recaps/`.
-2. Ensure the recap exports a valid recap object with a matching `slug`.
-3. Add `recapPath` in the corresponding event.
-
-### 4) Optional slides
-
-Slides are optional and live in `modules/slides/`.
-
-- Data source: `modules/slides/content/example-deck.tsx`
-- Route: `app/slides/[id]/page.tsx`
-
-If your community does not use slides, remove links to `/slides/*` from content.
-
-### 5) Ambassadors and partners
-
-- `content/ambassadors.ts`: `name`, optional `role`, `photo`, and links (`x`, `linkedin`, `github`, `website`).
-- `content/partners.ts`: partner `name`, `logo`, `url`, optional `logoBg`, optional `logoHeight`.
-
-Local SVG logos in `public/images/partners/` are recommended.
-
-### 6) World events carousel
-
-Edit `content/world-events.ts` entries (`src`, `location`, `date`, `alt`).
-
-`components/WorldEventsCarousel.tsx` renders this list directly.
-
-### 7) Mailing-list subscribe page
-
-A shareable subscribe page is available at `/subscribe`.
-
-**Option A: Postgres (recommended)** — Store subscriptions in your database:
-
-1. Add a Postgres database via [Vercel Marketplace](https://vercel.com/marketplace?category=storage&search=postgres) (e.g. Neon). This injects `POSTGRES_URL` or `DATABASE_URL`.
-2. Run the schema in `db/schema.sql` on your database.
-3. Subscriptions are stored in the `subscribers` table.
-
-**Option B: Webhook** — Forward to an external endpoint:
-
-- `MAILING_LIST_WEBHOOK_URL`: endpoint that accepts a JSON payload with `email`, `source`, `community`, and `subscribedAt`.
-- `MAILING_LIST_API_KEY` (optional): sent as `x-api-key` header.
-
-If Postgres is configured, you can optionally also set `MAILING_LIST_WEBHOOK_URL` to notify an external service (e.g. Zapier) when someone subscribes.
-
-Without Postgres or a webhook, API submissions return a configuration error.
-
-## Locale / i18n
-
-### Current model
-
-- Runtime provider: `lib/i18n.tsx`
-- Dictionaries: `content/locales/*.json`
-- Bundle registry: `content/locales/index.ts`
-- Config gate: `siteConfig.locales`
-
-Language toggle appears when `siteConfig.locales.length > 1`.
-
-### Add a second locale
-
-1. Create `content/locales/xx.json` (for example `th.json`).
-2. Register it in `content/locales/index.ts`.
-3. Add `'xx'` to `siteConfig.locales`.
-4. Optionally set `defaultLocale` to `'xx'`.
-
-Example `content/locales/index.ts`:
-
-```ts
-import en from './en.json'
-import th from './th.json'
-
-export const localeBundles = {
-  en,
-  th,
-} as const
-```
-
-### Translation keys and params
-
-Use `t('path.to.key', params)` from `useI18n()`.
-
-- Dot-path keys: `t('home.upcomingEvents')`
-- Parameter replacement: `t('home.attendees', { count: '42' })` for strings like `"{count} attendees"`
-
-If a key is missing, the function returns the key path (useful for spotting missing translations).
-
-## Add or Remove Sections
-
-Homepage order is defined in `app/page.tsx`.
-
-- Remove a section by deleting the component from the page.
-- Add a section by creating a component and inserting it in `app/page.tsx`.
-
-Keep content source files aligned with any component changes.
-
-## Image Strategy
-
-This template currently uses local images in `public/images/` for:
-
-- hero event photos
-- world events photos
-- ambassadors
-- partner logos
-
-With fully local images, `next.config.js` does not need remote image domains.
+Copy `.env.example` to `.env.local` and fill in the required variables.
 
 ## Deployment
 
-### Vercel
+**Vercel:** Push to GitHub and import the repo. Deploy with default Next.js settings.
 
-1. Push to GitHub.
-2. Import repository in Vercel.
-3. Deploy with default Next.js settings.
-
-### Other platforms
-
-Build command:
-
-```bash
-npm run build
-```
-
-Start command:
-
-```bash
-npm run start
-```
+**Other platforms:**
+- Build: `pnpm build`
+- Start: `pnpm start`
 
 ## Contributing
 
-See `CONTRIBUTING.md`.
+Contributions are welcome. See `CONTRIBUTING.md` for guidelines.
 
-## Sites Using This Template
+## Links
 
-- [cursorthailand.com](https://cursorthailand.com)
-
-Using this template? Open a PR to add your site here.
+- [Cursor Community](https://cursor.com/community)
+- [Luma — All Events](https://luma.com/cursorcommunity)
 
 ## Credits
 
-Designed and implemented by [Luis Fernando Romero Calero](https://lfrc.me) and [Cursor](https://cursor.com).
+Built with the [Cursor Ambassador Evergreen Template](https://github.com/CursorCommunity). Designed by [Luis Fernando Romero Calero](https://lfrc.me) and [Cursor](https://cursor.com).
 
 ## License
 
