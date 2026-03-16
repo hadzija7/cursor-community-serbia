@@ -8,7 +8,7 @@ Optional workshop slide engine for Cursor Community events. Can be skipped if th
 
 - **Routes:** `app/slides/[id]/page.tsx` (example deck), `app/education/productivity-with-ai/[id]/page.tsx` (main presentation)
 - **Content:** `modules/slides/content/` — deck files export Slide arrays
-- **Components:** `modules/slides/components/` — SlideLayout, SlideContent, CodeBlock, PromptBlock, DiagramSlide
+- **Components:** `modules/slides/components/` — SlideLayout, SlideContent, SlidePage, CodeBlock, PromptBlock, DiagramSlide
 
 ## Data Model
 
@@ -17,6 +17,8 @@ interface Slide {
   id: number
   title: string
   content: ReactNode
+  notes?: string
+  titleSize?: 'large' | 'normal'  // 'large' for title-slide heading
 }
 ```
 
@@ -29,7 +31,7 @@ interface Slide {
 
 ## Decks
 
-- `example-deck.tsx` — Template (served at `/slides/[id]`, `/education/test`)
+- `example-deck.tsx` — Template (served at `/slides/[id]`)
 - `productivity-with-ai-deck.tsx` — Productivity, AI evolution, Cursor (served at `/education/productivity-with-ai`)
 
 ## Verification

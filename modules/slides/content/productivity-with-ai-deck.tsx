@@ -5,6 +5,7 @@ export const productivityWithAiDeck: Slide[] = [
   {
     id: 1,
     title: 'Productivity with AI & Cursor',
+    titleSize: 'large',
     content: (
       <div className="space-y-6">
         <p className="text-cursor-text-muted text-xl md:text-2xl">Be more productive at work. Learn faster. A practical guide.</p>
