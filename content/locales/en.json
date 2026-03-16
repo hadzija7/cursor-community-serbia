@@ -72,6 +72,13 @@
     "minutes": "Minutes",
     "seconds": "Seconds"
   },
+  "education": {
+    "title": "Educational Content",
+    "description": "Learn how AI and Cursor can help you be more productive and learn faster. Presentations, guides, and resources for beginners.",
+    "backToHome": "← Back to homepage",
+    "resources": "Resources",
+    "nav": "Learn"
+  },
   "worldEvents": {
     "title": "Cafe Cursor around the world",
     "subtitle": "Same day, different timezones",

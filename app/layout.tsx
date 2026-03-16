@@ -10,6 +10,11 @@ const GA_ID = 'G-TJRWP2YTM2'
 export const metadata: Metadata = {
   title: `${siteConfig.communityName} ${siteConfig.communityNameLocal} | Cursor Ambassador Site`,
   description: 'Cursor Community Serbia — the official local community for Cursor AI enthusiasts in Serbia. Join meetups, workshops, and connect with fellow developers.',
+  icons: {
+    icon: [
+      { url: '/favicon.svg', type: 'image/svg+xml' },
+    ],
+  },
   openGraph: {
     title: `${siteConfig.communityName} ${siteConfig.communityNameLocal}`,
     description: 'Cursor Community Serbia — the official local community for Cursor AI enthusiasts in Serbia. Join meetups, workshops, and connect with fellow developers.',
@@ -24,6 +29,9 @@ export default function RootLayout({
 }) {
   return (
     <html lang={siteConfig.defaultLocale}>
+      <head>
+        <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+      </head>
       <body className="antialiased">
         <I18nProvider>{children}</I18nProvider>
         <Analytics />
