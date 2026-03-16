@@ -8,142 +8,143 @@ export const productivityWithAiDeck: Slide[] = [
     titleSize: 'large',
     content: (
       <div className="space-y-6">
-        <p className="text-cursor-text-muted text-xl md:text-2xl">Be more productive at work. Learn faster. A practical guide.</p>
-        <p className="text-cursor-text-faint text-base md:text-lg">From AI evolution to working smarter with Cursor</p>
+        <p className="text-cursor-text-muted text-xl md:text-2xl">
+          Learning. Execution. Examples. Understanding. Moving forward.
+        </p>
+        <p className="text-cursor-text-faint text-base md:text-lg">A practical guide</p>
       </div>
     ),
   },
+  // --- Learning ---
   {
     id: 2,
-    title: 'A Quick Look at AI Evolution',
+    title: 'Learning',
     content: (
       <div className="space-y-6">
         <p>
-          <strong>AI has evolved fast.</strong> From early experiments to tools that understand and generate text, answer
-          questions, and assist with real tasks.
-        </p>
-        <p className="text-cursor-text-muted">
-          Think of it like having a very fast assistant who&apos;s read a lot and can help whenever you ask.
+          <strong>Who knows Stack Overflow?</strong> A platform where people share problems and collaborate to solve them.
         </p>
         <p>
-          You&apos;ve probably seen it: <strong>ChatGPT</strong>, Google Assistant, Grammarly, Smart Reply in Gmail.
+          <strong>GPT</strong> changed the way we look for information. Information is easily accessible now.
         </p>
-        <p className="text-cursor-text-muted">No coding needed.</p>
+        <p className="text-cursor-text-muted">Knowledge is becoming less scarce.</p>
       </div>
     ),
   },
+  // --- Execution, Productivity, Automation ---
   {
     id: 3,
-    title: 'AI in Everyday Life',
+    title: 'Execution, Productivity & Automation',
     content: (
       <div className="space-y-6">
-        <ul className="list-disc pl-6 space-y-2">
-          <li>Writing emails and reports</li>
-          <li>Summarising documents</li>
-          <li>Suggesting text (autocomplete)</li>
-          <li>Answering questions quickly</li>
-          <li>Helping with study and learning</li>
-        </ul>
         <p>
-          <strong>Main idea:</strong> AI speeds up repetitive work so you can focus on thinking and deciding.
+          <strong>Cursor, Claude, Codex</strong> — and the ecosystem of AI tools.
         </p>
+        <ul className="list-disc pl-6 space-y-2">
+          <li>LLM reasoning + access to tools</li>
+          <li>Increase productivity by automating repetitive tasks</li>
+          <li>Give an agent a task → it executes autonomously</li>
+          <li>Spawn agents on event or timer → Cursor automations</li>
+        </ul>
       </div>
     ),
   },
   {
     id: 4,
-    title: 'How AI Helps You Be More Productive',
-    content: (
-      <div className="space-y-6">
-        <p>Before: blank page → you write everything from scratch.</p>
-        <p>With AI: you get a first draft → you edit and improve.</p>
-      </div>
-    ),
-  },
-  {
-    id: 5,
-    title: 'Everyday Productivity',
+    title: 'Demo: Cursor, Automations & Cloud Agents',
     content: (
       <div className="space-y-6">
         <ul className="list-disc pl-6 space-y-2">
-          <li>
-            <strong>Email / report:</strong> AI drafts, you adjust and personalise.
-          </li>
-          <li>
-            <strong>Long document:</strong> AI summarises; you read the summary.
-          </li>
-          <li>
-            <strong>Ideas / planning:</strong> AI structures and groups; you refine.
-          </li>
-          <li>
-            <strong>Exam prep:</strong> AI explains topics or gives practice questions.
-          </li>
-          <li>
-            <strong>Cover letters:</strong> AI adapts one base text for each job.
-          </li>
+          <li>Check Cursor interface</li>
+          <li>Check automations and cloud agents</li>
         </ul>
-        <p className="text-cursor-text-muted">You still decide what goes out the door.</p>
+      </div>
+    ),
+  },
+  // --- Examples ---
+  {
+    id: 5,
+    title: 'Why Cursor? Why Build?',
+    content: (
+      <div className="space-y-6">
+        <p>
+          <strong>Why use Cursor?</strong> To build things.
+        </p>
+        <p>
+          <strong>Why build things?</strong> To solve problems.
+        </p>
+        <p>Solve problems for others → make money.</p>
+        <p className="text-cursor-text-muted">Building your own product.</p>
       </div>
     ),
   },
   {
     id: 6,
-    title: 'How AI Helps You Learn Faster',
+    title: 'Selling to People vs. Selling to Agents',
     content: (
       <div className="space-y-6">
         <ul className="list-disc pl-6 space-y-2">
           <li>
-            <strong>&quot;Explain like I&apos;m X&quot;</strong> — adjust the level to you.
+            <strong>Selling to people</strong> → build UI
           </li>
           <li>
-            <strong>Ask while you work</strong> — no need to switch to Google.
+            <strong>Selling to agents</strong> → since most agents are LLMs, explain well with words how your product can be used. Provide APIs so agents can execute your functionality.
           </li>
           <li>
-            <strong>Practice questions</strong> — &quot;Give me 5 questions on this topic.&quot;
-          </li>
-          <li>
-            <strong>Clarify jargon</strong> — &quot;What does this mean in simple words?&quot;
+            <strong>Since most users are using agents</strong> → you want to sell to agents.
           </li>
         </ul>
+        <p>
+          <strong>MCPs</strong> — wrappers around AI, with descriptions so agents can decide when to invoke.
+        </p>
+        <p>
+          <strong>Skills</strong> — explain how to leverage APIs.
+        </p>
+        <p>
+          <strong>Plugins</strong> — if you&apos;re building a product and want users to interface through Cursor (LLM-first UI), submit a plugin to the Cursor marketplace.
+        </p>
       </div>
     ),
   },
   {
     id: 7,
-    title: 'Cursor: AI While You Work',
+    title: 'Paradigm Shift',
     content: (
       <div className="space-y-6">
-        <p>Cursor is an AI-powered editor that sits inside your workflow.</p>
-        <p className="text-cursor-text-muted">Chat with AI while you write, code, or plan — with full context of your files.</p>
+        <p>New way of interacting with software: <strong>we explain the problem and AI solves it.</strong></p>
+        <p className="text-cursor-text-muted">Much easier than understanding complex interfaces.</p>
         <ul className="list-disc pl-6 space-y-2">
-          <li>Chat panel always available</li>
-          <li>AI sees your files and context</li>
-          <li>Ask &quot;explain this&quot; or &quot;improve this&quot;</li>
-          <li>Works for text, code, and docs</li>
+          <li>
+            <strong>Design:</strong> Instead of learning Figma → use Cursor + Pencil.dev
+          </li>
+          <li>
+            <strong>Video editing:</strong> Instead of Photoshop → use Cursor + Remotion
+          </li>
+          <li>
+            <strong>Version control MCP (GitHub)</strong> — don&apos;t need to understand all the commands anymore.
+          </li>
+          <li>
+            <strong>This presentation was built with Cursor.</strong> 🎯
+          </li>
         </ul>
       </div>
     ),
   },
+  // --- Moving forward ---
   {
     id: 8,
-    title: 'What You Can Do with Cursor',
+    title: 'Moving Forward',
     content: (
       <div className="space-y-6">
         <ul className="list-disc pl-6 space-y-2">
           <li>
-            <strong>Draft content</strong> — emails, reports, essays
+            <strong>Cost vs. efficiency</strong>
           </li>
           <li>
-            <strong>Summarise</strong> — long docs, meeting notes
+            <strong>Security, reliability</strong>
           </li>
           <li>
-            <strong>Explain</strong> — code, concepts, assignments
-          </li>
-          <li>
-            <strong>Refactor</strong> — make text or code clearer
-          </li>
-          <li>
-            <strong>Plan</strong> — structure projects and ideas
+            <strong>Human identity, purpose</strong>
           </li>
         </ul>
       </div>
@@ -151,55 +152,6 @@ export const productivityWithAiDeck: Slide[] = [
   },
   {
     id: 9,
-    title: 'Live Demo',
-    content: (
-      <div className="space-y-6">
-        <PromptBlock prompt="Summarise this in 3 bullet points." />
-        <div className="space-y-2 text-cursor-text-muted text-sm">
-          <p>Also try:</p>
-          <p>&quot;Make this easier to understand.&quot;</p>
-          <p>&quot;Explain what this means in simple words.&quot;</p>
-        </div>
-      </div>
-    ),
-  },
-  {
-    id: 10,
-    title: 'Getting Started',
-    content: (
-      <div className="space-y-6">
-        <ol className="list-decimal pl-6 space-y-2">
-          <li>
-            <strong>Try ChatGPT</strong> for a few everyday tasks
-          </li>
-          <li>
-            <strong>Use AI once this week</strong> — email, summary, study help
-          </li>
-          <li>
-            <strong>Try Cursor</strong> if you work with text or code
-          </li>
-        </ol>
-        <p>
-          <strong>Tip:</strong> Be specific when you ask. The better your prompt, the better the result.
-        </p>
-      </div>
-    ),
-  },
-  {
-    id: 11,
-    title: 'One Tip for Better Results',
-    content: (
-      <div className="space-y-6">
-        <p>
-          <strong>Be specific.</strong>
-        </p>
-        <p>Instead of: &quot;Make this better.&quot;</p>
-        <p>Try: &quot;Make this shorter and easier for beginners to read.&quot;</p>
-      </div>
-    ),
-  },
-  {
-    id: 12,
     title: 'Questions?',
     content: (
       <div className="space-y-6">
