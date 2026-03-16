@@ -24,7 +24,7 @@ Open [http://localhost:3000](http://localhost:3000).
 ## Key Features
 
 - **Homepage** — Upcoming events, countdown, past event recaps
-- **Education** (`/education`) — AI in Business presentation, Cursor Cheat Sheet, and more
+- **Education** (`/education`) — Productivity with AI & Cursor presentation, Cursor Cheat Sheet, and more
 - **Subscribe** (`/subscribe`) — Join the mailing list for updates
 - **Recaps** (`/recaps/[slug]`) — Event photo galleries and highlights
 - **Slides** (`/slides/[id]`) — Optional workshop slide decks

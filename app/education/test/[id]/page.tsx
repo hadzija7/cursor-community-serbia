@@ -3,11 +3,11 @@ import SlideLayout from '@/modules/slides/components/SlideLayout'
 import SlideContent from '@/modules/slides/components/SlideContent'
 import { exampleDeck, totalExampleSlides } from '@/modules/slides/content/example-deck'
 
-interface SlidePageProps {
+interface EducationTestSlideProps {
   params: Promise<{ id: string }>
 }
 
-export default async function SlidePage({ params }: SlidePageProps) {
+export default async function EducationTestSlidePage({ params }: EducationTestSlideProps) {
   const { id: idParam } = await params
   const id = Number(idParam)
   if (!Number.isInteger(id) || id < 1 || id > totalExampleSlides) {
