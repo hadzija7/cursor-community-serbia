@@ -21,7 +21,7 @@ function getTimeLeft(targetDate: string) {
 function CountdownBlock({ value, label }: { value: number; label: string }) {
   return (
     <div className="flex flex-col items-center bg-cursor-bg rounded-lg px-4 py-3 sm:px-6 sm:py-4 min-w-[72px] sm:min-w-[96px] border border-cursor-border">
-      <span className="text-3xl sm:text-5xl font-semibold tabular-nums text-cursor-text leading-none">
+      <span className="text-3xl sm:text-5xl font-semibold tabular-nums text-cursor-text leading-none" suppressHydrationWarning>
         {String(value).padStart(2, '0')}
       </span>
       <span className="text-[10px] sm:text-xs uppercase tracking-widest text-cursor-text-muted mt-1.5">
@@ -38,12 +38,11 @@ export default function EventCountdown() {
     .slice()
     .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())[0]
 
-  const [time, setTime] = useState<ReturnType<typeof getTimeLeft> | null>(() =>
-    nextEvent ? getTimeLeft(nextEvent.date) : null
-  )
+  const [time, setTime] = useState<ReturnType<typeof getTimeLeft> | null>(null)
 
   useEffect(() => {
     if (!nextEvent) return
+    setTime(getTimeLeft(nextEvent.date))
     const id = setInterval(() => setTime(getTimeLeft(nextEvent.date)), 1000)
     return () => clearInterval(id)
   }, [nextEvent])
@@ -67,7 +66,7 @@ export default function EventCountdown() {
         <h3 className="text-2xl sm:text-3xl font-bold tracking-tight text-cursor-text">
           {nextEvent.title}
         </h3>
-        <p className="text-sm text-cursor-text-muted mt-1">
+        <p className="text-sm text-cursor-text-muted mt-1" suppressHydrationWarning>
           {shortDate}
           <span className="mx-1.5">&middot;</span>
           {city}
