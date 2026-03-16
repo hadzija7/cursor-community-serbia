@@ -130,9 +130,30 @@ export const productivityWithAiDeck: Slide[] = [
       </div>
     ),
   },
-  // --- Moving forward ---
+  // --- Understanding how LLMs work ---
   {
     id: 8,
+    title: 'Understanding How LLMs Work',
+    content: (
+      <div className="space-y-6">
+        <p>How to have better performing agents?</p>
+        <ul className="list-disc pl-6 space-y-2">
+          <li>
+            <strong>Cursor cheatsheet</strong> — shortcuts and tips
+          </li>
+          <li>
+            Agents will use <code className="bg-cursor-surface px-1.5 py-0.5 rounded text-sm">AGENTS.md</code> to orient, then follow the specs and workflows (project-scaffold)
+          </li>
+          <li>
+            <strong>Model routers</strong> — select the best underlying model for your task
+          </li>
+        </ul>
+      </div>
+    ),
+  },
+  // --- Moving forward ---
+  {
+    id: 9,
     title: 'Moving Forward',
     content: (
       <div className="space-y-6">
@@ -151,7 +172,7 @@ export const productivityWithAiDeck: Slide[] = [
     ),
   },
   {
-    id: 9,
+    id: 10,
     title: 'Questions?',
     content: (
       <div className="space-y-6">
