@@ -8,10 +8,11 @@ export interface EducationResource {
 
 export const educationResources: EducationResource[] = [
   {
-    id: 'ai-in-business',
-    title: 'AI in Business',
-    description: 'Beginner-friendly guide: how AI helps you be more productive, learn faster, and get started with Cursor.',
-    href: '/education/ai-in-business.html',
+    id: 'productivity-with-ai',
+    title: 'Productivity with AI & Cursor',
+    description:
+      'Be more productive at work: a quick look at AI evolution, everyday productivity tips, and how to use Cursor.',
+    href: '/education/productivity-with-ai',
     type: 'presentation',
   },
   {

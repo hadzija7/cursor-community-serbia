@@ -15,19 +15,20 @@ Educational content section at `/education` listing presentations and PDFs for t
 ## Architecture
 
 - **Page:** `app/education/page.tsx` — lists resources from `content/education.ts`
-- **Static assets:** `public/education/` — HTML presentations, PDFs
+- **Presentations:** Slide engine at `app/education/[deck]/[id]/` (e.g. productivity-with-ai)
+- **Static assets:** `public/education/` — PDFs, legacy HTML
 
 ## Resource Types
 
-- `presentation` — HTML slides (e.g. reveal.js)
+- `presentation` — Slide engine decks or HTML (e.g. reveal.js)
 - `guide` — PDFs (e.g. Cursor Cheat Sheet)
 - `article`, `video` — future types
 
 ## Current Resources
 
-| ID | Title | File |
-|----|-------|------|
-| ai-in-business | AI in Business | `public/education/ai-in-business.html` |
+| ID | Title | Location |
+|----|-------|----------|
+| productivity-with-ai | Productivity with AI & Cursor | `/education/productivity-with-ai` (slide engine) |
 | cursor-cheat-sheet | Cursor Cheat Sheet | `public/education/cursor-cheat-sheet-en.pdf` |
 
 ## Adding a Resource
