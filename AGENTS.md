@@ -48,6 +48,7 @@
 - `content/` — Site config, events, ambassadors, education, locales
 - `lib/` — i18n, db, types
 - `public/` — Static assets, favicon, education materials
+- `designs/` — Pencil.dev designs; see `designs/README.md` for workflow
 
 ## Environment
 - `.env.local` — Secrets (gitignored). See `.env.example` for required vars.

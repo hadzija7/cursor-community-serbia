@@ -27,6 +27,11 @@ export const productivityWithAiDeck: Slide[] = [
         <p>
           <strong>GPT</strong> changed the way we look for information. Information is easily accessible now.
         </p>
+        <ul className="list-disc pl-6 space-y-2">
+          <li>Searching the web for information</li>
+          <li>Summaries of documents</li>
+          <li>Explainations of code</li>
+        </ul>
         <p className="text-cursor-text-muted">Knowledge is becoming less scarce.</p>
       </div>
     ),
@@ -38,7 +43,7 @@ export const productivityWithAiDeck: Slide[] = [
     content: (
       <div className="space-y-6">
         <p>
-          <strong>Cursor, Claude, Codex</strong> — and the ecosystem of AI tools.
+          <strong>Cursor, Claude, Codex</strong> and the ecosystem of AI tools.
         </p>
         <ul className="list-disc pl-6 space-y-2">
           <li>LLM reasoning + access to tools</li>
@@ -121,7 +126,7 @@ export const productivityWithAiDeck: Slide[] = [
             <strong>Video editing:</strong> Instead of Photoshop → use Cursor + Remotion
           </li>
           <li>
-            <strong>Version control MCP (GitHub)</strong> — don&apos;t need to understand all the commands anymore.
+            <strong>Version control MCP (GitHub)</strong> → don&apos;t need to understand all the commands anymore.
           </li>
           <li>
             <strong>This presentation was built with Cursor.</strong> 🎯
@@ -159,10 +164,13 @@ export const productivityWithAiDeck: Slide[] = [
       <div className="space-y-6">
         <ul className="list-disc pl-6 space-y-2">
           <li>
-            <strong>Cost vs. efficiency</strong>
+            <strong>Cost vs efficiency</strong>
           </li>
           <li>
             <strong>Security, reliability</strong>
+          </li>
+          <li>
+            <strong>SaaS, Proprietary data</strong>
           </li>
           <li>
             <strong>Human identity, purpose</strong>
