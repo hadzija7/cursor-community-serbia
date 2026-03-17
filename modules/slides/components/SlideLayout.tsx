@@ -34,13 +34,23 @@ export default function SlideLayout({
   const handleKeyDown = useCallback(
     (event: KeyboardEvent) => {
       if (isNavigating) return
+      // Skip when user is typing in an input/textarea
+      const target = event.target as HTMLElement
+      if (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA' || target.isContentEditable) return
 
       switch (event.key) {
         case 'ArrowLeft':
+        case 'ArrowUp':
+        case 'PageUp':
+        case 'Backspace':
           event.preventDefault()
           if (currentSlide > 1) goToSlide(currentSlide - 1)
           break
         case 'ArrowRight':
+        case 'ArrowDown':
+        case 'PageDown':
+        case ' ':
+        case 'Enter':
           event.preventDefault()
           if (currentSlide < totalSlides) goToSlide(currentSlide + 1)
           break
