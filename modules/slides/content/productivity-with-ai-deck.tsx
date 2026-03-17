@@ -85,7 +85,7 @@ export const productivityWithAiDeck: Slide[] = [
   },
   {
     id: 6,
-    title: 'Selling to People vs. Selling to Agents',
+    title: 'Selling to People vs Selling to Agents',
     content: (
       <div className="space-y-6">
         <ul className="list-disc pl-6 space-y-2">
