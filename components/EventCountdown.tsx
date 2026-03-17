@@ -6,8 +6,26 @@ import { ExternalLink } from 'lucide-react'
 import { upcomingEvents } from '@/content/events'
 import { useI18n } from '@/lib/i18n'
 
-function getTimeLeft(targetDate: string) {
-  const diff = new Date(`${targetDate}T18:00:00`).getTime() - Date.now()
+function cetOffsetFor(dateStr: string): string {
+  const jan = new Date(`${dateStr.slice(0, 4)}-01-15T12:00:00Z`)
+  const jul = new Date(`${dateStr.slice(0, 4)}-07-15T12:00:00Z`)
+  const stdOffset = Math.max(
+    jan.getTimezoneOffset(),
+    jul.getTimezoneOffset()
+  )
+  const target = new Date(`${dateStr}T12:00:00Z`)
+  const isDST =
+    new Intl.DateTimeFormat('en', { timeZone: 'Europe/Belgrade', timeZoneName: 'short' })
+      .formatToParts(target)
+      .find((p) => p.type === 'timeZoneName')?.value?.includes('summer') ||
+    target.getTimezoneOffset() < stdOffset
+  // CET = UTC+1, CEST = UTC+2
+  return isDST ? '+02:00' : '+01:00'
+}
+
+function getTimeLeft(targetDate: string, targetTime = '18:00') {
+  const offset = cetOffsetFor(targetDate)
+  const diff = new Date(`${targetDate}T${targetTime}:00${offset}`).getTime() - Date.now()
   if (diff <= 0) return { days: 0, hours: 0, minutes: 0, seconds: 0 }
 
   return {
@@ -39,12 +57,12 @@ export default function EventCountdown() {
     .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())[0]
 
   const [time, setTime] = useState<ReturnType<typeof getTimeLeft> | null>(() =>
-    nextEvent ? getTimeLeft(nextEvent.date) : null
+    nextEvent ? getTimeLeft(nextEvent.date, nextEvent.time) : null
   )
 
   useEffect(() => {
     if (!nextEvent) return
-    const id = setInterval(() => setTime(getTimeLeft(nextEvent.date)), 1000)
+    const id = setInterval(() => setTime(getTimeLeft(nextEvent.date, nextEvent.time)), 1000)
     return () => clearInterval(id)
   }, [nextEvent])
 

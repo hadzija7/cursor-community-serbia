@@ -5,6 +5,8 @@ export interface CursorEvent {
   title: string
   titleLocal?: string
   date: string
+  /** Event start time in HH:MM format, CET/CEST (Europe/Belgrade). Defaults to '18:00'. */
+  time?: string
   displayDate: string
   attendees?: number
   location: string
