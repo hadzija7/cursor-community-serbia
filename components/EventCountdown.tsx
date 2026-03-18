@@ -5,27 +5,10 @@ import { motion } from 'framer-motion'
 import { ExternalLink } from 'lucide-react'
 import { upcomingEvents } from '@/content/events'
 import { useI18n } from '@/lib/i18n'
-
-function cetOffsetFor(dateStr: string): string {
-  const jan = new Date(`${dateStr.slice(0, 4)}-01-15T12:00:00Z`)
-  const jul = new Date(`${dateStr.slice(0, 4)}-07-15T12:00:00Z`)
-  const stdOffset = Math.max(
-    jan.getTimezoneOffset(),
-    jul.getTimezoneOffset()
-  )
-  const target = new Date(`${dateStr}T12:00:00Z`)
-  const isDST =
-    new Intl.DateTimeFormat('en', { timeZone: 'Europe/Belgrade', timeZoneName: 'short' })
-      .formatToParts(target)
-      .find((p) => p.type === 'timeZoneName')?.value?.includes('summer') ||
-    target.getTimezoneOffset() < stdOffset
-  // CET = UTC+1, CEST = UTC+2
-  return isDST ? '+02:00' : '+01:00'
-}
+import { eventStartMs, isFutureEvent } from '@/lib/event-time'
 
 function getTimeLeft(targetDate: string, targetTime = '18:00') {
-  const offset = cetOffsetFor(targetDate)
-  const diff = new Date(`${targetDate}T${targetTime}:00${offset}`).getTime() - Date.now()
+  const diff = eventStartMs(targetDate, targetTime) - Date.now()
   if (diff <= 0) return { days: 0, hours: 0, minutes: 0, seconds: 0 }
 
   return {
@@ -36,10 +19,16 @@ function getTimeLeft(targetDate: string, targetTime = '18:00') {
   }
 }
 
+function findNextEvent() {
+  return upcomingEvents
+    .filter(isFutureEvent)
+    .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())[0] ?? null
+}
+
 function CountdownBlock({ value, label }: { value: number; label: string }) {
   return (
     <div className="flex flex-col items-center bg-cursor-bg rounded-lg px-4 py-3 sm:px-6 sm:py-4 min-w-[72px] sm:min-w-[96px] border border-cursor-border">
-      <span className="text-3xl sm:text-5xl font-semibold tabular-nums text-cursor-text leading-none" suppressHydrationWarning>
+      <span className="text-3xl sm:text-5xl font-semibold tabular-nums text-cursor-text leading-none">
         {String(value).padStart(2, '0')}
       </span>
       <span className="text-[10px] sm:text-xs uppercase tracking-widest text-cursor-text-muted mt-1.5">
@@ -49,24 +38,30 @@ function CountdownBlock({ value, label }: { value: number; label: string }) {
   )
 }
 
+type CountdownState = {
+  event: (typeof upcomingEvents)[number]
+  time: ReturnType<typeof getTimeLeft>
+} | null
+
 export default function EventCountdown() {
   const { t, locale } = useI18n()
 
-  const nextEvent = upcomingEvents
-    .slice()
-    .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())[0]
-
-  const [time, setTime] = useState<ReturnType<typeof getTimeLeft> | null>(() =>
-    nextEvent ? getTimeLeft(nextEvent.date, nextEvent.time) : null
-  )
+  const [state, setState] = useState<CountdownState>(null)
 
   useEffect(() => {
-    if (!nextEvent) return
-    const id = setInterval(() => setTime(getTimeLeft(nextEvent.date, nextEvent.time)), 1000)
+    const tick = () => {
+      const next = findNextEvent()
+      if (!next) { setState(null); return }
+      setState({ event: next, time: getTimeLeft(next.date, next.time) })
+    }
+    tick()
+    const id = setInterval(tick, 1000)
     return () => clearInterval(id)
-  }, [nextEvent])
+  }, [])
 
-  if (!nextEvent || !time) return null
+  if (!state) return null
+
+  const { event: nextEvent, time } = state
 
   const shortDate = new Date(`${nextEvent.date}T00:00:00`).toLocaleDateString(
     locale === 'en' ? 'en-US' : locale,
@@ -85,7 +80,7 @@ export default function EventCountdown() {
         <h3 className="text-2xl sm:text-3xl font-bold tracking-tight text-cursor-text">
           {nextEvent.title}
         </h3>
-        <p className="text-sm text-cursor-text-muted mt-1" suppressHydrationWarning>
+        <p className="text-sm text-cursor-text-muted mt-1">
           {shortDate}
           <span className="mx-1.5">&middot;</span>
           {city}

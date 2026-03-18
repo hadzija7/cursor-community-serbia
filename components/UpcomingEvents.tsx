@@ -1,14 +1,25 @@
 'use client'
 
+import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { ExternalLink } from 'lucide-react'
 import { upcomingEvents } from '@/content/events'
 import { useI18n } from '@/lib/i18n'
+import { isFutureEvent } from '@/lib/event-time'
 
 export default function UpcomingEvents() {
   const { t, locale } = useI18n()
 
-  if (upcomingEvents.length === 0) {
+  const [liveEvents, setLiveEvents] = useState(upcomingEvents)
+
+  useEffect(() => {
+    const refresh = () => setLiveEvents(upcomingEvents.filter(isFutureEvent))
+    refresh()
+    const id = setInterval(refresh, 60_000)
+    return () => clearInterval(id)
+  }, [])
+
+  if (liveEvents.length === 0) {
     return null
   }
 
@@ -26,7 +37,7 @@ export default function UpcomingEvents() {
       </h2>
 
       <div className="space-y-4">
-        {upcomingEvents.map((event, index) => {
+        {liveEvents.map((event, index) => {
           const shortDate = new Date(`${event.date}T00:00:00`).toLocaleDateString(locale === 'en' ? 'en-US' : locale, {
             year: 'numeric',
             month: 'short',
