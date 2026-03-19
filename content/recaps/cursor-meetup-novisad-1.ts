@@ -17,13 +17,13 @@ export const cursorMeetupNovisad1Recap: RecapData = {
   videoUrl: 'https://www.youtube.com/embed/ixb78UP9ESc',
   photoCredits: [{ name: 'Dušan Petković' }],
   photos: [
-    { src: driveImg('1hBFfcHX32T_HgOLufb8F6Lw3gStuE_HO'), alt: 'Event attendees during the meetup' },
+    { src: driveImg('1Z-iGL-XSyStIyD6Y4M2D-w9J4DBsAgK0'), alt: 'Presentation and demos' },
     { src: driveImg('1w3S0i4b4EUFHutgE7INx74bzCiM5h1kA'), alt: 'Community members networking' },
     { src: driveImg('1HuB0LNl4JXuy64C5Jc1g-3-9Zn7pi3M0'), alt: 'Cursor Meetup Novi Sad' },
     { src: driveImg('1CHG9qc9IaNvMv42YtYQQiIgWmHtUxeK6'), alt: 'Attendees at the event' },
-    { src: driveImg('1Z-iGL-XSyStIyD6Y4M2D-w9J4DBsAgK0'), alt: 'Presentation and demos' },
     { src: driveImg('17sPcRmzi6DJDP31Q2ekhMzq_sk0c1_ej'), alt: 'Group discussion' },
     { src: driveImg('1fz6ZMy9D67ZYehg6rtL2aFcVGICAJRtI'), alt: 'Cursor Meetup Novi Sad' },
     { src: driveImg('1UoeIoKKK91SK1SxtMzaTsF2TdONE4C2X'), alt: 'Event group photo' },
+    { src: driveImg('1hBFfcHX32T_HgOLufb8F6Lw3gStuE_HO'), alt: 'Event attendees during the meetup' },
   ],
 }
