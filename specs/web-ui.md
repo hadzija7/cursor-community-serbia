@@ -19,6 +19,7 @@ The Cursor Community Serbia site is a Next.js 16 App Router application presenti
 | Route | Purpose |
 |-------|---------|
 | `/` | Homepage (hero, events, ambassadors, partners) |
+| `/api/events/upcoming` | Server route returning sanitized upcoming events (Luma-first, static fallback) |
 | `/subscribe` | Mailing list subscription |
 | `/education` | Educational resources (presentations, PDFs) |
 | `/recaps/[slug]` | Event recap pages |
@@ -29,10 +30,13 @@ The Cursor Community Serbia site is a Next.js 16 App Router application presenti
 - `app/page.tsx` — Homepage composition
 - `components/HeroHeader.tsx` — Hero + bento photo grid
 - `components/UpcomingEvents.tsx`, `components/PastEvents.tsx` — Event lists
+- `components/EventCountdown.tsx` — Countdown driven by live upcoming events
 - `components/AmbassadorSection.tsx` — Ambassador cards
 - `components/Partners.tsx` — Partner logos
 - `components/SubscribeForm.tsx` — Mailing list form
 - `app/education/page.tsx` — Education landing page
+- `lib/use-upcoming-events.ts` — Client polling hook for upcoming events API
+- `lib/luma.ts` — Server-side Luma API mapping and pagination
 
 ### Layout & Theming
 
@@ -45,10 +49,13 @@ The Cursor Community Serbia site is a Next.js 16 App Router application presenti
 - Next.js 16, React 19
 - Framer Motion, Lucide React
 - Content from `content/` (site config, events, ambassadors, partners, education)
+- Optional live events from Luma API via `app/api/events/upcoming/route.ts`
 
 ## Verification
 
 - [ ] Homepage loads without errors
+- [ ] Upcoming events reflect Luma API data when `LUMA_API_KEY` is configured
+- [ ] Homepage still shows static upcoming events when Luma is unavailable
 - [ ] Subscribe form submits
 - [ ] Education resources open correctly
 - [ ] Favicon displays Cursor logo

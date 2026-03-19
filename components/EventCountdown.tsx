@@ -3,9 +3,9 @@
 import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { ExternalLink } from 'lucide-react'
-import { upcomingEvents } from '@/content/events'
 import { useI18n } from '@/lib/i18n'
 import { eventStartMs, isFutureEvent } from '@/lib/event-time'
+import type { CursorEvent } from '@/lib/types'
 
 function getTimeLeft(targetDate: string, targetTime = '18:00') {
   const diff = eventStartMs(targetDate, targetTime) - Date.now()
@@ -19,10 +19,10 @@ function getTimeLeft(targetDate: string, targetTime = '18:00') {
   }
 }
 
-function findNextEvent() {
-  return upcomingEvents
+function findNextEvent(events: CursorEvent[]) {
+  return events
     .filter(isFutureEvent)
-    .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())[0] ?? null
+    .sort((a, b) => eventStartMs(a.date, a.time) - eventStartMs(b.date, b.time))[0] ?? null
 }
 
 function CountdownBlock({ value, label }: { value: number; label: string }) {
@@ -39,25 +39,29 @@ function CountdownBlock({ value, label }: { value: number; label: string }) {
 }
 
 type CountdownState = {
-  event: (typeof upcomingEvents)[number]
+  event: CursorEvent
   time: ReturnType<typeof getTimeLeft>
 } | null
 
-export default function EventCountdown() {
+interface EventCountdownProps {
+  events: CursorEvent[]
+}
+
+export default function EventCountdown({ events }: EventCountdownProps) {
   const { t, locale } = useI18n()
 
   const [state, setState] = useState<CountdownState>(null)
 
   useEffect(() => {
     const tick = () => {
-      const next = findNextEvent()
+      const next = findNextEvent(events)
       if (!next) { setState(null); return }
       setState({ event: next, time: getTimeLeft(next.date, next.time) })
     }
     tick()
     const id = setInterval(tick, 1000)
     return () => clearInterval(id)
-  }, [])
+  }, [events])
 
   if (!state) return null
 

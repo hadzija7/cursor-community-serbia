@@ -6,8 +6,8 @@ Living scorecard for Cursor Community Serbia. Update after each phase.
 
 | Domain        | Spec | Code | Tests | Review | Overall |
 |---------------|------|------|-------|--------|---------|
-| Web UI        | C    | B    | D     | -      | C       |
-| Content Config| C    | B    | -     | -      | C       |
+| Web UI        | C    | B    | C     | -      | C       |
+| Content Config| C    | B    | C     | -      | C       |
 | Mailing List  | C    | B    | D     | -      | C       |
 | Education     | C    | B    | -     | -      | C       |
 | Slides        | C    | B    | -     | -      | C       |
@@ -27,7 +27,8 @@ Living scorecard for Cursor Community Serbia. Update after each phase.
 
 ## Known Gaps
 
-- [ ] Unit tests for subscribe API
+- [x] Unit tests for subscribe API
+- [x] Unit tests for upcoming events API + Luma mapping
 - [ ] E2E or UI property tests
 - [ ] CI pipeline (lint, test, build)
 - [ ] Structured error boundaries
@@ -37,3 +38,4 @@ Living scorecard for Cursor Community Serbia. Update after each phase.
 | Date       | Change                          |
 |------------|----------------------------------|
 | 2026-03-13 | Initial scaffold; grades set    |
+| 2026-03-19 | Added Luma live event sync route and tests |

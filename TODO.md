@@ -6,6 +6,7 @@
 - [ ] Add/expand unit tests for critical paths (subscribe API, education config)
 
 ## Phase 2: Content & Polish
+- [x] Add live Luma upcoming events sync with static fallback (`/api/events/upcoming`)
 - [ ] Review and update content (events, ambassadors, partners) for Serbia
 - [ ] Ensure education resources are complete and linked correctly
 - [ ] Verify i18n keys and add Serbian locale if needed

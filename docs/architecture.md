@@ -12,6 +12,7 @@ Cursor Community Serbia is a Next.js community site based on the Cursor Ambassad
 |------------------|-------------------------|----------------------------------|
 | Web UI           | specs/web-ui.md         | `app/`, `components/`            |
 | Content Config   | specs/content-config.md | `content/`                       |
+| Luma Events Sync | specs/web-ui.md, specs/content-config.md | `app/api/events/upcoming/`, `lib/luma.ts`, `lib/use-upcoming-events.ts` |
 | Mailing List     | specs/mailing-list.md   | `app/api/subscribe/`, `db/`      |
 | Education        | specs/education.md      | `app/education/`, `public/education/` |
 | Slides (optional)| specs/slides.md         | `modules/slides/`, `app/slides/` |
@@ -70,4 +71,6 @@ cursor-community-serbia/
 | `POSTGRES_URL` / `DATABASE_URL` | Postgres connection (mailing list) |
 | `MAILING_LIST_WEBHOOK_URL`  | Optional webhook for subscriptions   |
 | `MAILING_LIST_API_KEY`      | Optional API key for webhook         |
+| `LUMA_API_KEY`              | Server-only key for Luma calendar API |
+| `LUMA_API_BASE_URL`         | Optional override for Luma API base URL |
 | `.env.local`                | Local env (gitignored)               |

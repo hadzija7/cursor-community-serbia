@@ -1,23 +1,18 @@
 'use client'
 
-import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { ExternalLink } from 'lucide-react'
-import { upcomingEvents } from '@/content/events'
 import { useI18n } from '@/lib/i18n'
 import { isFutureEvent } from '@/lib/event-time'
+import type { CursorEvent } from '@/lib/types'
 
-export default function UpcomingEvents() {
+interface UpcomingEventsProps {
+  events: CursorEvent[]
+}
+
+export default function UpcomingEvents({ events }: UpcomingEventsProps) {
   const { t, locale } = useI18n()
-
-  const [liveEvents, setLiveEvents] = useState(upcomingEvents)
-
-  useEffect(() => {
-    const refresh = () => setLiveEvents(upcomingEvents.filter(isFutureEvent))
-    refresh()
-    const id = setInterval(refresh, 60_000)
-    return () => clearInterval(id)
-  }, [])
+  const liveEvents = events.filter(isFutureEvent)
 
   if (liveEvents.length === 0) {
     return null
