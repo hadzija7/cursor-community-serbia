@@ -11,7 +11,7 @@ export default function Navbar() {
 
   return (
     <nav className="flex justify-between items-center px-6 md:px-12 lg:px-16 py-4 md:py-5">
-      <Link href="/" className="flex items-center gap-3">
+      <Link href="/" className="flex items-center gap-1.5">
         <Image
           src="/cursor-logo.svg"
           alt="Cursor"
@@ -21,9 +21,8 @@ export default function Navbar() {
           className="h-6 md:h-8 w-auto"
         />
         <span className="font-cursor text-lg md:text-xl font-semibold tracking-tight text-cursor-text">
-          {siteConfig.communityName}
           {siteConfig.communityNameLocal ? (
-            <span className="font-thai font-bold tracking-wide text-xl md:text-2xl text-cursor-text-secondary ml-2">
+            <span className="font-thai font-bold tracking-wide text-xl md:text-2xl text-cursor-text-secondary ml-1">
               {siteConfig.communityNameLocal}
             </span>
           ) : null}
@@ -32,19 +31,19 @@ export default function Navbar() {
       <div className="flex items-center gap-4 md:gap-6">
         <Link
           href="/#upcoming"
-          className="hidden sm:block text-sm text-cursor-text-muted hover:text-cursor-text transition-colors"
+          className="hidden sm:block text-base text-cursor-text-muted hover:text-cursor-text transition-colors"
         >
           {t('home.upcomingEvents')}
         </Link>
         <Link
           href="/#recaps"
-          className="hidden sm:block text-sm text-cursor-text-muted hover:text-cursor-text transition-colors"
+          className="hidden sm:block text-base text-cursor-text-muted hover:text-cursor-text transition-colors"
         >
           {t('home.pastEvents')}
         </Link>
         <Link
           href="/subscribe"
-          className="text-sm text-cursor-text-muted hover:text-cursor-text transition-colors"
+          className="text-base text-cursor-text-muted hover:text-cursor-text transition-colors"
         >
           {t('subscribe.nav')}
         </Link>
