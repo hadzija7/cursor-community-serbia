@@ -11,7 +11,7 @@ export const events: CursorEvent[] = [
     attendees: 37,
     location: 'Novi Sad, Vojvodina',
     recapPath: '/recaps/cursor-meetup-novisad-1',
-    thumbnail: 'https://drive.google.com/uc?export=view&id=1hBFfcHX32T_HgOLufb8F6Lw3gStuE_HO',
+    thumbnail: 'https://drive.google.com/uc?export=view&id=1Z-iGL-XSyStIyD6Y4M2D-w9J4DBsAgK0',
     lumaUrl: 'https://luma.com/3bshmlcv',
     status: 'past',
   },
