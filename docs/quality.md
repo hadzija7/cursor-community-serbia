@@ -39,3 +39,4 @@ Living scorecard for Cursor Community Serbia. Update after each phase.
 |------------|----------------------------------|
 | 2026-03-13 | Initial scaffold; grades set    |
 | 2026-03-19 | Added Luma live event sync route and tests |
+| 2026-03-19 | Added listed calendar event merge (public calendar source) |

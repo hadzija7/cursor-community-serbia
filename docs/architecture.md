@@ -73,4 +73,5 @@ cursor-community-serbia/
 | `MAILING_LIST_API_KEY`      | Optional API key for webhook         |
 | `LUMA_API_KEY`              | Server-only key for Luma calendar API |
 | `LUMA_API_BASE_URL`         | Optional override for Luma API base URL |
+| `LUMA_CALENDAR_SLUG`        | Optional public calendar slug used to include listed events |
 | `.env.local`                | Local env (gitignored)               |

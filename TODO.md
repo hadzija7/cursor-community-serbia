@@ -7,6 +7,7 @@
 
 ## Phase 2: Content & Polish
 - [x] Add live Luma upcoming events sync with static fallback (`/api/events/upcoming`)
+- [x] Include listed (not-managed) events in upcoming events feed
 - [ ] Review and update content (events, ambassadors, partners) for Serbia
 - [ ] Ensure education resources are complete and linked correctly
 - [ ] Verify i18n keys and add Serbian locale if needed

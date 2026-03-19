@@ -32,7 +32,9 @@ Events use `CursorEvent` from `lib/types`. Education resources use `EducationRes
 ## Runtime Event Source
 
 - Homepage upcoming events are read via `/api/events/upcoming`.
-- If `LUMA_API_KEY` is set, server-side Luma events are used.
+- If `LUMA_API_KEY` is set, server-side managed events are fetched from Luma API.
+- Listed events are fetched from the public calendar page (`https://luma.com/<slug>`) and merged.
+- `LUMA_CALENDAR_SLUG` can override the slug; otherwise it is inferred from `content/site.config.ts`.
 - If `LUMA_API_KEY` is missing or Luma fails, `content/events.ts` remains the fallback source.
 
 ## Verification

@@ -11,6 +11,7 @@ describe('GET /api/events/upcoming', () => {
     vi.restoreAllMocks()
     vi.useFakeTimers()
     vi.setSystemTime(new Date('2026-03-19T12:00:00.000Z'))
+    vi.spyOn(luma, 'fetchListedCalendarEvents').mockResolvedValue([])
   })
 
   afterEach(() => {
@@ -18,8 +19,9 @@ describe('GET /api/events/upcoming', () => {
     process.env = ORIGINAL_ENV
   })
 
-  it('returns static upcoming events when LUMA_API_KEY is missing', async () => {
+  it('returns static fallback events when listed-events source is empty', async () => {
     delete process.env.LUMA_API_KEY
+    process.env.LUMA_CALENDAR_SLUG = '/'
 
     const response = await GET()
     const body = (await response.json()) as { source: string; events: CursorEvent[]; updatedAt: string }
@@ -30,11 +32,35 @@ describe('GET /api/events/upcoming', () => {
     expect(typeof body.updatedAt).toBe('string')
   })
 
-  it('returns events from Luma when the API call succeeds', async () => {
+  it('returns listed events when API key is missing and calendar page has events', async () => {
+    delete process.env.LUMA_API_KEY
+
+    const listedEvent: CursorEvent = {
+      id: 'evt_listed',
+      title: 'Listed Event',
+      date: '2026-03-26',
+      time: '18:00',
+      displayDate: 'March 26, 2026',
+      location: 'Belgrade, Serbia',
+      lumaUrl: 'https://luma.com/listed',
+      status: 'upcoming',
+    }
+    vi.spyOn(luma, 'fetchListedCalendarEvents').mockResolvedValue([listedEvent])
+
+    const response = await GET()
+    const body = (await response.json()) as { source: string; events: CursorEvent[]; counts: { managed: number; listed: number } }
+
+    expect(response.status).toBe(200)
+    expect(body.source).toBe('listed')
+    expect(body.events).toEqual([listedEvent])
+    expect(body.counts).toEqual({ managed: 0, listed: 1 })
+  })
+
+  it('returns merged managed and listed events when Luma API succeeds', async () => {
     process.env.LUMA_API_KEY = 'secret'
     process.env.LUMA_API_BASE_URL = 'https://public-api.luma.com'
 
-    const lumaEvents: CursorEvent[] = [
+    const managedEvents: CursorEvent[] = [
       {
         id: 'evt_123',
         title: 'Cursor Community Live',
@@ -46,24 +72,40 @@ describe('GET /api/events/upcoming', () => {
         status: 'upcoming',
       },
     ]
+    const listedEvents: CursorEvent[] = [
+      {
+        id: 'evt_999',
+        title: 'Listed Partner Event',
+        date: '2026-03-22',
+        time: '19:00',
+        displayDate: 'March 22, 2026',
+        location: 'Novi Sad, Serbia',
+        lumaUrl: 'https://luma.com/yvpg9ijv',
+        status: 'upcoming',
+      },
+    ]
 
-    const fetchSpy = vi.spyOn(luma, 'fetchLumaUpcomingEvents').mockResolvedValue(lumaEvents)
+    const managedSpy = vi.spyOn(luma, 'fetchLumaUpcomingEvents').mockResolvedValue(managedEvents)
+    vi.spyOn(luma, 'fetchListedCalendarEvents').mockResolvedValue(listedEvents)
 
     const response = await GET()
-    const body = (await response.json()) as { source: string; events: CursorEvent[] }
+    const body = (await response.json()) as { source: string; events: CursorEvent[]; counts: { managed: number; listed: number } }
 
     expect(response.status).toBe(200)
-    expect(body.source).toBe('luma')
-    expect(body.events).toEqual(lumaEvents)
-    expect(fetchSpy).toHaveBeenCalledWith({
+    expect(body.source).toBe('luma+listed')
+    expect(body.events).toEqual([managedEvents[0], listedEvents[0]])
+    expect(body.counts).toEqual({ managed: 1, listed: 1 })
+    expect(managedSpy).toHaveBeenCalledWith({
       apiKey: 'secret',
       baseUrl: 'https://public-api.luma.com',
     })
   })
 
-  it('falls back to static events when the Luma call fails', async () => {
+  it('falls back to static events when managed and listed sources fail', async () => {
     process.env.LUMA_API_KEY = 'secret'
+    process.env.LUMA_CALENDAR_SLUG = 'cursor-serbia'
     vi.spyOn(luma, 'fetchLumaUpcomingEvents').mockRejectedValue(new Error('boom'))
+    vi.spyOn(luma, 'fetchListedCalendarEvents').mockRejectedValue(new Error('listed-fail'))
 
     const response = await GET()
     const body = (await response.json()) as { source: string; events: CursorEvent[] }

@@ -2,6 +2,7 @@ import type { CursorEvent } from '@/lib/types'
 import { eventStartMs, isFutureEvent } from '@/lib/event-time'
 
 const DEFAULT_BASE_URL = 'https://public-api.luma.com'
+const DEFAULT_PUBLIC_LUMA_BASE_URL = 'https://luma.com'
 const BELGRADE_TIME_ZONE = 'Europe/Belgrade'
 const MAX_PAGES = 5
 const PAGE_LIMIT = 50
@@ -12,6 +13,17 @@ interface LumaListEventsResponse {
   entries?: unknown[]
   has_more?: boolean
   next_cursor?: string | null
+}
+
+function normalizeLumaUrl(urlOrSlug: string | undefined): string | undefined {
+  if (!urlOrSlug) {
+    return undefined
+  }
+  if (/^https?:\/\//i.test(urlOrSlug)) {
+    return urlOrSlug
+  }
+  const normalizedSlug = urlOrSlug.replace(/^\/+/, '')
+  return normalizedSlug ? `${DEFAULT_PUBLIC_LUMA_BASE_URL}/${normalizedSlug}` : undefined
 }
 
 function asObject(value: unknown): JsonObject | null {
@@ -107,12 +119,8 @@ export function mapLumaEntryToCursorEvent(entry: unknown): CursorEvent | null {
   const locationName = pickString(source, [['location_name'], ['event', 'location_name'], ['location', 'name'], ['event', 'location', 'name']])
   const location = [city, country].filter(Boolean).join(', ') || locationName || 'TBA'
 
-  const lumaUrl =
-    pickString(source, [['url'], ['event', 'url'], ['event_url'], ['event', 'event_url']]) ??
-    (() => {
-      const slug = pickString(source, [['url_slug'], ['event', 'url_slug']])
-      return slug ? `https://luma.com/${slug}` : undefined
-    })()
+  const lumaUrl = normalizeLumaUrl(pickString(source, [['url'], ['event', 'url'], ['event_url'], ['event', 'event_url']])) ??
+    normalizeLumaUrl(pickString(source, [['url_slug'], ['event', 'url_slug']]))
 
   return {
     id,
@@ -179,6 +187,75 @@ export async function fetchLumaUpcomingEvents({
     }
 
     cursor = payload.next_cursor
+  }
+
+  return Array.from(deduped.values())
+    .filter(isFutureEvent)
+    .sort((a, b) => eventStartMs(a.date, a.time) - eventStartMs(b.date, b.time))
+}
+
+function extractNextDataJson(html: string): unknown {
+  const nextDataMatch = html.match(/<script id="__NEXT_DATA__" type="application\/json">([\s\S]*?)<\/script>/)
+  if (!nextDataMatch) {
+    throw new Error('Could not find __NEXT_DATA__ payload on Luma calendar page.')
+  }
+
+  return JSON.parse(nextDataMatch[1])
+}
+
+function collectCalendarEventLikeEntries(node: unknown, entries: JsonObject[]) {
+  const objectNode = asObject(node)
+  if (objectNode) {
+    const name = objectNode.name
+    const startAt = objectNode.start_at
+    const url = objectNode.url
+    if (typeof name === 'string' && typeof startAt === 'string' && typeof url === 'string') {
+      entries.push(objectNode)
+    }
+    for (const value of Object.values(objectNode)) {
+      collectCalendarEventLikeEntries(value, entries)
+    }
+    return
+  }
+
+  if (Array.isArray(node)) {
+    for (const item of node) {
+      collectCalendarEventLikeEntries(item, entries)
+    }
+  }
+}
+
+interface FetchListedCalendarEventsArgs {
+  calendarSlug: string
+  baseUrl?: string
+}
+
+export async function fetchListedCalendarEvents({
+  calendarSlug,
+  baseUrl = DEFAULT_PUBLIC_LUMA_BASE_URL,
+}: FetchListedCalendarEventsArgs): Promise<CursorEvent[]> {
+  const normalizedBaseUrl = baseUrl.replace(/\/$/, '')
+  const normalizedSlug = calendarSlug.replace(/^\/+/, '').trim()
+  if (!normalizedSlug) {
+    return []
+  }
+
+  const response = await fetch(`${normalizedBaseUrl}/${normalizedSlug}`, { cache: 'no-store' })
+  if (!response.ok) {
+    throw new Error(`Failed to fetch public Luma calendar page with status ${response.status}`)
+  }
+
+  const html = await response.text()
+  const nextData = extractNextDataJson(html)
+  const rawEntries: JsonObject[] = []
+  collectCalendarEventLikeEntries(nextData, rawEntries)
+
+  const deduped = new Map<string, CursorEvent>()
+  for (const entry of rawEntries) {
+    const mapped = mapLumaEntryToCursorEvent(entry)
+    if (mapped) {
+      deduped.set(mapped.id, mapped)
+    }
   }
 
   return Array.from(deduped.values())
