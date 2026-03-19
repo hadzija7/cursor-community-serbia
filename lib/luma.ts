@@ -1,5 +1,3 @@
-import 'server-only'
-
 import type { CursorEvent } from '@/lib/types'
 import { eventStartMs, isFutureEvent } from '@/lib/event-time'
 
