@@ -6,7 +6,7 @@ Cursor Community Serbia — specification index with verification status.
 
 | Spec | Status | Verified | Notes |
 |------|--------|----------|-------|
-| [web-ui](web-ui.md) | Implemented | Partial | Core routes and components |
+| [web-ui](web-ui.md) | Implemented | Partial | Core routes; see also [design system](../docs/design-system.md) |
 | [content-config](content-config.md) | Implemented | Yes | Content-driven customization |
 | [mailing-list](mailing-list.md) | Implemented | Partial | Postgres or webhook backend |
 | [education](education.md) | Implemented | Yes | Presentations and resources |

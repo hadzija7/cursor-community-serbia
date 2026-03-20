@@ -2,6 +2,8 @@
 
 ## Phase 1: Foundation (Current)
 - [x] Scaffold agent-friendly structure (AGENTS.md, docs, specs, rules)
+- [x] Document website design system (`docs/design-system.md`)
+- [x] Document Figma HTML-to-design capture (`docs/figma-capture.md`) + opt-in `NEXT_PUBLIC_FIGMA_CAPTURE` in `app/layout.tsx`
 - [ ] Verify all specs reflect current implementation
 - [ ] Add/expand unit tests for critical paths (subscribe API, education config)
 

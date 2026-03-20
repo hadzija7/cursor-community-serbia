@@ -10,7 +10,7 @@ The Cursor Community Serbia site is a Next.js 16 App Router application presenti
 |-------|-------|
 | Status | Implemented |
 | Verified | Partial |
-| Last updated | 2026-03 |
+| Last updated | 2026-03-20 |
 
 ## Architecture
 
@@ -38,7 +38,9 @@ The Cursor Community Serbia site is a Next.js 16 App Router application presenti
 
 - `app/layout.tsx` — Root layout, metadata, favicon
 - `app/globals.css` — Tailwind, Cursor Serbia theme (dark background `#14120b`, light text `#edecec`)
-- `tailwind.config.ts` — Cursor color palette
+- `tailwind.config.ts` — Cursor color palette (`cursor.*` tokens)
+- `docs/design-system.md` — Canonical design system (tokens, typography, layout, assets, a11y)
+- `.cursor/rules/figma-design-system.mdc` — Agent rules for Figma/Pencil implementation
 
 ## Dependencies
 

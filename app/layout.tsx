@@ -47,6 +47,12 @@ export default function RootLayout({
             gtag('config', '${GA_ID}');
           `}
         </Script>
+        {process.env.NEXT_PUBLIC_FIGMA_CAPTURE === '1' ? (
+          <Script
+            src="https://mcp.figma.com/mcp/html-to-design/capture.js"
+            strategy="afterInteractive"
+          />
+        ) : null}
       </body>
     </html>
   )

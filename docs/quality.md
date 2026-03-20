@@ -23,7 +23,7 @@ Living scorecard for Cursor Community Serbia. Update after each phase.
 | Observability  | D     | Vercel Analytics; no structured logging |
 | Performance    | B     | Next.js optimizations; static where possible |
 | CI             | D     | No CI config in repo                     |
-| Documentation  | B     | README, this scaffold                    |
+| Documentation  | B     | README, architecture, design system doc |
 
 ## Known Gaps
 
@@ -36,4 +36,6 @@ Living scorecard for Cursor Community Serbia. Update after each phase.
 
 | Date       | Change                          |
 |------------|----------------------------------|
+| 2026-03-20 | Added `docs/figma-capture.md`, Figma capture opt-in in layout |
+| 2026-03-20 | Added `docs/design-system.md`   |
 | 2026-03-13 | Initial scaffold; grades set    |

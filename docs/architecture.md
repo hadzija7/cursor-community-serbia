@@ -59,6 +59,7 @@ cursor-community-serbia/
 ## Key Conventions
 
 - **Content-first:** Most customization is done by editing `content/` files.
+- **Design system:** Colors, typography, and UI patterns for the site are documented in `docs/design-system.md` (tokens live in `tailwind.config.ts` and `app/globals.css`).
 - **i18n:** Use `useI18n()` and `t('path.to.key')` for translations.
 - **Images:** Use local assets in `public/images/` for portability.
 - **Specs:** One spec per system; see `specs/README.md`.

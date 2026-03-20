@@ -16,6 +16,7 @@
 | Resource | Path |
 |----------|------|
 | Architecture | `docs/architecture.md` |
+| Design system | `docs/design-system.md` |
 | Core beliefs | `docs/core-beliefs.md` |
 | Quality scorecard | `docs/quality.md` |
 | Spec index | `specs/README.md` |
