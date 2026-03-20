@@ -1,4 +1,3 @@
-import PromptBlock from '@/modules/slides/components/PromptBlock'
 import { Slide } from '@/modules/slides/types'
 
 export const productivityWithAiDeck: Slide[] = [

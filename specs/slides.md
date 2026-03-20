@@ -9,6 +9,7 @@ Optional workshop slide engine for Cursor Community events. Can be skipped if th
 - **Routes:** `app/slides/[id]/page.tsx` (example deck), `app/education/productivity-with-ai/[id]/page.tsx` (main presentation)
 - **Content:** `modules/slides/content/` — deck files export Slide arrays
 - **Components:** `modules/slides/components/` — SlideLayout, SlideContent, SlidePage, CodeBlock, PromptBlock, DiagramSlide
+- **Slide chrome:** `SlideLayout` bottom bar includes prev/next, dot indicators, slide counter, and a **full screen** control (Fullscreen API on the deck root; click no-ops if `requestFullscreen` is missing). Press Esc to exit full screen.
 
 ## Data Model
 
