@@ -6,12 +6,13 @@ This folder contains a reusable slide engine for workshop sessions.
 
 1. Create a slide deck file in `modules/slides/content/`.
 2. Export an array of slides matching `Slide` from `modules/slides/types.ts` (optional: add `titleSize: 'large'` for title slides).
-3. Add a route using the shared `SlidePage` component with a unique `storageKey` per deck.
+3. Add a **route layout** (`layout.tsx` next to `[id]/page.tsx`) that wraps children in `SlideLayout` with a unique `storageKey` and `totalSlides` per deck — keeps the shell mounted so fullscreen survives slide changes.
+4. Add `[id]/page.tsx` using `SlidePage` (slide body only).
 
 ## Components
 
-- `SlidePage.tsx` - shared page renderer (deck, totalSlides, storageKey)
-- `SlideLayout.tsx` - keyboard and button navigation, full-screen toggle (deck root via Fullscreen API)
+- `SlidePage.tsx` - shared page renderer (deck, totalSlides, id from route)
+- `SlideLayout.tsx` - keyboard/button navigation, full-screen toggle (deck root via Fullscreen API); render from deck **layout**, not from `SlidePage`
 - `SlideContent.tsx` - slide content renderer
 - `CodeBlock.tsx` - copyable code blocks
 - `PromptBlock.tsx` - copyable prompt blocks

@@ -1,24 +1,35 @@
 'use client'
 
-import { useEffect, useState, useCallback, useRef } from 'react'
-import { useRouter, usePathname } from 'next/navigation'
+import { useEffect, useState, useCallback, useRef, useMemo } from 'react'
+import { useRouter, usePathname, useParams } from 'next/navigation'
 import { ChevronLeft, ChevronRight, Maximize2, Minimize2 } from 'lucide-react'
 
+function parseSlideId(idStr: string | undefined): number {
+  const n = Number(idStr)
+  return Number.isInteger(n) && n >= 1 ? n : 1
+}
+
 interface SlideLayoutProps {
-  currentSlide: number
   totalSlides: number
   children: React.ReactNode
   storageKey?: string
 }
 
+/**
+ * Persistent deck chrome (nav, fullscreen). Render from a route **layout** so this
+ * component stays mounted across `/deck/1` → `/deck/2` navigations and fullscreen persists.
+ */
 export default function SlideLayout({
-  currentSlide,
   totalSlides,
   children,
   storageKey = 'cursor-ambassador-current-slide',
 }: SlideLayoutProps) {
   const router = useRouter()
   const pathname = usePathname()
+  const params = useParams()
+  const idParam = params?.id
+  const idStr = Array.isArray(idParam) ? idParam[0] : idParam
+  const currentSlide = useMemo(() => parseSlideId(idStr), [idStr])
   const [isNavigating, setIsNavigating] = useState(false)
   const [isFullscreen, setIsFullscreen] = useState(false)
   const rootRef = useRef<HTMLDivElement>(null)

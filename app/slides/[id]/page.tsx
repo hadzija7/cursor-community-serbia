@@ -8,11 +8,6 @@ interface SlidePageRouteProps {
 export default async function SlidePageRoute({ params }: SlidePageRouteProps) {
   const { id } = await params
   return (
-    <SlidePage
-      deck={exampleDeck}
-      totalSlides={totalExampleSlides}
-      storageKey="cursor-slides-example"
-      idParam={id}
-    />
+    <SlidePage deck={exampleDeck} totalSlides={totalExampleSlides} idParam={id} />
   )
 }
