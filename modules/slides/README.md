@@ -11,7 +11,7 @@ This folder contains a reusable slide engine for workshop sessions.
 ## Components
 
 - `SlidePage.tsx` - shared page renderer (deck, totalSlides, storageKey)
-- `SlideLayout.tsx` - keyboard and button navigation
+- `SlideLayout.tsx` - keyboard and button navigation, full-screen toggle (deck root via Fullscreen API)
 - `SlideContent.tsx` - slide content renderer
 - `CodeBlock.tsx` - copyable code blocks
 - `PromptBlock.tsx` - copyable prompt blocks
