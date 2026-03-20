@@ -11,11 +11,6 @@ interface ProductivitySlideProps {
 export default async function ProductivitySlidePage({ params }: ProductivitySlideProps) {
   const { id } = await params
   return (
-    <SlidePage
-      deck={productivityWithAiDeck}
-      totalSlides={totalProductivityWithAiSlides}
-      storageKey="cursor-slides-productivity"
-      idParam={id}
-    />
+    <SlidePage deck={productivityWithAiDeck} totalSlides={totalProductivityWithAiSlides} idParam={id} />
   )
 }
