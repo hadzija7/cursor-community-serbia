@@ -32,6 +32,7 @@ The Cursor Community Serbia site is a Next.js 16 App Router application presenti
 - `components/AmbassadorSection.tsx` — Ambassador cards
 - `components/Partners.tsx` — Partner logos
 - `components/SubscribeForm.tsx` — Mailing list form
+- `components/PhotoGallery.tsx` — Recap image grid; fullscreen lightbox with prev/next controls and **ArrowLeft / ArrowRight** keyboard navigation when multiple photos
 - `app/education/page.tsx` — Education landing page
 
 ### Layout & Theming

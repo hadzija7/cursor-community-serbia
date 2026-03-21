@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import Image from 'next/image'
 import { motion, AnimatePresence } from 'framer-motion'
 import { ChevronLeft, ChevronRight, X } from 'lucide-react'
@@ -16,6 +16,21 @@ export default function PhotoGallery({ photos, embedded = false }: PhotoGalleryP
   const { t } = useI18n()
   const [currentIndex, setCurrentIndex] = useState(0)
   const [isFullscreen, setIsFullscreen] = useState(false)
+
+  useEffect(() => {
+    if (!isFullscreen || photos.length <= 1) return
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'ArrowLeft') {
+        e.preventDefault()
+        setCurrentIndex((prev) => (prev - 1 + photos.length) % photos.length)
+      } else if (e.key === 'ArrowRight') {
+        e.preventDefault()
+        setCurrentIndex((prev) => (prev + 1) % photos.length)
+      }
+    }
+    window.addEventListener('keydown', onKeyDown)
+    return () => window.removeEventListener('keydown', onKeyDown)
+  }, [isFullscreen, photos.length])
 
   if (photos.length === 0) {
     return null
