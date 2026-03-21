@@ -3,26 +3,25 @@
 import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { ExternalLink } from 'lucide-react'
-import { upcomingEvents } from '@/content/events'
 import { useI18n } from '@/lib/i18n'
 import { eventStartMs, isFutureEvent } from '@/lib/event-time'
+import type { CursorEvent } from '@/lib/types'
 
-function getTimeLeft(targetDate: string, targetTime = '18:00') {
-  const diff = eventStartMs(targetDate, targetTime) - Date.now()
+function getTimeLeft(date: string, time = '18:00') {
+  const diff = eventStartMs(date, time) - Date.now()
   if (diff <= 0) return { days: 0, hours: 0, minutes: 0, seconds: 0 }
-
   return {
-    days: Math.floor(diff / (1000 * 60 * 60 * 24)),
-    hours: Math.floor((diff / (1000 * 60 * 60)) % 24),
-    minutes: Math.floor((diff / (1000 * 60)) % 60),
+    days: Math.floor(diff / 86_400_000),
+    hours: Math.floor((diff / 3_600_000) % 24),
+    minutes: Math.floor((diff / 60_000) % 60),
     seconds: Math.floor((diff / 1000) % 60),
   }
 }
 
-function findNextEvent() {
-  return upcomingEvents
+function nextEvent(events: CursorEvent[]) {
+  return events
     .filter(isFutureEvent)
-    .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())[0] ?? null
+    .sort((a, b) => eventStartMs(a.date, a.time) - eventStartMs(b.date, b.time))[0] ?? null
 }
 
 function CountdownBlock({ value, label }: { value: number; label: string }) {
@@ -38,36 +37,31 @@ function CountdownBlock({ value, label }: { value: number; label: string }) {
   )
 }
 
-type CountdownState = {
-  event: (typeof upcomingEvents)[number]
-  time: ReturnType<typeof getTimeLeft>
-} | null
+interface Props { events: CursorEvent[] }
 
-export default function EventCountdown() {
+export default function EventCountdown({ events }: Props) {
   const { t, locale } = useI18n()
-
-  const [state, setState] = useState<CountdownState>(null)
+  const [state, setState] = useState<{ event: CursorEvent; time: ReturnType<typeof getTimeLeft> } | null>(null)
 
   useEffect(() => {
     const tick = () => {
-      const next = findNextEvent()
-      if (!next) { setState(null); return }
-      setState({ event: next, time: getTimeLeft(next.date, next.time) })
+      const ev = nextEvent(events)
+      if (!ev) { setState(null); return }
+      setState({ event: ev, time: getTimeLeft(ev.date, ev.time) })
     }
     tick()
     const id = setInterval(tick, 1000)
     return () => clearInterval(id)
-  }, [])
+  }, [events])
 
   if (!state) return null
+  const { event: ev, time } = state
 
-  const { event: nextEvent, time } = state
-
-  const shortDate = new Date(`${nextEvent.date}T00:00:00`).toLocaleDateString(
+  const shortDate = new Date(`${ev.date}T00:00:00`).toLocaleDateString(
     locale === 'en' ? 'en-US' : locale,
-    { year: 'numeric', month: 'long', day: 'numeric' }
+    { year: 'numeric', month: 'long', day: 'numeric' },
   )
-  const city = nextEvent.location.split(',')[0].trim()
+  const city = ev.location.split(',')[0].trim()
 
   return (
     <motion.div
@@ -78,7 +72,7 @@ export default function EventCountdown() {
     >
       <div className="bg-cursor-bg-dark border border-cursor-border rounded-xl p-6 sm:p-8 text-center shadow-2xl">
         <h3 className="text-2xl sm:text-3xl font-bold tracking-tight text-cursor-text">
-          {nextEvent.title}
+          {ev.title}
         </h3>
         <p className="text-sm text-cursor-text-muted mt-1">
           {shortDate}
@@ -93,9 +87,9 @@ export default function EventCountdown() {
           <CountdownBlock value={time.seconds} label={t('countdown.seconds')} />
         </div>
 
-        {nextEvent.lumaUrl && (
+        {ev.lumaUrl && (
           <a
-            href={nextEvent.lumaUrl}
+            href={ev.lumaUrl}
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex items-center gap-2 mt-6 px-5 py-2.5 bg-cursor-text text-cursor-bg rounded-lg hover:bg-cursor-text-muted transition-colors text-sm font-medium"

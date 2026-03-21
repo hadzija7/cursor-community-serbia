@@ -10,17 +10,18 @@ import PastEvents from '@/components/PastEvents'
 import Partners from '@/components/Partners'
 import JsonLd from '@/components/JsonLd'
 import { siteConfig } from '@/content/site.config'
-import { upcomingEvents } from '@/content/events'
 import { useI18n } from '@/lib/i18n'
+import { useUpcomingEvents } from '@/lib/use-upcoming-events'
+import type { CursorEvent } from '@/lib/types'
 
-function buildHomeJsonLd() {
-  const org = {
+function buildHomeJsonLd(events: CursorEvent[]) {
+  const organization = {
     '@type': 'Organization',
     name: siteConfig.communityName,
     url: siteConfig.cursorCommunityUrl,
   }
 
-  const eventItems = upcomingEvents.map((event) => ({
+  const eventItems = events.map((event) => ({
     '@type': 'Event',
     name: event.title,
     startDate: event.date,
@@ -28,7 +29,7 @@ function buildHomeJsonLd() {
       '@type': 'Place',
       name: event.location,
     },
-    organizer: org,
+    organizer: organization,
     ...(event.lumaUrl ? { url: event.lumaUrl } : {}),
     eventAttendanceMode: 'https://schema.org/OfflineEventAttendanceMode',
     eventStatus: 'https://schema.org/EventScheduled',
@@ -36,23 +37,24 @@ function buildHomeJsonLd() {
 
   return {
     '@context': 'https://schema.org',
-    '@graph': [org, ...eventItems],
+    '@graph': [organization, ...eventItems],
   }
 }
 
 export default function Home() {
   const { t } = useI18n()
+  const upcomingEvents = useUpcomingEvents()
 
   return (
     <main className="min-h-screen bg-cursor-bg text-cursor-text scroll-smooth">
-      <JsonLd data={buildHomeJsonLd()} />
+      <JsonLd data={buildHomeJsonLd(upcomingEvents)} />
       <HeroHeader />
-      <EventCountdown />
+      <EventCountdown events={upcomingEvents} />
 
       <div className="max-w-3xl mx-auto px-6 py-16 md:py-24">
         <AmbassadorSection />
         {/* <FeaturedSection /> */}
-        <UpcomingEvents />
+        <UpcomingEvents events={upcomingEvents} />
         <PastEvents />
         <Partners />
 

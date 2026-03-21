@@ -6,6 +6,7 @@
 - [ ] Add/expand unit tests for critical paths (subscribe API, education config)
 
 ## Phase 2: Content & Polish
+- [x] Live Luma upcoming-events sync with static fallback (`/api/events/upcoming`, `lib/luma.ts`)
 - [x] Recap photo gallery: keyboard arrows in fullscreen lightbox (`PhotoGallery`)
 - [x] Add Cursor Meetup Novi Sad past event recap (Mar 17, 2026)
 - [x] Add Cursor Coworking Niš recap (Mar 20, 2026) with interviews section

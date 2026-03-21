@@ -1,27 +1,18 @@
 'use client'
 
-import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { ExternalLink } from 'lucide-react'
-import { upcomingEvents } from '@/content/events'
 import { useI18n } from '@/lib/i18n'
 import { isFutureEvent } from '@/lib/event-time'
+import type { CursorEvent } from '@/lib/types'
 
-export default function UpcomingEvents() {
+interface Props { events: CursorEvent[] }
+
+export default function UpcomingEvents({ events }: Props) {
   const { t, locale } = useI18n()
+  const liveEvents = events.filter(isFutureEvent)
 
-  const [liveEvents, setLiveEvents] = useState(upcomingEvents)
-
-  useEffect(() => {
-    const refresh = () => setLiveEvents(upcomingEvents.filter(isFutureEvent))
-    refresh()
-    const id = setInterval(refresh, 60_000)
-    return () => clearInterval(id)
-  }, [])
-
-  if (liveEvents.length === 0) {
-    return null
-  }
+  if (liveEvents.length === 0) return null
 
   return (
     <motion.section
@@ -38,11 +29,10 @@ export default function UpcomingEvents() {
 
       <div className="space-y-4">
         {liveEvents.map((event, index) => {
-          const shortDate = new Date(`${event.date}T00:00:00`).toLocaleDateString(locale === 'en' ? 'en-US' : locale, {
-            year: 'numeric',
-            month: 'short',
-            day: 'numeric',
-          })
+          const shortDate = new Date(`${event.date}T00:00:00`).toLocaleDateString(
+            locale === 'en' ? 'en-US' : locale,
+            { year: 'numeric', month: 'short', day: 'numeric' },
+          )
           const city = event.location.split(',')[0].trim()
 
           return (
