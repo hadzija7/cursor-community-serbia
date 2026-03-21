@@ -74,6 +74,11 @@ export interface RecapPhotoCredit {
   url?: string
 }
 
+export interface RecapInterview {
+  title: string
+  youtubeUrl: string
+}
+
 export interface RecapData {
   slug: string
   title: string
@@ -82,6 +87,7 @@ export interface RecapData {
   summary: string[]
   host?: { name: string; logo: string; url?: string }
   videoUrl?: string
+  interviews?: RecapInterview[]
   photoCredits?: RecapPhotoCredit[]
   photos: GalleryPhoto[]
 }

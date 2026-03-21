@@ -7,6 +7,7 @@ import { ArrowLeft } from 'lucide-react'
 import PhotoGallery from '@/components/PhotoGallery'
 import { RecapData } from '@/lib/types'
 import { useI18n } from '@/lib/i18n'
+import { toYouTubeEmbedUrl } from '@/lib/youtube-embed'
 
 interface EventRecapProps {
   recap: RecapData
@@ -77,6 +78,36 @@ export default function EventRecap({ recap }: EventRecapProps) {
             )}
           </div>
         )}
+
+        {recap.interviews && recap.interviews.length > 0 ? (
+          <div className="border-t border-cursor-border mt-6 pt-6">
+            <h3 className="text-lg font-semibold text-cursor-text mb-1">{t('recap.interviewsTitle')}</h3>
+            <p className="text-cursor-text-muted text-sm mb-4">{t('recap.interviewsSubtitle')}</p>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {recap.interviews.map((item) => {
+                const embed = toYouTubeEmbedUrl(item.youtubeUrl)
+                return (
+                  <div key={`${item.title}-${item.youtubeUrl}`} className="space-y-2">
+                    <p className="text-sm font-medium text-cursor-text">{item.title}</p>
+                    {embed ? (
+                      <div className="rounded-lg overflow-hidden border border-cursor-border aspect-video">
+                        <iframe
+                          src={embed}
+                          title={item.title}
+                          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                          allowFullScreen
+                          className="w-full h-full"
+                        />
+                      </div>
+                    ) : (
+                      <p className="text-sm text-cursor-text-muted">Unsupported video URL.</p>
+                    )}
+                  </div>
+                )
+              })}
+            </div>
+          </div>
+        ) : null}
 
         <PhotoGallery photos={recap.photos} embedded />
 

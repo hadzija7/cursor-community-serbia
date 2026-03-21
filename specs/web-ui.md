@@ -10,7 +10,7 @@ The Cursor Community Serbia site is a Next.js 16 App Router application presenti
 |-------|-------|
 | Status | Implemented |
 | Verified | Partial |
-| Last updated | 2026-03 |
+| Last updated | 2026-03-21 |
 
 ## Architecture
 
@@ -21,7 +21,7 @@ The Cursor Community Serbia site is a Next.js 16 App Router application presenti
 | `/` | Homepage (hero, events, ambassadors, partners) |
 | `/subscribe` | Mailing list subscription |
 | `/education` | Educational resources (presentations, PDFs) |
-| `/recaps/[slug]` | Event recap pages |
+| `/recaps/[slug]` | Event recap pages (`EventRecap`: summary, optional video, optional YouTube `interviews[]`, gallery) |
 | `/slides/[id]` | Optional workshop slides |
 
 ### Key Components

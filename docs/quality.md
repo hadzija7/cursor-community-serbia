@@ -36,4 +36,5 @@ Living scorecard for Cursor Community Serbia. Update after each phase.
 
 | Date       | Change                          |
 |------------|----------------------------------|
+| 2026-03-21 | Recap `interviews[]` + YouTube embed helper; Niš coworking recap content |
 | 2026-03-13 | Initial scaffold; grades set    |

@@ -37,6 +37,8 @@
   },
   "recap": {
     "title": "Event recap",
+    "interviewsTitle": "Interviews",
+    "interviewsSubtitle": "Conversations from the event — more clips coming soon.",
     "galleryTitle": "Photos",
     "gallerySubtitle": "{count} photos from the event",
     "openPhoto": "Open photo {index}",

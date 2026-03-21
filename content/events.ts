@@ -21,9 +21,12 @@ export const events: CursorEvent[] = [
     date: '2026-03-20',
     time: '18:00',
     displayDate: 'March 20, 2026',
+    attendees: 46,
     location: 'Niš, Serbia',
+    recapPath: '/recaps/cursor-coworking-nis-1',
+    thumbnail: 'https://drive.google.com/uc?export=view&id=1SspQCSCwKoSE3xmMrI-jxOHywtf8uehF',
     lumaUrl: 'https://luma.com/b9evox5u',
-    status: 'upcoming',
+    status: 'past',
   },
   {
     id: 'cursor-coworking-novisad-1',
@@ -62,4 +65,6 @@ export const events: CursorEvent[] = [
 ]
 
 export const upcomingEvents = events.filter((event) => event.status === 'upcoming')
-export const pastEvents = events.filter((event) => event.status === 'past')
+export const pastEvents = events
+  .filter((event) => event.status === 'past')
+  .sort((a, b) => b.date.localeCompare(a.date))
