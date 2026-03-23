@@ -14,10 +14,19 @@ export const cursorCoworkingNis1Recap: RecapData = {
     'At 17:00 we shifted into a focused presentation on Cursor and AI-assisted development, followed by an hour of networking. The mix of quiet heads-down time and structured programming gave newcomers a path in while regulars could compare notes and workflows.',
     'Thank you to everyone who came out — whether you stayed for the whole day or joined for the evening segment. If you want to hear from attendees in their own words, check the interview clips below; more are on the way.',
   ],
+  videoUrl: 'https://www.youtube.com/watch?v=m7sUxVwfytA',
   interviews: [
     {
       title: 'Interview — part 1',
       youtubeUrl: 'https://youtu.be/40lMRdi-MHQ',
+    },
+    {
+      title: 'Interview — part 2',
+      youtubeUrl: 'https://youtu.be/OZsvzqWw3C4',
+    },
+    {
+      title: 'Interview — part 3',
+      youtubeUrl: 'https://youtu.be/Gp2ruLgUTgI',
     },
   ],
   photoCredits: [{ name: 'Cursor Community Serbia' }],

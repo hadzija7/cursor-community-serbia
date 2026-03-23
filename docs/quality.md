@@ -37,6 +37,7 @@ Living scorecard for Cursor Community Serbia. Update after each phase.
 
 | Date       | Change                          |
 |------------|----------------------------------|
+| 2026-03-23 | Recap `videoUrl`: presentation section + YouTube watch URL normalization |
 | 2026-03-21 | Live Luma upcoming events sync + tests |
 | 2026-03-21 | Recap gallery lightbox: keyboard ArrowLeft/ArrowRight to browse photos |
 | 2026-03-21 | Recap `interviews[]` + YouTube embed helper; Niš coworking recap content |

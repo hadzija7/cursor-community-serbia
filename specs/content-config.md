@@ -23,7 +23,7 @@ Content is driven by TypeScript/JSON files in `content/`. No CMS; content lives 
 | `content/education.ts` | Educational resources (presentations, PDFs) |
 | `content/header-photos.ts` | Hero bento grid images |
 | `content/locales/*.json` | i18n dictionaries |
-| `content/recaps/*.ts` | Recap document content (`RecapData`: summary, optional `videoUrl`, optional `interviews[]` for YouTube embeds, gallery) |
+| `content/recaps/*.ts` | Recap document content (`RecapData`: summary, optional `videoUrl` for main presentation embed, optional `interviews[]` for YouTube embeds, gallery) |
 
 ## Types
 

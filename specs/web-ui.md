@@ -22,7 +22,7 @@ The Cursor Community Serbia site is a Next.js 16 App Router application presenti
 | `/api/events/upcoming` | Server route returning upcoming events (managed + listed merge, static fallback) |
 | `/subscribe` | Mailing list subscription |
 | `/education` | Educational resources (presentations, PDFs) |
-| `/recaps/[slug]` | Event recap pages (`EventRecap`: summary, optional video, optional YouTube `interviews[]`, gallery) |
+| `/recaps/[slug]` | Event recap pages (`EventRecap`: summary, optional `videoUrl` as presentation block with i18n heading, optional YouTube `interviews[]`, gallery) |
 | `/slides/[id]` | Optional workshop slides |
 
 ### Key Components

@@ -15,6 +15,9 @@ interface EventRecapProps {
 
 export default function EventRecap({ recap }: EventRecapProps) {
   const { t } = useI18n()
+  const presentationYoutubeEmbed = recap.videoUrl ? toYouTubeEmbedUrl(recap.videoUrl) : null
+  const presentationIframeSrc =
+    presentationYoutubeEmbed ?? (recap.videoUrl?.startsWith('http') ? recap.videoUrl : null)
 
   return (
     <motion.section
@@ -58,26 +61,31 @@ export default function EventRecap({ recap }: EventRecapProps) {
           ))}
         </div>
 
-        {recap.videoUrl && (
-          <div className="mt-6 rounded-lg overflow-hidden border border-cursor-border aspect-video">
-            {recap.videoUrl.startsWith('http') ? (
-              <iframe
-                src={recap.videoUrl}
-                allow="autoplay; encrypted-media"
-                allowFullScreen
-                className="w-full h-full"
-              />
-            ) : (
-              <video
-                src={recap.videoUrl}
-                controls
-                preload="metadata"
-                className="w-full h-full"
-                playsInline
-              />
-            )}
+        {recap.videoUrl ? (
+          <div className="border-t border-cursor-border mt-6 pt-6">
+            <h3 className="text-lg font-semibold text-cursor-text mb-1">{t('recap.presentationTitle')}</h3>
+            <p className="text-cursor-text-muted text-sm mb-4">{t('recap.presentationSubtitle')}</p>
+            <div className="rounded-lg overflow-hidden border border-cursor-border aspect-video">
+              {presentationIframeSrc ? (
+                <iframe
+                  src={presentationIframeSrc}
+                  title={t('recap.presentationTitle')}
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                  allowFullScreen
+                  className="w-full h-full"
+                />
+              ) : (
+                <video
+                  src={recap.videoUrl}
+                  controls
+                  preload="metadata"
+                  className="w-full h-full"
+                  playsInline
+                />
+              )}
+            </div>
           </div>
-        )}
+        ) : null}
 
         {recap.interviews && recap.interviews.length > 0 ? (
           <div className="border-t border-cursor-border mt-6 pt-6">
