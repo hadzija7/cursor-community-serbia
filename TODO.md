@@ -3,7 +3,8 @@
 ## Phase 1: Foundation (Current)
 - [x] Scaffold agent-friendly structure (AGENTS.md, docs, specs, rules)
 - [ ] Verify all specs reflect current implementation
-- [ ] Add/expand unit tests for critical paths (subscribe API, education config)
+- [x] Add/expand unit tests for subscribe API (mailing list + Luma)
+- [ ] Add/expand unit tests for education config
 
 ## Phase 2: Content & Polish
 - [x] Live Luma upcoming-events sync with static fallback (`/api/events/upcoming`, `lib/luma.ts`)

@@ -14,6 +14,8 @@ function buildRequest(email: string) {
 describe('POST /api/subscribe', () => {
   beforeEach(() => {
     process.env = { ...ORIGINAL_ENV }
+    delete process.env.LUMA_API_KEY
+    delete process.env.LUMA_IMPORT_TAG_NAMES
     vi.restoreAllMocks()
   })
 
@@ -67,5 +69,42 @@ describe('POST /api/subscribe', () => {
         }),
       })
     )
+  })
+
+  it('calls Luma import-people when LUMA_API_KEY is set', async () => {
+    process.env.MAILING_LIST_WEBHOOK_URL = 'https://example.com/webhook'
+    process.env.LUMA_API_KEY = 'luma-secret'
+
+    const fetchSpy = vi.spyOn(global, 'fetch').mockImplementation((input) => {
+      const url = typeof input === 'string' ? input : input.url
+      if (url.includes('example.com/webhook')) {
+        return Promise.resolve(new Response(JSON.stringify({ ok: true }), { status: 200 }))
+      }
+      if (url.includes('luma.com')) {
+        return Promise.resolve(new Response('{}', { status: 200 }))
+      }
+      return Promise.reject(new Error(`unexpected fetch: ${url}`))
+    })
+
+    const response = await POST(buildRequest('person@example.com'))
+    const body = (await response.json()) as { ok: boolean }
+
+    expect(response.status).toBe(200)
+    expect(body.ok).toBe(true)
+    expect(fetchSpy).toHaveBeenCalledTimes(2)
+
+    const lumaCall = fetchSpy.mock.calls.find((c) =>
+      String(c[0]).includes('/v1/calendar/import-people'),
+    )
+    expect(lumaCall).toBeDefined()
+    expect(lumaCall?.[1]).toMatchObject({
+      method: 'POST',
+      headers: expect.objectContaining({
+        'x-luma-api-key': 'luma-secret',
+      }),
+    })
+    expect(JSON.parse((lumaCall?.[1] as RequestInit).body as string)).toEqual({
+      infos: [{ email: 'person@example.com' }],
+    })
   })
 })

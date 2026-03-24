@@ -8,7 +8,7 @@ Living scorecard for Cursor Community Serbia. Update after each phase.
 |---------------|------|------|-------|--------|---------|
 | Web UI        | C    | B    | C     | -      | C       |
 | Content Config| C    | B    | C     | -      | C       |
-| Mailing List  | C    | B    | D     | -      | C       |
+| Mailing List  | C    | B    | C     | -      | C       |
 | Education     | C    | B    | -     | -      | C       |
 | Slides        | C    | B    | -     | -      | C       |
 
@@ -28,7 +28,7 @@ Living scorecard for Cursor Community Serbia. Update after each phase.
 ## Known Gaps
 
 - [x] Unit tests for upcoming events API and Luma mapping
-- [ ] Unit tests for subscribe API
+- [x] Unit tests for subscribe API (webhook + optional Luma import)
 - [ ] E2E or UI property tests
 - [ ] CI pipeline (lint, test, build)
 - [ ] Structured error boundaries
@@ -37,6 +37,7 @@ Living scorecard for Cursor Community Serbia. Update after each phase.
 
 | Date       | Change                          |
 |------------|----------------------------------|
+| 2026-03-24 | Subscribe API: optional Luma `import-people` for calendar sync; tests |
 | 2026-03-23 | Recap `videoUrl`: presentation section + YouTube watch URL normalization |
 | 2026-03-21 | Live Luma upcoming events sync + tests |
 | 2026-03-21 | Recap gallery lightbox: keyboard ArrowLeft/ArrowRight to browse photos |

@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it, vi } from 'vitest'
-import { fetchCalendarPageEvents, mapLumaEntry } from '@/lib/luma'
+import { fetchCalendarPageEvents, importCalendarPeople, mapLumaEntry } from '@/lib/luma'
 
 describe('mapLumaEntry', () => {
   it('maps a flat Luma event to CursorEvent', () => {
@@ -91,5 +91,48 @@ describe('fetchCalendarPageEvents', () => {
   it('returns empty array for empty slug', async () => {
     const events = await fetchCalendarPageEvents('')
     expect(events).toEqual([])
+  })
+})
+
+describe('importCalendarPeople', () => {
+  afterEach(() => vi.restoreAllMocks())
+
+  it('POSTs infos to Luma import-people with API key header', async () => {
+    const fetchSpy = vi.spyOn(globalThis, 'fetch').mockResolvedValue(
+      new Response('{}', { status: 200, headers: { 'Content-Type': 'application/json' } }),
+    )
+
+    const res = await importCalendarPeople('test-key', [{ email: 'a@b.co' }], {
+      baseUrl: 'https://public-api.luma.com',
+    })
+
+    expect(res.ok).toBe(true)
+    expect(fetchSpy).toHaveBeenCalledOnce()
+    expect(fetchSpy).toHaveBeenCalledWith(
+      'https://public-api.luma.com/v1/calendar/import-people',
+      expect.objectContaining({
+        method: 'POST',
+        headers: expect.objectContaining({
+          'Content-Type': 'application/json',
+          'x-luma-api-key': 'test-key',
+        }),
+      }),
+    )
+    const [, init] = fetchSpy.mock.calls[0]
+    expect(JSON.parse((init as RequestInit).body as string)).toEqual({
+      infos: [{ email: 'a@b.co' }],
+    })
+  })
+
+  it('includes tag_names when provided', async () => {
+    const fetchSpy = vi.spyOn(globalThis, 'fetch').mockResolvedValue(new Response('{}', { status: 200 }))
+
+    await importCalendarPeople('k', [{ email: 'x@y.z' }], { tagNames: ['website'] })
+
+    const [, init] = fetchSpy.mock.calls[0]
+    expect(JSON.parse((init as RequestInit).body as string)).toEqual({
+      infos: [{ email: 'x@y.z' }],
+      tag_names: ['website'],
+    })
   })
 })

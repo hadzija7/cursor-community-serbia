@@ -1,5 +1,6 @@
 import { siteConfig } from '@/content/site.config'
 import { getDb } from '@/lib/db'
+import { importCalendarPeople } from '@/lib/luma'
 
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 
@@ -9,6 +10,31 @@ interface SubscribeRequest {
 
 function toError(message: string, status: number) {
   return Response.json({ ok: false, message }, { status })
+}
+
+/** Adds the email to the Luma calendar linked to LUMA_API_KEY. Best-effort; does not throw. */
+async function syncSubscriberToLuma(email: string) {
+  const apiKey = process.env.LUMA_API_KEY?.trim()
+  if (!apiKey) return
+
+  const baseUrl = process.env.LUMA_API_BASE_URL?.trim()
+  const tagRaw = process.env.LUMA_IMPORT_TAG_NAMES?.trim()
+  const tagNames = tagRaw
+    ? tagRaw.split(',').map((t) => t.trim()).filter(Boolean)
+    : undefined
+
+  try {
+    const res = await importCalendarPeople(apiKey, [{ email }], {
+      ...(baseUrl ? { baseUrl } : {}),
+      ...(tagNames?.length ? { tagNames } : {}),
+    })
+    if (!res.ok) {
+      const detail = await res.text().catch(() => '')
+      console.error('Luma import-people failed:', res.status, detail)
+    }
+  } catch (err) {
+    console.error('Luma import-people error:', err)
+  }
 }
 
 export async function POST(request: Request) {
@@ -67,6 +93,10 @@ export async function POST(request: Request) {
       }
     }
 
+    if (inserted) {
+      await syncSubscriberToLuma(email)
+    }
+
     return Response.json({
       ok: true,
       message: 'Subscribed successfully.',
@@ -100,6 +130,8 @@ export async function POST(request: Request) {
     } catch {
       return toError('Could not reach mailing list provider.', 502)
     }
+
+    await syncSubscriberToLuma(email)
 
     return Response.json({ ok: true, message: 'Subscribed successfully.' })
   }

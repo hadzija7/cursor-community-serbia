@@ -8,7 +8,7 @@ Cursor Community Serbia — specification index with verification status.
 |------|--------|----------|-------|
 | [web-ui](web-ui.md) | Implemented | Partial | Core routes/components + live upcoming events API |
 | [content-config](content-config.md) | Implemented | Partial | Content-driven config with static fallback for Luma events |
-| [mailing-list](mailing-list.md) | Implemented | Partial | Postgres or webhook backend |
+| [mailing-list](mailing-list.md) | Implemented | Partial | Postgres or webhook; optional Luma import-people |
 | [education](education.md) | Implemented | Yes | Presentations and resources |
 | [slides](slides.md) | Implemented | Partial | Optional workshop slides |
 

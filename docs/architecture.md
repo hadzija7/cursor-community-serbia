@@ -71,7 +71,8 @@ cursor-community-serbia/
 | `POSTGRES_URL` / `DATABASE_URL` | Postgres connection (mailing list) |
 | `MAILING_LIST_WEBHOOK_URL`  | Optional webhook for subscriptions   |
 | `MAILING_LIST_API_KEY`      | Optional API key for webhook         |
-| `LUMA_API_KEY`              | Server-only key for Luma calendar API |
+| `LUMA_API_KEY`              | Server-only key for Luma calendar API (events + import-people on subscribe) |
 | `LUMA_API_BASE_URL`         | Optional override for Luma API base URL |
+| `LUMA_IMPORT_TAG_NAMES`     | Optional comma-separated Luma tags applied when importing subscribers |
 | `LUMA_CALENDAR_SLUG`        | Optional public calendar slug for listed events |
 | `.env.local`                | Local env (gitignored)               |

@@ -141,6 +141,37 @@ export async function fetchManagedEvents(apiKey: string, baseUrl = LUMA_API_BASE
 }
 
 // ---------------------------------------------------------------------------
+// Import people to the calendar tied to the API key (Luma Plus / developer key)
+// https://docs.luma.com/reference/post_v1-calendar-import-people
+// ---------------------------------------------------------------------------
+
+export interface LumaImportPerson {
+  email: string
+  name?: string | null
+}
+
+export async function importCalendarPeople(
+  apiKey: string,
+  infos: LumaImportPerson[],
+  options?: { baseUrl?: string; tagNames?: string[] },
+): Promise<Response> {
+  const base = (options?.baseUrl ?? LUMA_API_BASE).replace(/\/$/, '')
+  const body: Record<string, unknown> = { infos }
+  if (options?.tagNames?.length) {
+    body.tag_names = options.tagNames
+  }
+  return fetch(`${base}/v1/calendar/import-people`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'x-luma-api-key': apiKey,
+    },
+    body: JSON.stringify(body),
+    cache: 'no-store',
+  })
+}
+
+// ---------------------------------------------------------------------------
 // Fetch listed events from public calendar page (no API key needed)
 // ---------------------------------------------------------------------------
 
