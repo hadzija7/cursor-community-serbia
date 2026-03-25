@@ -7,6 +7,7 @@
 - [ ] Add/expand unit tests for education config
 
 ## Phase 2: Content & Polish
+- [x] Coworking day slide deck (`/education/coworking-day`, 6 slides)
 - [x] Live Luma upcoming-events sync with static fallback (`/api/events/upcoming`, `lib/luma.ts`)
 - [x] Recap photo gallery: keyboard arrows in fullscreen lightbox (`PhotoGallery`)
 - [x] Add Cursor Meetup Novi Sad past event recap (Mar 17, 2026)

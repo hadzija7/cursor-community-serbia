@@ -37,6 +37,7 @@ Living scorecard for Cursor Community Serbia. Update after each phase.
 
 | Date       | Change                          |
 |------------|----------------------------------|
+| 2026-03-25 | Education: Coworking Day deck (`coworking-day-deck.tsx`, `/education/coworking-day`) |
 | 2026-03-24 | Subscribe API: optional Luma `import-people` for calendar sync; tests |
 | 2026-03-23 | Recap `videoUrl`: presentation section + YouTube watch URL normalization |
 | 2026-03-21 | Live Luma upcoming events sync + tests |

@@ -8,6 +8,14 @@ export interface EducationResource {
 
 export const educationResources: EducationResource[] = [
   {
+    id: 'coworking-day-cursor',
+    title: 'Cursor Coworking Day',
+    description:
+      'Short deck: interface tour, practical tips, and build ideas (plugins, agent memory + graphs, show-and-tell).',
+    href: '/education/coworking-day',
+    type: 'presentation',
+  },
+  {
     id: 'productivity-with-ai',
     title: 'Productivity with AI & Cursor',
     description:
