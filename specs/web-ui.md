@@ -24,7 +24,7 @@ The Cursor Community Serbia site is a Next.js 16 App Router application presenti
 | `/education` | Educational resources (presentations, PDFs) |
 | `/recaps/[slug]` | Event recap pages (`EventRecap`: summary, optional `videoUrl` as presentation block with i18n heading, optional YouTube `interviews[]`, gallery) |
 | `/slides/[id]` | Optional workshop slides |
-| `/education/coworking-day/[id]` | Coworking day kickoff deck (6 slides) |
+| `/education/coworking-day/[id]` | Coworking day kickoff deck (8 slides) |
 
 ### Key Components
 

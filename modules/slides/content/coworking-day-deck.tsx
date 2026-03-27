@@ -68,6 +68,25 @@ export const coworkingDayDeck: Slide[] = [
   },
   {
     id: 4,
+    title: 'Brainstorming — what should we build today?',
+    content: (
+      <div className="space-y-5">
+        <p>
+          <strong>~30 minutes</strong> — share ideas in the room: what do you want to ship or explore before show-and-tell?
+        </p>
+        <ul className="list-disc pl-6 space-y-2">
+          <li>Problems you want to solve, tools you want to try, or spikes worth a few hours</li>
+          <li>Short pitches OK — we&apos;ll cluster themes and people can pair or solo</li>
+          <li>No wrong answers — the goal is a shared menu of builds, not a perfect plan</li>
+        </ul>
+        <p className="text-cursor-text-muted text-sm md:text-base">
+          Capture themes on a board or shared doc if you have one — then pick something small enough to demo.
+        </p>
+      </div>
+    ),
+  },
+  {
+    id: 5,
     title: 'Build idea: plugins for Cursor',
     content: (
       <div className="space-y-5">
@@ -87,7 +106,7 @@ export const coworkingDayDeck: Slide[] = [
     ),
   },
   {
-    id: 5,
+    id: 6,
     title: 'Build idea: agent memory + graphs',
     content: (
       <div className="space-y-5">
@@ -113,7 +132,29 @@ export const coworkingDayDeck: Slide[] = [
     ),
   },
   {
-    id: 6,
+    id: 7,
+    title: 'Build idea: personal knowledge — Obsidian + Cursor',
+    content: (
+      <div className="space-y-5">
+        <p>
+          <strong>PKM on disk:</strong> keep notes, links, and structure in{' '}
+          <strong>Obsidian</strong> (wikilinks, graph, daily notes). Open the same vault folder in{' '}
+          <strong>Cursor</strong> and use the agent on Markdown — refactor notes, draft summaries, extract tasks, keep{' '}
+          <code className="bg-cursor-surface px-1 rounded text-sm">AGENTS.md</code> / rules so edits match how you think.
+        </p>
+        <ul className="list-disc pl-6 space-y-2">
+          <li>Vault = single source of truth; Cursor = batch edits, codegen for plugins/skills, semantic search across files</li>
+          <li>Skills or small scripts in the vault can encode repeatable workflows (e.g. meeting → note template)</li>
+          <li>Good day-one experiment: one folder of notes + &quot;tidy and link these five files&quot; with @folder context</li>
+        </ul>
+        <p className="text-cursor-text-muted text-sm md:text-base">
+          You don&apos;t need a perfect system — align naming, one index note, and let the agent help maintain links and structure.
+        </p>
+      </div>
+    ),
+  },
+  {
+    id: 8,
     title: 'Your build & show-and-tell',
     content: (
       <div className="space-y-5">

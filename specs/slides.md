@@ -36,7 +36,7 @@ interface Slide {
 
 - `example-deck.tsx` — Template (served at `/slides/[id]`)
 - `productivity-with-ai-deck.tsx` — Productivity, AI evolution, Cursor (served at `/education/productivity-with-ai`)
-- `coworking-day-deck.tsx` — Coworking day kickoff: basics, tips, build ideas (served at `/education/coworking-day`)
+- `coworking-day-deck.tsx` — Coworking day kickoff: basics, tips, ~30 min brainstorming block, build ideas (plugins, agent memory, Obsidian + Cursor PKM), show-and-tell (served at `/education/coworking-day`)
 
 ## Verification
 
