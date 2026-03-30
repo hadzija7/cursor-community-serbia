@@ -10,7 +10,9 @@ import { useI18n } from '@/lib/i18n'
 export default function PastEvents() {
   const { t, locale } = useI18n()
 
-  if (pastEvents.length === 0) {
+  const recapEvents = pastEvents.filter((event) => event.recapPath)
+
+  if (recapEvents.length === 0) {
     return null
   }
 
@@ -27,10 +29,11 @@ export default function PastEvents() {
         {t('home.pastEvents')}
       </h2>
 
-      <div className="space-y-4">
-        {pastEvents.map((event) => {
-          if (!event.recapPath) return null
-
+      <div
+        className="max-h-[28rem] overflow-y-auto overscroll-y-contain pr-2 -mr-2 space-y-4 [scrollbar-gutter:stable] [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-cursor-border [&::-webkit-scrollbar-track]:bg-transparent"
+        aria-label={t('home.pastEvents')}
+      >
+        {recapEvents.map((event) => {
           const displayDate = new Date(`${event.date}T00:00:00`).toLocaleDateString(locale === 'en' ? 'en-US' : locale, {
             year: 'numeric',
             month: 'long',
@@ -38,7 +41,7 @@ export default function PastEvents() {
           })
 
           return (
-            <Link key={event.id} href={event.recapPath} className="block group">
+            <Link key={event.id} href={event.recapPath!} className="block group">
               <div className="bg-cursor-bg-dark border border-cursor-border rounded-md p-4 hover:border-cursor-border-emphasis transition-colors">
                 <div className="flex items-start gap-4">
                   {event.thumbnail ? (
