@@ -10,7 +10,7 @@ Content is driven by TypeScript/JSON files in `content/`. No CMS; content lives 
 |-------|-------|
 | Status | Implemented |
 | Verified | Partial |
-| Last updated | 2026-03 |
+| Last updated | 2026-04 |
 
 ## Content Sources
 

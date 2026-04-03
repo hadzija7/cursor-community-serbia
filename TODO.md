@@ -12,6 +12,7 @@
 - [x] Recap photo gallery: keyboard arrows in fullscreen lightbox (`PhotoGallery`)
 - [x] Add Cursor Meetup Novi Sad past event recap (Mar 17, 2026)
 - [x] Add Cursor Coworking Niš recap (Mar 20, 2026) with presentation video + interviews
+- [x] Add Cafe Cursor Cannes recap (Apr 2, 2026); Luma https://luma.com/hswzhn5m
 - [ ] Review and update content (events, ambassadors, partners) for Serbia
 - [ ] Ensure education resources are complete and linked correctly
 - [ ] Verify i18n keys and add Serbian locale if needed
