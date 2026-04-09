@@ -23,3 +23,11 @@ export function toYouTubeEmbedUrl(url: string): string | null {
   }
   return null
 }
+
+/** Extract the 11-char video id from a watch / youtu.be / embed URL. */
+export function parseYouTubeVideoId(url: string): string | null {
+  const embed = toYouTubeEmbedUrl(url)
+  if (!embed) return null
+  const m = embed.match(/^https:\/\/www\.youtube\.com\/embed\/([^/?]+)/)
+  return m?.[1] ?? null
+}

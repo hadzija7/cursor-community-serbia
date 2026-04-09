@@ -5,6 +5,7 @@ import Navbar from '@/components/Navbar'
 import JsonLd from '@/components/JsonLd'
 import { recapsBySlug } from '@/content/recaps'
 import { siteConfig } from '@/content/site.config'
+import { getRecapYoutubePresentationCards } from '@/lib/recap-youtube'
 
 interface RecapPageProps {
   params: Promise<{ slug: string }>
@@ -70,13 +71,14 @@ export default async function RecapPage({ params }: RecapPageProps) {
   }
 
   const jsonLd = buildRecapJsonLd(slug)
+  const youtubePresentationCards = await getRecapYoutubePresentationCards(recap)
 
   return (
     <main className="min-h-screen bg-cursor-bg text-cursor-text">
       {jsonLd && <JsonLd data={jsonLd} />}
       <Navbar />
       <div className="max-w-5xl mx-auto px-6 pt-12 pb-12">
-        <EventRecap recap={recap} />
+        <EventRecap recap={recap} youtubePresentationCards={youtubePresentationCards} />
       </div>
     </main>
   )

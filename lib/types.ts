@@ -79,6 +79,21 @@ export interface RecapInterview {
   youtubeUrl: string
 }
 
+/** Title, description, and thumbnail for a YouTube recap card (from oEmbed / player response). */
+export interface YouTubeCardMeta {
+  title: string
+  description: string
+  thumbnailUrl: string
+}
+
+export interface RecapExtraPresentation {
+  /** Shown only if YouTube metadata cannot be loaded. */
+  title?: string
+  youtubeUrl: string
+  /** Same semantics as `RecapData.videoThumbnailUrl` when not using fetched YouTube thumbnails. */
+  videoThumbnailUrl?: string
+}
+
 export interface RecapData {
   slug: string
   title: string
@@ -87,6 +102,10 @@ export interface RecapData {
   summary: string[]
   host?: { name: string; logo: string; url?: string }
   videoUrl?: string
+  /** Optional image shown before play for embedded presentation (e.g. YouTube). Click reveals the player. */
+  videoThumbnailUrl?: string
+  /** More session recordings (e.g. a second talk), shown below the main presentation. */
+  extraPresentations?: RecapExtraPresentation[]
   interviews?: RecapInterview[]
   photoCredits?: RecapPhotoCredit[]
   photos: GalleryPhoto[]

@@ -37,6 +37,10 @@ Living scorecard for Cursor Community Serbia. Update after each phase.
 
 | Date       | Change                          |
 |------------|----------------------------------|
+| 2026-04-09 | Recap YouTube grid: `getRecapYoutubePresentationCards` + `lib/youtube-metadata.ts` (player response, cached); cards side-by-side on md+ |
+| 2026-04-09 | Recap `extraPresentations[]` for additional YouTube recordings (Hub201: second session link) |
+| 2026-04-09 | Recap presentation: optional `videoThumbnailUrl` (poster + click-to-play for YouTube); Hub201 recap uses Drive image |
+| 2026-04-09 | Content: Cursor Belgrade Hub201 recap (`cursor-belgrade-hub201-1`) + past event; Luma yvpg9ijv |
 | 2026-04-03 | Content: Cafe Cursor Cannes recap (`cafe-cursor-cannes-1`) + past event entry |
 | 2026-03-27 | Coworking Day deck: brainstorming slide + Obsidian/Cursor PKM build idea (8 slides) |
 | 2026-03-25 | Education: Coworking Day deck (`coworking-day-deck.tsx`, `/education/coworking-day`) |
