@@ -7,7 +7,7 @@ function driveImg(id: string) {
 export const cursorBelgradeHub201Meetup1Recap: RecapData = {
   slug: 'cursor-belgrade-hub201-1',
   title: 'Cursor Belgrade Hub201 Meetup - Recap',
-  date: 'April 8, 2026',
+  date: 'April 7, 2026',
   attendees: 40,
   summary: [
     'Forty people joined us in the amphitheatre at Hub201 in Belgrade for an evening focused on AI-driven development in cybersecurity. The room mixed developers, security practitioners, and Cursor enthusiasts ready to go deep on real workflows.',

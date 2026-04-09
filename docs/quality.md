@@ -37,6 +37,7 @@ Living scorecard for Cursor Community Serbia. Update after each phase.
 
 | Date       | Change                          |
 |------------|----------------------------------|
+| 2026-04-09 | Hub201 event date corrected to 2026-04-07 (recap + `events.ts`) |
 | 2026-04-09 | Recap YouTube grid: `getRecapYoutubePresentationCards` + `lib/youtube-metadata.ts` (player response, cached); cards side-by-side on md+ |
 | 2026-04-09 | Recap `extraPresentations[]` for additional YouTube recordings (Hub201: second session link) |
 | 2026-04-09 | Recap presentation: optional `videoThumbnailUrl` (poster + click-to-play for YouTube); Hub201 recap uses Drive image |

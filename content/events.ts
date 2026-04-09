@@ -5,9 +5,9 @@ export const events: CursorEvent[] = [
   {
     id: 'cursor-belgrade-hub201-1',
     title: 'Cursor Belgrade Hub201 Meetup',
-    date: '2026-04-08',
+    date: '2026-04-07',
     time: '17:30',
-    displayDate: 'April 8, 2026',
+    displayDate: 'April 7, 2026',
     attendees: 40,
     location: 'Belgrade, Serbia',
     recapPath: '/recaps/cursor-belgrade-hub201-1',
