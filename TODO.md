@@ -14,6 +14,7 @@
 - [x] Add Cursor Coworking Niš recap (Mar 20, 2026) with presentation video + interviews
 - [x] Add Cafe Cursor Cannes recap (Apr 2, 2026); Luma https://luma.com/hswzhn5m
 - [x] Add Cursor Belgrade Hub201 recap (Apr 7, 2026); Luma https://luma.com/yvpg9ijv
+- [x] Add Cursor Meetup Novi Sad Dec 23, 2025 recap; Luma https://luma.com/udbedo7b
 - [ ] Review and update content (events, ambassadors, partners) for Serbia
 - [ ] Ensure education resources are complete and linked correctly
 - [ ] Verify i18n keys and add Serbian locale if needed

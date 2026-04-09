@@ -3,6 +3,19 @@ import { CursorEvent } from '@/lib/types'
 // REPLACE: Replace all sample events, locations, and Luma URLs with real community events.
 export const events: CursorEvent[] = [
   {
+    id: 'cursor-meetup-novisad-dec-2025',
+    title: 'Cursor Meetup Novi Sad',
+    date: '2025-12-23',
+    time: '19:30',
+    displayDate: 'December 23, 2025',
+    attendees: 100,
+    location: 'Novi Sad, Vojvodina',
+    recapPath: '/recaps/cursor-meetup-novisad-dec-2025',
+    thumbnail: 'https://i.ytimg.com/vi/Wpup2C1oPWY/hqdefault.jpg',
+    lumaUrl: 'https://luma.com/udbedo7b',
+    status: 'past',
+  },
+  {
     id: 'cursor-belgrade-hub201-1',
     title: 'Cursor Belgrade Hub201 Meetup',
     date: '2026-04-07',

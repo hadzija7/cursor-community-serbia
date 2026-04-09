@@ -37,6 +37,9 @@ Living scorecard for Cursor Community Serbia. Update after each phase.
 
 | Date       | Change                          |
 |------------|----------------------------------|
+| 2026-04-10 | Recap/events: prefer YouTube `hqdefault` for OG + JSON-LD + past-event thumb when `videoUrl` is YouTube |
+| 2026-04-10 | Content: Novi Sad Dec 2025 recap — presentation `videoUrl` https://youtu.be/Wpup2C1oPWY |
+| 2026-04-09 | Content: Cursor Meetup Novi Sad Dec 23, 2025 recap (`cursor-meetup-novisad-dec-2025`); Luma udbedo7b (attendees corrected to 100) |
 | 2026-04-09 | Hub201 event date corrected to 2026-04-07 (recap + `events.ts`) |
 | 2026-04-09 | Recap YouTube grid: `getRecapYoutubePresentationCards` + `lib/youtube-metadata.ts` (player response, cached); cards side-by-side on md+ |
 | 2026-04-09 | Recap `extraPresentations[]` for additional YouTube recordings (Hub201: second session link) |
