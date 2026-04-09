@@ -6,7 +6,6 @@ import JsonLd from '@/components/JsonLd'
 import { recapsBySlug } from '@/content/recaps'
 import { siteConfig } from '@/content/site.config'
 import { getRecapYoutubePresentationCards } from '@/lib/recap-youtube'
-import { parseYouTubeVideoId } from '@/lib/youtube-embed'
 
 interface RecapPageProps {
   params: Promise<{ slug: string }>
@@ -18,10 +17,6 @@ export async function generateMetadata({ params }: RecapPageProps): Promise<Meta
   if (!recap) return {}
 
   const description = recap.summary[0] || `Recap of ${recap.title}`
-  const presentationVideoId = recap.videoUrl ? parseYouTubeVideoId(recap.videoUrl) : null
-  const ogImageUrl = presentationVideoId
-    ? `https://i.ytimg.com/vi/${presentationVideoId}/hqdefault.jpg`
-    : recap.photos[0]?.src
 
   return {
     title: `${recap.title} | ${siteConfig.communityName}`,
@@ -30,15 +25,8 @@ export async function generateMetadata({ params }: RecapPageProps): Promise<Meta
       title: recap.title,
       description,
       type: 'article',
-      ...(ogImageUrl
-        ? {
-            images: [
-              {
-                url: ogImageUrl,
-                alt: presentationVideoId ? recap.title : recap.photos[0]?.alt ?? recap.title,
-              },
-            ],
-          }
+      ...(recap.photos[0]?.src
+        ? { images: [{ url: recap.photos[0].src, alt: recap.photos[0].alt }] }
         : {}),
     },
   }
@@ -47,11 +35,6 @@ export async function generateMetadata({ params }: RecapPageProps): Promise<Meta
 function buildRecapJsonLd(slug: string) {
   const recap = recapsBySlug[slug]
   if (!recap) return null
-
-  const presentationVideoId = recap.videoUrl ? parseYouTubeVideoId(recap.videoUrl) : null
-  const primaryImage = presentationVideoId
-    ? `https://i.ytimg.com/vi/${presentationVideoId}/hqdefault.jpg`
-    : recap.photos[0]?.src
 
   return {
     '@context': 'https://schema.org',
@@ -74,7 +57,7 @@ function buildRecapJsonLd(slug: string) {
           },
         }
       : {}),
-    ...(primaryImage ? { image: primaryImage } : {}),
+    ...(recap.photos[0]?.src ? { image: recap.photos[0].src } : {}),
     eventAttendanceMode: 'https://schema.org/OfflineEventAttendanceMode',
     eventStatus: 'https://schema.org/EventScheduled',
   }

@@ -50,10 +50,17 @@ function extractPlayerResponse(html: string): unknown | null {
 
 function pickThumbnail(thumbnails: unknown): string | null {
   if (!Array.isArray(thumbnails) || thumbnails.length === 0) return null
-  const sorted = [...thumbnails].sort(
-    (a, b) => Number((b as { width?: number }).width ?? 0) - Number((a as { width?: number }).width ?? 0),
-  )
-  const url = (sorted[0] as { url?: string })?.url
+  type T = { url?: string; width?: number; height?: number }
+  const list = thumbnails as T[]
+  // Match YouTube watch page: prefer the maxres asset when the API lists it.
+  const maxres = list.find((t) => t.url?.includes('maxresdefault'))
+  if (maxres?.url) return maxres.url
+  const sorted = [...list].sort((a, b) => {
+    const dw = Number(b.width ?? 0) - Number(a.width ?? 0)
+    if (dw !== 0) return dw
+    return Number(b.height ?? 0) - Number(a.height ?? 0)
+  })
+  const url = sorted[0]?.url
   return typeof url === 'string' ? url : null
 }
 
@@ -78,8 +85,10 @@ async function fetchYouTubeMetadataFromPlayerResponse(videoId: string): Promise<
   const vd = parsed?.videoDetails
   if (!vd?.title) return null
 
+  const idEnc = encodeURIComponent(videoId)
   const thumb =
-    pickThumbnail(vd.thumbnail?.thumbnails) ?? `https://i.ytimg.com/vi/${encodeURIComponent(videoId)}/hqdefault.jpg`
+    pickThumbnail(vd.thumbnail?.thumbnails) ??
+    `https://i.ytimg.com/vi/${idEnc}/maxresdefault.jpg`
 
   return {
     title: vd.title,
@@ -95,10 +104,15 @@ async function fetchYouTubeMetadataFromOEmbed(videoId: string): Promise<YouTubeC
   if (!res.ok) return null
   const data = (await res.json()) as { title?: string; thumbnail_url?: string }
   if (!data.title || !data.thumbnail_url) return null
+  // oEmbed often returns hqdefault; watch page uses maxres when available — align on CDN naming.
+  const thumb =
+    data.thumbnail_url.includes('ytimg.com') && data.thumbnail_url.includes('hqdefault')
+      ? `https://i.ytimg.com/vi/${encodeURIComponent(videoId)}/maxresdefault.jpg`
+      : data.thumbnail_url
   return {
     title: data.title,
     description: '',
-    thumbnailUrl: data.thumbnail_url,
+    thumbnailUrl: thumb,
   }
 }
 
@@ -128,7 +142,7 @@ export async function buildYoutubePresentationFeed(
         meta = {
           title: fallbackTitle?.trim() || 'Video',
           description: '',
-          thumbnailUrl: `https://i.ytimg.com/vi/${encodeURIComponent(id)}/hqdefault.jpg`,
+          thumbnailUrl: `https://i.ytimg.com/vi/${encodeURIComponent(id)}/maxresdefault.jpg`,
         }
       }
       return { youtubeUrl, meta }
