@@ -31,7 +31,7 @@ The Cursor Community Serbia site is a Next.js 16 App Router application presenti
 - `app/page.tsx` — Homepage composition
 - `components/HeroHeader.tsx` — Hero + bento photo grid
 - `components/UpcomingEvents.tsx` — Upcoming event stack
-- `components/PastEvents.tsx` — Past events with recaps: responsive grid (1 / 2 / 3 columns), section width `min(80vw, 100vw - 3rem)` capped for large screens; card layout with hero thumbnail, metadata, recap CTA
+- `components/PastEvents.tsx` — Past events with recaps: responsive grid (1 / 2 / 3 columns); **full-bleed** section (`w-screen ml-[calc(50%-50vw)]`) so the band spans the viewport while nested content is **80vw** wide and centered; card layout with hero thumbnail, metadata, recap CTA
 - `components/EventCountdown.tsx` — Countdown driven by live upcoming events
 - `lib/use-upcoming-events.ts` — Client polling hook for upcoming events API
 - `lib/luma.ts` — Server-side Luma API mapping and calendar page parsing

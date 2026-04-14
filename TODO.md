@@ -7,7 +7,7 @@
 - [ ] Add/expand unit tests for education config
 
 ## Phase 2: Content & Polish
-- [x] Past Events homepage section: wider grid layout (3 columns) for recap browsing
+- [x] Past Events homepage section: full-bleed band, content 80vw centered, responsive grid (3 columns on large screens)
 - [x] Coworking day slide deck (`/education/coworking-day`, 8 slides: brainstorming + Obsidian/Cursor PKM)
 - [x] Live Luma upcoming-events sync with static fallback (`/api/events/upcoming`, `lib/luma.ts`)
 - [x] Recap photo gallery: keyboard arrows in fullscreen lightbox (`PhotoGallery`)
