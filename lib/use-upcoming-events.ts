@@ -1,12 +1,14 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { upcomingEvents } from '@/content/events'
-import { isFutureEvent } from '@/lib/event-time'
+import { events } from '@/content/events'
+import { eventStartMs, isFutureEvent } from '@/lib/event-time'
 import type { CursorEvent } from '@/lib/types'
 
 const POLL_MS = 5 * 60 * 1000
-const INITIAL = upcomingEvents.filter(isFutureEvent)
+const INITIAL = events
+  .filter(isFutureEvent)
+  .sort((a, b) => eventStartMs(a.date, a.time) - eventStartMs(b.date, b.time))
 
 export function useUpcomingEvents(): CursorEvent[] {
   const [events, setEvents] = useState<CursorEvent[]>(INITIAL)
