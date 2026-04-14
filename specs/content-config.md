@@ -10,7 +10,7 @@ Content is driven by TypeScript/JSON files in `content/`. No CMS; content lives 
 |-------|-------|
 | Status | Implemented |
 | Verified | Partial |
-| Last updated | 2026-04-10 |
+| Last updated | 2026-04-14 |
 
 ## Content Sources
 
@@ -35,7 +35,7 @@ Events use `CursorEvent` from `lib/types`. Education resources use `EducationRes
 - If `LUMA_API_KEY` is set, managed events are fetched from the official Luma API.
 - Listed events are parsed from the public calendar page (`https://luma.com/<slug>`) and merged.
 - `LUMA_CALENDAR_SLUG` overrides the slug; otherwise inferred from `content/site.config.ts` `lumaUrl`.
-- If all live sources fail, `content/events.ts` is the static fallback.
+- If all live sources fail (or no live events are returned), the API falls back to future-dated entries from `content/events.ts` `events` (by event start time), not only rows with `status: 'upcoming'`.
 
 ## Verification
 

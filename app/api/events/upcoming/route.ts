@@ -1,11 +1,13 @@
-import { upcomingEvents } from '@/content/events'
+import { events } from '@/content/events'
 import { siteConfig } from '@/content/site.config'
 import { eventStartMs, isFutureEvent } from '@/lib/event-time'
 import { fetchCalendarPageEvents, fetchManagedEvents } from '@/lib/luma'
 import type { CursorEvent } from '@/lib/types'
 
 function staticFallback() {
-  return upcomingEvents.filter(isFutureEvent)
+  return events
+    .filter(isFutureEvent)
+    .sort((a, b) => eventStartMs(a.date, a.time) - eventStartMs(b.date, b.time))
 }
 
 function calendarSlug(): string {
