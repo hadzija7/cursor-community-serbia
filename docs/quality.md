@@ -37,7 +37,7 @@ Living scorecard for Cursor Community Serbia. Update after each phase.
 
 | Date       | Change                          |
 |------------|----------------------------------|
-| 2026-05-17 | Luma: split to `LUMA_BELGRADE_API_KEY` + `LUMA_NOVI_SAD_API_KEY`; upcoming events merge both calendars; subscribe imports to both; removed `LUMA_API_KEY` / `LUMA_CALENDAR_SLUG`; public link → `luma.com/cursorcommunity` |
+| 2026-05-17 | YouTube recap metadata: cache key bumped (`youtube-video-metadata-v2`) + per-video `revalidateTag` helper so updated video descriptions (e.g. Aleks “SDLC with Cursor”) refetch from YouTube |
 | 2026-05-17 | Recap UI: **Video Recap** section for `videoUrl`; **Presentation** only for `extraPresentations[]`; `getRecapYoutubeSections` in `lib/recap-youtube.ts` |
 | 2026-05-17 | Content: Cursor Coworking Day Belgrade recap (`cursor-coworking-belgrade-1`); Luma 9tlvu6ij; recap video https://youtu.be/ApGre9Btaq0 |
 | 2026-04-14 | Homepage: Past Events recap grid (3 columns on large screens, ~80% viewport width); static upcoming fallback uses future-dated `events` when `status: upcoming` list is empty |

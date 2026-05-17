@@ -1,4 +1,4 @@
-import { unstable_cache } from 'next/cache'
+import { revalidateTag, unstable_cache } from 'next/cache'
 import { parseYouTubeVideoId } from '@/lib/youtube-embed'
 import type { YouTubeCardMeta } from '@/lib/types'
 
@@ -122,11 +122,21 @@ async function fetchYouTubeMetadataUncached(videoId: string): Promise<YouTubeCar
   return fetchYouTubeMetadataFromOEmbed(videoId)
 }
 
+const YOUTUBE_METADATA_CACHE_KEY = 'youtube-video-metadata-v2'
+
+function youtubeMetadataTag(videoId: string) {
+  return `${YOUTUBE_METADATA_CACHE_KEY}:${videoId}`
+}
+
+export function revalidateYouTubeVideoMetadata(videoId: string) {
+  revalidateTag(youtubeMetadataTag(videoId), 'max')
+}
+
 export function getYouTubeVideoMetadata(videoId: string): Promise<YouTubeCardMeta | null> {
   return unstable_cache(
     async () => fetchYouTubeMetadataUncached(videoId),
-    ['youtube-video-metadata', videoId],
-    { revalidate: 86_400 },
+    [YOUTUBE_METADATA_CACHE_KEY, videoId],
+    { revalidate: 86_400, tags: [youtubeMetadataTag(videoId)] },
   )()
 }
 

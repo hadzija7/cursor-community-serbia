@@ -18,7 +18,10 @@ export const cursorCoworkingBelgrade1Recap: RecapData = {
     'Whether people came for the coworking block, the evening talk, or both, the takeaway was the same: new connections, hands-on Cursor energy, and a strong reason to show up again next time.',
   ],
   videoUrl: 'https://youtu.be/ApGre9Btaq0',
-  extraPresentations: [{ youtubeUrl: 'https://youtu.be/f_9HkQrMoCA' }],
+  extraPresentations: [
+    { youtubeUrl: 'https://youtu.be/f_9HkQrMoCA' },
+    { youtubeUrl: 'https://youtu.be/LY9Jd-n1qOA' },
+  ],
   photos: [
     { src: driveImg('1BlbLo_xRyF3wGcuywTb5-uzqwh7Ona95'), alt: 'Cursor Coworking Day Belgrade' },
     { src: driveImg('1yRBGY-zQWvzHDTyLizatPJK5vBBE8ZuC'), alt: 'Coworking day in Belgrade' },
