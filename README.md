@@ -59,7 +59,7 @@ Subscriptions can use **Postgres** or a **Webhook**:
 
 - **Postgres:** Add a database via [Vercel Marketplace](https://vercel.com/marketplace?category=storage&search=postgres), run `db/schema.sql`, set `POSTGRES_URL` or `DATABASE_URL`
 - **Webhook:** Set `MAILING_LIST_WEBHOOK_URL` to forward signups to an external endpoint
-- **Luma:** With `LUMA_API_KEY` (same as for managed events), new subscribers are also added to your Luma calendar via the [import-people API](https://docs.luma.com/reference/post_v1-calendar-import-people). Optional `LUMA_IMPORT_TAG_NAMES` applies existing calendar tags.
+- **Luma:** With `LUMA_BELGRADE_API_KEY` and/or `LUMA_NOVI_SAD_API_KEY`, new subscribers are added to each configured city calendar via the [import-people API](https://docs.luma.com/reference/post_v1-calendar-import-people). Optional `LUMA_IMPORT_TAG_NAMES` applies existing calendar tags.
 
 Copy `.env.example` to `.env.local` and fill in the required variables.
 

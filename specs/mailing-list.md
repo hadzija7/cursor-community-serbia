@@ -10,13 +10,13 @@ Subscribe page at `/subscribe` collects email addresses and stores them or forwa
 |-------|-------|
 | Status | Implemented |
 | Verified | Partial |
-| Last updated | 2026-03 |
+| Last updated | 2026-05-17 |
 
 ## Architecture
 
 - **UI:** `app/subscribe/page.tsx`, `components/SubscribeForm.tsx`
 - **API:** `app/api/subscribe/route.ts` (POST)
-- **Luma:** When `LUMA_API_KEY` is set, new successful subscriptions call Luma [import-people](https://docs.luma.com/reference/post_v1-calendar-import-people) so the address is added to the calendar tied to that key (non-blocking; failures are logged only).
+- **Luma:** When `LUMA_BELGRADE_API_KEY` and/or `LUMA_NOVI_SAD_API_KEY` are set, new successful subscriptions call Luma [import-people](https://docs.luma.com/reference/post_v1-calendar-import-people) for each configured city calendar (non-blocking; failures are logged only).
 
 ## Backends
 
@@ -34,9 +34,10 @@ Subscribe page at `/subscribe` collects email addresses and stores them or forwa
 
 ### Luma calendar (optional)
 
-- Env: `LUMA_API_KEY` (same key as managed events; calendar is implicit)
+- Env: `LUMA_BELGRADE_API_KEY`, `LUMA_NOVI_SAD_API_KEY` (each key is tied to its city calendar)
 - Env: `LUMA_API_BASE_URL` (optional), `LUMA_IMPORT_TAG_NAMES` (optional comma-separated tags)
 - Runs only for **new** rows when Postgres is used (`ON CONFLICT` skip → no Luma call). Webhook-only mode calls Luma on every accepted POST.
+- When both city keys are set, import runs into both calendars best-effort.
 
 ## Verification
 

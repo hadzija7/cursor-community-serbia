@@ -11,7 +11,6 @@ describe('GET /api/events/upcoming', () => {
     vi.restoreAllMocks()
     vi.useFakeTimers()
     vi.setSystemTime(new Date('2026-03-19T12:00:00.000Z'))
-    vi.spyOn(luma, 'fetchCalendarPageEvents').mockResolvedValue([])
   })
 
   afterEach(() => {
@@ -19,9 +18,9 @@ describe('GET /api/events/upcoming', () => {
     process.env = ORIGINAL_ENV
   })
 
-  it('returns static events when no sources are configured', async () => {
-    delete process.env.LUMA_API_KEY
-    process.env.LUMA_CALENDAR_SLUG = '/'
+  it('returns static events when no city calendar keys are configured', async () => {
+    delete process.env.LUMA_BELGRADE_API_KEY
+    delete process.env.LUMA_NOVI_SAD_API_KEY
 
     const res = await GET()
     const body = await res.json()
@@ -29,75 +28,86 @@ describe('GET /api/events/upcoming', () => {
     expect(res.status).toBe(200)
     expect(body.source).toBe('static')
     expect(body.events.length).toBeGreaterThan(0)
+    expect(body.counts).toEqual({ belgrade: 0, noviSad: 0 })
   })
 
-  it('returns listed events from calendar page', async () => {
-    delete process.env.LUMA_API_KEY
+  it('merges managed events from both city calendars', async () => {
+    process.env.LUMA_BELGRADE_API_KEY = 'belgrade-secret'
+    process.env.LUMA_NOVI_SAD_API_KEY = 'novisad-secret'
 
-    const listed: CursorEvent = {
-      id: 'evt_listed',
-      title: 'Listed Event',
-      date: '2026-03-26',
-      time: '18:00',
-      displayDate: 'March 26, 2026',
-      location: 'Belgrade, Serbia',
-      lumaUrl: 'https://luma.com/listed',
-      status: 'upcoming',
-    }
-    vi.spyOn(luma, 'fetchCalendarPageEvents').mockResolvedValue([listed])
-
-    const res = await GET()
-    const body = await res.json()
-
-    expect(body.source).toBe('listed')
-    expect(body.events).toEqual([listed])
-    expect(body.counts).toEqual({ managed: 0, listed: 1 })
-  })
-
-  it('merges managed and listed events', async () => {
-    process.env.LUMA_API_KEY = 'secret'
-
-    const managed: CursorEvent = {
-      id: 'evt_managed',
-      title: 'Managed Event',
+    const belgrade: CursorEvent = {
+      id: 'evt_belgrade',
+      title: 'Belgrade Event',
       date: '2026-03-21',
       time: '18:00',
       displayDate: 'March 21, 2026',
       location: 'Belgrade, Serbia',
-      lumaUrl: 'https://luma.com/managed',
+      lumaUrl: 'https://luma.com/belgrade',
       status: 'upcoming',
     }
-    const listed: CursorEvent = {
-      id: 'evt_listed',
-      title: 'Listed Event',
+    const noviSad: CursorEvent = {
+      id: 'evt_novisad',
+      title: 'Novi Sad Event',
       date: '2026-03-22',
       time: '19:00',
       displayDate: 'March 22, 2026',
       location: 'Novi Sad, Serbia',
-      lumaUrl: 'https://luma.com/listed',
+      lumaUrl: 'https://luma.com/novisad',
       status: 'upcoming',
     }
 
-    vi.spyOn(luma, 'fetchManagedEvents').mockResolvedValue([managed])
-    vi.spyOn(luma, 'fetchCalendarPageEvents').mockResolvedValue([listed])
+    vi.spyOn(luma, 'fetchManagedEvents').mockImplementation(async (apiKey) => {
+      if (apiKey === 'belgrade-secret') return [belgrade]
+      if (apiKey === 'novisad-secret') return [noviSad]
+      return []
+    })
 
     const res = await GET()
     const body = await res.json()
 
-    expect(body.source).toBe('luma+listed')
-    expect(body.events).toEqual([managed, listed])
-    expect(body.counts).toEqual({ managed: 1, listed: 1 })
+    expect(body.source).toBe('luma')
+    expect(body.events).toEqual([belgrade, noviSad])
+    expect(body.counts).toEqual({ belgrade: 1, noviSad: 1 })
   })
 
-  it('falls back to static when all sources fail', async () => {
-    process.env.LUMA_API_KEY = 'secret'
+  it('returns partial-luma when one city calendar fails', async () => {
+    process.env.LUMA_BELGRADE_API_KEY = 'belgrade-secret'
+    process.env.LUMA_NOVI_SAD_API_KEY = 'novisad-secret'
+
+    const belgrade: CursorEvent = {
+      id: 'evt_belgrade',
+      title: 'Belgrade Event',
+      date: '2026-03-21',
+      time: '18:00',
+      displayDate: 'March 21, 2026',
+      location: 'Belgrade, Serbia',
+      lumaUrl: 'https://luma.com/belgrade',
+      status: 'upcoming',
+    }
+
+    vi.spyOn(luma, 'fetchManagedEvents').mockImplementation(async (apiKey) => {
+      if (apiKey === 'belgrade-secret') return [belgrade]
+      throw new Error('fail')
+    })
+
+    const res = await GET()
+    const body = await res.json()
+
+    expect(body.source).toBe('partial-luma')
+    expect(body.events).toEqual([belgrade])
+    expect(body.counts).toEqual({ belgrade: 1, noviSad: 0 })
+  })
+
+  it('falls back to static when all city calendars fail', async () => {
+    process.env.LUMA_BELGRADE_API_KEY = 'belgrade-secret'
+    process.env.LUMA_NOVI_SAD_API_KEY = 'novisad-secret'
     vi.spyOn(luma, 'fetchManagedEvents').mockRejectedValue(new Error('fail'))
-    vi.spyOn(luma, 'fetchCalendarPageEvents').mockRejectedValue(new Error('fail'))
 
     const res = await GET()
     const body = await res.json()
 
     expect(body.source).toBe('fallback')
     expect(body.events.length).toBeGreaterThan(0)
+    expect(body.counts).toEqual({ belgrade: 0, noviSad: 0 })
   })
 })

@@ -1,6 +1,6 @@
 import { siteConfig } from '@/content/site.config'
 import { getDb } from '@/lib/db'
-import { importCalendarPeople } from '@/lib/luma'
+import { getLumaCityCalendars, importCalendarPeople } from '@/lib/luma'
 
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 
@@ -12,28 +12,35 @@ function toError(message: string, status: number) {
   return Response.json({ ok: false, message }, { status })
 }
 
-/** Adds the email to the Luma calendar linked to LUMA_API_KEY. Best-effort; does not throw. */
+/** Adds the email to each configured city Luma calendar. Best-effort; does not throw. */
 async function syncSubscriberToLuma(email: string) {
-  const apiKey = process.env.LUMA_API_KEY?.trim()
-  if (!apiKey) return
+  const calendars = getLumaCityCalendars()
+  if (calendars.length === 0) return
 
   const baseUrl = process.env.LUMA_API_BASE_URL?.trim()
   const tagRaw = process.env.LUMA_IMPORT_TAG_NAMES?.trim()
   const tagNames = tagRaw
     ? tagRaw.split(',').map((t) => t.trim()).filter(Boolean)
     : undefined
+  const importOptions = {
+    ...(baseUrl ? { baseUrl } : {}),
+    ...(tagNames?.length ? { tagNames } : {}),
+  }
 
-  try {
-    const res = await importCalendarPeople(apiKey, [{ email }], {
-      ...(baseUrl ? { baseUrl } : {}),
-      ...(tagNames?.length ? { tagNames } : {}),
-    })
-    if (!res.ok) {
-      const detail = await res.text().catch(() => '')
-      console.error('Luma import-people failed:', res.status, detail)
+  const results = await Promise.allSettled(
+    calendars.map(async ({ city, apiKey }) => {
+      const res = await importCalendarPeople(apiKey, [{ email }], importOptions)
+      if (!res.ok) {
+        const detail = await res.text().catch(() => '')
+        throw new Error(`Luma import-people failed for ${city}: ${res.status} ${detail}`)
+      }
+    }),
+  )
+
+  for (const result of results) {
+    if (result.status === 'rejected') {
+      console.error('Luma import-people error:', result.reason)
     }
-  } catch (err) {
-    console.error('Luma import-people error:', err)
   }
 }
 

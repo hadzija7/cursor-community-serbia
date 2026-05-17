@@ -106,6 +106,23 @@ interface LumaApiPage {
   next_cursor?: string | null
 }
 
+export type LumaCityCalendar = 'belgrade' | 'noviSad'
+
+export interface LumaCityCalendarConfig {
+  city: LumaCityCalendar
+  apiKey: string
+}
+
+/** Configured city calendars from env (Belgrade + Novi Sad API keys). */
+export function getLumaCityCalendars(): LumaCityCalendarConfig[] {
+  const calendars: LumaCityCalendarConfig[] = []
+  const belgrade = process.env.LUMA_BELGRADE_API_KEY?.trim()
+  const noviSad = process.env.LUMA_NOVI_SAD_API_KEY?.trim()
+  if (belgrade) calendars.push({ city: 'belgrade', apiKey: belgrade })
+  if (noviSad) calendars.push({ city: 'noviSad', apiKey: noviSad })
+  return calendars
+}
+
 export async function fetchManagedEvents(apiKey: string, baseUrl = LUMA_API_BASE): Promise<CursorEvent[]> {
   const base = baseUrl.replace(/\/$/, '')
   const seen = new Map<string, CursorEvent>()

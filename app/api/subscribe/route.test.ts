@@ -14,7 +14,8 @@ function buildRequest(email: string) {
 describe('POST /api/subscribe', () => {
   beforeEach(() => {
     process.env = { ...ORIGINAL_ENV }
-    delete process.env.LUMA_API_KEY
+    delete process.env.LUMA_BELGRADE_API_KEY
+    delete process.env.LUMA_NOVI_SAD_API_KEY
     delete process.env.LUMA_IMPORT_TAG_NAMES
     vi.restoreAllMocks()
   })
@@ -71,9 +72,10 @@ describe('POST /api/subscribe', () => {
     )
   })
 
-  it('calls Luma import-people when LUMA_API_KEY is set', async () => {
+  it('calls Luma import-people for both city calendars when keys are set', async () => {
     process.env.MAILING_LIST_WEBHOOK_URL = 'https://example.com/webhook'
-    process.env.LUMA_API_KEY = 'luma-secret'
+    process.env.LUMA_BELGRADE_API_KEY = 'belgrade-secret'
+    process.env.LUMA_NOVI_SAD_API_KEY = 'novisad-secret'
 
     const fetchSpy = vi.spyOn(global, 'fetch').mockImplementation((input) => {
       const url = typeof input === 'string' ? input : input.url
@@ -91,20 +93,25 @@ describe('POST /api/subscribe', () => {
 
     expect(response.status).toBe(200)
     expect(body.ok).toBe(true)
-    expect(fetchSpy).toHaveBeenCalledTimes(2)
+    expect(fetchSpy).toHaveBeenCalledTimes(3)
 
-    const lumaCall = fetchSpy.mock.calls.find((c) =>
+    const lumaCalls = fetchSpy.mock.calls.filter((c) =>
       String(c[0]).includes('/v1/calendar/import-people'),
     )
-    expect(lumaCall).toBeDefined()
-    expect(lumaCall?.[1]).toMatchObject({
-      method: 'POST',
-      headers: expect.objectContaining({
-        'x-luma-api-key': 'luma-secret',
-      }),
-    })
-    expect(JSON.parse((lumaCall?.[1] as RequestInit).body as string)).toEqual({
-      infos: [{ email: 'person@example.com' }],
-    })
+    expect(lumaCalls).toHaveLength(2)
+
+    const apiKeys = lumaCalls.map(
+      (call) => (call[1] as RequestInit).headers as Record<string, string>,
+    )
+    expect(apiKeys.map((h) => h['x-luma-api-key']).sort()).toEqual([
+      'belgrade-secret',
+      'novisad-secret',
+    ])
+
+    for (const call of lumaCalls) {
+      expect(JSON.parse((call[1] as RequestInit).body as string)).toEqual({
+        infos: [{ email: 'person@example.com' }],
+      })
+    }
   })
 })

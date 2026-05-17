@@ -11,6 +11,7 @@
 - [x] Past Events homepage section: full-bleed band, content 80vw centered, responsive grid (3 columns on large screens)
 - [x] Coworking day slide deck (`/education/coworking-day`, 8 slides: brainstorming + Obsidian/Cursor PKM)
 - [x] Live Luma upcoming-events sync with static fallback (`/api/events/upcoming`, `lib/luma.ts`)
+- [x] Split Luma calendars: Belgrade + Novi Sad API keys (`LUMA_BELGRADE_API_KEY`, `LUMA_NOVI_SAD_API_KEY`); subscriber import to both
 - [x] Recap photo gallery: keyboard arrows in fullscreen lightbox (`PhotoGallery`)
 - [x] Add Cursor Meetup Novi Sad past event recap (Mar 17, 2026)
 - [x] Add Cursor Coworking Niš recap (Mar 20, 2026) with presentation video + interviews

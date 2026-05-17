@@ -19,7 +19,7 @@ The Cursor Community Serbia site is a Next.js 16 App Router application presenti
 | Route | Purpose |
 |-------|---------|
 | `/` | Homepage (hero, events, ambassadors, partners) |
-| `/api/events/upcoming` | Server route returning upcoming events (managed + listed merge, static fallback) |
+| `/api/events/upcoming` | Server route returning upcoming events from Belgrade + Novi Sad Luma calendars (static fallback) |
 | `/subscribe` | Mailing list subscription |
 | `/education` | Educational resources (presentations, PDFs) |
 | `/recaps/[slug]` | Event recap pages (`EventRecap`: summary; **Video Recap** section for main `videoUrl`; optional **Presentation** grid for `extraPresentations`; YouTube posters from `lib/youtube-metadata.ts`; Open Graph + JSON-LD `image` use first gallery photo; optional `interviews[]`, gallery) |
@@ -34,7 +34,7 @@ The Cursor Community Serbia site is a Next.js 16 App Router application presenti
 - `components/PastEvents.tsx` — Past events with recaps: responsive grid (1 / 2 / 3 columns); **full-bleed** section (`w-screen ml-[calc(50%-50vw)]`) so the band spans the viewport while nested content is **80vw** wide and centered; card layout with hero thumbnail, metadata, recap CTA
 - `components/EventCountdown.tsx` — Countdown driven by live upcoming events
 - `lib/use-upcoming-events.ts` — Client polling hook for upcoming events API
-- `lib/luma.ts` — Server-side Luma API mapping and calendar page parsing
+- `lib/luma.ts` — Server-side Luma API mapping; city calendar env helpers (`getLumaCityCalendars`)
 - `components/AmbassadorSection.tsx` — Ambassador cards
 - `components/Partners.tsx` — Partner logos
 - `components/SubscribeForm.tsx` — Mailing list form
@@ -52,7 +52,7 @@ The Cursor Community Serbia site is a Next.js 16 App Router application presenti
 - Next.js 16, React 19
 - Framer Motion, Lucide React
 - Content from `content/` (site config, events, ambassadors, partners, education)
-- Optional live events from Luma API and public calendar page via `app/api/events/upcoming/route.ts`
+- Optional live events from Belgrade and Novi Sad Luma calendars via `app/api/events/upcoming/route.ts`
 
 ## Verification
 

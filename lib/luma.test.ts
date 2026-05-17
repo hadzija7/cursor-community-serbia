@@ -1,5 +1,38 @@
-import { afterEach, describe, expect, it, vi } from 'vitest'
-import { fetchCalendarPageEvents, importCalendarPeople, mapLumaEntry } from '@/lib/luma'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
+import {
+  fetchCalendarPageEvents,
+  getLumaCityCalendars,
+  importCalendarPeople,
+  mapLumaEntry,
+} from '@/lib/luma'
+
+const ORIGINAL_ENV = process.env
+
+describe('getLumaCityCalendars', () => {
+  beforeEach(() => {
+    process.env = { ...ORIGINAL_ENV }
+    delete process.env.LUMA_BELGRADE_API_KEY
+    delete process.env.LUMA_NOVI_SAD_API_KEY
+  })
+
+  afterEach(() => {
+    process.env = ORIGINAL_ENV
+  })
+
+  it('returns empty array when no keys are configured', () => {
+    expect(getLumaCityCalendars()).toEqual([])
+  })
+
+  it('returns configured city calendars', () => {
+    process.env.LUMA_BELGRADE_API_KEY = ' belgrade '
+    process.env.LUMA_NOVI_SAD_API_KEY = 'novisad'
+
+    expect(getLumaCityCalendars()).toEqual([
+      { city: 'belgrade', apiKey: 'belgrade' },
+      { city: 'noviSad', apiKey: 'novisad' },
+    ])
+  })
+})
 
 describe('mapLumaEntry', () => {
   it('maps a flat Luma event to CursorEvent', () => {

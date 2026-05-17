@@ -1,23 +1,16 @@
 import { events } from '@/content/events'
-import { siteConfig } from '@/content/site.config'
 import { eventStartMs, isFutureEvent } from '@/lib/event-time'
-import { fetchCalendarPageEvents, fetchManagedEvents } from '@/lib/luma'
+import {
+  fetchManagedEvents,
+  getLumaCityCalendars,
+  type LumaCityCalendar,
+} from '@/lib/luma'
 import type { CursorEvent } from '@/lib/types'
 
 function staticFallback() {
   return events
     .filter(isFutureEvent)
     .sort((a, b) => eventStartMs(a.date, a.time) - eventStartMs(b.date, b.time))
-}
-
-function calendarSlug(): string {
-  const explicit = process.env.LUMA_CALENDAR_SLUG?.trim()
-  if (explicit) return explicit
-  try {
-    return new URL(siteConfig.lumaUrl).pathname.replace(/^\/+/, '').split('/')[0] || ''
-  } catch {
-    return ''
-  }
 }
 
 function mergeAndSort(...groups: CursorEvent[][]): CursorEvent[] {
@@ -28,39 +21,59 @@ function mergeAndSort(...groups: CursorEvent[][]): CursorEvent[] {
   )
 }
 
+type CityCounts = Record<LumaCityCalendar, number>
+
+function emptyCounts(): CityCounts {
+  return { belgrade: 0, noviSad: 0 }
+}
+
 export async function GET() {
-  const apiKey = process.env.LUMA_API_KEY
-  const slug = calendarSlug()
+  const calendars = getLumaCityCalendars()
+  const baseUrl = process.env.LUMA_API_BASE_URL
 
-  let managed: CursorEvent[] = []
-  let listed: CursorEvent[] = []
+  if (calendars.length === 0) {
+    return Response.json({
+      source: 'static',
+      events: staticFallback(),
+      counts: emptyCounts(),
+      updatedAt: new Date().toISOString(),
+    })
+  }
+
+  const counts = emptyCounts()
+  const eventGroups: CursorEvent[][] = []
   let hadError = false
+  let successCount = 0
 
-  if (apiKey) {
-    try {
-      managed = await fetchManagedEvents(apiKey, process.env.LUMA_API_BASE_URL)
-    } catch (err) {
+  const results = await Promise.allSettled(
+    calendars.map(async ({ city, apiKey }) => {
+      const fetched = await fetchManagedEvents(apiKey, baseUrl)
+      return { city, events: fetched }
+    }),
+  )
+
+  for (const result of results) {
+    if (result.status === 'fulfilled') {
+      successCount++
+      counts[result.value.city] = result.value.events.length
+      eventGroups.push(result.value.events)
+    } else {
       hadError = true
-      console.error('[events/upcoming] managed fetch failed:', err)
+      console.error('[events/upcoming] managed fetch failed:', result.reason)
     }
   }
 
-  if (slug) {
-    try {
-      listed = await fetchCalendarPageEvents(slug)
-    } catch (err) {
-      hadError = true
-      console.error('[events/upcoming] listed fetch failed:', err)
-    }
-  }
-
-  const merged = mergeAndSort(managed, listed)
+  const merged = mergeAndSort(...eventGroups)
 
   if (merged.length > 0) {
+    const source =
+      hadError && successCount > 0
+        ? 'partial-luma'
+        : 'luma'
     return Response.json({
-      source: apiKey && managed.length ? 'luma+listed' : 'listed',
+      source,
       events: merged,
-      counts: { managed: managed.length, listed: listed.length },
+      counts,
       updatedAt: new Date().toISOString(),
     })
   }
@@ -68,6 +81,7 @@ export async function GET() {
   return Response.json({
     source: hadError ? 'fallback' : 'static',
     events: staticFallback(),
+    counts,
     updatedAt: new Date().toISOString(),
   })
 }
