@@ -37,6 +37,8 @@ Living scorecard for Cursor Community Serbia. Update after each phase.
 
 | Date       | Change                          |
 |------------|----------------------------------|
+| 2026-05-17 | Recap UI: **Video Recap** section for `videoUrl`; **Presentation** only for `extraPresentations[]`; `getRecapYoutubeSections` in `lib/recap-youtube.ts` |
+| 2026-05-17 | Content: Cursor Coworking Day Belgrade recap (`cursor-coworking-belgrade-1`); Luma 9tlvu6ij; recap video https://youtu.be/ApGre9Btaq0 |
 | 2026-04-14 | Homepage: Past Events recap grid (3 columns on large screens, ~80% viewport width); static upcoming fallback uses future-dated `events` when `status: upcoming` list is empty |
 | 2026-04-10 | Thumbnails: past-event + recap OG/schema use first gallery photo; YouTube cards use player maxres / same CDN URLs as watch page |
 | 2026-04-10 | Content: Novi Sad Dec 2025 recap — presentation `videoUrl` https://youtu.be/Wpup2C1oPWY |

@@ -10,7 +10,7 @@ Content is driven by TypeScript/JSON files in `content/`. No CMS; content lives 
 |-------|-------|
 | Status | Implemented |
 | Verified | Partial |
-| Last updated | 2026-04-14 |
+| Last updated | 2026-05-17 |
 
 ## Content Sources
 
@@ -21,9 +21,9 @@ Content is driven by TypeScript/JSON files in `content/`. No CMS; content lives 
 | `content/ambassadors.ts` | Ambassador names, photos, social links |
 | `content/partners.ts` | Partner logos, URLs |
 | `content/education.ts` | Educational resources (presentations, PDFs) |
-| `content/header-photos.ts` | Hero bento grid images |
+| `content/header-photos.ts` | Hero bento grid images (includes `public/images/mural-cursor-logo-mockup.png` for venue mural + Cursor branding) |
 | `content/locales/*.json` | i18n dictionaries |
-| `content/recaps/*.ts` | Recap document content (`RecapData`: summary, optional `videoUrl`, optional `videoThumbnailUrl` for non-YouTube video poster, optional `extraPresentations[]` `{ youtubeUrl, title? }` merged into one YouTube grid with titles/descriptions/thumbs fetched server-side, optional `interviews[]`, gallery) |
+| `content/recaps/*.ts` | Recap document content (`RecapData`: summary, optional `videoUrl` → **Video Recap** section, optional `extraPresentations[]` → **Presentation** section, optional `videoThumbnailUrl`, optional `interviews[]`, gallery) |
 
 ## Types
 

@@ -14,8 +14,8 @@ export const headerPhotos: HeaderPhoto[] = [
     mobile: { row: 1, col: 1, rowSpan: 2, colSpan: 2 },
   },
   {
-    src: '/images/events/cursorcafe2.jpg',
-    alt: 'Cursor meetup participants working together',
+    src: '/images/mural-cursor-logo-mockup.png',
+    alt: 'Cafe wall mural with Cursor wordmark on the illustrated machine',
     row: 1,
     col: 3,
     mobile: { row: 3, col: 1 },

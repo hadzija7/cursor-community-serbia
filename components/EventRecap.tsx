@@ -12,6 +12,9 @@ import { parseYouTubeVideoId, toYouTubeEmbedUrl } from '@/lib/youtube-embed'
 
 interface EventRecapProps {
   recap: RecapData
+  /** Main event recording (`recap.videoUrl` when YouTube). */
+  youtubeVideoRecapCards?: Array<{ youtubeUrl: string; meta: YouTubeCardMeta }>
+  /** Extra session recordings (`recap.extraPresentations`). */
   youtubePresentationCards?: Array<{ youtubeUrl: string; meta: YouTubeCardMeta }>
 }
 
@@ -116,14 +119,20 @@ function YoutubePresentationCard({
   )
 }
 
-export default function EventRecap({ recap, youtubePresentationCards }: EventRecapProps) {
+export default function EventRecap({
+  recap,
+  youtubeVideoRecapCards,
+  youtubePresentationCards,
+}: EventRecapProps) {
   const { t } = useI18n()
   const youtubeMainEmbed = recap.videoUrl ? toYouTubeEmbedUrl(recap.videoUrl) : null
   const presentationIframeSrc =
     youtubeMainEmbed ?? (recap.videoUrl?.startsWith('http') ? recap.videoUrl : null)
   const legacyNonYoutubeMain = Boolean(recap.videoUrl && !parseYouTubeVideoId(recap.videoUrl))
-  const youtubeGridCount = youtubePresentationCards?.length ?? 0
-  const showPresentationSection = legacyNonYoutubeMain || youtubeGridCount > 0
+  const videoRecapYoutubeCount = youtubeVideoRecapCards?.length ?? 0
+  const presentationYoutubeCount = youtubePresentationCards?.length ?? 0
+  const showVideoRecapSection = legacyNonYoutubeMain || videoRecapYoutubeCount > 0
+  const showPresentationSection = presentationYoutubeCount > 0
 
   return (
     <motion.section
@@ -167,10 +176,10 @@ export default function EventRecap({ recap, youtubePresentationCards }: EventRec
           ))}
         </div>
 
-        {showPresentationSection ? (
+        {showVideoRecapSection ? (
           <div className="border-t border-cursor-border mt-6 pt-6">
-            <h3 className="text-lg font-semibold text-cursor-text mb-1">{t('recap.presentationTitle')}</h3>
-            <p className="text-cursor-text-muted text-sm mb-4">{t('recap.presentationSubtitle')}</p>
+            <h3 className="text-lg font-semibold text-cursor-text mb-1">{t('recap.videoRecapTitle')}</h3>
+            <p className="text-cursor-text-muted text-sm mb-4">{t('recap.videoRecapSubtitle')}</p>
 
             {legacyNonYoutubeMain && recap.videoUrl ? (
               <>
@@ -178,7 +187,7 @@ export default function EventRecap({ recap, youtubePresentationCards }: EventRec
                   <div className="rounded-lg overflow-hidden border border-cursor-border aspect-video relative bg-black">
                     <iframe
                       src={presentationIframeSrc}
-                      title={t('recap.presentationTitle')}
+                      title={t('recap.videoRecapTitle')}
                       allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                       allowFullScreen
                       className="w-full h-full"
@@ -199,21 +208,39 @@ export default function EventRecap({ recap, youtubePresentationCards }: EventRec
               </>
             ) : null}
 
-            {youtubeGridCount > 0 ? (
+            {videoRecapYoutubeCount > 0 ? (
               <div
                 className={`grid grid-cols-1 md:grid-cols-2 gap-6 ${legacyNonYoutubeMain ? 'mt-6' : ''}`}
               >
-                {youtubePresentationCards!.map((card, index) => (
+                {youtubeVideoRecapCards!.map((card, index) => (
                   <YoutubePresentationCard
                     key={card.youtubeUrl}
                     youtubeUrl={card.youtubeUrl}
                     meta={card.meta}
-                    playLabel={t('recap.playPresentation')}
+                    playLabel={t('recap.playVideoRecap')}
                     priority={index === 0}
                   />
                 ))}
               </div>
             ) : null}
+          </div>
+        ) : null}
+
+        {showPresentationSection ? (
+          <div className="border-t border-cursor-border mt-6 pt-6">
+            <h3 className="text-lg font-semibold text-cursor-text mb-1">{t('recap.presentationTitle')}</h3>
+            <p className="text-cursor-text-muted text-sm mb-4">{t('recap.presentationSubtitle')}</p>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {youtubePresentationCards!.map((card, index) => (
+                <YoutubePresentationCard
+                  key={card.youtubeUrl}
+                  youtubeUrl={card.youtubeUrl}
+                  meta={card.meta}
+                  playLabel={t('recap.playPresentation')}
+                  priority={index === 0}
+                />
+              ))}
+            </div>
           </div>
         ) : null}
 

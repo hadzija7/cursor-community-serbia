@@ -7,9 +7,11 @@ import { cafecursorBelgrade1Recap } from './cafe-cursor-belgrade-1'
 import { cursorCoworkingNis1Recap } from './cursor-coworking-nis-1'
 import { cursorCoworkingNovisad1Recap } from './cursor-coworking-novisad-1'
 import { cursorBelgradeHub201Meetup1Recap } from './cursor-belgrade-hub201-1'
+import { cursorCoworkingBelgrade1Recap } from './cursor-coworking-belgrade-1'
 
 export const recapsBySlug: Record<string, RecapData> = {
   [cafeCursorCannes1Recap.slug]: cafeCursorCannes1Recap,
+  [cursorCoworkingBelgrade1Recap.slug]: cursorCoworkingBelgrade1Recap,
   [cursorBelgradeHub201Meetup1Recap.slug]: cursorBelgradeHub201Meetup1Recap,
   [cafecursorNovisad1Recap.slug]: cafecursorNovisad1Recap,
   [cafecursorBelgrade1Recap.slug]: cafecursorBelgrade1Recap,

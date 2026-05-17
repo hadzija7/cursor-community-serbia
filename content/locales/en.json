@@ -37,6 +37,9 @@
   },
   "recap": {
     "title": "Event recap",
+    "videoRecapTitle": "Video Recap",
+    "videoRecapSubtitle": "Recording from the event.",
+    "playVideoRecap": "Play recap video",
     "presentationTitle": "Presentation",
     "presentationSubtitle": "Recording of the main session from the event.",
     "playPresentation": "Play presentation video",
