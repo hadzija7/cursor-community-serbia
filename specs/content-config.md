@@ -21,7 +21,7 @@ Content is driven by TypeScript/JSON files in `content/`. No CMS; content lives 
 | `content/ambassadors.ts` | Ambassador names, photos, social links |
 | `content/partners.ts` | Partner logos, URLs |
 | `content/education.ts` | Educational resources (presentations, PDFs) |
-| `content/header-photos.ts` | Hero bento grid images (includes `public/images/mural-cursor-logo-mockup.png` for venue mural + Cursor branding) |
+| `content/header-photos.ts` | Hero bento grid images (local `public/images/` paths and optional Google Drive `uc?export=view&id=` URLs, same pattern as recap galleries and past-event thumbnails) |
 | `content/locales/*.json` | i18n dictionaries |
 | `content/recaps/*.ts` | Recap document content (`RecapData`: summary, optional `videoUrl` → **Video Recap** section, optional `extraPresentations[]` → **Presentation** section, optional `videoThumbnailUrl`, optional `interviews[]`, gallery) |
 

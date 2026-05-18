@@ -7,7 +7,7 @@
 - [ ] Add/expand unit tests for education config
 
 ## Phase 2: Content & Polish
-- [x] Homepage hero bento: venue mural with Cursor logo (`content/header-photos.ts`, `public/images/mural-cursor-logo-mockup.png`)
+- [x] Homepage hero bento: Cannes event photo via Google Drive (`content/header-photos.ts`, Drive id `1yDEyEWC-1WACUkMkRIY_Y5EpkJh0Xkkd`)
 - [x] Past Events homepage section: full-bleed band, content 80vw centered, responsive grid (3 columns on large screens)
 - [x] Coworking day slide deck (`/education/coworking-day`, 8 slides: brainstorming + Obsidian/Cursor PKM)
 - [x] Live Luma upcoming-events sync with static fallback (`/api/events/upcoming`, `lib/luma.ts`)
