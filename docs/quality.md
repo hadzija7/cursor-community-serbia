@@ -37,6 +37,8 @@ Living scorecard for Cursor Community Serbia. Update after each phase.
 
 | Date       | Change                          |
 |------------|----------------------------------|
+| 2026-05-27 | Content: Cursor Meetup Novi Sad May 26, 2026 recap — gallery swapped to JPEG Drive uploads (replaced CR3 originals) |
+| 2026-05-27 | Content: Cursor Meetup Novi Sad May 26, 2026 recap (`cursor-meetup-novisad-may-2026`); Luma jn59jzyp; Memclaw presentation; 10 gallery photos |
 | 2026-05-17 | YouTube recap metadata: cache key bumped (`youtube-video-metadata-v2`) + per-video `revalidateTag` helper so updated video descriptions (e.g. Aleks “SDLC with Cursor”) refetch from YouTube |
 | 2026-05-17 | Recap UI: **Video Recap** section for `videoUrl`; **Presentation** only for `extraPresentations[]`; `getRecapYoutubeSections` in `lib/recap-youtube.ts` |
 | 2026-05-17 | Content: Cursor Coworking Day Belgrade recap (`cursor-coworking-belgrade-1`); Luma 9tlvu6ij; recap video https://youtu.be/ApGre9Btaq0 |
