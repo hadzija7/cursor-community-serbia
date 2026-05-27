@@ -37,6 +37,7 @@ Living scorecard for Cursor Community Serbia. Update after each phase.
 
 | Date       | Change                          |
 |------------|----------------------------------|
+| 2026-05-27 | Content: Cursor Meetup Novi Sad May 26, 2026 — Memclaw presentation in `extraPresentations` (Presentation section) https://youtu.be/ynhKwdcadMA |
 | 2026-05-27 | Content: Cursor Meetup Novi Sad May 26, 2026 recap — gallery swapped to JPEG Drive uploads (replaced CR3 originals) |
 | 2026-05-27 | Content: Cursor Meetup Novi Sad May 26, 2026 recap (`cursor-meetup-novisad-may-2026`); Luma jn59jzyp; Memclaw presentation; 10 gallery photos |
 | 2026-05-17 | YouTube recap metadata: cache key bumped (`youtube-video-metadata-v2`) + per-video `revalidateTag` helper so updated video descriptions (e.g. Aleks “SDLC with Cursor”) refetch from YouTube |

@@ -17,6 +17,7 @@ export const cursorMeetupNovisadMay2026Recap: RecapData = {
     'From 6:00 to 6:45 PM the room stayed locked in on the presentation; from 6:45 to 8:00 PM we opened up for networking, drinks, and the kind of side conversations that keep a meetup going.',
     'Whether people came curious about Memclaw, working on their own projects, or just looking to meet other builders, the takeaway was the same: new connections, a clearer picture of personal memory tooling, and another strong Novi Sad Cursor evening.',
   ],
+  extraPresentations: [{ youtubeUrl: 'https://youtu.be/ynhKwdcadMA' }],
   photos: [
     { src: driveImg('1E0NV4YFLlFD8O72R0DrCqQ6pkjvwTE2k'), alt: 'Cursor Meetup Novi Sad' },
     { src: driveImg('1_x6bxrlfMpXLTc8sS89HpWXzEguhduCn'), alt: 'Memclaw presentation' },
