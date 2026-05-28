@@ -20,6 +20,7 @@ pnpm dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000).
+Run `pnpm test` to test the project.
 
 ## Key Features
 

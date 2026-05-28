@@ -25,6 +25,7 @@
 - [ ] Verify i18n keys and add Serbian locale if needed
 
 ## Phase 3: Quality & Observability
+- [x] Document the test command in the README Quick Start
 - [ ] Improve test coverage per `specs/testing-strategy.md`
 - [ ] Document deployment and env setup for contributors
 - [ ] Add CI checks for build, lint, test
