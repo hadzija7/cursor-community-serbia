@@ -5,6 +5,7 @@
 - [ ] Verify all specs reflect current implementation
 - [x] Add/expand unit tests for subscribe API (mailing list + Luma)
 - [ ] Add/expand unit tests for education config
+- [x] Fix lint for graphite demo server (`graphite-demo/server.js`)
 
 ## Phase 2: Content & Polish
 - [x] Homepage hero bento: Cannes event photo via Google Drive (`content/header-photos.ts`, Drive id `1yDEyEWC-1WACUkMkRIY_Y5EpkJh0Xkkd`)
