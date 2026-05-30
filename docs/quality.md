@@ -19,7 +19,7 @@ Living scorecard for Cursor Community Serbia. Update after each phase.
 | Layer          | Grade | Notes                                    |
 |----------------|-------|------------------------------------------|
 | Error handling | C     | Basic try/catch; API returns errors      |
-| Security       | C     | Env vars for secrets; no hardcoded keys |
+| Security       | B     | Rate limiting, security headers, DOMPurify, input validation |
 | Observability  | D     | Vercel Analytics; no structured logging |
 | Performance    | B     | Next.js optimizations; static where possible |
 | CI             | D     | No CI config in repo                     |
@@ -37,6 +37,7 @@ Living scorecard for Cursor Community Serbia. Update after each phase.
 
 | Date       | Change                          |
 |------------|----------------------------------|
+| 2026-05-30 | Security hardening: rate limiting on `/api/subscribe`, security headers, DOMPurify for HTML/SVG, GA ID moved to env var, email length validation, error log redaction |
 | 2026-05-27 | Content: Cursor Meetup Novi Sad May 26, 2026 — Memclaw presentation in `extraPresentations` (Presentation section) https://youtu.be/ynhKwdcadMA |
 | 2026-05-27 | Content: Cursor Meetup Novi Sad May 26, 2026 recap — gallery swapped to JPEG Drive uploads (replaced CR3 originals) |
 | 2026-05-27 | Content: Cursor Meetup Novi Sad May 26, 2026 recap (`cursor-meetup-novisad-may-2026`); Luma jn59jzyp; Memclaw presentation; 10 gallery photos |

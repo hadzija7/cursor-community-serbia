@@ -5,7 +5,7 @@ import { I18nProvider } from '@/lib/i18n'
 import { siteConfig } from '@/content/site.config'
 import './globals.css'
 
-const GA_ID = 'G-TJRWP2YTM2'
+const GA_ID = process.env.NEXT_PUBLIC_GA_ID ?? ''
 
 export const metadata: Metadata = {
   title: `${siteConfig.communityName} ${siteConfig.communityNameLocal} | Cursor Ambassador Site`,
@@ -35,18 +35,22 @@ export default function RootLayout({
       <body className="antialiased">
         <I18nProvider>{children}</I18nProvider>
         <Analytics />
-        <Script
-          src={`https://www.googletagmanager.com/gtag/js?id=${GA_ID}`}
-          strategy="afterInteractive"
-        />
-        <Script id="google-analytics" strategy="afterInteractive">
-          {`
-            window.dataLayer = window.dataLayer || [];
-            function gtag(){dataLayer.push(arguments);}
-            gtag('js', new Date());
-            gtag('config', '${GA_ID}');
-          `}
-        </Script>
+        {GA_ID ? (
+          <>
+            <Script
+              src={`https://www.googletagmanager.com/gtag/js?id=${GA_ID}`}
+              strategy="afterInteractive"
+            />
+            <Script id="google-analytics" strategy="afterInteractive">
+              {`
+                window.dataLayer = window.dataLayer || [];
+                function gtag(){dataLayer.push(arguments);}
+                gtag('js', new Date());
+                gtag('config', '${GA_ID}');
+              `}
+            </Script>
+          </>
+        ) : null}
       </body>
     </html>
   )
