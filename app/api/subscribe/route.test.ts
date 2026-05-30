@@ -3,10 +3,16 @@ import { POST } from '@/app/api/subscribe/route'
 
 const ORIGINAL_ENV = process.env
 
-function buildRequest(email: string) {
+let ipCounter = 0
+
+function buildRequest(email: string, ip?: string) {
+  const uniqueIp = ip ?? `10.0.0.${++ipCounter}`
   return new Request('http://localhost/api/subscribe', {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
+    headers: {
+      'Content-Type': 'application/json',
+      'x-forwarded-for': uniqueIp,
+    },
     body: JSON.stringify({ email }),
   })
 }
@@ -113,5 +119,24 @@ describe('POST /api/subscribe', () => {
         infos: [{ email: 'person@example.com' }],
       })
     }
+  })
+
+  it('returns 429 after exceeding rate limit', async () => {
+    const rateLimitIp = '192.168.99.99'
+    for (let i = 0; i < 5; i++) {
+      await POST(buildRequest('not-an-email', rateLimitIp))
+    }
+    const response = await POST(buildRequest('person@example.com', rateLimitIp))
+    const body = (await response.json()) as { ok: boolean; message: string }
+    expect(response.status).toBe(429)
+    expect(body.message).toContain('Too many requests')
+  })
+
+  it('returns 400 for emails exceeding max length', async () => {
+    const longEmail = 'a'.repeat(250) + '@b.co'
+    const response = await POST(buildRequest(longEmail))
+    const body = (await response.json()) as { ok: boolean; message: string }
+    expect(response.status).toBe(400)
+    expect(body.message).toContain('valid email')
   })
 })

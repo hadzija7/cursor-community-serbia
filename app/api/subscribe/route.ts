@@ -3,6 +3,24 @@ import { getDb } from '@/lib/db'
 import { getLumaCityCalendars, importCalendarPeople } from '@/lib/luma'
 
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+const MAX_EMAIL_LENGTH = 254
+
+// ---------------- simple in-memory rate limiter ----------------
+const RATE_WINDOW_MS = 60_000
+const RATE_MAX_REQUESTS = 5
+
+const requestCounts = new Map<string, { count: number; resetAt: number }>()
+
+function isRateLimited(ip: string): boolean {
+  const now = Date.now()
+  const entry = requestCounts.get(ip)
+  if (!entry || now >= entry.resetAt) {
+    requestCounts.set(ip, { count: 1, resetAt: now + RATE_WINDOW_MS })
+    return false
+  }
+  entry.count++
+  return entry.count > RATE_MAX_REQUESTS
+}
 
 interface SubscribeRequest {
   email?: string
@@ -45,6 +63,12 @@ async function syncSubscriberToLuma(email: string) {
 }
 
 export async function POST(request: Request) {
+  const forwarded = request.headers.get('x-forwarded-for')
+  const ip = forwarded?.split(',')[0]?.trim() || 'unknown'
+  if (isRateLimited(ip)) {
+    return toError('Too many requests. Please try again later.', 429)
+  }
+
   let payload: SubscribeRequest
 
   try {
@@ -54,7 +78,7 @@ export async function POST(request: Request) {
   }
 
   const email = payload.email?.trim().toLowerCase()
-  if (!email || !EMAIL_PATTERN.test(email)) {
+  if (!email || email.length > MAX_EMAIL_LENGTH || !EMAIL_PATTERN.test(email)) {
     return toError('Please provide a valid email address.', 400)
   }
 
@@ -72,7 +96,7 @@ export async function POST(request: Request) {
       `
       inserted = result.length > 0
     } catch (err) {
-      console.error('Postgres subscribe error:', err)
+      console.error('Postgres subscribe error:', err instanceof Error ? err.message : 'unknown')
       return toError('Could not save subscription.', 500)
     }
 
@@ -96,7 +120,7 @@ export async function POST(request: Request) {
         })
       } catch {
         // Log but don't fail - Postgres write succeeded
-        console.error('Webhook notify failed:', webhookUrl)
+        console.error('Webhook notify failed')
       }
     }
 

@@ -1,5 +1,6 @@
 'use client'
 
+import DOMPurify from 'dompurify'
 import { useEffect, useState } from 'react'
 
 interface DiagramSlideProps {
@@ -90,7 +91,7 @@ export default function DiagramSlide({ src, alt, caption }: DiagramSlideProps) {
         <div
           className="w-full border border-cursor-border rounded-md overflow-hidden"
           style={{ minHeight: '300px' }}
-          dangerouslySetInnerHTML={{ __html: modifiedSvg }}
+          dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(modifiedSvg, { USE_PROFILES: { svg: true }, ADD_TAGS: ['use'] }) }}
         />
       </div>
       {caption ? <p className="text-cursor-text-muted text-lg text-center max-w-3xl">{caption}</p> : null}
