@@ -3,6 +3,19 @@ import { CursorEvent } from '@/lib/types'
 // REPLACE: Replace all sample events, locations, and Luma URLs with real community events.
 export const events: CursorEvent[] = [
   {
+    id: 'cafe-cursor-belgrade-summer-2026',
+    title: 'Cafe Cursor Belgrade — Summer Edition',
+    date: '2026-06-28',
+    time: '11:00',
+    displayDate: 'June 28, 2026',
+    attendees: 67,
+    location: 'Belgrade, Serbia',
+    recapPath: '/recaps/cafe-cursor-belgrade-summer-2026',
+    thumbnail: 'https://drive.google.com/uc?export=view&id=1YmPZwDDF1Op1bSvQ4R3Lx4otJkjlCVUj',
+    lumaUrl: 'https://luma.com/cursor-belgrade',
+    status: 'past',
+  },
+  {
     id: 'cursor-meetup-novisad-may-2026',
     title: 'Cursor Meetup Novi Sad',
     date: '2026-05-26',
