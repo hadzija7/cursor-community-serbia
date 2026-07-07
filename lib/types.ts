@@ -79,6 +79,11 @@ export interface RecapInterview {
   youtubeUrl: string
 }
 
+export interface RecapExtraVideoRecap {
+  title?: string
+  videoUrl: string
+}
+
 /** Title, description, and thumbnail for a YouTube recap card (from oEmbed / player response). */
 export interface YouTubeCardMeta {
   title: string
@@ -102,6 +107,8 @@ export interface RecapData {
   summary: string[]
   host?: { name: string; logo: string; url?: string }
   videoUrl?: string
+  /** Additional recap recordings (e.g. second Drive upload), shown in the Video Recap section. */
+  extraVideoRecaps?: RecapExtraVideoRecap[]
   /** Optional image shown before play for embedded presentation (e.g. YouTube). Click reveals the player. */
   videoThumbnailUrl?: string
   /** More session recordings (e.g. a second talk), shown below the main presentation. */

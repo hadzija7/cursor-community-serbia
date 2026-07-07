@@ -9,6 +9,7 @@ import PhotoGallery from '@/components/PhotoGallery'
 import type { RecapData, YouTubeCardMeta } from '@/lib/types'
 import { useI18n } from '@/lib/i18n'
 import { parseYouTubeVideoId, toYouTubeEmbedUrl } from '@/lib/youtube-embed'
+import { toDrivePreviewEmbedUrl, toDriveVideoSrc } from '@/lib/drive-embed'
 
 interface EventRecapProps {
   recap: RecapData
@@ -86,6 +87,60 @@ function LazyYouTubePlayer({
   )
 }
 
+function VideoEmbedFrame({ src, title }: { src: string; title: string }) {
+  const [useIframeFallback, setUseIframeFallback] = useState(false)
+  const youtubeEmbed = toYouTubeEmbedUrl(src)
+  const driveVideoSrc = toDriveVideoSrc(src)
+  const drivePreviewSrc = toDrivePreviewEmbedUrl(src)
+
+  if (youtubeEmbed) {
+    return (
+      <div className="rounded-lg overflow-hidden border border-cursor-border aspect-video relative bg-black min-h-0 w-full">
+        <iframe
+          src={youtubeEmbed}
+          title={title}
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+          allowFullScreen
+          className="absolute inset-0 h-full w-full border-0"
+        />
+      </div>
+    )
+  }
+
+  if (driveVideoSrc && !useIframeFallback) {
+    return (
+      <div className="rounded-lg overflow-hidden border border-cursor-border aspect-video relative bg-black min-h-0 w-full">
+        <video
+          src={driveVideoSrc}
+          controls
+          preload="metadata"
+          playsInline
+          title={title}
+          onError={() => setUseIframeFallback(true)}
+          className="absolute inset-0 h-full w-full object-contain"
+        />
+      </div>
+    )
+  }
+
+  const embedSrc = drivePreviewSrc ?? (src.startsWith('http') ? src : null)
+  if (!embedSrc) {
+    return <p className="text-sm text-cursor-text-muted">Unsupported video URL.</p>
+  }
+
+  return (
+    <div className="rounded-lg overflow-hidden border border-cursor-border aspect-video relative bg-black min-h-0 w-full">
+      <iframe
+        src={embedSrc}
+        title={title}
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+        allowFullScreen
+        className="absolute inset-0 h-full w-full border-0"
+      />
+    </div>
+  )
+}
+
 function YoutubePresentationCard({
   youtubeUrl,
   meta,
@@ -129,10 +184,14 @@ export default function EventRecap({
   const presentationIframeSrc =
     youtubeMainEmbed ?? (recap.videoUrl?.startsWith('http') ? recap.videoUrl : null)
   const legacyNonYoutubeMain = Boolean(recap.videoUrl && !parseYouTubeVideoId(recap.videoUrl))
+  const extraVideoRecapCount = recap.extraVideoRecaps?.length ?? 0
   const videoRecapYoutubeCount = youtubeVideoRecapCards?.length ?? 0
   const presentationYoutubeCount = youtubePresentationCards?.length ?? 0
-  const showVideoRecapSection = legacyNonYoutubeMain || videoRecapYoutubeCount > 0
+  const showVideoRecapSection =
+    legacyNonYoutubeMain || videoRecapYoutubeCount > 0 || extraVideoRecapCount > 0
   const showPresentationSection = presentationYoutubeCount > 0
+  const mainDriveEmbed =
+    legacyNonYoutubeMain && presentationIframeSrc ? presentationIframeSrc : null
 
   return (
     <motion.section
@@ -181,48 +240,50 @@ export default function EventRecap({
             <h3 className="text-lg font-semibold text-cursor-text mb-1">{t('recap.videoRecapTitle')}</h3>
             <p className="text-cursor-text-muted text-sm mb-4">{t('recap.videoRecapSubtitle')}</p>
 
-            {legacyNonYoutubeMain && recap.videoUrl ? (
-              <>
-                {presentationIframeSrc ? (
-                  <div className="rounded-lg overflow-hidden border border-cursor-border aspect-video relative bg-black">
-                    <iframe
-                      src={presentationIframeSrc}
-                      title={t('recap.videoRecapTitle')}
-                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                      allowFullScreen
-                      className="w-full h-full"
-                    />
-                  </div>
-                ) : (
-                  <div className="rounded-lg overflow-hidden border border-cursor-border aspect-video relative bg-black">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {mainDriveEmbed ? (
+                <div className="min-w-0">
+                  <VideoEmbedFrame src={mainDriveEmbed} title={t('recap.videoRecapTitle')} />
+                </div>
+              ) : legacyNonYoutubeMain && recap.videoUrl ? (
+                <div className="min-w-0">
+                  <div className="rounded-lg overflow-hidden border border-cursor-border aspect-video relative bg-black min-h-0 w-full">
                     <video
                       src={recap.videoUrl}
                       controls
                       preload="metadata"
-                      className="w-full h-full"
                       playsInline
                       poster={recap.videoThumbnailUrl}
+                      title={t('recap.videoRecapTitle')}
+                      className="absolute inset-0 h-full w-full object-contain"
                     />
                   </div>
-                )}
-              </>
-            ) : null}
+                </div>
+              ) : null}
 
-            {videoRecapYoutubeCount > 0 ? (
-              <div
-                className={`grid grid-cols-1 md:grid-cols-2 gap-6 ${legacyNonYoutubeMain ? 'mt-6' : ''}`}
-              >
-                {youtubeVideoRecapCards!.map((card, index) => (
+              {recap.extraVideoRecaps?.map((item) => (
+                <div key={item.videoUrl} className="min-w-0">
+                  {item.title ? (
+                    <p className="text-sm font-medium text-cursor-text mb-2">{item.title}</p>
+                  ) : null}
+                  <VideoEmbedFrame
+                    src={item.videoUrl}
+                    title={item.title ?? t('recap.videoRecapTitle')}
+                  />
+                </div>
+              ))}
+
+              {youtubeVideoRecapCards?.map((card, index) => (
+                <div key={card.youtubeUrl} className="min-w-0">
                   <YoutubePresentationCard
-                    key={card.youtubeUrl}
                     youtubeUrl={card.youtubeUrl}
                     meta={card.meta}
                     playLabel={t('recap.playVideoRecap')}
                     priority={index === 0}
                   />
-                ))}
-              </div>
-            ) : null}
+                </div>
+              ))}
+            </div>
           </div>
         ) : null}
 
@@ -248,28 +309,13 @@ export default function EventRecap({
           <div className="border-t border-cursor-border mt-6 pt-6">
             <h3 className="text-lg font-semibold text-cursor-text mb-1">{t('recap.interviewsTitle')}</h3>
             <p className="text-cursor-text-muted text-sm mb-4">{t('recap.interviewsSubtitle')}</p>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {recap.interviews.map((item) => {
-                const embed = toYouTubeEmbedUrl(item.youtubeUrl)
-                return (
-                  <div key={`${item.title}-${item.youtubeUrl}`} className="space-y-2">
-                    <p className="text-sm font-medium text-cursor-text">{item.title}</p>
-                    {embed ? (
-                      <div className="rounded-lg overflow-hidden border border-cursor-border aspect-video">
-                        <iframe
-                          src={embed}
-                          title={item.title}
-                          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                          allowFullScreen
-                          className="w-full h-full"
-                        />
-                      </div>
-                    ) : (
-                      <p className="text-sm text-cursor-text-muted">Unsupported video URL.</p>
-                    )}
-                  </div>
-                )
-              })}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {recap.interviews.map((item) => (
+                <div key={`${item.title}-${item.youtubeUrl}`} className="min-w-0">
+                  <p className="text-sm font-medium text-cursor-text mb-2">{item.title}</p>
+                  <VideoEmbedFrame src={item.youtubeUrl} title={item.title} />
+                </div>
+              ))}
             </div>
           </div>
         ) : null}

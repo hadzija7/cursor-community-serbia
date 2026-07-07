@@ -20,6 +20,7 @@
 - [x] Add Cursor Meetup Novi Sad Dec 23, 2025 recap; Luma https://luma.com/udbedo7b
 - [x] Add Cursor Coworking Day Belgrade recap (May 15, 2026); Luma https://luma.com/9tlvu6ij
 - [x] Add Cursor Meetup Novi Sad May 26, 2026 recap (Memclaw); Luma https://luma.com/jn59jzyp
+- [x] Add Cafe Cursor Belgrade Summer Edition recap (Jun 28, 2026); Luma https://luma.com/cursor-belgrade
 - [ ] Review and update content (events, ambassadors, partners) for Serbia
 - [ ] Ensure education resources are complete and linked correctly
 - [ ] Verify i18n keys and add Serbian locale if needed
