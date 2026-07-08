@@ -5,9 +5,9 @@ export const hackathonConfig = {
   tagline: 'Build the future with AI — one full day of hacking, learning, and community.',
   date: '2026-08-20',
   displayDate: 'August 20, 2026',
-  location: 'Belgrade, Serbia',
+  location: 'Novi Sad, Serbia',
   duration: '1 full day',
-  lumaUrl: 'https://luma.com/cursorcommunity',
+  lumaUrl: 'https://luma.com/ghvnbjlx',
 }
 
 export const hackathonStats = [

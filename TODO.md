@@ -22,7 +22,9 @@
 - [x] Add Cursor Meetup Novi Sad May 26, 2026 recap (Memclaw); Luma https://luma.com/jn59jzyp
 - [x] Add Cafe Cursor Belgrade Summer Edition recap (Jun 28, 2026); Luma https://luma.com/cursor-belgrade
 - [x] Hackathon landing page (`/hackathon`): sponsor marquee, sponsorship form, API route; hero + highlights layout (TUM-inspired, orange accent)
+- [x] Hackathon content: location Novi Sad, Luma `https://luma.com/ghvnbjlx`, CTA "Sponsor event"
 - [ ] Review and update content (events, ambassadors, partners) for Serbia
+
 - [ ] Ensure education resources are complete and linked correctly
 - [ ] Verify i18n keys and add Serbian locale if needed
 
