@@ -27,6 +27,21 @@ try {
   `
   await sql`CREATE INDEX IF NOT EXISTS idx_subscribers_email ON subscribers (email)`
   await sql`CREATE INDEX IF NOT EXISTS idx_subscribers_subscribed_at ON subscribers (subscribed_at DESC)`
+  await sql`
+    CREATE TABLE IF NOT EXISTS hackathon_sponsor_applications (
+      id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+      company_name TEXT NOT NULL,
+      contact_name TEXT NOT NULL,
+      email TEXT NOT NULL,
+      website TEXT,
+      message TEXT,
+      source TEXT NOT NULL DEFAULT 'website-hackathon-sponsor-form',
+      community TEXT NOT NULL,
+      submitted_at TIMESTAMPTZ NOT NULL DEFAULT now()
+    )
+  `
+  await sql`CREATE INDEX IF NOT EXISTS idx_hackathon_sponsor_applications_email ON hackathon_sponsor_applications (email)`
+  await sql`CREATE INDEX IF NOT EXISTS idx_hackathon_sponsor_applications_submitted_at ON hackathon_sponsor_applications (submitted_at DESC)`
   console.log('✓ Schema created successfully')
 } catch (err) {
   console.error('Schema setup failed:', err.message)
