@@ -1,55 +1,55 @@
-@import url('https://fonts.googleapis.com/css2?family=Thasadith:wght@400;700&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Thasadith:wght@400;700&display=swap");
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @font-face {
-  font-family: 'BSRU Pro';
-  src: url('/fonts/BSRU Pro Regular.woff') format('woff');
+  font-family: "BSRU Pro";
+  src: url("/fonts/BSRU Pro Regular.woff") format("woff");
   font-weight: normal;
   font-style: normal;
   font-display: swap;
 }
 
 @font-face {
-  font-family: 'CursorGothic';
-  src: url('/fonts/CursorGothic-Regular.woff2') format('woff2');
+  font-family: "CursorGothic";
+  src: url("/fonts/CursorGothic-Regular.woff2") format("woff2");
   font-weight: 400;
   font-style: normal;
   font-display: swap;
 }
 
 @font-face {
-  font-family: 'CursorGothic';
-  src: url('/fonts/CursorGothic-Italic.woff2') format('woff2');
+  font-family: "CursorGothic";
+  src: url("/fonts/CursorGothic-Italic.woff2") format("woff2");
   font-weight: 400;
   font-style: italic;
   font-display: swap;
 }
 
 @font-face {
-  font-family: 'CursorGothic';
-  src: url('/fonts/CursorGothic-Bold.woff2') format('woff2');
+  font-family: "CursorGothic";
+  src: url("/fonts/CursorGothic-Bold.woff2") format("woff2");
   font-weight: 700;
   font-style: normal;
   font-display: swap;
 }
 
 @font-face {
-  font-family: 'CursorGothic';
-  src: url('/fonts/CursorGothic-BoldItalic.woff2') format('woff2');
+  font-family: "CursorGothic";
+  src: url("/fonts/CursorGothic-BoldItalic.woff2") format("woff2");
   font-weight: 700;
   font-style: italic;
   font-display: swap;
 }
 
 :root {
-  --font-sans: 'CursorGothic', system-ui, sans-serif;
-  --font-mono: 'Berkeley Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
-  --font-cursor: 'CursorGothic', system-ui, sans-serif;
-  --font-bsru: 'BSRU Pro', sans-serif;
-  --font-thai: 'Thasadith', sans-serif;
+  --font-sans: "CursorGothic", system-ui, sans-serif;
+  --font-mono: "Berkeley Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+  --font-cursor: "CursorGothic", system-ui, sans-serif;
+  --font-bsru: "BSRU Pro", sans-serif;
+  --font-thai: "Thasadith", sans-serif;
 }
 
 * {
@@ -87,5 +87,29 @@ body {
 
   .font-thai {
     font-family: var(--font-thai);
+  }
+
+  .sponsor-marquee-track {
+    animation: sponsor-marquee-right 24s linear infinite;
+    will-change: transform;
+  }
+
+  .sponsor-marquee:hover .sponsor-marquee-track {
+    animation-play-state: paused;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .sponsor-marquee-track {
+      animation: none;
+    }
+  }
+}
+
+@keyframes sponsor-marquee-right {
+  from {
+    transform: translate3d(-50%, 0, 0);
+  }
+  to {
+    transform: translate3d(0, 0, 0);
   }
 }

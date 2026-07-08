@@ -10,6 +10,7 @@ Cursor Community Serbia — specification index with verification status.
 | [content-config](content-config.md) | Implemented | Partial | Content-driven config with static fallback for Luma events |
 | [mailing-list](mailing-list.md) | Implemented | Partial | Postgres or webhook; optional Luma import-people |
 | [education](education.md) | Implemented | Yes | Presentations and resources |
+| [hackathon](hackathon.md) | Implemented | Partial | Hackathon page, sponsor marquee, sponsorship form |
 | [slides](slides.md) | Implemented | Partial | Optional workshop slides |
 
 ## Status Legend

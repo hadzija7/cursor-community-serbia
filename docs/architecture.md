@@ -13,8 +13,9 @@ Cursor Community Serbia is a Next.js community site based on the Cursor Ambassad
 | Web UI           | specs/web-ui.md         | `app/`, `components/`            |
 | Content Config   | specs/content-config.md | `content/`                       |
 | Luma Events Sync | specs/web-ui.md, specs/content-config.md | `app/api/events/upcoming/`, `lib/luma.ts`, `lib/use-upcoming-events.ts` |
-| Mailing List     | specs/mailing-list.md   | `app/api/subscribe/`, `db/`      |
-| Education        | specs/education.md      | `app/education/`, `public/education/` |
+| Mailing List  | specs/mailing-list.md   | `app/api/subscribe/`, `db/`      |
+| Hackathon     | specs/hackathon.md      | `app/hackathon/`, `app/api/hackathon/sponsor/` |
+| Education     | specs/education.md      | `app/education/`, `public/education/` |
 | Slides (optional)| specs/slides.md         | `modules/slides/`, `app/slides/` |
 
 ## Directory Structure
@@ -25,6 +26,7 @@ cursor-community-serbia/
 │   ├── page.tsx              # Homepage composition
 │   ├── layout.tsx            # Root layout, metadata, favicon
 │   ├── subscribe/            # Mailing list subscribe page
+│   ├── hackathon/            # Hackathon landing + sponsorship
 │   ├── education/            # Educational resources landing
 │   ├── recaps/[slug]/        # Dynamic recap pages
 │   ├── slides/[id]/          # Optional workshop slides
@@ -35,6 +37,7 @@ cursor-community-serbia/
 │   ├── events.ts             # Upcoming/past events
 │   ├── ambassadors.ts       # Ambassador cards
 │   ├── partners.ts           # Partner logos
+│   ├── hackathon.ts          # Hackathon event + sponsors
 │   ├── education.ts          # Education resources list
 │   ├── recaps/               # Recap documents
 │   └── locales/              # i18n dictionaries
