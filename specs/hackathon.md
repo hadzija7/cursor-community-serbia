@@ -61,7 +61,7 @@ Inspired by conference landing patterns (e.g. TUM Blockchain Conference): full-w
 Edit `content/hackathon.ts` for:
 
 - Event title, tagline, dates, location, Luma URL
-- Highlights list
+- Highlights grid (`hackathonStats`)
 - Sponsor logos (`hackathonSponsors`)
 
 ## Verification

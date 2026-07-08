@@ -14,6 +14,8 @@ function buildRequest(body: Record<string, string | undefined>) {
 describe('POST /api/hackathon/sponsor', () => {
   beforeEach(() => {
     process.env = { ...ORIGINAL_ENV }
+    delete process.env.POSTGRES_URL
+    delete process.env.DATABASE_URL
     vi.restoreAllMocks()
   })
 

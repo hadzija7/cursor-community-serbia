@@ -8,12 +8,6 @@ export const hackathonConfig = {
   location: 'Belgrade, Serbia',
   duration: '1 full day',
   lumaUrl: 'https://luma.com/cursorcommunity',
-  highlights: [
-    'Full-day build sprint with Cursor',
-    'Mentorship from Cursor ambassadors',
-    'Prizes for top projects',
-    'Food, drinks, and good vibes',
-  ],
 }
 
 export const hackathonStats = [
