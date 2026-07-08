@@ -84,6 +84,10 @@ export default function Home() {
               {t('education.nav')}
             </Link>
             <span className="text-cursor-text-faint">·</span>
+            <Link href="/hackathon" className="text-cursor-text hover:text-cursor-text-muted transition-colors text-sm">
+              {t('hackathon.nav')}
+            </Link>
+            <span className="text-cursor-text-faint">·</span>
             <a
               href={siteConfig.cursorCommunityUrl}
               target="_blank"

@@ -22,6 +22,7 @@ The Cursor Community Serbia site is a Next.js 16 App Router application presenti
 | `/api/events/upcoming` | Server route returning upcoming events from Belgrade + Novi Sad Luma calendars (static fallback) |
 | `/subscribe` | Mailing list subscription |
 | `/education` | Educational resources (presentations, PDFs) |
+| `/hackathon` | Hackathon landing (details, sponsor marquee, sponsorship form) |
 | `/recaps/[slug]` | Event recap pages (`EventRecap`: summary; **Video Recap** section for main `videoUrl` and optional `extraVideoRecaps` (Drive embeds); optional **Presentation** grid for `extraPresentations`; YouTube posters from `lib/youtube-metadata.ts`; Open Graph + JSON-LD `image` use first gallery photo; optional `interviews[]` (YouTube or Drive), gallery) |
 | `/slides/[id]` | Optional workshop slides |
 | `/education/coworking-day/[id]` | Coworking day kickoff deck (8 slides) |
@@ -37,9 +38,15 @@ The Cursor Community Serbia site is a Next.js 16 App Router application presenti
 - `lib/luma.ts` — Server-side Luma API mapping; city calendar env helpers (`getLumaCityCalendars`)
 - `components/AmbassadorSection.tsx` — Ambassador cards
 - `components/Partners.tsx` — Partner logos
+- `components/HackathonPromoCard.tsx` — Homepage hero hackathon promo card (top-left overlay)
+- `components/HackathonHero.tsx` — Hackathon page hero (facts + CTAs)
+- `components/HackathonHighlights.tsx` — Hackathon stat-style highlight grid
+- `components/SponsorMarquee.tsx` — Hackathon sponsor marquee animation
+- `components/HackathonSponsorshipForm.tsx` — Hackathon sponsorship application form
 - `components/SubscribeForm.tsx` — Mailing list form
 - `components/PhotoGallery.tsx` — Recap image grid; fullscreen lightbox with prev/next controls and **ArrowLeft / ArrowRight** keyboard navigation when multiple photos
 - `app/education/page.tsx` — Education landing page
+- `app/hackathon/page.tsx` — Hackathon landing page
 
 ### Layout & Theming
 

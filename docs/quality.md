@@ -7,6 +7,7 @@ Living scorecard for Cursor Community Serbia. Update after each phase.
 | Domain        | Spec | Code | Tests | Review | Overall |
 |---------------|------|------|-------|--------|---------|
 | Web UI        | C    | B    | C     | -      | C       |
+| Hackathon     | C    | B    | C     | -      | C       |
 | Content Config| C    | B    | C     | -      | C       |
 | Mailing List  | C    | B    | C     | -      | C       |
 | Education     | C    | B    | -     | -      | C       |
@@ -37,6 +38,9 @@ Living scorecard for Cursor Community Serbia. Update after each phase.
 
 | Date       | Change                          |
 |------------|----------------------------------|
+| 2026-07-08 | Hackathon page UI: TUM-inspired hero, stat highlights, orange accent palette refresh |
+| 2026-07-08 | Hackathon sponsors: added ElevenLabs, Firecrawl, Render logos to marquee |
+| 2026-07-08 | Hackathon page (`/hackathon`): sponsor marquee animation, sponsorship form, Postgres + webhook API |
 | 2026-07-07 | Content: Cafe Cursor Belgrade Summer Edition recap (`cafe-cursor-belgrade-summer-2026`); Luma cursor-belgrade; 2 Drive recap videos + interview; 8 gallery photos |
 | 2026-07-07 | Recap UI: unified 2-column video grid for recap + interview cards; Drive videos use native `<video>` with iframe fallback |
 | 2026-05-27 | Content: Cursor Meetup Novi Sad May 26, 2026 — Memclaw presentation in `extraPresentations` (Presentation section) https://youtu.be/ynhKwdcadMA |

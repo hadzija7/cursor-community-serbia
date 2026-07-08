@@ -39,6 +39,7 @@ export interface Partner {
   url: string
   logoBg?: string
   logoHeight?: string
+  logoWidth?: string
 }
 
 export interface FeaturedResource {

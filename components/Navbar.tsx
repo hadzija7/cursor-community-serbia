@@ -42,6 +42,12 @@ export default function Navbar() {
           {t('home.pastEvents')}
         </Link>
         <Link
+          href="/hackathon"
+          className="text-base text-cursor-text-muted hover:text-cursor-text transition-colors"
+        >
+          {t('hackathon.nav')}
+        </Link>
+        <Link
           href="/subscribe"
           className="text-base text-cursor-text-muted hover:text-cursor-text transition-colors"
         >

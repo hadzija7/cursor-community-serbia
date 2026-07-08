@@ -88,4 +88,24 @@ body {
   .font-thai {
     font-family: var(--font-thai);
   }
+
+  .sponsor-marquee-track {
+    animation: sponsor-marquee-right 24s linear infinite;
+    will-change: transform;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .sponsor-marquee-track {
+      animation: none;
+    }
+  }
+}
+
+@keyframes sponsor-marquee-right {
+  from {
+    transform: translate3d(-50%, 0, 0);
+  }
+  to {
+    transform: translate3d(0, 0, 0);
+  }
 }
