@@ -64,6 +64,8 @@ Edit `content/hackathon.ts` for:
 - Highlights grid (`hackathonStats`)
 - Sponsor logos (`hackathonSponsors`)
 
+Current event: **Novi Sad, Serbia** (August 20, 2026); register CTA → `https://luma.com/ghvnbjlx`. Hero secondary CTA label is "Sponsor event" (`hackathon.viewSponsorsCta` in `content/locales/en.json`), linking to `#sponsors`.
+
 ## Verification
 
 - [ ] `/hackathon` loads with event details and sponsor marquee
