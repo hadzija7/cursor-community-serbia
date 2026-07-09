@@ -259,12 +259,19 @@ export async function fetchLumaEventBySlug(urlOrSlug: string): Promise<CursorEve
   if (!slug) return null
 
   const raw = await fetchLumaPageEntries(slug)
-  const mapped = raw.map(mapLumaEntry).filter((e): e is CursorEvent => e !== null)
-  if (mapped.length === 0) return null
 
-  const match = mapped.find((e) => {
-    if (!e.lumaUrl) return false
-    return extractLumaSlug(e.lumaUrl) === slug
-  })
-  return match ?? mapped[0]
+  let fallback: CursorEvent | null = null
+  for (const entry of raw) {
+    const ev = mapLumaEntry(entry)
+    if (!ev) continue
+    fallback ??= ev
+
+    const candidates = [
+      firstString(entry, [['url'], ['event', 'url']]),
+      firstString(entry, [['url_slug'], ['event', 'url_slug']]),
+      ev.lumaUrl,
+    ]
+    if (candidates.some((c) => c && extractLumaSlug(c) === slug)) return ev
+  }
+  return fallback
 }
