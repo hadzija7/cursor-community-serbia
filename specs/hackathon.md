@@ -10,7 +10,7 @@ Dedicated hackathon landing page at `/hackathon` with event details, animated sp
 |-------|-------|
 | Status | Implemented |
 | Verified | Partial |
-| Last updated | 2026-07-08 |
+| Last updated | 2026-07-09 |
 
 ## Page layout
 
@@ -23,6 +23,7 @@ Inspired by conference landing patterns (e.g. TUM Blockchain Conference): full-w
 | Route | Purpose |
 |-------|---------|
 | `/hackathon` | Hackathon landing page (details, sponsors, sponsorship form) |
+| `/api/hackathon/event` | GET live date/location from Luma (static fallback) |
 | `/api/hackathon/sponsor` | POST sponsorship applications |
 
 ### Key Components
@@ -33,7 +34,9 @@ Inspired by conference landing patterns (e.g. TUM Blockchain Conference): full-w
 - `components/HackathonHighlights.tsx` — Stat-style highlight grid (TUM-inspired)
 - `components/SponsorMarquee.tsx` — Infinite horizontal sponsor logo animation
 - `components/HackathonSponsorshipForm.tsx` — Sponsorship application form
-- `content/hackathon.ts` — Event copy, dates, Luma URL, sponsor logos, stat cards
+- `content/hackathon.ts` — Static fallback copy, Luma URL, sponsor logos, stat cards
+- `lib/hackathon-details.ts` — Resolve date/location from Luma slug with static fallback
+- `lib/use-hackathon-details.ts` — Client hook polling `/api/hackathon/event`
 
 ### Sponsor Marquee
 
@@ -60,15 +63,24 @@ Inspired by conference landing patterns (e.g. TUM Blockchain Conference): full-w
 
 Edit `content/hackathon.ts` for:
 
-- Event title, tagline, dates, location, Luma URL
+- Event title, tagline, duration, and **Luma URL** (source of truth for live sync)
+- Static fallback `date` / `displayDate` / `location` (used when Luma is unreachable)
 - Highlights grid (`hackathonStats`)
 - Sponsor logos (`hackathonSponsors`)
 
-Current event: **Novi Sad, Serbia** (August 20, 2026); register CTA → `https://luma.com/ghvnbjlx`. Hero secondary CTA label is "Sponsor event" (`hackathon.viewSponsorsCta` in `content/locales/en.json`), linking to `#sponsors`.
+### Live date & location from Luma
+
+- `hackathonConfig.lumaUrl` (e.g. `https://luma.com/ghvnbjlx`) drives sync
+- Server: `fetchLumaEventBySlug` reads the public Luma event page (no API key); `resolveHackathonDetails` merges date/location onto static copy
+- Client: `useHackathonDetails` polls `/api/hackathon/event` every 5 minutes (same pattern as upcoming events)
+- Title, tagline, and duration stay content-owned so marketing copy does not flip with Luma’s event name
+
+Hero secondary CTA label is "Sponsor event" (`hackathon.viewSponsorsCta` in `content/locales/en.json`), linking to `#sponsors`.
 
 ## Verification
 
 - [ ] `/hackathon` loads with event details and sponsor marquee
+- [ ] Date/location update when Luma event changes (or fall back to static)
 - [ ] Marquee animates smoothly and pauses on hover
 - [ ] Sponsorship form validates required fields
 - [ ] Postgres path stores applications

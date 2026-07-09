@@ -210,14 +210,35 @@ function extractEntries(html: string): JsonObj[] {
   return entries
 }
 
+/** Extract a Luma event/calendar slug from a full URL or bare slug. */
+export function extractLumaSlug(urlOrSlug: string): string {
+  const trimmed = urlOrSlug.trim()
+  if (!trimmed) return ''
+
+  try {
+    const url = new URL(trimmed)
+    const host = url.hostname.replace(/^www\./, '')
+    if (host === 'luma.com' || host === 'lu.ma') {
+      return url.pathname.replace(/^\/+/, '').split('/')[0] ?? ''
+    }
+  } catch {
+    /* bare slug */
+  }
+
+  return trimmed.replace(/^\/+/, '').split('/')[0] ?? ''
+}
+
+async function fetchLumaPageEntries(slug: string): Promise<JsonObj[]> {
+  const clean = extractLumaSlug(slug)
+  if (!clean) return []
+
+  const res = await fetch(`${LUMA_PUBLIC_BASE}/${clean}`, { cache: 'no-store' })
+  if (!res.ok) throw new Error(`Luma page responded with ${res.status}`)
+  return extractEntries(await res.text())
+}
+
 export async function fetchCalendarPageEvents(calendarSlug: string): Promise<CursorEvent[]> {
-  const slug = calendarSlug.replace(/^\/+/, '').trim()
-  if (!slug) return []
-
-  const res = await fetch(`${LUMA_PUBLIC_BASE}/${slug}`, { cache: 'no-store' })
-  if (!res.ok) throw new Error(`Luma calendar page responded with ${res.status}`)
-
-  const raw = extractEntries(await res.text())
+  const raw = await fetchLumaPageEntries(calendarSlug)
   const seen = new Map<string, CursorEvent>()
   for (const e of raw) {
     const ev = mapLumaEntry(e)
@@ -227,4 +248,30 @@ export async function fetchCalendarPageEvents(calendarSlug: string): Promise<Cur
   return Array.from(seen.values())
     .filter(isFutureEvent)
     .sort((a, b) => eventStartMs(a.date, a.time) - eventStartMs(b.date, b.time))
+}
+
+/**
+ * Fetch a single public Luma event by URL or slug (no API key).
+ * Prefers an entry whose url/url_slug matches the requested slug.
+ */
+export async function fetchLumaEventBySlug(urlOrSlug: string): Promise<CursorEvent | null> {
+  const slug = extractLumaSlug(urlOrSlug)
+  if (!slug) return null
+
+  const raw = await fetchLumaPageEntries(slug)
+
+  let fallback: CursorEvent | null = null
+  for (const entry of raw) {
+    const ev = mapLumaEntry(entry)
+    if (!ev) continue
+    fallback ??= ev
+
+    const candidates = [
+      firstString(entry, [['url'], ['event', 'url']]),
+      firstString(entry, [['url_slug'], ['event', 'url_slug']]),
+      ev.lumaUrl,
+    ]
+    if (candidates.some((c) => c && extractLumaSlug(c) === slug)) return ev
+  }
+  return fallback
 }

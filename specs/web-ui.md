@@ -20,6 +20,7 @@ The Cursor Community Serbia site is a Next.js 16 App Router application presenti
 |-------|---------|
 | `/` | Homepage (hero, events, ambassadors, partners) |
 | `/api/events/upcoming` | Server route returning upcoming events from Belgrade + Novi Sad Luma calendars (static fallback) |
+| `/api/hackathon/event` | Live hackathon date/location from Luma event page (static fallback) |
 | `/subscribe` | Mailing list subscription |
 | `/education` | Educational resources (presentations, PDFs) |
 | `/hackathon` | Hackathon landing (details, sponsor marquee, sponsorship form) |
@@ -38,7 +39,8 @@ The Cursor Community Serbia site is a Next.js 16 App Router application presenti
 - `lib/luma.ts` — Server-side Luma API mapping; city calendar env helpers (`getLumaCityCalendars`)
 - `components/AmbassadorSection.tsx` — Ambassador cards
 - `components/Partners.tsx` — Partner logos
-- `components/HackathonPromoCard.tsx` — Homepage hero hackathon promo card (top-left overlay; orange accent)
+- `components/HackathonPromoCard.tsx` — Homepage hero hackathon promo card (top-left overlay; orange accent; live date/location via `useHackathonDetails`)
+- `lib/use-hackathon-details.ts` — Client poll of `/api/hackathon/event`
 - `components/HackathonHero.tsx` — Hackathon page hero (facts + CTAs)
 - `components/HackathonHighlights.tsx` — Hackathon stat-style highlight grid
 - `components/SponsorMarquee.tsx` — Hackathon sponsor marquee animation

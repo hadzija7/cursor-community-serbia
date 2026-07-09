@@ -3,8 +3,10 @@ import { Partner } from '@/lib/types'
 export const hackathonConfig = {
   title: 'Cursor Hackathon Serbia',
   tagline: 'Build the future with AI — one full day of hacking, learning, and community.',
-  date: '2026-08-20',
-  displayDate: 'August 20, 2026',
+  // Static fallback when Luma is unreachable. Live date/location come from
+  // `hackathonConfig.lumaUrl` via `/api/hackathon/event` (see lib/hackathon-details.ts).
+  date: '2026-08-22',
+  displayDate: 'August 22, 2026',
   location: 'Novi Sad, Serbia',
   duration: '1 full day',
   lumaUrl: 'https://luma.com/ghvnbjlx',

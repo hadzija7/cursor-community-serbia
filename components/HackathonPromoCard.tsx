@@ -1,11 +1,12 @@
 'use client'
 
 import Link from 'next/link'
-import { hackathonConfig } from '@/content/hackathon'
 import { useI18n } from '@/lib/i18n'
+import { useHackathonDetails } from '@/lib/use-hackathon-details'
 
 export default function HackathonPromoCard() {
   const { t } = useI18n()
+  const hackathon = useHackathonDetails()
 
   return (
     <Link
@@ -16,10 +17,10 @@ export default function HackathonPromoCard() {
         {t('hackathon.upcoming')}
       </p>
       <p className="mt-3 text-xl font-semibold leading-tight tracking-tight sm:text-2xl md:text-3xl">
-        {hackathonConfig.title}
+        {hackathon.title}
       </p>
-      <p className="mt-2 text-sm text-cursor-text-secondary sm:text-base">{hackathonConfig.displayDate}</p>
-      <p className="mt-1 text-sm text-cursor-text-muted sm:text-base">{hackathonConfig.location}</p>
+      <p className="mt-2 text-sm text-cursor-text-secondary sm:text-base">{hackathon.displayDate}</p>
+      <p className="mt-1 text-sm text-cursor-text-muted sm:text-base">{hackathon.location}</p>
       <p className="mt-4 inline-flex items-center rounded-md bg-cursor-text px-4 py-2 text-sm font-medium text-cursor-bg transition-colors hover:bg-cursor-text-muted sm:text-base">
         {t('hackathon.promoCta')} →
       </p>
