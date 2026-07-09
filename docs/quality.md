@@ -7,7 +7,7 @@ Living scorecard for Cursor Community Serbia. Update after each phase.
 | Domain        | Spec | Code | Tests | Review | Overall |
 |---------------|------|------|-------|--------|---------|
 | Web UI        | C    | B    | C     | -      | C       |
-| Hackathon     | C    | B    | C     | -      | C       |
+| Hackathon     | B    | B    | B     | -      | B       |
 | Content Config| C    | B    | C     | -      | C       |
 | Mailing List  | C    | B    | C     | -      | C       |
 | Education     | C    | B    | -     | -      | C       |
@@ -29,6 +29,7 @@ Living scorecard for Cursor Community Serbia. Update after each phase.
 ## Known Gaps
 
 - [x] Unit tests for upcoming events API and Luma mapping
+- [x] Unit tests for hackathon Luma date/location sync (`/api/hackathon/event`)
 - [x] Unit tests for subscribe API (webhook + optional Luma import)
 - [ ] E2E or UI property tests
 - [ ] CI pipeline (lint, test, build)
@@ -38,6 +39,7 @@ Living scorecard for Cursor Community Serbia. Update after each phase.
 
 | Date       | Change                          |
 |------------|----------------------------------|
+| 2026-07-09 | Hackathon date/location synced from public Luma event page (`/api/hackathon/event`); static fallback retained |
 | 2026-07-08 | Hackathon page UI: TUM-inspired hero, stat highlights, orange accent palette refresh |
 | 2026-07-08 | Hackathon sponsors: added ElevenLabs, Firecrawl, Render logos to marquee |
 | 2026-07-08 | Hackathon page (`/hackathon`): sponsor marquee animation, sponsorship form, Postgres + webhook API |

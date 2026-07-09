@@ -1,6 +1,8 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import {
+  extractLumaSlug,
   fetchCalendarPageEvents,
+  fetchLumaEventBySlug,
   getLumaCityCalendars,
   importCalendarPeople,
   mapLumaEntry,
@@ -31,6 +33,19 @@ describe('getLumaCityCalendars', () => {
       { city: 'belgrade', apiKey: 'belgrade' },
       { city: 'noviSad', apiKey: 'novisad' },
     ])
+  })
+})
+
+describe('extractLumaSlug', () => {
+  it('extracts slug from luma.com and lu.ma URLs', () => {
+    expect(extractLumaSlug('https://luma.com/ghvnbjlx')).toBe('ghvnbjlx')
+    expect(extractLumaSlug('https://lu.ma/ghvnbjlx')).toBe('ghvnbjlx')
+    expect(extractLumaSlug('https://www.luma.com/ghvnbjlx/')).toBe('ghvnbjlx')
+  })
+
+  it('accepts bare slugs', () => {
+    expect(extractLumaSlug('ghvnbjlx')).toBe('ghvnbjlx')
+    expect(extractLumaSlug('/ghvnbjlx')).toBe('ghvnbjlx')
   })
 })
 
@@ -124,6 +139,39 @@ describe('fetchCalendarPageEvents', () => {
   it('returns empty array for empty slug', async () => {
     const events = await fetchCalendarPageEvents('')
     expect(events).toEqual([])
+  })
+})
+
+describe('fetchLumaEventBySlug', () => {
+  afterEach(() => vi.restoreAllMocks())
+
+  it('returns the matching public event by slug', async () => {
+    const html = `<html><body><script id="__NEXT_DATA__" type="application/json">{
+      "props":{"pageProps":{"entries":[{
+        "api_id":"evt-R0caMRFu7T4ECEd",
+        "name":"Cursor Hackathon in Novi Sad",
+        "start_at":"2099-08-22T06:00:00.000Z",
+        "url":"ghvnbjlx",
+        "geo_address_info":{"city":"Novi Sad","country":"Serbia"}
+      }]}}
+    }</script></body></html>`
+
+    vi.spyOn(globalThis, 'fetch').mockResolvedValue(
+      new Response(html, { status: 200, headers: { 'Content-Type': 'text/html' } }),
+    )
+
+    const event = await fetchLumaEventBySlug('https://luma.com/ghvnbjlx')
+
+    expect(event).toMatchObject({
+      id: 'evt-R0caMRFu7T4ECEd',
+      title: 'Cursor Hackathon in Novi Sad',
+      location: 'Novi Sad, Serbia',
+      lumaUrl: 'https://luma.com/ghvnbjlx',
+    })
+  })
+
+  it('returns null for empty slug', async () => {
+    expect(await fetchLumaEventBySlug('')).toBeNull()
   })
 })
 

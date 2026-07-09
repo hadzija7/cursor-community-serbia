@@ -3,27 +3,28 @@
 import { motion } from 'framer-motion'
 import { Calendar, Clock, MapPin } from 'lucide-react'
 import Link from 'next/link'
-import { hackathonConfig } from '@/content/hackathon'
 import { useI18n } from '@/lib/i18n'
+import { useHackathonDetails } from '@/lib/use-hackathon-details'
 
 export default function HackathonHero() {
   const { t } = useI18n()
+  const hackathon = useHackathonDetails()
 
   const facts = [
     {
       icon: Calendar,
       label: t('hackathon.dateLabel'),
-      value: hackathonConfig.displayDate,
+      value: hackathon.displayDate,
     },
     {
       icon: MapPin,
       label: t('hackathon.locationLabel'),
-      value: hackathonConfig.location,
+      value: hackathon.location,
     },
     {
       icon: Clock,
       label: t('hackathon.durationLabel'),
-      value: hackathonConfig.duration,
+      value: hackathon.duration,
     },
   ]
 
@@ -60,9 +61,9 @@ export default function HackathonHero() {
             <p className="inline-flex items-center rounded-full border border-cursor-accent-orange/50 bg-cursor-accent-orange-bg px-3 py-1 text-xs font-semibold uppercase tracking-[0.18em] text-cursor-accent-orange">
               {t('hackathon.upcoming')}
             </p>
-            <h1 className="text-4xl font-bold tracking-tight md:text-6xl lg:text-7xl">{hackathonConfig.title}</h1>
+            <h1 className="text-4xl font-bold tracking-tight md:text-6xl lg:text-7xl">{hackathon.title}</h1>
             <p className="text-lg text-cursor-text-secondary md:text-xl lg:text-2xl leading-relaxed">
-              {hackathonConfig.tagline}
+              {hackathon.tagline}
             </p>
           </div>
 
@@ -86,7 +87,7 @@ export default function HackathonHero() {
 
           <div className="flex flex-wrap items-center gap-4 pt-2">
             <a
-              href={hackathonConfig.lumaUrl}
+              href={hackathon.lumaUrl}
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center justify-center rounded-lg bg-cursor-text px-6 py-3 text-sm font-semibold text-cursor-bg transition-colors hover:bg-cursor-text-secondary md:text-base"

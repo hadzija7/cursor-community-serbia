@@ -14,7 +14,7 @@ Cursor Community Serbia is a Next.js community site based on the Cursor Ambassad
 | Content Config   | specs/content-config.md | `content/`                       |
 | Luma Events Sync | specs/web-ui.md, specs/content-config.md | `app/api/events/upcoming/`, `lib/luma.ts`, `lib/use-upcoming-events.ts` |
 | Mailing List  | specs/mailing-list.md   | `app/api/subscribe/`, `db/`      |
-| Hackathon     | specs/hackathon.md      | `app/hackathon/`, `app/api/hackathon/sponsor/` |
+| Hackathon     | specs/hackathon.md      | `app/hackathon/`, `app/api/hackathon/event/`, `app/api/hackathon/sponsor/` |
 | Education     | specs/education.md      | `app/education/`, `public/education/` |
 | Slides (optional)| specs/slides.md         | `modules/slides/`, `app/slides/` |
 
