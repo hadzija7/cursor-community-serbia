@@ -28,7 +28,7 @@ describe('postJsonWebhook', () => {
     )
   })
 
-  it('re-POSTs to Location when Apps Script returns a redirect', async () => {
+  it('GETs Location when Apps Script returns a redirect', async () => {
     const fetchSpy = vi
       .spyOn(global, 'fetch')
       .mockResolvedValueOnce(
@@ -54,10 +54,11 @@ describe('postJsonWebhook', () => {
       2,
       'https://script.googleusercontent.com/macros/echo',
       expect.objectContaining({
-        method: 'POST',
-        body: JSON.stringify({ companyName: 'Acme' }),
+        method: 'GET',
+        redirect: 'follow',
       })
     )
+    expect(fetchSpy.mock.calls[1]?.[1]).not.toHaveProperty('body')
   })
 })
 

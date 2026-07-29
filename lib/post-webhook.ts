@@ -1,6 +1,7 @@
 /**
- * POST JSON to a webhook URL, preserving the body across Google Apps Script redirects.
- * Apps Script web apps often respond with 302; default fetch follow turns POST into GET and drops the body.
+ * POST JSON to a webhook URL, following Google Apps Script ContentService redirects with GET.
+ * Apps Script runs doPost on the initial /exec request, then 302s to a googleusercontent.com
+ * URL that serves the response body — that hop accepts GET only (POST yields 405).
  */
 export async function postJsonWebhook(
   url: string,
@@ -25,9 +26,7 @@ export async function postJsonWebhook(
     const location = response.headers.get('Location')
     if (location) {
       return fetch(location, {
-        method: 'POST',
-        headers: requestHeaders,
-        body: payload,
+        method: 'GET',
         cache: 'no-store',
         redirect: 'follow',
       })
