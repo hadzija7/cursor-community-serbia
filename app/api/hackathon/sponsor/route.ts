@@ -1,5 +1,6 @@
 import { siteConfig } from '@/content/site.config'
 import { getDb } from '@/lib/db'
+import { isWebhookSuccess, postJsonWebhook } from '@/lib/post-webhook'
 
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 
@@ -13,6 +14,32 @@ interface SponsorApplicationRequest {
 
 function toError(message: string, status: number) {
   return Response.json({ ok: false, message }, { status })
+}
+
+function webhookHeaders(): HeadersInit {
+  const apiKey = process.env.HACKATHON_SPONSOR_API_KEY ?? process.env.MAILING_LIST_API_KEY
+  return apiKey ? { 'x-api-key': apiKey } : {}
+}
+
+async function deliverViaWebhook(
+  webhookUrl: string,
+  applicationPayload: Record<string, unknown>,
+  required: boolean,
+): Promise<Response | null> {
+  try {
+    const upstream = await postJsonWebhook(webhookUrl, applicationPayload, webhookHeaders())
+
+    if (required && !(await isWebhookSuccess(upstream))) {
+      return toError('Sponsorship provider rejected the request.', 502)
+    }
+  } catch {
+    if (required) {
+      return toError('Could not reach sponsorship provider.', 502)
+    }
+    console.error('Hackathon sponsor webhook notify failed:', webhookUrl)
+  }
+
+  return null
 }
 
 export async function POST(request: Request) {
@@ -52,6 +79,8 @@ export async function POST(request: Request) {
     submittedAt: new Date().toISOString(),
   }
 
+  let savedToDb = false
+
   if (db) {
     try {
       await db`
@@ -74,54 +103,28 @@ export async function POST(request: Request) {
           ${siteConfig.communityName}
         )
       `
+      savedToDb = true
     } catch (err) {
       console.error('Postgres hackathon sponsor error:', err)
-      return toError('Could not save sponsorship application.', 500)
+      if (!webhookUrl) {
+        return toError('Could not save sponsorship application.', 500)
+      }
+      // Fall through to webhook (e.g. table missing while Sheets is configured).
     }
+  }
 
+  if (savedToDb) {
     if (webhookUrl) {
-      const apiKey = process.env.HACKATHON_SPONSOR_API_KEY ?? process.env.MAILING_LIST_API_KEY
-      const headers: HeadersInit = {
-        'Content-Type': 'application/json',
-        ...(apiKey ? { 'x-api-key': apiKey } : {}),
-      }
-      try {
-        await fetch(webhookUrl, {
-          method: 'POST',
-          headers,
-          body: JSON.stringify(applicationPayload),
-          cache: 'no-store',
-        })
-      } catch {
-        console.error('Hackathon sponsor webhook notify failed:', webhookUrl)
-      }
+      await deliverViaWebhook(webhookUrl, applicationPayload, false)
     }
-
     return Response.json({ ok: true, message: 'Application submitted successfully.' })
   }
 
   if (webhookUrl) {
-    const apiKey = process.env.HACKATHON_SPONSOR_API_KEY ?? process.env.MAILING_LIST_API_KEY
-    const headers: HeadersInit = {
-      'Content-Type': 'application/json',
-      ...(apiKey ? { 'x-api-key': apiKey } : {}),
+    const failure = await deliverViaWebhook(webhookUrl, applicationPayload, true)
+    if (failure) {
+      return failure
     }
-
-    try {
-      const upstream = await fetch(webhookUrl, {
-        method: 'POST',
-        headers,
-        body: JSON.stringify(applicationPayload),
-        cache: 'no-store',
-      })
-
-      if (!upstream.ok) {
-        return toError('Sponsorship provider rejected the request.', 502)
-      }
-    } catch {
-      return toError('Could not reach sponsorship provider.', 502)
-    }
-
     return Response.json({ ok: true, message: 'Application submitted successfully.' })
   }
 

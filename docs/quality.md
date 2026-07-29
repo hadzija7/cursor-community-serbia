@@ -39,6 +39,8 @@ Living scorecard for Cursor Community Serbia. Update after each phase.
 
 | Date       | Change                          |
 |------------|----------------------------------|
+| 2026-07-29 | Hackathon sponsor API: fall through to webhook when Postgres insert fails (missing table); Sheets path unblocked |
+| 2026-07-29 | Hackathon sponsorship Google Sheets inbox: Apps Script webhook template + setup docs (`HACKATHON_SPONSOR_WEBHOOK_URL`) |
 | 2026-07-09 | Hackathon date/location synced from public Luma event page (`/api/hackathon/event`); static fallback retained |
 | 2026-07-08 | Hackathon page UI: TUM-inspired hero, stat highlights, orange accent palette refresh |
 | 2026-07-08 | Hackathon sponsors: added ElevenLabs, Firecrawl, Render logos to marquee |

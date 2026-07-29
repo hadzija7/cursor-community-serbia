@@ -1,5 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { POST } from '@/app/api/hackathon/sponsor/route'
+import * as db from '@/lib/db'
 
 const ORIGINAL_ENV = process.env
 
@@ -95,11 +96,44 @@ describe('POST /api/hackathon/sponsor', () => {
       'https://example.com/hackathon-webhook',
       expect.objectContaining({
         method: 'POST',
+        redirect: 'manual',
         headers: expect.objectContaining({
           'Content-Type': 'application/json',
           'x-api-key': 'secret',
         }),
       })
     )
+  })
+
+  it('falls back to webhook when Postgres insert fails', async () => {
+    process.env.HACKATHON_SPONSOR_WEBHOOK_URL = 'https://example.com/hackathon-webhook'
+
+    const failingDb = Object.assign(
+      async () => {
+        throw new Error('relation "hackathon_sponsor_applications" does not exist')
+      },
+      { query: async () => undefined, transaction: async () => undefined }
+    )
+    vi.spyOn(db, 'getDb').mockReturnValue(failingDb as ReturnType<typeof db.getDb>)
+
+    const fetchSpy = vi.spyOn(global, 'fetch').mockResolvedValue(
+      new Response(JSON.stringify({ ok: true }), {
+        status: 200,
+        headers: { 'Content-Type': 'application/json' },
+      })
+    )
+
+    const response = await POST(
+      buildRequest({
+        companyName: 'Acme',
+        contactName: 'Jane',
+        email: 'person@example.com',
+      })
+    )
+    const body = (await response.json()) as { ok: boolean }
+
+    expect(response.status).toBe(200)
+    expect(body.ok).toBe(true)
+    expect(fetchSpy).toHaveBeenCalled()
   })
 })

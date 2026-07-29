@@ -47,7 +47,7 @@ cursor-community-serbia/
 │   ├── education/            # Presentations, PDFs
 │   └── images/               # Photos, logos
 ├── db/                       # Postgres schema (mailing list)
-└── scripts/                  # db-setup, db-query
+└── scripts/                  # db-setup, db-query, hackathon Sheets Apps Script template
 ```
 
 ## Tech Stack
