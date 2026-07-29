@@ -10,7 +10,7 @@ Dedicated hackathon landing page at `/hackathon` with event details, animated sp
 |-------|-------|
 | Status | Implemented |
 | Verified | Partial |
-| Last updated | 2026-07-09 |
+| Last updated | 2026-07-29 |
 
 ## Page layout
 
@@ -59,6 +59,21 @@ Inspired by conference landing patterns (e.g. TUM Blockchain Conference): full-w
 - Payload: `{ companyName, contactName, email, website, message, source, community, submittedAt }`
 - Optional auth: `HACKATHON_SPONSOR_API_KEY` or `MAILING_LIST_API_KEY` in `x-api-key` header
 
+### Google Sheets (via Apps Script)
+
+Recommended team inbox: keep the branded form, append rows to a Sheet with a Google Apps Script web app.
+
+1. Create a Google Sheet; tab name `Applications` (or match `SHEET_NAME` in the script).
+2. Optional header row: `submittedAt | companyName | contactName | email | website | message | source | community`
+3. Paste [`scripts/hackathon-sponsor-google-sheet.gs`](../scripts/hackathon-sponsor-google-sheet.gs) into Extensions → Apps Script; set `SECRET`.
+4. Deploy as Web app (Execute as: Me, Who has access: Anyone).
+5. Set env: `HACKATHON_SPONSOR_WEBHOOK_URL=https://script.google.com/macros/s/.../exec?key=YOUR_SECRET`
+6. Omit `HACKATHON_SPONSOR_API_KEY` for this path — Apps Script reads `?key=` instead of `x-api-key`.
+
+Delivery uses `lib/post-webhook.ts` so Apps Script 302 redirects keep the POST body, and JSON `{ ok: false }` is treated as failure when Sheets is the only backend.
+
+Postgres can stay configured; webhook notify runs after a successful insert (notify failures are logged, not surfaced). If the DB insert fails (e.g. missing table) and a webhook URL is set, the request falls through to the webhook so Sheets still receives the row. Create the table with `pnpm db:setup`.
+
 ## Content
 
 Edit `content/hackathon.ts` for:
@@ -85,3 +100,4 @@ Hero secondary CTA label is "Sponsor event" (`hackathon.viewSponsorsCta` in `con
 - [ ] Sponsorship form validates required fields
 - [ ] Postgres path stores applications
 - [ ] Webhook path forwards payload
+- [ ] Google Sheets Apps Script receives a test row when `HACKATHON_SPONSOR_WEBHOOK_URL` is set
