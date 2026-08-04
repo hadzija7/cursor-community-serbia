@@ -81,7 +81,7 @@ Edit `content/hackathon.ts` for:
 - Event title, tagline, duration, and **Luma URL** (source of truth for live sync)
 - Static fallback `date` / `displayDate` / `location` (used when Luma is unreachable)
 - Highlights grid (`hackathonStats`)
-- Sponsor logos (`hackathonSponsors`)
+- Sponsor logos (`hackathonSponsors`: Cursor, ElevenLabs, Firecrawl, Render, Convex)
 
 ### Live date & location from Luma
 

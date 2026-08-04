@@ -50,4 +50,11 @@ export const hackathonSponsors: Partner[] = [
     logoHeight: 'h-6',
     logoWidth: 'w-28',
   },
+  {
+    name: 'Convex',
+    logo: '/images/partners/convex.png',
+    url: 'https://convex.dev',
+    logoBg: '#14120b',
+    logoHeight: 'h-8',
+  },
 ]

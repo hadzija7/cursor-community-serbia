@@ -24,8 +24,9 @@
 - [x] Hackathon landing page (`/hackathon`): sponsor marquee, sponsorship form, API route; hero + highlights layout (TUM-inspired, orange accent)
 - [x] Hackathon content: location Novi Sad, Luma `https://luma.com/ghvnbjlx`, CTA "Sponsor event"
 - [x] Hackathon date/location synced from Luma event page (`/api/hackathon/event`, static fallback)
-- [x] Hackathon sponsorship → Google Sheets via Apps Script webhook template (`scripts/hackathon-sponsor-google-sheet.gs`)
-- [ ] Review and update content (events, ambassadors, partners) for Serbia
+  - [x] Hackathon sponsorship → Google Sheets via Apps Script webhook template (`scripts/hackathon-sponsor-google-sheet.gs`)
+  - [x] Hackathon sponsors: added Convex to marquee
+  - [ ] Review and update content (events, ambassadors, partners) for Serbia
 
 - [ ] Ensure education resources are complete and linked correctly
 - [ ] Verify i18n keys and add Serbian locale if needed
