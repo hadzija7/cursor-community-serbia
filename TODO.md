@@ -22,7 +22,7 @@
 - [x] Add Cursor Meetup Novi Sad May 26, 2026 recap (Memclaw); Luma https://luma.com/jn59jzyp
 - [x] Add Cafe Cursor Belgrade Summer Edition recap (Jun 28, 2026); Luma https://luma.com/cursor-belgrade
 - [x] Hackathon landing page (`/hackathon`): sponsor marquee, sponsorship form, API route; hero + highlights layout (TUM-inspired, orange accent)
-- [x] Hackathon content: location Novi Sad, Luma `https://luma.com/ghvnbjlx`, CTA "Sponsor event"
+- [x] Hackathon content: Belgrade, September 12, 2026; Luma `https://luma.com/ghvnbjlx`, CTA "Sponsor event"
 - [x] Hackathon date/location synced from Luma event page (`/api/hackathon/event`, static fallback)
   - [x] Hackathon sponsorship → Google Sheets via Apps Script webhook template (`scripts/hackathon-sponsor-google-sheet.gs`)
   - [x] Hackathon sponsors: added Convex to marquee

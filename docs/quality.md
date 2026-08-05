@@ -39,6 +39,7 @@ Living scorecard for Cursor Community Serbia. Update after each phase.
 
 | Date       | Change                          |
 |------------|----------------------------------|
+| 2026-08-05 | Hackathon static fallback: Belgrade, September 12, 2026 (aligned with Luma `ghvnbjlx`) |
 | 2026-08-05 | Hackathon prizes section above sponsors: Convex track (Best app that uses Convex; 1st 100.000 RSD, 2nd 50.000 RSD) |
 | 2026-08-04 | Hackathon sponsors: added Convex logo to marquee |
 | 2026-07-29 | Hackathon sponsor API: fall through to webhook when Postgres insert fails (missing table); Sheets path unblocked |

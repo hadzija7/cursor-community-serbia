@@ -80,7 +80,7 @@ Postgres can stay configured; webhook notify runs after a successful insert (not
 Edit `content/hackathon.ts` for:
 
 - Event title, tagline, duration, and **Luma URL** (source of truth for live sync)
-- Static fallback `date` / `displayDate` / `location` (used when Luma is unreachable)
+- Static fallback `date` / `displayDate` / `location` (Belgrade, September 12, 2026 — used when Luma is unreachable)
 - Highlights grid (`hackathonStats`)
 - Prize tracks (`hackathonPrizes`: Convex — Best app that uses Convex; 1st 100.000 RSD, 2nd 50.000 RSD)
 - Sponsor logos (`hackathonSponsors`: Cursor, ElevenLabs, Firecrawl, Render, Convex)

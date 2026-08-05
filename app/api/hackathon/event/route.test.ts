@@ -9,9 +9,9 @@ describe('GET /api/hackathon/event', () => {
     vi.spyOn(hackathonDetails, 'resolveHackathonDetails').mockResolvedValue({
       title: 'Cursor Hackathon Serbia',
       tagline: 'Build',
-      date: '2026-08-22',
-      displayDate: 'August 22, 2026',
-      location: 'Novi Sad, Serbia',
+      date: '2026-09-12',
+      displayDate: 'September 12, 2026',
+      location: 'Belgrade, Serbia',
       duration: '1 full day',
       lumaUrl: 'https://luma.com/ghvnbjlx',
       source: 'luma',
@@ -21,8 +21,8 @@ describe('GET /api/hackathon/event', () => {
     expect(res.status).toBe(200)
     const body = await res.json()
     expect(body).toMatchObject({
-      displayDate: 'August 22, 2026',
-      location: 'Novi Sad, Serbia',
+      displayDate: 'September 12, 2026',
+      location: 'Belgrade, Serbia',
       source: 'luma',
     })
   })

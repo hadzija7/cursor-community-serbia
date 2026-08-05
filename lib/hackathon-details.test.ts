@@ -5,9 +5,9 @@ import * as luma from '@/lib/luma'
 const FALLBACK = {
   title: 'Cursor Hackathon Serbia',
   tagline: 'Build the future with AI',
-  date: '2026-08-22',
-  displayDate: 'August 22, 2026',
-  location: 'Novi Sad, Serbia',
+  date: '2026-09-12',
+  displayDate: 'September 12, 2026',
+  location: 'Belgrade, Serbia',
   duration: '1 full day',
   lumaUrl: 'https://luma.com/ghvnbjlx',
 }
