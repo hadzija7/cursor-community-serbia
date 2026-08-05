@@ -1,4 +1,4 @@
-import { Partner } from '@/lib/types'
+import { HackathonPrizeTrack, Partner } from '@/lib/types'
 
 export const hackathonConfig = {
   title: 'Cursor Hackathon Serbia',
@@ -17,6 +17,22 @@ export const hackathonStats = [
   { value: 'Mentors', label: 'Guidance from Cursor ambassadors', accent: 'green' as const },
   { value: 'Prizes', label: 'Awards for top projects', accent: 'yellow' as const },
   { value: 'Community', label: 'Food, drinks, and good vibes', accent: 'purple' as const },
+]
+
+/** Prize tracks — one card group per sponsoring prize category. */
+export const hackathonPrizes: HackathonPrizeTrack[] = [
+  {
+    sponsor: 'Convex',
+    sponsorLogo: '/images/partners/convex.png',
+    sponsorUrl: 'https://convex.dev',
+    logoBg: '#14120b',
+    logoHeight: 'h-7',
+    category: 'Best app that uses Convex',
+    places: [
+      { place: '1st place', amount: '100.000 RSD', accent: 'orange' },
+      { place: '2nd place', amount: '50.000 RSD', accent: 'yellow' },
+    ],
+  },
 ]
 
 /** Hackathon sponsors — edit logos in `public/images/partners/` or add new entries. */

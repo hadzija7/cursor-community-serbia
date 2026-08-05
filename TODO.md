@@ -26,6 +26,7 @@
 - [x] Hackathon date/location synced from Luma event page (`/api/hackathon/event`, static fallback)
   - [x] Hackathon sponsorship → Google Sheets via Apps Script webhook template (`scripts/hackathon-sponsor-google-sheet.gs`)
   - [x] Hackathon sponsors: added Convex to marquee
+  - [x] Hackathon prizes section above sponsors (Convex: Best app that uses Convex — 1st/2nd RSD)
   - [ ] Review and update content (events, ambassadors, partners) for Serbia
 
 - [ ] Ensure education resources are complete and linked correctly

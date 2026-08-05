@@ -3,6 +3,7 @@
 import { motion } from 'framer-motion'
 import HackathonHero from '@/components/HackathonHero'
 import HackathonHighlights from '@/components/HackathonHighlights'
+import HackathonPrizes from '@/components/HackathonPrizes'
 import HackathonSponsorshipForm from '@/components/HackathonSponsorshipForm'
 import Navbar from '@/components/Navbar'
 import SponsorMarquee from '@/components/SponsorMarquee'
@@ -19,6 +20,8 @@ export default function HackathonPage() {
 
       <div className="mx-auto max-w-5xl space-y-20 px-6 py-16 md:py-20">
         <HackathonHighlights />
+
+        <HackathonPrizes />
 
         <motion.section
           id="sponsors"

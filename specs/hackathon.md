@@ -10,7 +10,7 @@ Dedicated hackathon landing page at `/hackathon` with event details, animated sp
 |-------|-------|
 | Status | Implemented |
 | Verified | Partial |
-| Last updated | 2026-07-29 |
+| Last updated | 2026-08-05 |
 
 ## Page layout
 
@@ -22,19 +22,20 @@ Inspired by conference landing patterns (e.g. TUM Blockchain Conference): full-w
 
 | Route | Purpose |
 |-------|---------|
-| `/hackathon` | Hackathon landing page (details, sponsors, sponsorship form) |
+| `/hackathon` | Hackathon landing page (details, prizes, sponsors, sponsorship form) |
 | `/api/hackathon/event` | GET live date/location from Luma (static fallback) |
 | `/api/hackathon/sponsor` | POST sponsorship applications |
 
 ### Key Components
 
-- `app/hackathon/page.tsx` — Page composition (Navbar, hero, highlights, sponsors, form)
+- `app/hackathon/page.tsx` — Page composition (Navbar, hero, highlights, prizes, sponsors, form)
 - `app/hackathon/layout.tsx` — Route metadata
 - `components/HackathonHero.tsx` — Full-width hero with date/location/duration cards and CTAs
 - `components/HackathonHighlights.tsx` — Stat-style highlight grid (TUM-inspired)
+- `components/HackathonPrizes.tsx` — Prize tracks with per-place cards (above sponsors)
 - `components/SponsorMarquee.tsx` — Infinite horizontal sponsor logo animation
 - `components/HackathonSponsorshipForm.tsx` — Sponsorship application form
-- `content/hackathon.ts` — Static fallback copy, Luma URL, sponsor logos, stat cards
+- `content/hackathon.ts` — Static fallback copy, Luma URL, prize tracks, sponsor logos, stat cards
 - `lib/hackathon-details.ts` — Resolve date/location from Luma slug with static fallback
 - `lib/use-hackathon-details.ts` — Client hook polling `/api/hackathon/event`
 
@@ -81,7 +82,14 @@ Edit `content/hackathon.ts` for:
 - Event title, tagline, duration, and **Luma URL** (source of truth for live sync)
 - Static fallback `date` / `displayDate` / `location` (used when Luma is unreachable)
 - Highlights grid (`hackathonStats`)
+- Prize tracks (`hackathonPrizes`: Convex — Best app that uses Convex; 1st 100.000 RSD, 2nd 50.000 RSD)
 - Sponsor logos (`hackathonSponsors`: Cursor, ElevenLabs, Firecrawl, Render, Convex)
+
+### Prizes section
+
+- Rendered above the sponsor marquee (`#prizes`)
+- One track group per sponsoring prize category; place cards (1st/2nd) use highlight accent styles
+- Types: `HackathonPrizeTrack` / `HackathonPrizePlace` in `lib/types.ts`
 
 ### Live date & location from Luma
 

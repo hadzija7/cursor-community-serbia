@@ -37,7 +37,7 @@ cursor-community-serbia/
 │   ├── events.ts             # Upcoming/past events
 │   ├── ambassadors.ts       # Ambassador cards
 │   ├── partners.ts           # Partner logos
-│   ├── hackathon.ts          # Hackathon event + sponsors
+│   ├── hackathon.ts          # Hackathon event, prizes, sponsors
 │   ├── education.ts          # Education resources list
 │   ├── recaps/               # Recap documents
 │   └── locales/              # i18n dictionaries

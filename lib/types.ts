@@ -42,6 +42,22 @@ export interface Partner {
   logoWidth?: string
 }
 
+export interface HackathonPrizePlace {
+  place: string
+  amount: string
+  accent: 'orange' | 'green' | 'yellow' | 'purple'
+}
+
+export interface HackathonPrizeTrack {
+  sponsor: string
+  sponsorLogo: string
+  sponsorUrl: string
+  logoBg?: string
+  logoHeight?: string
+  category: string
+  places: HackathonPrizePlace[]
+}
+
 export interface FeaturedResource {
   title: string
   description: string

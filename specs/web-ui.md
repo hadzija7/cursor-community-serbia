@@ -43,6 +43,7 @@ The Cursor Community Serbia site is a Next.js 16 App Router application presenti
 - `lib/use-hackathon-details.ts` — Client poll of `/api/hackathon/event`
 - `components/HackathonHero.tsx` — Hackathon page hero (facts + CTAs)
 - `components/HackathonHighlights.tsx` — Hackathon stat-style highlight grid
+- `components/HackathonPrizes.tsx` — Hackathon prize tracks (place cards above sponsors)
 - `components/SponsorMarquee.tsx` — Hackathon sponsor marquee animation
 - `components/HackathonSponsorshipForm.tsx` — Hackathon sponsorship application form
 - `components/SubscribeForm.tsx` — Mailing list form
