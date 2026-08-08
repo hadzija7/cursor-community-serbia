@@ -7,18 +7,46 @@ import './globals.css'
 
 const GA_ID = 'G-TJRWP2YTM2'
 
+const siteUrl =
+  process.env.NEXT_PUBLIC_SITE_URL ||
+  (process.env.VERCEL_PROJECT_PRODUCTION_URL
+    ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
+    : 'https://cursorserbia.com')
+
+const siteTitle = `${siteConfig.communityName} ${siteConfig.communityNameLocal}`
+const siteDescription =
+  'Cursor Community Serbia — the official local community for Cursor AI enthusiasts in Serbia. Join meetups, workshops, and connect with fellow developers.'
+
+const ogImage = {
+  url: '/images/og-cursor-serbia.jpg',
+  width: 1024,
+  height: 1024,
+  alt: siteTitle,
+}
+
 export const metadata: Metadata = {
-  title: `${siteConfig.communityName} ${siteConfig.communityNameLocal} | Cursor Ambassador Site`,
-  description: 'Cursor Community Serbia — the official local community for Cursor AI enthusiasts in Serbia. Join meetups, workshops, and connect with fellow developers.',
+  metadataBase: new URL(siteUrl),
+  title: `${siteTitle} | Cursor Ambassador Site`,
+  description: siteDescription,
   icons: {
     icon: [
       { url: '/favicon.svg', type: 'image/svg+xml' },
     ],
   },
   openGraph: {
-    title: `${siteConfig.communityName} ${siteConfig.communityNameLocal}`,
-    description: 'Cursor Community Serbia — the official local community for Cursor AI enthusiasts in Serbia. Join meetups, workshops, and connect with fellow developers.',
+    title: siteTitle,
+    description: siteDescription,
+    url: siteUrl,
+    siteName: siteTitle,
     type: 'website',
+    locale: 'en_US',
+    images: [ogImage],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: siteTitle,
+    description: siteDescription,
+    images: [ogImage.url],
   },
 }
 

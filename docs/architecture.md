@@ -24,7 +24,7 @@ Cursor Community Serbia is a Next.js community site based on the Cursor Ambassad
 cursor-community-serbia/
 ├── app/
 │   ├── page.tsx              # Homepage composition
-│   ├── layout.tsx            # Root layout, metadata, favicon
+│   ├── layout.tsx            # Root layout, OG/Twitter metadata, favicon
 │   ├── subscribe/            # Mailing list subscribe page
 │   ├── hackathon/            # Hackathon landing + sponsorship
 │   ├── education/            # Educational resources landing
@@ -71,6 +71,7 @@ cursor-community-serbia/
 
 | Variable                    | Purpose                              |
 |-----------------------------|--------------------------------------|
+| `NEXT_PUBLIC_SITE_URL`      | Canonical site URL for OG/sitemap (default `https://cursorserbia.com`) |
 | `POSTGRES_URL` / `DATABASE_URL` | Postgres connection (mailing list) |
 | `MAILING_LIST_WEBHOOK_URL`  | Optional webhook for subscriptions   |
 | `MAILING_LIST_API_KEY`      | Optional API key for webhook         |

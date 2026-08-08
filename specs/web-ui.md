@@ -10,7 +10,7 @@ The Cursor Community Serbia site is a Next.js 16 App Router application presenti
 |-------|-------|
 | Status | Implemented |
 | Verified | Partial |
-| Last updated | 2026-04-14 |
+| Last updated | 2026-08-08 |
 
 ## Architecture
 
@@ -53,9 +53,10 @@ The Cursor Community Serbia site is a Next.js 16 App Router application presenti
 
 ### Layout & Theming
 
-- `app/layout.tsx` — Root layout, metadata, favicon
+- `app/layout.tsx` — Root layout, metadata (Open Graph + Twitter share image: `/images/og-cursor-serbia.jpg`), favicon
 - `app/globals.css` — Tailwind, Cursor Serbia theme (dark background `#14120b`, light text `#edecec`)
 - `tailwind.config.ts` — Cursor color palette
+- Share preview: `metadataBase` + `openGraph.images` / `twitter.images` so LinkedIn/X show Cursor Serbia branding instead of scraping an ambassador photo
 
 ## Dependencies
 
