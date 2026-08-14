@@ -68,7 +68,7 @@ export const hackathonSponsors: Partner[] = [
   },
   {
     name: 'Daytona',
-    logo: '/images/partners/daytona.svg',
+    logo: '/images/partners/daytona.png',
     url: 'https://www.daytona.io',
     logoBg: '#14120b',
     logoHeight: 'h-7',
