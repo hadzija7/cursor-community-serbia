@@ -39,7 +39,7 @@ Living scorecard for Cursor Community Serbia. Update after each phase.
 
 | Date       | Change                          |
 |------------|----------------------------------|
-| 2026-08-14 | Hackathon sponsors: added Daytona official wordmark (`daytona.png`); removed Cursor from marquee (host) |
+| 2026-08-14 | Hackathon sponsors: added Daytona official wordmark; removed Cursor from marquee (host) |
 | 2026-08-08 | Open Graph / Twitter share image set to Cursor Serbia logo (`/images/og-cursor-serbia.jpg`); `metadataBase` defaults to cursorserbia.com |
 | 2026-08-05 | Hackathon static fallback: Belgrade, September 12, 2026 (aligned with Luma `ghvnbjlx`) |
 | 2026-08-05 | Hackathon prizes section above sponsors: Convex track (Best app that uses Convex; 1st 100.000 RSD, 2nd 50.000 RSD) |
