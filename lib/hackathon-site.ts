@@ -40,6 +40,28 @@ export function getCommunitySiteUrl(): string {
   return (process.env.NEXT_PUBLIC_SITE_URL ?? 'https://cursorserbia.com').replace(/\/$/, '')
 }
 
+/** True for the canonical community host (not preview / deployment hosts). */
+export function isCommunityHost(host: string | null | undefined): boolean {
+  const hostname = hostnameFromHost(host)
+  if (!hostname) {
+    return false
+  }
+
+  let communityHostname = ''
+  try {
+    communityHostname = new URL(getCommunitySiteUrl()).hostname.toLowerCase()
+  } catch {
+    return false
+  }
+
+  if (!communityHostname) {
+    return false
+  }
+
+  const apex = communityHostname.replace(/^www\./, '')
+  return hostname === communityHostname || hostname === apex || hostname === `www.${apex}`
+}
+
 export function getHackathonBasePath(host: string | null | undefined): '' | '/hackathon' {
   return isHackathonHost(host) ? '' : '/hackathon'
 }

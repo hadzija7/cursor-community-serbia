@@ -1,6 +1,7 @@
 import { NextResponse, type NextRequest } from 'next/server'
 import {
   getHackathonSiteUrl,
+  isCommunityHost,
   isHackathonHost,
   rewriteHackathonSubdomainPath,
   subdomainPathFromHackathonPath,
@@ -22,7 +23,7 @@ export function middleware(request: NextRequest) {
   }
 
   const siteUrl = getHackathonSiteUrl()
-  if (siteUrl && pathname.startsWith('/hackathon')) {
+  if (siteUrl && isCommunityHost(host) && pathname.startsWith('/hackathon')) {
     const destination = new URL(siteUrl)
     destination.pathname = subdomainPathFromHackathonPath(pathname)
     destination.search = request.nextUrl.search

@@ -3,6 +3,7 @@ import {
   getPublicHackathonHref,
   hackathonHref,
   hostnameFromHost,
+  isCommunityHost,
   isHackathonHost,
   rewriteHackathonSubdomainPath,
   subdomainPathFromHackathonPath,
@@ -11,6 +12,7 @@ import {
 describe('hackathon site host helpers', () => {
   afterEach(() => {
     delete process.env.NEXT_PUBLIC_HACKATHON_SITE_URL
+    delete process.env.NEXT_PUBLIC_SITE_URL
   })
 
   it('treats hackathon.* hosts as the hackathon site', () => {
@@ -18,6 +20,15 @@ describe('hackathon site host helpers', () => {
     expect(isHackathonHost('hackathon.localhost:3001')).toBe(true)
     expect(isHackathonHost('cursorserbia.com')).toBe(false)
     expect(isHackathonHost('localhost:3001')).toBe(false)
+  })
+
+  it('scopes the community host to the canonical site URL', () => {
+    expect(isCommunityHost('cursorserbia.com')).toBe(true)
+    expect(isCommunityHost('www.cursorserbia.com')).toBe(true)
+    expect(isCommunityHost('cursorserbia.com:443')).toBe(true)
+    expect(isCommunityHost('project-git-branch-team.vercel.app')).toBe(false)
+    expect(isCommunityHost('localhost:3001')).toBe(false)
+    expect(isCommunityHost('hackathon.cursorserbia.com')).toBe(false)
   })
 
   it('matches a configured public hackathon URL host', () => {
