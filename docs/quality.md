@@ -39,6 +39,7 @@ Living scorecard for Cursor Community Serbia. Update after each phase.
 
 | Date       | Change                          |
 |------------|----------------------------------|
+| 2026-08-17 | Hackathon Overview hosts the sponsor form (`#become-a-sponsor`); header tabs are Overview / Prizes / Stack; hero Stack CTA removed |
 | 2026-08-17 | Hackathon tabbed mini-site + `hackathon.*` subdomain rewrite (DNS still added in Vercel) |
 | 2026-08-17 | Hackathon sponsor stack preview at `/hackathon/stack` (grouped expertise cards; landing unchanged) |
 | 2026-08-14 | Hackathon sponsors: added Daytona official wordmark; removed Cursor from marquee (host) |

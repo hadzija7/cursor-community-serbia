@@ -3,9 +3,13 @@
 import { motion } from 'framer-motion'
 import HackathonHero from '@/components/HackathonHero'
 import HackathonHighlights from '@/components/HackathonHighlights'
+import HackathonSponsorshipForm from '@/components/HackathonSponsorshipForm'
 import SponsorMarquee from '@/components/SponsorMarquee'
+import { useI18n } from '@/lib/i18n'
 
 export default function HackathonPage() {
+  const { t } = useI18n()
+
   return (
     <>
       <HackathonHero />
@@ -21,6 +25,24 @@ export default function HackathonPage() {
           transition={{ duration: 0.5 }}
         >
           <SponsorMarquee />
+        </motion.section>
+
+        <motion.section
+          id="become-a-sponsor"
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true, margin: '-50px' }}
+          transition={{ duration: 0.5 }}
+          className="scroll-mt-24 space-y-6 rounded-2xl border border-cursor-accent-orange/30 bg-gradient-to-br from-cursor-surface via-cursor-bg-dark to-cursor-accent-orange-bg p-8 md:p-10"
+        >
+          <div className="space-y-2">
+            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-cursor-accent-orange">
+              {t('hackathon.sponsorEyebrow')}
+            </p>
+            <h2 className="text-2xl font-semibold tracking-tight md:text-3xl">{t('hackathon.sponsorTitle')}</h2>
+            <p className="max-w-2xl text-cursor-text-secondary md:text-lg">{t('hackathon.sponsorDescription')}</p>
+          </div>
+          <HackathonSponsorshipForm />
         </motion.section>
       </div>
     </>
