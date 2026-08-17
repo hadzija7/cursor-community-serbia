@@ -2,7 +2,7 @@
 
 ## Overview
 
-Dedicated hackathon landing page at `/hackathon` with event details, animated sponsor marquee, and sponsorship application form.
+Hackathon mini-site with tabs (Overview, Stack, Prizes, Sponsor). Served at `/hackathon` on the community host, and at the root of `hackathon.cursorserbia.com` when that subdomain is attached.
 
 ## Status
 
@@ -10,7 +10,7 @@ Dedicated hackathon landing page at `/hackathon` with event details, animated sp
 |-------|-------|
 | Status | Implemented |
 | Verified | Partial |
-| Last updated | 2026-08-14 |
+| Last updated | 2026-08-17 |
 
 ## Page layout
 
@@ -22,20 +22,34 @@ Inspired by conference landing patterns (e.g. TUM Blockchain Conference): full-w
 
 | Route | Purpose |
 |-------|---------|
-| `/hackathon` | Hackathon landing page (details, prizes, sponsors, sponsorship form) |
+| `/hackathon` | Overview tab (hero, highlights, sponsor marquee) |
+| `/hackathon/stack` | Stack tab: expertise group panels + card modal |
+| `/hackathon/prizes` | Prizes tab |
+| `/hackathon/sponsor` | Become-a-sponsor form |
 | `/api/hackathon/event` | GET live date/location from Luma (static fallback) |
 | `/api/hackathon/sponsor` | POST sponsorship applications |
 
+On host `hackathon.*` (e.g. `hackathon.cursorserbia.com` or `hackathon.localhost`), `middleware.ts` rewrites `/` → `/hackathon`, `/stack` → `/hackathon/stack`, and so on. Community chrome is replaced by `HackathonSiteHeader` tabs.
+
+When `NEXT_PUBLIC_HACKATHON_SITE_URL` is set, `/hackathon` on the main domain redirects to that host. Do not set the env until the Vercel domain is live.
+
 ### Key Components
 
-- `app/hackathon/page.tsx` — Page composition (Navbar, hero, highlights, prizes, sponsors, form)
-- `app/hackathon/layout.tsx` — Route metadata
+- `app/hackathon/page.tsx` — Overview tab (hero, highlights, marquee)
+- `app/hackathon/stack/page.tsx` — Stack tab
+- `app/hackathon/prizes/page.tsx` — Prizes tab
+- `app/hackathon/sponsor/page.tsx` — Sponsor application tab
+- `app/hackathon/layout.tsx` — Route metadata + `HackathonSiteHeader`
+- `components/HackathonSiteHeader.tsx` — Hackathon-only chrome and tabs
+- `middleware.ts` — Subdomain rewrite + optional main-host redirect
+- `lib/hackathon-site.ts` — Host detection and public hrefs
 - `components/HackathonHero.tsx` — Full-width hero with date/location/duration cards and CTAs
 - `components/HackathonHighlights.tsx` — Stat-style highlight grid (TUM-inspired)
 - `components/HackathonPrizes.tsx` — Prize tracks with per-place cards (above sponsors)
 - `components/SponsorMarquee.tsx` — Infinite horizontal sponsor logo animation
 - `components/HackathonSponsorshipForm.tsx` — Sponsorship application form
-- `content/hackathon.ts` — Static fallback copy, Luma URL, prize tracks, sponsor logos, stat cards
+- `components/HackathonSponsorStack.tsx` — Expertise group panels + compact card modal (`/hackathon/stack`)
+- `content/hackathon.ts` — Static fallback copy, Luma URL, prize tracks, sponsor logos, stack profiles, stat cards
 - `lib/hackathon-details.ts` — Resolve date/location from Luma slug with static fallback
 - `lib/use-hackathon-details.ts` — Client hook polling `/api/hackathon/event`
 
@@ -84,6 +98,14 @@ Edit `content/hackathon.ts` for:
 - Highlights grid (`hackathonStats`)
 - Prize tracks (`hackathonPrizes`: Convex — Best app that uses Convex; 1st 100.000 RSD, 2nd 50.000 RSD)
 - Sponsor logos (`hackathonSponsors`: ElevenLabs, Firecrawl, Render, Convex, Daytona)
+- Sponsor stack (`hackathonSdlcStages`, `hackathonSponsorProfiles`, recipes, picks) — source for `/hackathon/stack` and `docs/hackathon/sponsor-cheat-sheet.md`
+
+### Sponsor stack tab
+
+- Route: `/hackathon/stack` (Stack tab)
+- Wrapping 2-column grid of area panels (not a linear pipeline). Cards stay short (logo, name, one-liner); details open in a modal
+- Cursor is host, not a sponsor. Wispr Flow is not a sponsor; voice-lane note only
+- Confirmed perks only: Daytona $100 + winner credits (track TBD); Convex 100.000 / 50.000 RSD
 
 ### Prizes section
 
@@ -98,14 +120,27 @@ Edit `content/hackathon.ts` for:
 - Client: `useHackathonDetails` polls `/api/hackathon/event` every 5 minutes (same pattern as upcoming events)
 - Title, tagline, and duration stay content-owned so marketing copy does not flip with Luma’s event name
 
-Hero secondary CTA label is "Sponsor event" (`hackathon.viewSponsorsCta` in `content/locales/en.json`), linking to `#sponsors`.
+Hero CTAs: Register (Luma), Stack tab, Sponsor tab (`hackathon.viewSponsorsCta`).
+
+## Subdomain (Vercel + DNS)
+
+The app is ready for `hackathon.cursorserbia.com`. Creating the hostname is a dashboard step:
+
+1. Vercel → this project → **Settings → Domains → Add** → `hackathon.cursorserbia.com`.
+2. If the apex already uses Vercel nameservers, wait until the domain is **Valid**.
+3. Otherwise add a CNAME at the DNS host: name `hackathon`, value `cname.vercel-dns.com`.
+4. After it is green, set Vercel env `NEXT_PUBLIC_HACKATHON_SITE_URL=https://hackathon.cursorserbia.com` and redeploy.
+5. Local preview without DNS: `http://hackathon.localhost:3001/` (Chrome/Firefox treat `*.localhost` as loopback).
 
 ## Verification
 
-- [ ] `/hackathon` loads with event details and sponsor marquee
+- [ ] `/hackathon` loads the Overview tab (hero, highlights, marquee)
+- [ ] Tabs switch to Stack, Prizes, and Sponsor
+- [ ] `http://hackathon.localhost:<port>/` rewrites to the Overview tab
 - [ ] Date/location update when Luma event changes (or fall back to static)
 - [ ] Marquee animates smoothly and pauses on hover
 - [ ] Sponsorship form validates required fields
 - [ ] Postgres path stores applications
 - [ ] Webhook path forwards payload
 - [ ] Google Sheets Apps Script receives a test row when `HACKATHON_SPONSOR_WEBHOOK_URL` is set
+- [ ] `/hackathon/stack` shows expertise group panels; card click opens a compact modal

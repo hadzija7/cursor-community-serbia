@@ -29,6 +29,8 @@
   - [x] Hackathon sponsors: added Convex to marquee
   - [x] Hackathon prizes section above sponsors (Convex: Best app that uses Convex — 1st/2nd RSD)
   - [x] Hackathon sponsors: added Daytona; removed Cursor (host, not sponsor)
+  - [x] Hackathon sponsor stack preview (`/hackathon/stack`): grouped cards, path, read-more
+  - [x] Hackathon tabbed mini-site (Overview / Stack / Prizes / Sponsor) + `hackathon.*` host rewrite
   - [ ] Review and update content (events, ambassadors, partners) for Serbia
 
 - [ ] Ensure education resources are complete and linked correctly

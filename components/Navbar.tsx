@@ -4,6 +4,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import LanguageToggle from '@/components/LanguageToggle'
 import { siteConfig } from '@/content/site.config'
+import { getPublicHackathonHref } from '@/lib/hackathon-site'
 import { useI18n } from '@/lib/i18n'
 
 export default function Navbar() {
@@ -42,7 +43,7 @@ export default function Navbar() {
           {t('home.pastEvents')}
         </Link>
         <Link
-          href="/hackathon"
+          href={getPublicHackathonHref()}
           className="text-base text-cursor-text-muted hover:text-cursor-text transition-colors"
         >
           {t('hackathon.nav')}

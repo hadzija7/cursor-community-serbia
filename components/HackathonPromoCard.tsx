@@ -1,6 +1,7 @@
 'use client'
 
 import Link from 'next/link'
+import { getPublicHackathonHref } from '@/lib/hackathon-site'
 import { useI18n } from '@/lib/i18n'
 import { useHackathonDetails } from '@/lib/use-hackathon-details'
 
@@ -10,7 +11,7 @@ export default function HackathonPromoCard() {
 
   return (
     <Link
-      href="/hackathon"
+      href={getPublicHackathonHref()}
       className="absolute left-4 top-4 z-20 w-[min(92vw,340px)] rounded-2xl border border-cursor-accent-orange/40 bg-cursor-bg/95 p-5 shadow-2xl shadow-black/40 backdrop-blur-md transition-all hover:border-cursor-accent-orange/70 hover:bg-cursor-bg-dark sm:left-8 sm:top-8 sm:w-[min(88vw,380px)] sm:p-6 md:w-[400px]"
     >
       <p className="text-xs uppercase tracking-[0.2em] text-cursor-accent-orange font-semibold sm:text-sm">

@@ -58,6 +58,51 @@ export interface HackathonPrizeTrack {
   places: HackathonPrizePlace[]
 }
 
+/** Where a sponsor sits on the one-day build path. */
+export type HackathonSdlcStageId = 'research' | 'execute' | 'backend' | 'experience' | 'deploy'
+
+export interface HackathonSdlcStage {
+  id: HackathonSdlcStageId
+  label: string
+  job: string
+  sponsorId: string
+  accent: 'orange' | 'green' | 'yellow' | 'purple' | 'blue'
+}
+
+export type HackathonSponsorPerkKind = 'confirmed' | 'public' | 'tbd'
+
+export interface HackathonSponsorPerk {
+  kind: HackathonSponsorPerkKind
+  label: string
+  detail?: string
+}
+
+export interface HackathonSponsorProfile {
+  id: string
+  name: string
+  logo: string
+  url: string
+  docsUrl: string
+  logoBg?: string
+  logoHeight?: string
+  sdlcStage: HackathonSdlcStageId
+  oneLiner: string
+  technologies: string[]
+  useCases: string[]
+  perks: HackathonSponsorPerk[]
+}
+
+export interface HackathonStackRecipe {
+  title: string
+  summary: string
+  sponsorIds: string[]
+}
+
+export interface HackathonStackPick {
+  need: string
+  use: string
+}
+
 export interface FeaturedResource {
   title: string
   description: string
