@@ -10,7 +10,7 @@ Dedicated hackathon landing page at `/hackathon` with event details, animated sp
 |-------|-------|
 | Status | Implemented |
 | Verified | Partial |
-| Last updated | 2026-08-05 |
+| Last updated | 2026-08-14 |
 
 ## Page layout
 
@@ -83,7 +83,7 @@ Edit `content/hackathon.ts` for:
 - Static fallback `date` / `displayDate` / `location` (Belgrade, September 12, 2026 — used when Luma is unreachable)
 - Highlights grid (`hackathonStats`)
 - Prize tracks (`hackathonPrizes`: Convex — Best app that uses Convex; 1st 100.000 RSD, 2nd 50.000 RSD)
-- Sponsor logos (`hackathonSponsors`: Cursor, ElevenLabs, Firecrawl, Render, Convex)
+- Sponsor logos (`hackathonSponsors`: ElevenLabs, Firecrawl, Render, Convex, Daytona)
 
 ### Prizes section
 
