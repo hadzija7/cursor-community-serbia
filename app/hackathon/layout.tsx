@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import HackathonSiteHeader from '@/components/HackathonSiteHeader'
 import { hackathonConfig } from '@/content/hackathon'
 import { siteConfig } from '@/content/site.config'
 
@@ -29,5 +30,10 @@ export const metadata: Metadata = {
 }
 
 export default function HackathonLayout({ children }: { children: React.ReactNode }) {
-  return children
+  return (
+    <div className="min-h-screen bg-cursor-bg text-cursor-text">
+      <HackathonSiteHeader />
+      <main>{children}</main>
+    </div>
+  )
 }

@@ -10,6 +10,7 @@ import PastEvents from '@/components/PastEvents'
 import Partners from '@/components/Partners'
 import JsonLd from '@/components/JsonLd'
 import { siteConfig } from '@/content/site.config'
+import { getPublicHackathonHref } from '@/lib/hackathon-site'
 import { useI18n } from '@/lib/i18n'
 import { useUpcomingEvents } from '@/lib/use-upcoming-events'
 import type { CursorEvent } from '@/lib/types'
@@ -84,7 +85,7 @@ export default function Home() {
               {t('education.nav')}
             </Link>
             <span className="text-cursor-text-faint">·</span>
-            <Link href="/hackathon" className="text-cursor-text hover:text-cursor-text-muted transition-colors text-sm">
+            <Link href={getPublicHackathonHref()} className="text-cursor-text hover:text-cursor-text-muted transition-colors text-sm">
               {t('hackathon.nav')}
             </Link>
             <span className="text-cursor-text-faint">·</span>

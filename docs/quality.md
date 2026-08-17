@@ -39,6 +39,8 @@ Living scorecard for Cursor Community Serbia. Update after each phase.
 
 | Date       | Change                          |
 |------------|----------------------------------|
+| 2026-08-17 | Hackathon tabbed mini-site + `hackathon.*` subdomain rewrite (DNS still added in Vercel) |
+| 2026-08-17 | Hackathon sponsor stack preview at `/hackathon/stack` (grouped expertise cards; landing unchanged) |
 | 2026-08-14 | Hackathon sponsors: added Daytona official wordmark; removed Cursor from marquee (host) |
 | 2026-08-08 | Open Graph / Twitter share image set to Cursor Serbia logo (`/images/og-cursor-serbia.jpg`); `metadataBase` defaults to cursorserbia.com |
 | 2026-08-05 | Hackathon static fallback: Belgrade, September 12, 2026 (aligned with Luma `ghvnbjlx`) |

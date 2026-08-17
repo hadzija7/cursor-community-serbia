@@ -4,11 +4,14 @@ import { motion } from 'framer-motion'
 import { Calendar, Clock, MapPin } from 'lucide-react'
 import Link from 'next/link'
 import { useI18n } from '@/lib/i18n'
+import { useHackathonHref } from '@/lib/use-hackathon-base-path'
 import { useHackathonDetails } from '@/lib/use-hackathon-details'
 
 export default function HackathonHero() {
   const { t } = useI18n()
   const hackathon = useHackathonDetails()
+  const stackHref = useHackathonHref('stack')
+  const sponsorHref = useHackathonHref('sponsor')
 
   const facts = [
     {
@@ -50,13 +53,6 @@ export default function HackathonHero() {
           transition={{ duration: 0.5 }}
           className="space-y-8"
         >
-          <Link
-            href="/"
-            className="inline-flex text-sm text-cursor-text-muted transition-colors hover:text-cursor-text"
-          >
-            {t('hackathon.backToHome')}
-          </Link>
-
           <div className="space-y-5 max-w-3xl">
             <p className="inline-flex items-center rounded-full border border-cursor-accent-orange/50 bg-cursor-accent-orange-bg px-3 py-1 text-xs font-semibold uppercase tracking-[0.18em] text-cursor-accent-orange">
               {t('hackathon.upcoming')}
@@ -94,12 +90,18 @@ export default function HackathonHero() {
             >
               {t('hackathon.registerCta')}
             </a>
-            <a
-              href="#sponsors"
+            <Link
+              href={stackHref}
               className="inline-flex items-center justify-center rounded-lg border border-cursor-accent-orange/60 bg-cursor-accent-orange-bg px-6 py-3 text-sm font-semibold text-cursor-accent-orange transition-colors hover:border-cursor-accent-orange hover:bg-cursor-accent-orange/20 md:text-base"
             >
+              {t('hackathon.tabStack')}
+            </Link>
+            <Link
+              href={sponsorHref}
+              className="inline-flex items-center justify-center rounded-lg border border-cursor-border-emphasis px-6 py-3 text-sm font-semibold text-cursor-text-secondary transition-colors hover:border-cursor-text-muted hover:text-cursor-text md:text-base"
+            >
               {t('hackathon.viewSponsorsCta')}
-            </a>
+            </Link>
           </div>
         </motion.div>
       </div>
