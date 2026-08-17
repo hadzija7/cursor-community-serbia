@@ -1,29 +1,32 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useSyncExternalStore } from 'react'
 import { getHackathonBasePath, isHackathonHost, type HackathonTab, hackathonHref } from '@/lib/hackathon-site'
 
+function subscribe(): () => void {
+  return () => {}
+}
+
+function getHostSnapshot(): string {
+  return window.location.host
+}
+
+function getServerHostSnapshot(): string {
+  return ''
+}
+
+function useBrowserHost(): string {
+  return useSyncExternalStore(subscribe, getHostSnapshot, getServerHostSnapshot)
+}
+
 export function useHackathonBasePath(): '' | '/hackathon' {
-  const [basePath, setBasePath] = useState<'' | '/hackathon'>('/hackathon')
-
-  useEffect(() => {
-    setBasePath(getHackathonBasePath(window.location.host))
-  }, [])
-
-  return basePath
+  return getHackathonBasePath(useBrowserHost() || null)
 }
 
 export function useHackathonHref(tab: HackathonTab): string {
-  const basePath = useHackathonBasePath()
-  return hackathonHref(basePath, tab)
+  return hackathonHref(useHackathonBasePath(), tab)
 }
 
 export function useIsHackathonHost(): boolean {
-  const [onHost, setOnHost] = useState(false)
-
-  useEffect(() => {
-    setOnHost(isHackathonHost(window.location.host))
-  }, [])
-
-  return onHost
+  return isHackathonHost(useBrowserHost() || null)
 }
