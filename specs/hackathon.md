@@ -2,7 +2,7 @@
 
 ## Overview
 
-Hackathon mini-site with tabs (Overview, Stack, Prizes, Sponsor). Served at `/hackathon` on the community host, and at the root of `hackathon.cursorserbia.com` when that subdomain is attached.
+Hackathon mini-site with tabs (Overview, Prizes, Stack). Served at `/hackathon` on the community host, and at the root of `hackathon.cursorserbia.com` when that subdomain is attached.
 
 ## Status
 
@@ -22,10 +22,10 @@ Inspired by conference landing patterns (e.g. TUM Blockchain Conference): full-w
 
 | Route | Purpose |
 |-------|---------|
-| `/hackathon` | Overview tab (hero, highlights, sponsor marquee) |
+| `/hackathon` | Overview tab (hero, highlights, sponsor marquee, become-a-sponsor form) |
 | `/hackathon/stack` | Stack tab: expertise group panels + card modal |
 | `/hackathon/prizes` | Prizes tab |
-| `/hackathon/sponsor` | Become-a-sponsor form |
+| `/hackathon/sponsor` | Redirects to Overview `#become-a-sponsor` (bookmarks / `hackathon.*` `/sponsor` rewrite) |
 | `/api/hackathon/event` | GET live date/location from Luma (static fallback) |
 | `/api/hackathon/sponsor` | POST sponsorship applications |
 
@@ -35,12 +35,12 @@ When `NEXT_PUBLIC_HACKATHON_SITE_URL` is set, `/hackathon` on the main domain re
 
 ### Key Components
 
-- `app/hackathon/page.tsx` — Overview tab (hero, highlights, marquee)
+- `app/hackathon/page.tsx` — Overview tab (hero, highlights, marquee, become-a-sponsor form)
 - `app/hackathon/stack/page.tsx` — Stack tab
 - `app/hackathon/prizes/page.tsx` — Prizes tab
-- `app/hackathon/sponsor/page.tsx` — Sponsor application tab
+- `app/hackathon/sponsor/page.tsx` — Redirect to Overview `#become-a-sponsor`
 - `app/hackathon/layout.tsx` — Route metadata + `HackathonSiteHeader`
-- `components/HackathonSiteHeader.tsx` — Hackathon-only chrome and tabs
+- `components/HackathonSiteHeader.tsx` — Hackathon-only chrome and tabs (Overview / Prizes / Stack)
 - `middleware.ts` — Subdomain rewrite + optional main-host redirect
 - `lib/hackathon-site.ts` — Host detection and public hrefs
 - `components/HackathonHero.tsx` — Full-width hero with date/location/duration cards and CTAs
@@ -120,7 +120,7 @@ Edit `content/hackathon.ts` for:
 - Client: `useHackathonDetails` polls `/api/hackathon/event` every 5 minutes (same pattern as upcoming events)
 - Title, tagline, and duration stay content-owned so marketing copy does not flip with Luma’s event name
 
-Hero CTAs: Register (Luma), Stack tab, Sponsor tab (`hackathon.viewSponsorsCta`).
+Hero CTAs: Register (Luma) and Sponsor event (`hackathon.viewSponsorsCta`). Sponsor event always scrolls to Overview `#become-a-sponsor` — including a second click while already on Overview with that hash. Off Overview (Prizes / Stack) it navigates to the Overview form. The form section uses `scroll-mt-24` so header chrome does not cover the heading. Stack is a header tab only.
 
 ## Subdomain (Vercel + DNS)
 
@@ -134,8 +134,10 @@ The app is ready for `hackathon.cursorserbia.com`. Creating the hostname is a da
 
 ## Verification
 
-- [ ] `/hackathon` loads the Overview tab (hero, highlights, marquee)
-- [ ] Tabs switch to Stack, Prizes, and Sponsor
+- [ ] `/hackathon` loads the Overview tab (hero, highlights, marquee, become-a-sponsor form)
+- [ ] Hero "Sponsor event" always scrolls to `#become-a-sponsor` (Overview with or without hash; from Prizes/Stack)
+- [ ] Tabs switch to Prizes and Stack (no Sponsor tab)
+- [ ] `/hackathon/sponsor` redirects to Overview `#become-a-sponsor`
 - [ ] `http://hackathon.localhost:<port>/` rewrites to the Overview tab
 - [ ] Date/location update when Luma event changes (or fall back to static)
 - [ ] Marquee animates smoothly and pauses on hover

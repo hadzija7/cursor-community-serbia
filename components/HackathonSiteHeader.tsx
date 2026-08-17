@@ -9,11 +9,12 @@ import { getCommunitySiteUrl, type HackathonTab } from '@/lib/hackathon-site'
 import { useHackathonHref, useIsHackathonHost } from '@/lib/use-hackathon-base-path'
 import { useHackathonDetails } from '@/lib/use-hackathon-details'
 
-const tabs: { id: HackathonTab; labelKey: string }[] = [
+type VisibleHackathonTab = Exclude<HackathonTab, 'sponsor'>
+
+const tabs: { id: VisibleHackathonTab; labelKey: string }[] = [
   { id: 'overview', labelKey: 'hackathon.tabOverview' },
-  { id: 'stack', labelKey: 'hackathon.tabStack' },
   { id: 'prizes', labelKey: 'hackathon.tabPrizes' },
-  { id: 'sponsor', labelKey: 'hackathon.tabSponsor' },
+  { id: 'stack', labelKey: 'hackathon.tabStack' },
 ]
 
 function isTabActive(pathname: string, tab: HackathonTab): boolean {
@@ -30,14 +31,12 @@ export default function HackathonSiteHeader() {
   const hackathon = useHackathonDetails()
   const onHackathonHost = useIsHackathonHost()
   const overviewHref = useHackathonHref('overview')
-  const stackHref = useHackathonHref('stack')
   const prizesHref = useHackathonHref('prizes')
-  const sponsorHref = useHackathonHref('sponsor')
-  const hrefs: Record<HackathonTab, string> = {
+  const stackHref = useHackathonHref('stack')
+  const hrefs: Record<VisibleHackathonTab, string> = {
     overview: overviewHref,
-    stack: stackHref,
     prizes: prizesHref,
-    sponsor: sponsorHref,
+    stack: stackHref,
   }
 
   const communityHref = onHackathonHost ? getCommunitySiteUrl() : '/'

@@ -23,10 +23,10 @@ The Cursor Community Serbia site is a Next.js 16 App Router application presenti
 | `/api/hackathon/event` | Live hackathon date/location from Luma event page (static fallback) |
 | `/subscribe` | Mailing list subscription |
 | `/education` | Educational resources (presentations, PDFs) |
-| `/hackathon` | Hackathon Overview tab (also `hackathon.*` host `/`) |
+| `/hackathon` | Hackathon Overview tab (hero, highlights, marquee, become-a-sponsor form; also `hackathon.*` host `/`) |
 | `/hackathon/stack` | Stack tab (expertise groups + card modal) |
 | `/hackathon/prizes` | Prizes tab |
-| `/hackathon/sponsor` | Sponsor application tab |
+| `/hackathon/sponsor` | Redirects to Overview `#become-a-sponsor` |
 | `/recaps/[slug]` | Event recap pages (`EventRecap`: summary; **Video Recap** section for main `videoUrl` and optional `extraVideoRecaps` (Drive embeds); optional **Presentation** grid for `extraPresentations`; YouTube posters from `lib/youtube-metadata.ts`; Open Graph + JSON-LD `image` use first gallery photo; optional `interviews[]` (YouTube or Drive), gallery) |
 | `/slides/[id]` | Optional workshop slides |
 | `/education/coworking-day/[id]` | Coworking day kickoff deck (8 slides) |
@@ -52,11 +52,11 @@ The Cursor Community Serbia site is a Next.js 16 App Router application presenti
 - `components/SubscribeForm.tsx` — Mailing list form
 - `components/PhotoGallery.tsx` — Recap image grid; fullscreen lightbox with prev/next controls and **ArrowLeft / ArrowRight** keyboard navigation when multiple photos
 - `app/education/page.tsx` — Education landing page
-- `app/hackathon/page.tsx` — Hackathon Overview tab
+- `app/hackathon/page.tsx` — Hackathon Overview tab (includes become-a-sponsor form)
 - `app/hackathon/stack/page.tsx` — Stack tab
 - `app/hackathon/prizes/page.tsx` — Prizes tab
-- `app/hackathon/sponsor/page.tsx` — Sponsor tab
-- `components/HackathonSiteHeader.tsx` — Hackathon tabs
+- `app/hackathon/sponsor/page.tsx` — Redirect to Overview `#become-a-sponsor`
+- `components/HackathonSiteHeader.tsx` — Hackathon tabs (Overview / Prizes / Stack)
 - `middleware.ts` — `hackathon.*` host rewrite
 - `components/HackathonSponsorStack.tsx` — Expertise group panels and card modal
 
@@ -82,4 +82,5 @@ The Cursor Community Serbia site is a Next.js 16 App Router application presenti
 - [ ] Subscribe form submits
 - [ ] Education resources open correctly
 - [ ] Favicon displays Cursor logo
+- [ ] `/hackathon` shows the become-a-sponsor form; header tabs are Overview / Prizes / Stack
 - [ ] `/hackathon/stack` loads grouped sponsor cards
