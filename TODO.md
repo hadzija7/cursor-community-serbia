@@ -22,12 +22,14 @@
 - [x] Add Cursor Coworking Day Belgrade recap (May 15, 2026); Luma https://luma.com/9tlvu6ij
 - [x] Add Cursor Meetup Novi Sad May 26, 2026 recap (Memclaw); Luma https://luma.com/jn59jzyp
 - [x] Add Cafe Cursor Belgrade Summer Edition recap (Jun 28, 2026); Luma https://luma.com/cursor-belgrade
+- [x] Add Cursor Meetup Novi Sad Aug 20, 2026 recap (Creative Space 75); Luma https://luma.com/kd163iko
 - [x] Hackathon landing page (`/hackathon`): sponsor marquee, sponsorship form, API route; hero + highlights layout (TUM-inspired, orange accent)
 - [x] Hackathon content: Belgrade, September 12, 2026; Luma `https://luma.com/ghvnbjlx`, CTA "Sponsor event"
 - [x] Hackathon date/location synced from Luma event page (`/api/hackathon/event`, static fallback)
   - [x] Hackathon sponsorship → Google Sheets via Apps Script webhook template (`scripts/hackathon-sponsor-google-sheet.gs`)
   - [x] Hackathon sponsors: added Convex to marquee
   - [x] Hackathon prizes section above sponsors (Convex: Best app that uses Convex — 1st/2nd RSD)
+  - [x] Hackathon prizes: Kosmonaut coworking for top 3 teams (15 / 10 / 5 entries, use within 3 months, claim on kosmonaut.rs)
   - [x] Hackathon sponsors: added Daytona; removed Cursor (host, not sponsor)
   - [x] Hackathon sponsor stack preview (`/hackathon/stack`): grouped cards, path, read-more
   - [x] Hackathon tabbed mini-site (Overview / Guide / Mentors / Prizes / Stack) + `hackathon.*` host rewrite

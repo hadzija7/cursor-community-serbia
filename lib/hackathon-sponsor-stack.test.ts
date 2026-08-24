@@ -75,12 +75,20 @@ describe('hackathon sponsor stack content', () => {
     expect(getSponsorProfile('netlify')?.perks.some((perk) => perk.kind === 'confirmed' && perk.label.includes('3,000'))).toBe(true)
   })
 
-  it('lists Convex cash and Daytona credit prize tracks', () => {
+  it('lists Convex cash, Kosmonaut coworking, and Daytona credit prize tracks', () => {
     const sponsors = hackathonPrizes.map((track) => track.sponsor)
 
-    expect(sponsors).toEqual(['Convex', 'Daytona'])
+    expect(sponsors).toEqual(['Convex', 'Kosmonaut', 'Daytona'])
     expect(hackathonPrizes[0]?.places.map((place) => place.amount)).toEqual(['100.000 RSD', '50.000 RSD'])
+    expect(hackathonPrizes[1]?.category).toBe('Free coworking for top 3 teams')
     expect(hackathonPrizes[1]?.places.map((place) => place.amount)).toEqual([
+      '15 coworking entries',
+      '10 coworking entries',
+      '5 coworking entries',
+    ])
+    expect(hackathonPrizes[1]?.note).toMatch(/3 months/)
+    expect(hackathonPrizes[1]?.note).toMatch(/Kosmonaut platform/)
+    expect(hackathonPrizes[2]?.places.map((place) => place.amount)).toEqual([
       '$3,000 credits',
       '$2,000 credits',
       '$1,000 credits',

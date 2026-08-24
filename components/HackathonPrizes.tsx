@@ -101,7 +101,6 @@ export default function HackathonPrizes() {
                     <p className={`mt-3 text-3xl font-bold tracking-tight md:text-4xl ${styles.value}`}>
                       {prize.amount}
                     </p>
-                    <p className="mt-2 text-sm text-cursor-text-secondary">{track.sponsor}</p>
                   </motion.div>
                 )
               })}

@@ -39,6 +39,9 @@ Living scorecard for Cursor Community Serbia. Update after each phase.
 
 | Date       | Change                          |
 |------------|----------------------------------|
+| 2026-08-24 | Hackathon prizes: place cards show place + amount only (no repeated sponsor name) |
+| 2026-08-24 | Hackathon prizes: Kosmonaut coworking for top 3 teams (15 / 10 / 5 entries per teammate, use within 3 months, claim on kosmonaut.rs), listed below Convex cash |
+| 2026-08-24 | Content: Cursor Meetup Novi Sad Aug 20, 2026 recap (`cursor-meetup-novisad-aug-2026`); Luma kd163iko; Drive recap video + 9 gallery photos from Creative Space 75 |
 | 2026-08-24 | Hackathon Stack: Add to Cursor uses `cursor://` MCP deeplink so the install tab no longer auto-closes |
 | 2026-08-24 | Exa tech-partner logo: official icon + “exa” wordmark on a white pad |
 | 2026-08-24 | Hackathon tech partners + Stack: Wispr Flow, Exa, Netlify, Fal.ai with confirmed participant credits |

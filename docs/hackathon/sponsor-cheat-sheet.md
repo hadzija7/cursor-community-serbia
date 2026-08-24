@@ -354,6 +354,7 @@ Exa finds sources → fal generates the image or clip → Convex stores the thre
 | A public frontend with deploy previews | **Netlify** |
 | To write the whole thing fast | **Cursor** (host editor) |
 | Cash prize for a Convex app | **Convex track** — 100.000 / 50.000 RSD |
+| Coworking for top 3 teams | **Kosmonaut** — 15 / 10 / 5 entries per teammate, use within 3 months; claim on kosmonaut.rs |
 | Confirmed platform credits on day one | **Daytona** $100 · **Exa** $50 · **Fal.ai** $50 · **Netlify** 3,000 · **Wispr Flow** 3 months Pro |
 | Event credits from ElevenLabs / Firecrawl / Render | **TBD** — use their public free tier until a code is announced |
 

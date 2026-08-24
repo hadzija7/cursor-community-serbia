@@ -46,6 +46,20 @@ export const hackathonPrizes: HackathonPrizeTrack[] = [
     ],
   },
   {
+    sponsor: 'Kosmonaut',
+    sponsorLogo: '/images/partners/kosmonaut.svg',
+    sponsorUrl: 'https://www.kosmonaut.rs/',
+    logoBg: '#14120b',
+    logoHeight: 'h-8',
+    category: 'Free coworking for top 3 teams',
+    note: 'Each teammate gets the entries for their place. Use them within 3 months. Register on the Kosmonaut platform to claim.',
+    places: [
+      { place: '1st place', amount: '15 coworking entries', accent: 'green' },
+      { place: '2nd place', amount: '10 coworking entries', accent: 'yellow' },
+      { place: '3rd place', amount: '5 coworking entries', accent: 'purple' },
+    ],
+  },
+  {
     sponsor: 'Daytona',
     sponsorLogo: '/images/partners/daytona.svg',
     sponsorUrl: 'https://www.daytona.io',
