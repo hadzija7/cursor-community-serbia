@@ -30,7 +30,19 @@
   - [x] Hackathon prizes section above sponsors (Convex: Best app that uses Convex — 1st/2nd RSD)
   - [x] Hackathon sponsors: added Daytona; removed Cursor (host, not sponsor)
   - [x] Hackathon sponsor stack preview (`/hackathon/stack`): grouped cards, path, read-more
-  - [x] Hackathon tabbed mini-site (Overview / Prizes / Stack) + `hackathon.*` host rewrite
+  - [x] Hackathon tabbed mini-site (Overview / Guide / Mentors / Prizes / Stack) + `hackathon.*` host rewrite
+  - [x] Hackathon Mentors tab (`/hackathon/mentors`): Nick Tomić first; judges placeholder
+  - [x] Hackathon prizes: added Daytona credit track ($3,000 / $2,000 / $1,000 + $100 each)
+  - [x] Hackathon Guide tab (`/hackathon/guide`): why, team, numbered timeline, topics
+  - [x] Hackathon Stack: Add to Cursor MCP install on each sponsor modal
+  - [x] Hackathon Overview: community partners band (Startit, Superteam Balkan) below sponsors
+  - [x] Hackathon: tech companies labeled Tech partners (vs Community partners); Become a sponsor unchanged
+  - [x] Hackathon Overview: community partners use the same scrolling marquee as tech partners
+  - [x] Hackathon community partners: added ABC BootCamps, JigJoy, Kosmonaut
+  - [x] Superteam Balkan logo: transparent PNG (no black JPEG frame), sized a step above Startit (`h-10`)
+  - [x] Hackathon tech partners + Stack: Wispr Flow, Exa, Netlify, Fal.ai (confirmed credits)
+  - [x] Exa logo: official icon + “exa” wordmark on a white pad
+  - [x] ABC BootCamps logo: official overlapping ABC + BOOTCAMP mark on white pad (`h-10`)
   - [x] Hackathon sponsor form lives on Overview (`#become-a-sponsor`); `/hackathon/sponsor` redirects there; no Sponsor tab
   - [x] Hero "Sponsor event" always scrolls to Overview `#become-a-sponsor` (same-page hash + `scroll-mt-24`)
   - [ ] Review and update content (events, ambassadors, partners) for Serbia

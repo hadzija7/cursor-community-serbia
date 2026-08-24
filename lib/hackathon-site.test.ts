@@ -33,6 +33,8 @@ describe('hackathon site host helpers', () => {
   it('rewrites subdomain paths onto /hackathon', () => {
     expect(rewriteHackathonSubdomainPath('/')).toBe('/hackathon')
     expect(rewriteHackathonSubdomainPath('/stack')).toBe('/hackathon/stack')
+    expect(rewriteHackathonSubdomainPath('/guide')).toBe('/hackathon/guide')
+    expect(rewriteHackathonSubdomainPath('/mentors')).toBe('/hackathon/mentors')
     expect(rewriteHackathonSubdomainPath('/prizes')).toBe('/hackathon/prizes')
     expect(rewriteHackathonSubdomainPath('/sponsor')).toBe('/hackathon/sponsor')
     expect(rewriteHackathonSubdomainPath('/hackathon/stack')).toBeNull()
@@ -50,6 +52,9 @@ describe('hackathon site host helpers', () => {
     expect(hackathonHref('', 'overview')).toBe('/')
     expect(hackathonHref('', 'stack')).toBe('/stack')
     expect(hackathonHref('/hackathon', 'prizes')).toBe('/hackathon/prizes')
+    expect(hackathonHref('/hackathon', 'guide')).toBe('/hackathon/guide')
+    expect(hackathonHref('', 'guide')).toBe('/guide')
+    expect(hackathonHref('/hackathon', 'mentors')).toBe('/hackathon/mentors')
   })
 
   it('uses the configured subdomain for public community links', () => {

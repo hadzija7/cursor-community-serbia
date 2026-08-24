@@ -78,7 +78,11 @@ export default function HackathonPrizes() {
               </a>
             </div>
 
-            <div className="grid gap-4 sm:grid-cols-2">
+            <div
+              className={`grid gap-4 ${
+                track.places.length >= 3 ? 'sm:grid-cols-2 lg:grid-cols-3' : 'sm:grid-cols-2'
+              }`}
+            >
               {track.places.map((prize, index) => {
                 const styles = accentStyles[prize.accent]
 
@@ -102,6 +106,10 @@ export default function HackathonPrizes() {
                 )
               })}
             </div>
+
+            {track.note ? (
+              <p className="text-sm leading-relaxed text-cursor-text-secondary">{track.note}</p>
+            ) : null}
           </div>
         ))}
       </div>

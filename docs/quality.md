@@ -39,6 +39,19 @@ Living scorecard for Cursor Community Serbia. Update after each phase.
 
 | Date       | Change                          |
 |------------|----------------------------------|
+| 2026-08-24 | Exa tech-partner logo: official icon + “exa” wordmark on a white pad |
+| 2026-08-24 | Hackathon tech partners + Stack: Wispr Flow, Exa, Netlify, Fal.ai with confirmed participant credits |
+| 2026-08-24 | ABC BootCamps: official overlapping mark on white pad at `h-10` (same as Superteam) |
+| 2026-08-24 | Superteam Balkan community logo: transparent PNG, no black JPEG frame, sized like Startit |
+| 2026-08-24 | Hackathon community partners: added ABC BootCamps, JigJoy, Kosmonaut |
+| 2026-08-24 | Hackathon Overview: community partners use the same scrolling marquee as tech partners |
+| 2026-08-24 | Hackathon: tech companies labeled Tech partners; community orgs stay Community partners |
+| 2026-08-24 | Hackathon Overview: community partners (Startit, Superteam Balkan) below sponsors |
+| 2026-08-24 | Hackathon Stack: Add to Cursor MCP install on each sponsor modal |
+| 2026-08-24 | Hackathon Stack: flat sponsor cards with area labels (no nested panels) |
+| 2026-08-24 | Hackathon Guide slimmed to why / team / numbered timeline / topics |
+| 2026-08-24 | Hackathon Mentors tab (`/hackathon/mentors`): Nick Tomić first; judges section empty until announced |
+| 2026-08-24 | Hackathon Guide tab (`/hackathon/guide`) for purpose, solo-or-pair, shipping defaults; Daytona prize track on Prizes |
 | 2026-08-17 | Hackathon Overview hosts the sponsor form (`#become-a-sponsor`); header tabs are Overview / Prizes / Stack; hero Stack CTA removed |
 | 2026-08-17 | Hackathon tabbed mini-site + `hackathon.*` subdomain rewrite (DNS still added in Vercel) |
 | 2026-08-17 | Hackathon sponsor stack preview at `/hackathon/stack` (grouped expertise cards; landing unchanged) |

@@ -13,6 +13,8 @@ type VisibleHackathonTab = Exclude<HackathonTab, 'sponsor'>
 
 const tabs: { id: VisibleHackathonTab; labelKey: string }[] = [
   { id: 'overview', labelKey: 'hackathon.tabOverview' },
+  { id: 'guide', labelKey: 'hackathon.tabGuide' },
+  { id: 'mentors', labelKey: 'hackathon.tabMentors' },
   { id: 'prizes', labelKey: 'hackathon.tabPrizes' },
   { id: 'stack', labelKey: 'hackathon.tabStack' },
 ]
@@ -31,10 +33,14 @@ export default function HackathonSiteHeader() {
   const hackathon = useHackathonDetails()
   const onHackathonHost = useIsHackathonHost()
   const overviewHref = useHackathonHref('overview')
+  const guideHref = useHackathonHref('guide')
+  const mentorsHref = useHackathonHref('mentors')
   const prizesHref = useHackathonHref('prizes')
   const stackHref = useHackathonHref('stack')
   const hrefs: Record<VisibleHackathonTab, string> = {
     overview: overviewHref,
+    guide: guideHref,
+    mentors: mentorsHref,
     prizes: prizesHref,
     stack: stackHref,
   }
