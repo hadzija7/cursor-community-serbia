@@ -2,13 +2,25 @@ import { describe, expect, it } from 'vitest'
 import { cursorMcpInstallHref } from '@/lib/cursor-mcp-install'
 
 describe('cursorMcpInstallHref', () => {
-  it('matches Convex’s published install-mcp link', () => {
+  it('uses the official cursor:// MCP install deeplink', () => {
     expect(
       cursorMcpInstallHref({
         name: 'convex',
         config: { command: 'npx -y convex@latest mcp start' },
       })
-    ).toBe('https://cursor.com/en/install-mcp?name=convex&config=eyJjb21tYW5kIjoibnB4IC15IGNvbnZleEBsYXRlc3QgbWNwIHN0YXJ0In0%3D')
+    ).toBe(
+      'cursor://anysphere.cursor-deeplink/mcp/install?name=convex&config=eyJjb21tYW5kIjoibnB4IC15IGNvbnZleEBsYXRlc3QgbWNwIHN0YXJ0In0%3D'
+    )
+  })
+
+  it('does not use the auto-closing install-mcp bounce page', () => {
+    const href = cursorMcpInstallHref({
+      name: 'exa',
+      config: { url: 'https://mcp.exa.ai/mcp' },
+    })
+
+    expect(href.startsWith('cursor://')).toBe(true)
+    expect(href.includes('cursor.com/en/install-mcp')).toBe(false)
   })
 
   it('encodes a hosted MCP URL', () => {
@@ -17,7 +29,9 @@ describe('cursorMcpInstallHref', () => {
       config: { url: 'https://mcp.firecrawl.dev/v2/mcp' },
     })
 
-    expect(href.startsWith('https://cursor.com/en/install-mcp?name=firecrawl&config=')).toBe(true)
+    expect(href.startsWith('cursor://anysphere.cursor-deeplink/mcp/install?name=firecrawl&config=')).toBe(
+      true
+    )
     expect(atob(new URL(href).searchParams.get('config') ?? '')).toBe(
       '{"url":"https://mcp.firecrawl.dev/v2/mcp"}'
     )

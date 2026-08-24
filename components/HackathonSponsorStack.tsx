@@ -121,8 +121,6 @@ function SponsorModal({
               {profile.mcp ? (
                 <a
                   href={cursorMcpInstallHref(profile.mcp)}
-                  target="_blank"
-                  rel="noopener noreferrer"
                   className="inline-flex shrink-0 items-center rounded-md bg-white px-2.5 py-1 text-xs font-semibold text-black transition-colors hover:bg-white/90"
                   aria-label={t('hackathon.stackAddMcpAria', { name: profile.name })}
                 >

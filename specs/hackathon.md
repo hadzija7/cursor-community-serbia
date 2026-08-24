@@ -114,7 +114,7 @@ Edit `content/hackathon.ts` for:
 
 - Route: `/hackathon/stack` (Stack tab)
 - Flat 2-column grid of sponsor cards (not a linear pipeline). Area label lives on the card (e.g. Host / infra, Voice / audio); details open in a modal
-- Each modal has an **Add to Cursor** button (title row) that opens the official MCP install deeplink (`https://cursor.com/en/install-mcp`). Configs live on `hackathonSponsorProfiles[].mcp` and are encoded by `lib/cursor-mcp-install.ts`
+- Each modal has an **Add to Cursor** button (title row) that uses the official `cursor://anysphere.cursor-deeplink/mcp/install` deeplink (same tab — do not open `https://cursor.com/en/install-mcp`, which auto-closes). Configs live on `hackathonSponsorProfiles[].mcp` and are encoded by `lib/cursor-mcp-install.ts`
 - Cursor is host, not a sponsor. Wispr Flow is a tech partner (dictation into Cursor); ElevenLabs stays product voice
 - Confirmed perks only: Daytona $100 + winner credits (Best app that uses Daytona); Convex 100.000 / 50.000 RSD; Wispr Flow 3 months Pro; Exa $50 credits each; Fal.ai $50 credits each; Netlify 3,000 credits for all participants
 - Stack area cards also cover Exa (Search / web), Wispr Flow (Voice input), Fal.ai (Generate / media), and Netlify (Host / frontend). Wispr has no public MCP install URL — desktop app only

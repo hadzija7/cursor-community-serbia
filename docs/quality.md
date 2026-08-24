@@ -39,6 +39,7 @@ Living scorecard for Cursor Community Serbia. Update after each phase.
 
 | Date       | Change                          |
 |------------|----------------------------------|
+| 2026-08-24 | Hackathon Stack: Add to Cursor uses `cursor://` MCP deeplink so the install tab no longer auto-closes |
 | 2026-08-24 | Exa tech-partner logo: official icon + “exa” wordmark on a white pad |
 | 2026-08-24 | Hackathon tech partners + Stack: Wispr Flow, Exa, Netlify, Fal.ai with confirmed participant credits |
 | 2026-08-24 | ABC BootCamps: official overlapping mark on white pad at `h-10` (same as Superteam) |
