@@ -1,6 +1,6 @@
 export const DEFAULT_HACKATHON_SITE_HOST = 'hackathon.cursorserbia.com'
 
-export type HackathonTab = 'overview' | 'stack' | 'prizes' | 'sponsor'
+export type HackathonTab = 'overview' | 'guide' | 'mentors' | 'stack' | 'prizes' | 'sponsor'
 
 export function hostnameFromHost(host: string | null | undefined): string {
   if (!host) {

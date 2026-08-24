@@ -2,7 +2,7 @@
 
 ## Overview
 
-Hackathon mini-site with tabs (Overview, Prizes, Stack). Served at `/hackathon` on the community host, and at the root of `hackathon.cursorserbia.com` when that subdomain is attached.
+Hackathon mini-site with tabs (Overview, Guide, Mentors, Prizes, Stack). Served at `/hackathon` on the community host, and at the root of `hackathon.cursorserbia.com` when that subdomain is attached.
 
 ## Status
 
@@ -10,7 +10,7 @@ Hackathon mini-site with tabs (Overview, Prizes, Stack). Served at `/hackathon` 
 |-------|-------|
 | Status | Implemented |
 | Verified | Partial |
-| Last updated | 2026-08-17 |
+| Last updated | 2026-08-24 |
 
 ## Page layout
 
@@ -22,7 +22,9 @@ Inspired by conference landing patterns (e.g. TUM Blockchain Conference): full-w
 
 | Route | Purpose |
 |-------|---------|
-| `/hackathon` | Overview tab (hero, highlights, sponsor marquee, become-a-sponsor form) |
+| `/hackathon` | Overview tab (hero, highlights, tech partners marquee, community partners, become-a-sponsor form) |
+| `/hackathon/guide` | Guide tab: purpose, team size, shipping defaults, hacker guidelines; topics list is empty until tracks lock |
+| `/hackathon/mentors` | Mentors and judges tab; judges stay empty until announced |
 | `/hackathon/stack` | Stack tab: expertise group panels + card modal |
 | `/hackathon/prizes` | Prizes tab |
 | `/hackathon/sponsor` | Redirects to Overview `#become-a-sponsor` (bookmarks / `hackathon.*` `/sponsor` rewrite) |
@@ -36,17 +38,21 @@ When `NEXT_PUBLIC_HACKATHON_SITE_URL` is set, `/hackathon` on the main domain re
 ### Key Components
 
 - `app/hackathon/page.tsx` — Overview tab (hero, highlights, marquee, become-a-sponsor form)
+- `app/hackathon/guide/page.tsx` — Guide tab
+- `app/hackathon/mentors/page.tsx` — Mentors and judges tab
 - `app/hackathon/stack/page.tsx` — Stack tab
 - `app/hackathon/prizes/page.tsx` — Prizes tab
 - `app/hackathon/sponsor/page.tsx` — Redirect to Overview `#become-a-sponsor`
 - `app/hackathon/layout.tsx` — Route metadata + `HackathonSiteHeader`
-- `components/HackathonSiteHeader.tsx` — Hackathon-only chrome and tabs (Overview / Prizes / Stack)
+- `components/HackathonSiteHeader.tsx` — Hackathon-only chrome and tabs (Overview / Guide / Mentors / Prizes / Stack)
+- `components/HackathonGuide.tsx` — Purpose, team, shipping, guidelines, and extensible topics
+- `components/HackathonPeople.tsx` — Mentor and judge cards (`/hackathon/mentors`)
 - `middleware.ts` — Subdomain rewrite + optional main-host redirect
 - `lib/hackathon-site.ts` — Host detection and public hrefs
 - `components/HackathonHero.tsx` — Full-width hero with date/location/duration cards and CTAs
 - `components/HackathonHighlights.tsx` — Stat-style highlight grid (TUM-inspired)
 - `components/HackathonPrizes.tsx` — Prize tracks with per-place cards (above sponsors)
-- `components/SponsorMarquee.tsx` — Infinite horizontal sponsor logo animation
+- `components/SponsorMarquee.tsx` — Tech partner and community partner marquees (Startit, Superteam Balkan, ABC BootCamps, JigJoy, Kosmonaut)
 - `components/HackathonSponsorshipForm.tsx` — Sponsorship application form
 - `components/HackathonSponsorStack.tsx` — Expertise group panels + compact card modal (`/hackathon/stack`)
 - `content/hackathon.ts` — Static fallback copy, Luma URL, prize tracks, sponsor logos, stack profiles, stat cards
@@ -96,21 +102,43 @@ Edit `content/hackathon.ts` for:
 - Event title, tagline, duration, and **Luma URL** (source of truth for live sync)
 - Static fallback `date` / `displayDate` / `location` (Belgrade, September 12, 2026 — used when Luma is unreachable)
 - Highlights grid (`hackathonStats`)
-- Prize tracks (`hackathonPrizes`: Convex — Best app that uses Convex; 1st 100.000 RSD, 2nd 50.000 RSD)
-- Sponsor logos (`hackathonSponsors`: ElevenLabs, Firecrawl, Render, Convex, Daytona)
-- Sponsor stack (`hackathonSdlcStages`, `hackathonSponsorProfiles`, recipes, picks) — source for `/hackathon/stack` and `docs/hackathon/sponsor-cheat-sheet.md`
+- Prize tracks (`hackathonPrizes`: Convex cash 100.000 / 50.000 RSD; Daytona credits $3,000 / $2,000 / $1,000 plus $100 for every participant)
+- Hacker guide (`hackathonGuidePurpose`, `hackathonGuideTeam`, `hackathonGuideSteps`, `hackathonGuideTopics`) — source for `/hackathon/guide`
+- Mentors and judges (`hackathonMentors`, `hackathonJudges`) — source for `/hackathon/mentors`
+- Tech partner logos (`hackathonSponsors`: ElevenLabs, Firecrawl, Render, Convex, Daytona, Wispr Flow, Exa, Netlify, Fal.ai) — Overview heading is **Tech partners**
+- Community partners (`hackathonCommunityPartners`: Startit, Superteam Balkan, ABC BootCamps, JigJoy, Kosmonaut) — Overview, below tech partners
+- Superteam Balkan uses a transparent PNG wordmark (`/images/partners/superteam-balkan.png`) at `h-10` (a step above Startit’s `h-8`) so the old JPEG black frame does not show on the dark marquee. ABC uses the official overlapping ABC + BOOTCAMP mark (`abc-bootcamps.png`) on a white pad (`logoBg: '#ffffff'`) at `h-10` so the dark wordmark stays readable on the dark marquee
+- Sponsor stack (`hackathonSdlcStages`, `hackathonSponsorProfiles` including `mcp`, recipes, picks) — source for `/hackathon/stack` and `docs/hackathon/sponsor-cheat-sheet.md`
 
 ### Sponsor stack tab
 
 - Route: `/hackathon/stack` (Stack tab)
-- Wrapping 2-column grid of area panels (not a linear pipeline). Cards stay short (logo, name, one-liner); details open in a modal
-- Cursor is host, not a sponsor. Wispr Flow is not a sponsor; voice-lane note only
-- Confirmed perks only: Daytona $100 + winner credits (track TBD); Convex 100.000 / 50.000 RSD
+- Flat 2-column grid of sponsor cards (not a linear pipeline). Area label lives on the card (e.g. Host / infra, Voice / audio); details open in a modal
+- Each modal has an **Add to Cursor** button (title row) that opens the official MCP install deeplink (`https://cursor.com/en/install-mcp`). Configs live on `hackathonSponsorProfiles[].mcp` and are encoded by `lib/cursor-mcp-install.ts`
+- Cursor is host, not a sponsor. Wispr Flow is a tech partner (dictation into Cursor); ElevenLabs stays product voice
+- Confirmed perks only: Daytona $100 + winner credits (Best app that uses Daytona); Convex 100.000 / 50.000 RSD; Wispr Flow 3 months Pro; Exa $50 credits each; Fal.ai $50 credits each; Netlify 3,000 credits for all participants
+- Stack area cards also cover Exa (Search / web), Wispr Flow (Voice input), Fal.ai (Generate / media), and Netlify (Host / frontend). Wispr has no public MCP install URL — desktop app only
+
+### Guide tab
+
+- Route: `/hackathon/guide` (Guide tab)
+- Minimal briefing: why, team (solo or a team), numbered guidelines timeline, topics
+- Timeline: Stack → mentors → Cursor → partner MCPs → Origin → 3-minute demo → submit form (plain text, no step links)
+- Content-first: add theme rows to `hackathonGuideTopics` when tracks lock; do not invent topics
+- Types: `HackathonGuideCopy` / `HackathonGuideStep` / `HackathonGuideTopic` in `lib/types.ts`
+
+### Mentors and judges tab
+
+- Route: `/hackathon/mentors` (Mentors tab)
+- Two sections: mentors (published) and judges (empty until announced)
+- First mentor: Nick Tomić — CTO and builder; SaaS / AI GTM bio; ask about GTM
+- Photos in `public/images/hackathon/`
+- Types: `HackathonPerson` in `lib/types.ts`
 
 ### Prizes section
 
-- Rendered above the sponsor marquee (`#prizes`)
-- One track group per sponsoring prize category; place cards (1st/2nd) use highlight accent styles
+- Rendered on the Prizes tab (`#prizes`)
+- One track group per sponsoring prize category; place cards use highlight accent styles; optional `note` for track rules or participation perks
 - Types: `HackathonPrizeTrack` / `HackathonPrizePlace` in `lib/types.ts`
 
 ### Live date & location from Luma
@@ -120,7 +148,7 @@ Edit `content/hackathon.ts` for:
 - Client: `useHackathonDetails` polls `/api/hackathon/event` every 5 minutes (same pattern as upcoming events)
 - Title, tagline, and duration stay content-owned so marketing copy does not flip with Luma’s event name
 
-Hero CTAs: Register (Luma) and Sponsor event (`hackathon.viewSponsorsCta`). Sponsor event always scrolls to Overview `#become-a-sponsor` — including a second click while already on Overview with that hash. Off Overview (Prizes / Stack) it navigates to the Overview form. The form section uses `scroll-mt-24` so header chrome does not cover the heading. Stack is a header tab only.
+Hero CTAs: Register (Luma) and Sponsor event (`hackathon.viewSponsorsCta`). Sponsor event always scrolls to Overview `#become-a-sponsor` — including a second click while already on Overview with that hash. Off Overview (Guide / Mentors / Prizes / Stack) it navigates to the Overview form. The form section uses `scroll-mt-24` so header chrome does not cover the heading. Guide, Mentors, and Stack are header tabs only.
 
 ## Subdomain (Vercel + DNS)
 
@@ -136,7 +164,9 @@ The app is ready for `hackathon.cursorserbia.com`. Creating the hostname is a da
 
 - [ ] `/hackathon` loads the Overview tab (hero, highlights, marquee, become-a-sponsor form)
 - [ ] Hero "Sponsor event" always scrolls to `#become-a-sponsor` (Overview with or without hash; from Prizes/Stack)
-- [ ] Tabs switch to Prizes and Stack (no Sponsor tab)
+- [ ] Tabs switch to Guide, Mentors, Prizes, and Stack (no Sponsor tab)
+- [ ] `/hackathon/mentors` shows Nick Tomić first and an empty judges placeholder
+- [ ] `/hackathon/guide` shows purpose, team size, shipping defaults, and an empty Topics placeholder
 - [ ] `/hackathon/sponsor` redirects to Overview `#become-a-sponsor`
 - [ ] `http://hackathon.localhost:<port>/` rewrites to the Overview tab
 - [ ] Date/location update when Luma event changes (or fall back to static)

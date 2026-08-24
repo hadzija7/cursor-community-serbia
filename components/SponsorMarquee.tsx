@@ -1,52 +1,66 @@
 "use client";
 
-import { hackathonSponsors } from "@/content/hackathon";
+import { hackathonCommunityPartners, hackathonSponsors } from "@/content/hackathon";
 import RenderLogoMark from "@/components/RenderLogoMark";
 import { Partner } from "@/lib/types";
 import { useI18n } from "@/lib/i18n";
 
-function SponsorLogo({ sponsor }: { sponsor: Partner }) {
-  const logoClassName = `${sponsor.logoHeight ?? "h-7"} ${sponsor.logoWidth ?? "w-auto"} object-contain transition-transform duration-200 group-hover:scale-105`;
+function PartnerLogo({ partner }: { partner: Partner }) {
+  const logoClassName = `${partner.logoHeight ?? "h-7"} ${partner.logoWidth ?? "w-auto"} object-contain transition-transform duration-200 group-hover:scale-105`;
 
   return (
     <a
-      href={sponsor.url}
+      href={partner.url}
       target="_blank"
       rel="noopener noreferrer"
       className="group mx-4 flex shrink-0 items-center rounded-md px-5 py-3 transition-opacity hover:opacity-80 sm:mx-6 sm:px-6"
-      style={{ backgroundColor: sponsor.logoBg ?? "#ffffff" }}
-      aria-label={sponsor.name}
+      style={{ backgroundColor: partner.logoBg ?? "#ffffff" }}
+      aria-label={partner.name}
     >
-      {sponsor.name === "Render" ? (
+      {partner.name === "Render" ? (
         <RenderLogoMark className={`${logoClassName} text-[#141414]`} />
       ) : (
         /* eslint-disable-next-line @next/next/no-img-element */
-        <img src={sponsor.logo} alt="" className={logoClassName} />
+        <img src={partner.logo} alt="" className={logoClassName} />
       )}
     </a>
   );
 }
 
-export default function SponsorMarquee() {
-  const { t } = useI18n();
+function loopedForMarquee(partners: Partner[]): Partner[] {
+  const copiesPerHalf = partners.length >= 5 ? 1 : Math.ceil(6 / Math.max(partners.length, 1));
+  const half = Array.from({ length: copiesPerHalf }, () => partners).flat();
+  return [...half, ...half];
+}
 
-  if (hackathonSponsors.length === 0) {
+function PartnerBand({
+  sectionId,
+  headingId,
+  eyebrow,
+  title,
+  partners,
+}: {
+  sectionId?: string
+  headingId: string
+  eyebrow: string
+  title: string
+  partners: Partner[]
+}) {
+  if (partners.length === 0) {
     return null;
   }
 
-  const loopedSponsors = [...hackathonSponsors, ...hackathonSponsors];
-
   return (
-    <section className="space-y-5" aria-labelledby="sponsor-marquee-heading">
+    <section id={sectionId} className="space-y-5" aria-labelledby={headingId}>
       <div className="space-y-2 text-center">
         <p className="text-xs font-semibold uppercase tracking-[0.18em] text-cursor-accent-orange">
-          {t("hackathon.sponsorsEyebrow")}
+          {eyebrow}
         </p>
         <h2
-          id="sponsor-marquee-heading"
+          id={headingId}
           className="text-2xl font-semibold tracking-tight md:text-3xl"
         >
-          {t("hackathon.sponsorsTitle")}
+          {title}
         </h2>
       </div>
 
@@ -55,11 +69,33 @@ export default function SponsorMarquee() {
         <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-20 bg-gradient-to-l from-cursor-bg-dark via-cursor-bg-dark/80 to-transparent sm:w-28" />
 
         <div className="sponsor-marquee-track flex w-max">
-          {loopedSponsors.map((sponsor, index) => (
-            <SponsorLogo key={`${sponsor.name}-${index}`} sponsor={sponsor} />
+          {loopedForMarquee(partners).map((partner, index) => (
+            <PartnerLogo key={`${partner.name}-${index}`} partner={partner} />
           ))}
         </div>
       </div>
     </section>
+  );
+}
+
+export default function SponsorMarquee() {
+  const { t } = useI18n();
+
+  return (
+    <div className="space-y-16">
+      <PartnerBand
+        headingId="sponsor-marquee-heading"
+        eyebrow={t("hackathon.sponsorsEyebrow")}
+        title={t("hackathon.sponsorsTitle")}
+        partners={hackathonSponsors}
+      />
+      <PartnerBand
+        sectionId="community-partners"
+        headingId="community-partners-heading"
+        eyebrow={t("hackathon.communityPartnersEyebrow")}
+        title={t("hackathon.communityPartnersTitle")}
+        partners={hackathonCommunityPartners}
+      />
+    </div>
   );
 }

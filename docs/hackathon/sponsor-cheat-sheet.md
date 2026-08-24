@@ -4,7 +4,7 @@
 **Build in:** [Cursor](https://cursor.com) (host / editor — not a sponsor)  
 **Register:** [luma.com/ghvnbjlx](https://luma.com/ghvnbjlx)
 
-Use this when you pick a stack. On the site (**Stack** tab at `/hackathon/stack`, or `/stack` on the hackathon subdomain) these are **area groups**, not a left-to-right pipeline. The path below is only a reading aid.
+Use this when you pick a stack. On the site, **Guide** (`/hackathon/guide`) is the participant brief; **Stack** (`/hackathon/stack`, or `/stack` on the hackathon subdomain) groups sponsors by area, not a left-to-right pipeline. The path below is only a reading aid.
 
 Credits and prizes below are **only what is confirmed**. Everything else is a public free tier or TBD — not a promised hackathon gift.
 
@@ -17,28 +17,42 @@ Left to right is a build path you can follow in one day. You do **not** need eve
 ```mermaid
 flowchart LR
   F["Research / web data<br/>Firecrawl"]
+  X["Search / web<br/>Exa"]
   D["Execute / AI sandboxes<br/>Daytona"]
   C["Backend / state<br/>Convex"]
   E["Voice / experience<br/>ElevenLabs"]
-  R["Host / deploy<br/>Render"]
-  F --> D --> C --> E --> R
+  W["Voice input<br/>Wispr Flow"]
+  A["Generate / media<br/>Fal.ai"]
+  R["Host / infra<br/>Render"]
+  N["Host / frontend<br/>Netlify"]
+  F --> X --> D --> C
+  C --> E
+  C --> W
+  C --> A
+  C --> R
+  C --> N
 ```
 
 | Area | Sponsor | Job on hack day |
 |------|---------|-----------------|
 | Research / web data | **Firecrawl** | Turn live websites into clean markdown or JSON for the app or agent |
+| Search / web | **Exa** | Neural search for sources the agent does not already have |
 | Execute / AI sandboxes | **Daytona** | Run AI-generated or user-untrusted code in an isolated machine |
 | Backend / state | **Convex** | Database, auth, realtime sync — the app’s memory |
 | Voice / experience | **ElevenLabs** | Speech in, speech out, or a full voice agent |
-| Host / deploy | **Render** | Public demo URL: web service, static site, Postgres, workers |
+| Voice input | **Wispr Flow** | Dictate into Cursor — not speech inside the product |
+| Generate / media | **Fal.ai** | Image, video, and audio models through one API |
+| Host / infra | **Render** | Public demo URL: web service, static site, Postgres, workers |
+| Host / frontend | **Netlify** | Public site from Git, deploy previews, functions |
 
 **Overlap (read this once)**
 
-- **Convex vs Render:** Convex can be the whole backend (and often the deploy target for the API). Render is conventional hosting — the HTTPS URL, a Node/Python service, Postgres, cron — when you are not all-in on Convex, or you need a separate frontend/API box.
-- **Daytona is not production hosting.** It is a disposable computer for agents and untrusted code. Ship the product on Convex and/or Render.
-- **Firecrawl is input. ElevenLabs is output.** They do not replace a backend.
+- **Convex vs Render / Netlify:** Convex can be the whole backend (and often the deploy target for the API). Render and Netlify are conventional hosting — the HTTPS URL judges open.
+- **Daytona is not production hosting.** It is a disposable computer for agents and untrusted code. Ship the product on Convex and/or Render or Netlify.
+- **Firecrawl scrapes a URL you already have. Exa searches** for sources you do not.
+- **ElevenLabs is speech in the product. Wispr Flow is how you dictate into Cursor.**
+- **Fal.ai generates media.** It is not search and not hosting.
 - **Cursor** is how you write and wire all of this. It is the host tool, not a sponsor product.
-- **Voice input / dictation** (e.g. Wispr Flow) would sit in the Voice lane if added later. It is **not** a confirmed sponsor — do not list it on the public stack.
 
 ---
 
@@ -71,7 +85,7 @@ flowchart LR
 
 - Product: [firecrawl.dev](https://www.firecrawl.dev)  
 - Pricing / credit costs: [firecrawl.dev/pricing](https://www.firecrawl.dev/pricing)  
-- Cursor: Firecrawl MCP (`https://mcp.firecrawl.dev/v2/mcp`) or CLI  
+- Cursor: Firecrawl MCP (`https://mcp.firecrawl.dev/v2/mcp`) or CLI — one-click **Add to Cursor** on `/hackathon/stack`  
 
 **What you get**
 
@@ -111,7 +125,8 @@ flowchart LR
 
 - **Every participant:** $100 Daytona platform credits.  
 - **Winners:** $3,000 / $2,000 / $1,000 in credits (1st / 2nd / 3rd).  
-- **TBD:** whether those winner credits are overall hackathon places or a Daytona-only track; how you redeem (code vs dashboard grant). Organizers will say on the day.  
+- **Prize track:** Best app that uses Daytona (shown on the Prizes tab).  
+- **TBD:** how you redeem winner credits (code vs dashboard grant). Organizers will say on the day.  
 - Public start: Daytona also advertises free compute on signup — that is their product free tier, not an extra hackathon bounty.
 
 ---
@@ -218,6 +233,82 @@ flowchart LR
 
 ---
 
+### Search / web — Exa
+
+**One-liner:** Neural web search so the agent finds sources — not just a URL you already have.
+
+**Products / technologies**
+
+- **Search** — live web, people, companies, and code  
+- **Contents** — token-efficient excerpts from result URLs  
+- **Research / agent** — multi-step search with citations  
+- **MCP** — hosted at `https://mcp.exa.ai/mcp`  
+
+**What you get (confirmed)**
+
+- **Every participant:** $50 Exa credits.
+
+**Start here**
+
+- [exa.ai](https://exa.ai/) · [Docs](https://exa.ai/docs) · Add to Cursor on `/hackathon/stack`
+
+---
+
+### Voice input — Wispr Flow
+
+**One-liner:** Dictate into Cursor — speech becomes clean text in the editor and chat.
+
+**Products / technologies**
+
+- Desktop + mobile dictation (Mac, Windows, iPhone, Android)  
+- Cleans filler words and formats as you speak  
+- Works in Cursor chat, the editor, and the terminal  
+- No public one-click MCP — install the app from [wisprflow.ai](https://wisprflow.ai/)
+
+**What you get (confirmed)**
+
+- **Every participant:** 3 months of Wispr Flow Pro.
+
+---
+
+### Generate / media — Fal.ai
+
+**One-liner:** Run image, video, and audio models through one API so the demo can generate media.
+
+**Products / technologies**
+
+- 1,000+ models — image, video, audio, 3D, upscaling  
+- Hosted MCP at `https://mcp.fal.ai/mcp` (add your fal API key after install)
+
+**What you get (confirmed)**
+
+- **Every participant:** $50 fal credits.
+
+**Start here**
+
+- [fal.ai](https://fal.ai/) · [Docs](https://fal.ai/docs/documentation)
+
+---
+
+### Host / frontend — Netlify
+
+**One-liner:** Deploy a public site from Git — previews, forms, and a URL judges can open.
+
+**Products / technologies**
+
+- Sites from Git, deploy previews, functions  
+- MCP: `npx -y @netlify/mcp` after `netlify login`
+
+**What you get (confirmed)**
+
+- **Every participant:** 3,000 Netlify credits.
+
+**Start here**
+
+- [netlify.com](https://www.netlify.com/) · [MCP docs](https://docs.netlify.com/welcome/build-with-ai/netlify-mcp-server/)
+
+---
+
 ## 3. Recipes (combine 2–3 sponsors)
 
 You can win with one sponsor used well. These are for when you want a full story.
@@ -240,6 +331,12 @@ Model writes code in Cursor → Daytona runs it in a sandbox → Convex stores r
 
 Firecrawl pulls live pages on a cadence (or on button click) → Convex is the live table → Render hosts the dashboard (or host UI on Convex/Vercel — Render if you want the sponsor in the deploy slot). Add ElevenLabs if the dashboard **reads** alerts aloud.
 
+### D — Search and generate
+
+**Exa + Fal.ai + Convex**
+
+Exa finds sources → fal generates the image or clip → Convex stores the thread. Good for “research this, then show a generated artifact.” Skip Firecrawl unless you already have the URLs.
+
 ---
 
 ## 4. Pick this if…
@@ -247,13 +344,17 @@ Firecrawl pulls live pages on a cadence (or on button click) → Convex is the l
 | I need… | Use |
 |---------|-----|
 | Live website content inside the app | **Firecrawl** |
+| The agent to *find* sources it does not already have | **Exa** |
 | The agent to *run* code / tests / a shell | **Daytona** |
 | Users, rows, and instant UI updates | **Convex** |
 | The demo to *talk* or *listen* | **ElevenLabs** |
+| To dictate into Cursor instead of typing | **Wispr Flow** |
+| Generated images, video, or audio | **Fal.ai** |
 | A public HTTPS URL / classic host / extra Postgres | **Render** |
+| A public frontend with deploy previews | **Netlify** |
 | To write the whole thing fast | **Cursor** (host editor) |
 | Cash prize for a Convex app | **Convex track** — 100.000 / 50.000 RSD |
-| Confirmed platform credits on day one | **Daytona** — $100 each; winner credit amounts above |
+| Confirmed platform credits on day one | **Daytona** $100 · **Exa** $50 · **Fal.ai** $50 · **Netlify** 3,000 · **Wispr Flow** 3 months Pro |
 | Event credits from ElevenLabs / Firecrawl / Render | **TBD** — use their public free tier until a code is announced |
 
 **Minimum viable stacks**

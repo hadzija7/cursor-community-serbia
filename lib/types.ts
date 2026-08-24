@@ -55,11 +55,52 @@ export interface HackathonPrizeTrack {
   logoBg?: string
   logoHeight?: string
   category: string
+  /** Extra track rule or participation perk, shown under the place cards. */
+  note?: string
   places: HackathonPrizePlace[]
 }
 
+export interface HackathonGuideCopy {
+  title: string
+  body: string
+}
+
+export interface HackathonGuideStep {
+  id: string
+  title: string
+  body: string
+}
+
+/** Theme or challenge track — add rows as topics lock. */
+export interface HackathonGuideTopic {
+  id: string
+  title: string
+  summary: string
+}
+
+export interface HackathonPerson {
+  id: string
+  name: string
+  title: string
+  photo: string
+  photoPosition?: 'top' | 'center'
+  bio?: string
+  /** What hackers should ask this person about. */
+  help?: string
+  links?: SocialLinks
+}
+
 /** Where a sponsor sits on the one-day build path. */
-export type HackathonSdlcStageId = 'research' | 'execute' | 'backend' | 'experience' | 'deploy'
+export type HackathonSdlcStageId =
+  | 'research'
+  | 'search'
+  | 'execute'
+  | 'backend'
+  | 'experience'
+  | 'dictate'
+  | 'generate'
+  | 'deploy'
+  | 'ship'
 
 export interface HackathonSdlcStage {
   id: HackathonSdlcStageId
@@ -77,6 +118,25 @@ export interface HackathonSponsorPerk {
   detail?: string
 }
 
+export type HackathonSponsorMcpConfig =
+  | {
+      url: string
+      auth?: { CLIENT_ID: string }
+    }
+  | {
+      command: string
+      args?: string[]
+      env?: Record<string, string>
+    }
+
+export interface HackathonSponsorMcp {
+  /** Server name written into mcp.json */
+  name: string
+  config: HackathonSponsorMcpConfig
+  /** Extra setup the deeplink cannot do (CLI login, etc.). */
+  note?: string
+}
+
 export interface HackathonSponsorProfile {
   id: string
   name: string
@@ -90,6 +150,8 @@ export interface HackathonSponsorProfile {
   technologies: string[]
   useCases: string[]
   perks: HackathonSponsorPerk[]
+  /** Omit when the partner is not an MCP (desktop dictation, etc.). */
+  mcp?: HackathonSponsorMcp
 }
 
 export interface HackathonStackRecipe {

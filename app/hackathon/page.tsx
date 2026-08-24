@@ -18,7 +18,7 @@ export default function HackathonPage() {
         <HackathonHighlights />
 
         <motion.section
-          id="sponsors"
+          id="tech-partners"
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
           viewport={{ once: true, margin: '-50px' }}

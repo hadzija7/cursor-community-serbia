@@ -10,7 +10,7 @@ The Cursor Community Serbia site is a Next.js 16 App Router application presenti
 |-------|-------|
 | Status | Implemented |
 | Verified | Partial |
-| Last updated | 2026-08-17 |
+| Last updated | 2026-08-24 |
 
 ## Architecture
 
@@ -24,6 +24,8 @@ The Cursor Community Serbia site is a Next.js 16 App Router application presenti
 | `/subscribe` | Mailing list subscription |
 | `/education` | Educational resources (presentations, PDFs) |
 | `/hackathon` | Hackathon Overview tab (hero, highlights, marquee, become-a-sponsor form; also `hackathon.*` host `/`) |
+| `/hackathon/guide` | Guide tab (why, team, guidelines timeline, topics) |
+| `/hackathon/mentors` | Mentors and judges tab |
 | `/hackathon/stack` | Stack tab (expertise groups + card modal) |
 | `/hackathon/prizes` | Prizes tab |
 | `/hackathon/sponsor` | Redirects to Overview `#become-a-sponsor` |
@@ -47,18 +49,22 @@ The Cursor Community Serbia site is a Next.js 16 App Router application presenti
 - `components/HackathonHero.tsx` — Hackathon page hero (facts + CTAs)
 - `components/HackathonHighlights.tsx` — Hackathon stat-style highlight grid
 - `components/HackathonPrizes.tsx` — Hackathon prize tracks (place cards above sponsors)
-- `components/SponsorMarquee.tsx` — Hackathon sponsor marquee animation
+- `components/SponsorMarquee.tsx` — Hackathon tech partner and community partner marquees
 - `components/HackathonSponsorshipForm.tsx` — Hackathon sponsorship application form
 - `components/SubscribeForm.tsx` — Mailing list form
 - `components/PhotoGallery.tsx` — Recap image grid; fullscreen lightbox with prev/next controls and **ArrowLeft / ArrowRight** keyboard navigation when multiple photos
 - `app/education/page.tsx` — Education landing page
 - `app/hackathon/page.tsx` — Hackathon Overview tab (includes become-a-sponsor form)
+- `app/hackathon/guide/page.tsx` — Guide tab
+- `app/hackathon/mentors/page.tsx` — Mentors and judges tab
 - `app/hackathon/stack/page.tsx` — Stack tab
 - `app/hackathon/prizes/page.tsx` — Prizes tab
 - `app/hackathon/sponsor/page.tsx` — Redirect to Overview `#become-a-sponsor`
-- `components/HackathonSiteHeader.tsx` — Hackathon tabs (Overview / Prizes / Stack)
+- `components/HackathonSiteHeader.tsx` — Hackathon tabs (Overview / Guide / Mentors / Prizes / Stack)
+- `components/HackathonGuide.tsx` — Hacker briefing sections + extensible topics
+- `components/HackathonPeople.tsx` — Mentor and judge cards
 - `middleware.ts` — `hackathon.*` host rewrite
-- `components/HackathonSponsorStack.tsx` — Expertise group panels and card modal
+- `components/HackathonSponsorStack.tsx` — Flat sponsor cards and detail modal with Add to Cursor MCP install
 
 ### Layout & Theming
 
@@ -82,5 +88,8 @@ The Cursor Community Serbia site is a Next.js 16 App Router application presenti
 - [ ] Subscribe form submits
 - [ ] Education resources open correctly
 - [ ] Favicon displays Cursor logo
-- [ ] `/hackathon` shows the become-a-sponsor form; header tabs are Overview / Prizes / Stack
-- [ ] `/hackathon/stack` loads grouped sponsor cards
+- [ ] `/hackathon` shows the become-a-sponsor form; header tabs are Overview / Guide / Mentors / Prizes / Stack
+- [ ] `/hackathon/guide` loads purpose, team, shipping, and guidelines
+- [ ] `/hackathon/mentors` shows Nick Tomić and an empty judges section
+- [ ] `/hackathon/stack` loads sponsor cards labeled by area
+- [ ] Sponsor modal has Add to Cursor, which opens an MCP install link
