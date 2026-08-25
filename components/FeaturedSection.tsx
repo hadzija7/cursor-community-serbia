@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { ArrowRight } from 'lucide-react'
 import { featuredResource } from '@/content/featured'
 import { useI18n } from '@/lib/i18n'
+import SectionEyebrow from '@/components/SectionEyebrow'
 
 export default function FeaturedSection() {
   const { t } = useI18n()
@@ -17,7 +18,7 @@ export default function FeaturedSection() {
       className="mb-16"
     >
       <div className="bg-[#1B1913] border border-cursor-border rounded-md p-6">
-        <p className="text-xs uppercase tracking-wider text-cursor-text-muted mb-4">{t('home.featured')}</p>
+        <SectionEyebrow as="p" className="mb-4">{t('home.featured')}</SectionEyebrow>
 
         <h2 className="text-3xl md:text-4xl font-bold tracking-tight text-cursor-text mb-1">
           {featuredResource.title}

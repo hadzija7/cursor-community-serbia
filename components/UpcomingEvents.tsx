@@ -5,6 +5,7 @@ import { ExternalLink } from 'lucide-react'
 import { useI18n } from '@/lib/i18n'
 import { isFutureEvent } from '@/lib/event-time'
 import type { CursorEvent } from '@/lib/types'
+import SectionEyebrow from '@/components/SectionEyebrow'
 
 interface Props { events: CursorEvent[] }
 
@@ -21,11 +22,9 @@ export default function UpcomingEvents({ events }: Props) {
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: '-50px' }}
       transition={{ duration: 0.5 }}
-      className="mb-16 scroll-mt-8"
+      className="mb-16 scroll-mt-8 space-y-6"
     >
-      <h2 className="text-sm uppercase tracking-wider text-cursor-text-muted font-medium mb-6">
-        {t('home.upcomingEvents')}
-      </h2>
+      <SectionEyebrow>{t('home.upcomingEvents')}</SectionEyebrow>
 
       <div className="space-y-4">
         {liveEvents.map((event, index) => {
@@ -42,7 +41,7 @@ export default function UpcomingEvents({ events }: Props) {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: '-50px' }}
               transition={{ duration: 0.4, delay: index * 0.08 }}
-              className="bg-cursor-bg-dark border border-cursor-border rounded-lg p-5"
+              className="rounded-2xl border border-cursor-accent-orange/25 bg-gradient-to-br from-cursor-surface via-cursor-bg-dark to-cursor-accent-orange-bg p-5"
             >
               <div className="flex items-center justify-between gap-4">
                 <div className="min-w-0">

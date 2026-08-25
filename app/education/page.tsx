@@ -3,6 +3,7 @@
 import Link from 'next/link'
 import { educationResources } from '@/content/education'
 import { useI18n } from '@/lib/i18n'
+import SectionEyebrow from '@/components/SectionEyebrow'
 
 export default function EducationPage() {
   const { t } = useI18n()
@@ -19,7 +20,7 @@ export default function EducationPage() {
         </div>
 
         <div className="space-y-4">
-          <h2 className="text-lg font-medium text-cursor-text-muted">{t('education.resources')}</h2>
+          <SectionEyebrow>{t('education.resources')}</SectionEyebrow>
           <ul className="space-y-4">
             {educationResources.map((resource) => (
               <li key={resource.id}>

@@ -10,6 +10,7 @@
 - [x] Site Open Graph / LinkedIn share image: Cursor Serbia logo (`public/images/og-cursor-serbia.jpg` via root + hackathon metadata)
 - [x] Homepage hero bento: Cannes event photo via Google Drive (`content/header-photos.ts`, Drive id `1yDEyEWC-1WACUkMkRIY_Y5EpkJh0Xkkd`)
 - [x] Past Events homepage section: full-bleed band, content 80vw centered, responsive grid (3 columns on large screens)
+- [x] Shared orange `SectionEyebrow` for homepage + education section headers (Past Events, Hosting Partners, Featured match Ambassadors / Upcoming)
 - [x] Coworking day slide deck (`/education/coworking-day`, 8 slides: brainstorming + Obsidian/Cursor PKM)
 - [x] Live Luma upcoming-events sync with static fallback (`/api/events/upcoming`, `lib/luma.ts`)
 - [x] Split Luma calendars: Belgrade + Novi Sad API keys (`LUMA_BELGRADE_API_KEY`, `LUMA_NOVI_SAD_API_KEY`); subscriber import to both
@@ -23,6 +24,7 @@
 - [x] Add Cursor Meetup Novi Sad May 26, 2026 recap (Memclaw); Luma https://luma.com/jn59jzyp
 - [x] Add Cafe Cursor Belgrade Summer Edition recap (Jun 28, 2026); Luma https://luma.com/cursor-belgrade
 - [x] Add Cursor Meetup Novi Sad Aug 20, 2026 recap (Creative Space 75); Luma https://luma.com/kd163iko
+- [x] Add Cafe Cursor Belgrade August recap (Aug 22, 2026); Luma https://luma.com/cursor-belgrade-august
 - [x] Hackathon landing page (`/hackathon`): sponsor marquee, sponsorship form, API route; hero + highlights layout (TUM-inspired, orange accent)
 - [x] Hackathon content: Belgrade, September 12, 2026; Luma `https://luma.com/ghvnbjlx`, CTA "Sponsor event"
 - [x] Hackathon date/location synced from Luma event page (`/api/hackathon/event`, static fallback)

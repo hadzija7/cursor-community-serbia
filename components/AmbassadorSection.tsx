@@ -4,8 +4,8 @@ import { motion } from 'framer-motion'
 import Image from 'next/image'
 import { Globe, Github, Linkedin, Twitter } from 'lucide-react'
 import { ambassadors } from '@/content/ambassadors'
-import { siteConfig } from '@/content/site.config'
 import { useI18n } from '@/lib/i18n'
+import SectionEyebrow from '@/components/SectionEyebrow'
 
 function SocialIcon({ kind }: { kind: 'x' | 'linkedin' | 'github' | 'website' }) {
   if (kind === 'x') return <Twitter className="w-4 h-4" />
@@ -27,13 +27,12 @@ export default function AmbassadorSection() {
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: '-50px' }}
       transition={{ duration: 0.5 }}
-      className="mb-16"
+      className="mb-16 space-y-6"
+      aria-labelledby="ambassadors-heading"
     >
-      <h2 className="text-sm uppercase tracking-wider text-cursor-text-muted font-medium mb-6">
-        {t('ambassadors.title', { communityName: siteConfig.communityName })}
-      </h2>
+      <SectionEyebrow id="ambassadors-heading">{t('ambassadors.eyebrow')}</SectionEyebrow>
 
-      <div className="flex flex-wrap justify-center gap-4">
+      <div className="grid gap-4 sm:grid-cols-2">
         {ambassadors.map((ambassador, index) => {
           const links = [
             { kind: 'x' as const, href: ambassador.links.x },
@@ -49,33 +48,35 @@ export default function AmbassadorSection() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: '-50px' }}
               transition={{ duration: 0.3, delay: index * 0.07 }}
-              className="bg-cursor-bg-dark border border-cursor-border rounded-md p-5 min-w-[280px] max-w-[360px] flex-1"
+              className="rounded-2xl border border-cursor-accent-orange/25 bg-gradient-to-br from-cursor-surface via-cursor-bg-dark to-cursor-accent-orange-bg p-6"
             >
               <div className="flex items-center gap-4">
-                <div className="relative w-14 h-14 min-w-14 min-h-14 shrink-0 rounded-full overflow-hidden border-2 border-white">
+                <div className="relative h-16 w-16 min-h-16 min-w-16 shrink-0 overflow-hidden rounded-full border-2 border-cursor-accent-orange/45">
                   <Image
                     src={ambassador.photo}
                     alt={ambassador.name}
                     fill
                     className={`object-cover ${ambassador.photoPosition === 'top' ? 'object-top' : 'object-center'}`}
-                    sizes="56px"
+                    sizes="64px"
                   />
                 </div>
-                <div>
-                  <p className="text-cursor-text font-medium">{ambassador.name}</p>
-                  {ambassador.role ? <p className="text-cursor-text-muted text-sm">{ambassador.role}</p> : null}
+                <div className="min-w-0">
+                  <p className="font-semibold tracking-tight text-cursor-text">{ambassador.name}</p>
+                  {ambassador.role ? (
+                    <p className="text-sm text-cursor-text-muted">{ambassador.role}</p>
+                  ) : null}
                 </div>
               </div>
 
               {links.length > 0 ? (
-                <div className="flex items-center gap-3 mt-4">
+                <div className="mt-5 flex items-center gap-3">
                   {links.map((link) => (
                     <a
                       key={`${ambassador.name}-${link.kind}`}
                       href={link.href}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="p-2 rounded border border-cursor-border text-cursor-text-muted hover:text-cursor-text hover:border-cursor-border-emphasis transition-colors"
+                      className="rounded-md border border-cursor-border p-2 text-cursor-text-muted transition-colors hover:border-cursor-accent-orange/50 hover:text-cursor-accent-orange"
                       aria-label={`${ambassador.name} ${link.kind}`}
                     >
                       <SocialIcon kind={link.kind} />

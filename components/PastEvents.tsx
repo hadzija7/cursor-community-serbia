@@ -6,6 +6,7 @@ import Image from 'next/image'
 import { Calendar, Users, ArrowRight, ImageIcon } from 'lucide-react'
 import { pastEvents } from '@/content/events'
 import { useI18n } from '@/lib/i18n'
+import SectionEyebrow from '@/components/SectionEyebrow'
 
 export default function PastEvents() {
   const { t, locale } = useI18n()
@@ -26,9 +27,7 @@ export default function PastEvents() {
       className="mb-16 scroll-mt-8 w-screen ml-[calc(50%-50vw)]"
     >
       <div className="w-[80vw] mx-auto">
-        <h2 className="text-sm uppercase tracking-wider text-cursor-text-muted font-medium mb-6">
-          {t('home.pastEvents')}
-        </h2>
+        <SectionEyebrow className="mb-6">{t('home.pastEvents')}</SectionEyebrow>
 
         <div
           className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-6"

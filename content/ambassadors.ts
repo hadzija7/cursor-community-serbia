@@ -5,7 +5,7 @@ export const ambassadors: Ambassador[] = [
   {
     name: 'Aleksandar Hadžibabić',
     role: 'Community Lead for Novi Sad',
-    photo: '/images/ambassadors/aleks.jpg',
+    photo: '/images/ambassadors/aleks-cursor.jpg',
     photoPosition: 'top',
     links: {
       x: 'https://x.com/AHadzibabic',

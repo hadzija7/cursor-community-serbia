@@ -2,6 +2,7 @@
 
 import { partners } from '@/content/partners'
 import { useI18n } from '@/lib/i18n'
+import SectionEyebrow from '@/components/SectionEyebrow'
 
 export default function Partners() {
   const { t } = useI18n()
@@ -12,9 +13,9 @@ export default function Partners() {
 
   return (
     <div className="mb-8">
-      <h3 className="text-sm uppercase tracking-wider text-cursor-text-muted font-medium mb-6">
+      <SectionEyebrow as="h3" className="mb-6">
         {t('footer.hostingPartners')}
-      </h3>
+      </SectionEyebrow>
       <div className="flex flex-wrap items-stretch gap-4">
         {partners.map((partner) => (
           <a

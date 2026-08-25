@@ -4,6 +4,7 @@ import { cursorMeetupNovisadDec2025Recap } from '@/content/recaps/cursor-meetup-
 import { cursorMeetupNovisadAug2026Recap } from '@/content/recaps/cursor-meetup-novisad-aug-2026'
 import { cursorMeetupNovisadMay2026Recap } from '@/content/recaps/cursor-meetup-novisad-may-2026'
 import { RecapData } from '@/lib/types'
+import { cafeCursorBelgradeAug2026Recap } from './cafe-cursor-belgrade-aug-2026'
 import { cafeCursorBelgradeSummer2026Recap } from './cafe-cursor-belgrade-summer-2026'
 import { cafeCursorCannes1Recap } from './cafe-cursor-cannes-1'
 import { cafecursorBelgrade1Recap } from './cafe-cursor-belgrade-1'
@@ -13,6 +14,7 @@ import { cursorBelgradeHub201Meetup1Recap } from './cursor-belgrade-hub201-1'
 import { cursorCoworkingBelgrade1Recap } from './cursor-coworking-belgrade-1'
 
 export const recapsBySlug: Record<string, RecapData> = {
+  [cafeCursorBelgradeAug2026Recap.slug]: cafeCursorBelgradeAug2026Recap,
   [cursorMeetupNovisadAug2026Recap.slug]: cursorMeetupNovisadAug2026Recap,
   [cafeCursorBelgradeSummer2026Recap.slug]: cafeCursorBelgradeSummer2026Recap,
   [cursorMeetupNovisadMay2026Recap.slug]: cursorMeetupNovisadMay2026Recap,

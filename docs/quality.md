@@ -39,6 +39,11 @@ Living scorecard for Cursor Community Serbia. Update after each phase.
 
 | Date       | Change                          |
 |------------|----------------------------------|
+| 2026-08-25 | Section headers share `SectionEyebrow` (orange small-caps); Past Events, Hosting Partners, Featured, and Education match Ambassadors / Upcoming Events |
+| 2026-08-25 | Homepage: ambassadors heading is orange eyebrow only; upcoming events uses the same orange subtitle + card styling |
+| 2026-08-25 | Ambassador photo: Aleksandar Hadžibabić uses new Cursor-shirt portrait (`aleks-cursor.jpg`) |
+| 2026-08-25 | Homepage ambassadors: fixed doubled “Cursor” title; section uses hackathon-style orange eyebrow, cards, and hover accents |
+| 2026-08-25 | Content: Cafe Cursor Belgrade August recap (`cafe-cursor-belgrade-aug-2026`); Luma cursor-belgrade-august; Drive recap video + 12 gallery photos from Cafeteria Battery |
 | 2026-08-24 | Hackathon prizes: place cards show place + amount only (no repeated sponsor name) |
 | 2026-08-24 | Hackathon prizes: Kosmonaut coworking for top 3 teams (15 / 10 / 5 entries per teammate, use within 3 months, claim on kosmonaut.rs), listed below Convex cash |
 | 2026-08-24 | Content: Cursor Meetup Novi Sad Aug 20, 2026 recap (`cursor-meetup-novisad-aug-2026`); Luma kd163iko; Drive recap video + 9 gallery photos from Creative Space 75 |
