@@ -23,7 +23,7 @@ describe('hackathon sponsor stack content', () => {
 
     expect(profileIds).toEqual(stageIds)
     expect(profileNames).toEqual(names)
-    expect(hackathonSponsorProfiles).toHaveLength(9)
+    expect(hackathonSponsorProfiles).toHaveLength(10)
   })
 
   it('lists Startit, Superteam, ABC BootCamps, JigJoy, and Kosmonaut as community partners', () => {
@@ -52,6 +52,7 @@ describe('hackathon sponsor stack content', () => {
     expect(getSponsorProfile('exa')?.mcp?.config).toEqual({ url: 'https://mcp.exa.ai/mcp' })
     expect(getSponsorProfile('fal')?.mcp?.config).toEqual({ url: 'https://mcp.fal.ai/mcp' })
     expect(getSponsorProfile('netlify')?.mcp?.config).toEqual({ command: 'npx -y @netlify/mcp' })
+    expect(getSponsorProfile('wonder')?.mcp?.config).toEqual({ url: 'https://mcp.wonder.so/mcp' })
   })
 
   it('does not invent unconfirmed event credits', () => {
@@ -63,7 +64,7 @@ describe('hackathon sponsor stack content', () => {
     }
   })
 
-  it('keeps confirmed Daytona, Convex, Wispr, Exa, Netlify, and Fal perks', () => {
+  it('keeps confirmed Daytona, Convex, Wispr, Exa, Netlify, Fal, and Wonder perks', () => {
     const daytona = getSponsorProfile('daytona')
     const convex = getSponsorProfile('convex')
 
@@ -73,6 +74,7 @@ describe('hackathon sponsor stack content', () => {
     expect(getSponsorProfile('exa')?.perks.some((perk) => perk.kind === 'confirmed' && perk.label.includes('$50'))).toBe(true)
     expect(getSponsorProfile('fal')?.perks.some((perk) => perk.kind === 'confirmed' && perk.label.includes('$50'))).toBe(true)
     expect(getSponsorProfile('netlify')?.perks.some((perk) => perk.kind === 'confirmed' && perk.label.includes('3,000'))).toBe(true)
+    expect(getSponsorProfile('wonder')?.perks.some((perk) => perk.kind === 'confirmed' && perk.label.includes('Pro'))).toBe(true)
   })
 
   it('lists Convex cash, Kosmonaut coworking, and Daytona credit prize tracks', () => {

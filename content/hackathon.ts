@@ -210,6 +210,14 @@ export const hackathonSponsors: Partner[] = [
     logoBg: '#14120b',
     logoHeight: 'h-8',
   },
+  {
+    name: 'Wonder',
+    logo: '/images/partners/wonder.png',
+    url: 'https://wonder.design/',
+    logoBg: '#14120b',
+    logoHeight: 'h-7',
+    logoWidth: 'w-32',
+  },
 ]
 
 /** Local hosts and community orgs — shown below tech partners on Overview. */
@@ -266,6 +274,13 @@ export const hackathonSdlcStages: HackathonSdlcStage[] = [
     job: 'Find sources the agent does not already have',
     sponsorId: 'exa',
     accent: 'green',
+  },
+  {
+    id: 'design',
+    label: 'Design / UI',
+    job: 'Design the interface as shippable React',
+    sponsorId: 'wonder',
+    accent: 'orange',
   },
   {
     id: 'execute',
@@ -624,6 +639,37 @@ export const hackathonSponsorProfiles: HackathonSponsorProfile[] = [
       note: 'Install Node 22+ and run netlify login first.',
     },
   },
+  {
+    id: 'wonder',
+    name: 'Wonder',
+    logo: '/images/partners/wonder.png',
+    url: 'https://wonder.design/',
+    docsUrl: 'https://wonder.design/docs/mcp',
+    logoBg: '#14120b',
+    logoHeight: 'h-7',
+    sdlcStage: 'design',
+    oneLiner: 'Design on a canvas that is already production React + Tailwind — not a handoff mockup.',
+    technologies: [
+      'Canvas, layers, and components that map 1:1 to code',
+      'AI chat to generate and iterate the design',
+      'Export production-ready React + Tailwind (or CSS)',
+      'MCP — hosted at mcp.wonder.so so Cursor stays in sync with the canvas',
+    ],
+    useCases: [
+      'Design the demo UI in Wonder, then ship the React it already is',
+      'Iterate a landing or product screen with AI on the canvas',
+      'Ask Cursor to pull or push design changes over MCP',
+      'Skip Figma-to-code translation on a one-day sprint',
+    ],
+    perks: [
+      { kind: 'confirmed', label: 'Pro plan for every participant' },
+    ],
+    mcp: {
+      name: 'wonder',
+      config: { url: 'https://mcp.wonder.so/mcp' },
+      note: 'After install, authenticate Wonder in Cursor MCP settings (browser sign-in).',
+    },
+  },
 ]
 
 export const hackathonStackRecipes: HackathonStackRecipe[] = [
@@ -647,6 +693,11 @@ export const hackathonStackRecipes: HackathonStackRecipe[] = [
     summary: 'Exa finds sources, fal generates the media, Convex stores the thread.',
     sponsorIds: ['exa', 'fal', 'convex'],
   },
+  {
+    title: 'Designed UI, live app',
+    summary: 'Design the screen in Wonder, keep state in Convex, put the site on Netlify.',
+    sponsorIds: ['wonder', 'convex', 'netlify'],
+  },
 ]
 
 export const hackathonStackPicks: HackathonStackPick[] = [
@@ -657,6 +708,7 @@ export const hackathonStackPicks: HackathonStackPick[] = [
   { need: 'The demo to talk or listen', use: 'ElevenLabs' },
   { need: 'To dictate into Cursor instead of typing', use: 'Wispr Flow' },
   { need: 'Generated images, video, or audio', use: 'Fal.ai' },
+  { need: 'A designed UI that is already React + Tailwind', use: 'Wonder' },
   { need: 'A public HTTPS URL or extra Postgres', use: 'Render' },
   { need: 'A public frontend with deploy previews', use: 'Netlify' },
 ]
@@ -667,6 +719,7 @@ export const hackathonStackOverlap = [
   'Firecrawl scrapes a URL you already have. Exa searches the web for sources you do not.',
   'ElevenLabs is speech in the product. Wispr Flow is how you dictate into Cursor.',
   'Fal.ai generates media. It is not search and not hosting.',
+  'Wonder is the design canvas that ships as React. Fal.ai generates media. They are not the same job.',
 ]
 
 export function getSponsorProfile(id: string): HackathonSponsorProfile | undefined {

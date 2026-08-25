@@ -94,6 +94,7 @@ export interface HackathonPerson {
 export type HackathonSdlcStageId =
   | 'research'
   | 'search'
+  | 'design'
   | 'execute'
   | 'backend'
   | 'experience'

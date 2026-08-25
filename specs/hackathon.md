@@ -10,7 +10,7 @@ Hackathon mini-site with tabs (Overview, Guide, Mentors, Prizes, Stack). Served 
 |-------|-------|
 | Status | Implemented |
 | Verified | Partial |
-| Last updated | 2026-08-24 |
+| Last updated | 2026-08-25 |
 
 ## Page layout
 
@@ -105,7 +105,7 @@ Edit `content/hackathon.ts` for:
 - Prize tracks (`hackathonPrizes`: Convex cash 100.000 / 50.000 RSD; Kosmonaut coworking — 15 / 10 / 5 entries per teammate on the top 3 teams, use within 3 months, claimed on their platform; Daytona credits $3,000 / $2,000 / $1,000 plus $100 for every participant)
 - Hacker guide (`hackathonGuidePurpose`, `hackathonGuideTeam`, `hackathonGuideSteps`, `hackathonGuideTopics`) — source for `/hackathon/guide`
 - Mentors and judges (`hackathonMentors`, `hackathonJudges`) — source for `/hackathon/mentors`
-- Tech partner logos (`hackathonSponsors`: ElevenLabs, Firecrawl, Render, Convex, Daytona, Wispr Flow, Exa, Netlify, Fal.ai) — Overview heading is **Tech partners**
+- Tech partner logos (`hackathonSponsors`: ElevenLabs, Firecrawl, Render, Convex, Daytona, Wispr Flow, Exa, Netlify, Fal.ai, Wonder) — Overview heading is **Tech partners**
 - Community partners (`hackathonCommunityPartners`: Startit, Superteam Balkan, ABC BootCamps, JigJoy, Kosmonaut) — Overview, below tech partners
 - Superteam Balkan uses a transparent PNG wordmark (`/images/partners/superteam-balkan.png`) at `h-10` (a step above Startit’s `h-8`) so the old JPEG black frame does not show on the dark marquee. ABC uses the official overlapping ABC + BOOTCAMP mark (`abc-bootcamps.png`) on a white pad (`logoBg: '#ffffff'`) at `h-10` so the dark wordmark stays readable on the dark marquee
 - Sponsor stack (`hackathonSdlcStages`, `hackathonSponsorProfiles` including `mcp`, recipes, picks) — source for `/hackathon/stack` and `docs/hackathon/sponsor-cheat-sheet.md`
@@ -116,8 +116,8 @@ Edit `content/hackathon.ts` for:
 - Flat 2-column grid of sponsor cards (not a linear pipeline). Area label lives on the card (e.g. Host / infra, Voice / audio); details open in a modal
 - Each modal has an **Add to Cursor** button (title row) that uses the official `cursor://anysphere.cursor-deeplink/mcp/install` deeplink (same tab — do not open `https://cursor.com/en/install-mcp`, which auto-closes). Configs live on `hackathonSponsorProfiles[].mcp` and are encoded by `lib/cursor-mcp-install.ts`
 - Cursor is host, not a sponsor. Wispr Flow is a tech partner (dictation into Cursor); ElevenLabs stays product voice
-- Confirmed perks only: Daytona $100 + winner credits (Best app that uses Daytona); Convex 100.000 / 50.000 RSD; Kosmonaut coworking for top 3 teams (15 / 10 / 5 entries per teammate, use within 3 months, claim on kosmonaut.rs); Wispr Flow 3 months Pro; Exa $50 credits each; Fal.ai $50 credits each; Netlify 3,000 credits for all participants
-- Stack area cards also cover Exa (Search / web), Wispr Flow (Voice input), Fal.ai (Generate / media), and Netlify (Host / frontend). Wispr has no public MCP install URL — desktop app only
+- Confirmed perks only: Daytona $100 + winner credits (Best app that uses Daytona); Convex 100.000 / 50.000 RSD; Kosmonaut coworking for top 3 teams (15 / 10 / 5 entries per teammate, use within 3 months, claim on kosmonaut.rs); Wispr Flow 3 months Pro; Exa $50 credits each; Fal.ai $50 credits each; Netlify 3,000 credits for all participants; Wonder Pro for all participants
+- Stack area cards also cover Exa (Search / web), Wonder (Design / UI), Wispr Flow (Voice input), Fal.ai (Generate / media), and Netlify (Host / frontend). Wispr has no public MCP install URL — desktop app only. Wonder MCP is `https://mcp.wonder.so/mcp` (OAuth after install)
 
 ### Guide tab
 

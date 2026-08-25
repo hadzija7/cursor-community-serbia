@@ -39,6 +39,7 @@ Living scorecard for Cursor Community Serbia. Update after each phase.
 
 | Date       | Change                          |
 |------------|----------------------------------|
+| 2026-08-25 | Hackathon tech partners + Stack: Wonder (Design / UI; Pro for all participants; MCP at mcp.wonder.so) |
 | 2026-08-25 | Section headers share `SectionEyebrow` (orange small-caps); Past Events, Hosting Partners, Featured, and Education match Ambassadors / Upcoming Events |
 | 2026-08-25 | Homepage: ambassadors heading is orange eyebrow only; upcoming events uses the same orange subtitle + card styling |
 | 2026-08-25 | Ambassador photo: Aleksandar Hadžibabić uses new Cursor-shirt portrait (`aleks-cursor.jpg`) |

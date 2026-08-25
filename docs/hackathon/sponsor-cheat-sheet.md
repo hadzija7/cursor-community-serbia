@@ -18,6 +18,7 @@ Left to right is a build path you can follow in one day. You do **not** need eve
 flowchart LR
   F["Research / web data<br/>Firecrawl"]
   X["Search / web<br/>Exa"]
+  U["Design / UI<br/>Wonder"]
   D["Execute / AI sandboxes<br/>Daytona"]
   C["Backend / state<br/>Convex"]
   E["Voice / experience<br/>ElevenLabs"]
@@ -25,7 +26,7 @@ flowchart LR
   A["Generate / media<br/>Fal.ai"]
   R["Host / infra<br/>Render"]
   N["Host / frontend<br/>Netlify"]
-  F --> X --> D --> C
+  F --> X --> U --> D --> C
   C --> E
   C --> W
   C --> A
@@ -37,6 +38,7 @@ flowchart LR
 |------|---------|-----------------|
 | Research / web data | **Firecrawl** | Turn live websites into clean markdown or JSON for the app or agent |
 | Search / web | **Exa** | Neural search for sources the agent does not already have |
+| Design / UI | **Wonder** | Design the interface as production React + Tailwind, not a handoff mockup |
 | Execute / AI sandboxes | **Daytona** | Run AI-generated or user-untrusted code in an isolated machine |
 | Backend / state | **Convex** | Database, auth, realtime sync — the app’s memory |
 | Voice / experience | **ElevenLabs** | Speech in, speech out, or a full voice agent |
@@ -52,6 +54,7 @@ flowchart LR
 - **Firecrawl scrapes a URL you already have. Exa searches** for sources you do not.
 - **ElevenLabs is speech in the product. Wispr Flow is how you dictate into Cursor.**
 - **Fal.ai generates media.** It is not search and not hosting.
+- **Wonder is the design canvas that ships as React.** Fal.ai generates media. They are not the same job.
 - **Cursor** is how you write and wire all of this. It is the host tool, not a sponsor product.
 
 ---
@@ -254,6 +257,34 @@ flowchart LR
 
 ---
 
+### Design / UI — Wonder
+
+**One-liner:** Design on a canvas that is already production React + Tailwind — not a handoff mockup.
+
+**Products / technologies**
+
+- Canvas, layers, and components that map 1:1 to code  
+- AI chat to generate and iterate the design  
+- Export production-ready React + Tailwind (or CSS)  
+- **MCP** — hosted at `https://mcp.wonder.so/mcp` (browser sign-in after install)
+
+**Ship in a day**
+
+1. Design the demo UI in Wonder, then ship the React it already is.  
+2. Iterate a landing or product screen with AI on the canvas.  
+3. Ask Cursor to pull or push design changes over MCP.  
+4. Skip Figma-to-code translation on a one-day sprint.
+
+**What you get (confirmed)**
+
+- **Every participant:** Wonder Pro.
+
+**Start here**
+
+- [wonder.design](https://wonder.design/) · [MCP docs](https://wonder.design/docs/mcp) · App: [app.wonder.so](https://app.wonder.so/)
+
+---
+
 ### Voice input — Wispr Flow
 
 **One-liner:** Dictate into Cursor — speech becomes clean text in the editor and chat.
@@ -337,6 +368,12 @@ Firecrawl pulls live pages on a cadence (or on button click) → Convex is the l
 
 Exa finds sources → fal generates the image or clip → Convex stores the thread. Good for “research this, then show a generated artifact.” Skip Firecrawl unless you already have the URLs.
 
+### E — Designed UI, live app
+
+**Wonder + Convex + Netlify**
+
+Design the screen in Wonder → Convex holds users and live state → Netlify hosts the public URL. Good for a polished one-day product demo. Skip Fal unless you also need generated media. Skip Render unless you need a separate API or Postgres.
+
 ---
 
 ## 4. Pick this if…
@@ -350,12 +387,13 @@ Exa finds sources → fal generates the image or clip → Convex stores the thre
 | The demo to *talk* or *listen* | **ElevenLabs** |
 | To dictate into Cursor instead of typing | **Wispr Flow** |
 | Generated images, video, or audio | **Fal.ai** |
+| A designed UI that is already React + Tailwind | **Wonder** |
 | A public HTTPS URL / classic host / extra Postgres | **Render** |
 | A public frontend with deploy previews | **Netlify** |
 | To write the whole thing fast | **Cursor** (host editor) |
 | Cash prize for a Convex app | **Convex track** — 100.000 / 50.000 RSD |
 | Coworking for top 3 teams | **Kosmonaut** — 15 / 10 / 5 entries per teammate, use within 3 months; claim on kosmonaut.rs |
-| Confirmed platform credits on day one | **Daytona** $100 · **Exa** $50 · **Fal.ai** $50 · **Netlify** 3,000 · **Wispr Flow** 3 months Pro |
+| Confirmed platform credits on day one | **Daytona** $100 · **Exa** $50 · **Fal.ai** $50 · **Netlify** 3,000 · **Wispr Flow** 3 months Pro · **Wonder** Pro |
 | Event credits from ElevenLabs / Firecrawl / Render | **TBD** — use their public free tier until a code is announced |
 
 **Minimum viable stacks**
