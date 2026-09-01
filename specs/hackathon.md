@@ -10,7 +10,7 @@ Hackathon mini-site with tabs (Overview, Guide, Mentors, Prizes, Stack). Served 
 |-------|-------|
 | Status | Implemented |
 | Verified | Partial |
-| Last updated | 2026-08-25 |
+| Last updated | 2026-09-01 |
 
 ## Page layout
 
@@ -49,7 +49,7 @@ When `NEXT_PUBLIC_HACKATHON_SITE_URL` is set, `/hackathon` on the main domain re
 - `components/HackathonPeople.tsx` — Mentor and judge cards (`/hackathon/mentors`)
 - `middleware.ts` — Subdomain rewrite + optional main-host redirect
 - `lib/hackathon-site.ts` — Host detection and public hrefs
-- `components/HackathonHero.tsx` — Full-width hero with date/location/duration cards and CTAs
+- `components/HackathonHero.tsx` — Full-width hero with date/location/duration cards and CTAs; Grok Bot mascot peeks above the duration card
 - `components/HackathonHighlights.tsx` — Stat-style highlight grid (TUM-inspired)
 - `components/HackathonPrizes.tsx` — Prize tracks with per-place cards (above sponsors)
 - `components/SponsorMarquee.tsx` — Tech partner and community partner marquees (Startit, Superteam Balkan, ABC BootCamps, JigJoy, Kosmonaut)
@@ -99,7 +99,7 @@ Postgres can stay configured; webhook notify runs after a successful insert (not
 
 Edit `content/hackathon.ts` for:
 
-- Event title, tagline, duration, and **Luma URL** (source of truth for live sync)
+- Event title (`Grok Bot Serbia Hackathon`), tagline, `mascotImage` (promo), `mascotPeekImage` (Overview hero), duration, and **Luma URL** (source of truth for live sync)
 - Static fallback `date` / `displayDate` / `location` (Belgrade, September 12, 2026 — used when Luma is unreachable)
 - Highlights grid (`hackathonStats`)
 - Prize tracks (`hackathonPrizes`: Convex cash 100.000 / 50.000 RSD; Kosmonaut coworking — 15 / 10 / 5 entries per teammate on the top 3 teams, use within 3 months, claimed on their platform; Daytona credits $3,000 / $2,000 / $1,000 plus $100 for every participant)
@@ -146,7 +146,9 @@ Edit `content/hackathon.ts` for:
 - `hackathonConfig.lumaUrl` (e.g. `https://luma.com/ghvnbjlx`) drives sync
 - Server: `fetchLumaEventBySlug` reads the public Luma event page (no API key); `resolveHackathonDetails` merges date/location onto static copy
 - Client: `useHackathonDetails` polls `/api/hackathon/event` every 5 minutes (same pattern as upcoming events)
-- Title, tagline, and duration stay content-owned so marketing copy does not flip with Luma’s event name
+- Title, tagline, mascot image, and duration stay content-owned so marketing copy does not flip with Luma’s event name
+- Homepage promo card (`HackathonPromoCard`) shows `hackathonConfig.mascotImage` next to the title
+- Overview hero peeks `hackathonConfig.mascotPeekImage` above the duration card; dark pixels are knocked out and `mix-blend-lighten` so it sits on the page background instead of a boxed image
 
 Hero CTAs: Register (Luma) and Sponsor event (`hackathon.viewSponsorsCta`). Sponsor event always scrolls to Overview `#become-a-sponsor` — including a second click while already on Overview with that hash. Off Overview (Guide / Mentors / Prizes / Stack) it navigates to the Overview form. The form section uses `scroll-mt-24` so header chrome does not cover the heading. Guide, Mentors, and Stack are header tabs only.
 

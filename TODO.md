@@ -27,6 +27,7 @@
 - [x] Add Cafe Cursor Belgrade August recap (Aug 22, 2026); Luma https://luma.com/cursor-belgrade-august
 - [x] Hackathon landing page (`/hackathon`): sponsor marquee, sponsorship form, API route; hero + highlights layout (TUM-inspired, orange accent)
 - [x] Hackathon content: Belgrade, September 12, 2026; Luma `https://luma.com/ghvnbjlx`, CTA "Sponsor event"
+- [x] Hackathon rebrand: Grok Bot Serbia Hackathon; Grok Bot mascot next to the title on homepage promo + Overview hero (`/images/hackathon/grok-bot.png`)
 - [x] Hackathon date/location synced from Luma event page (`/api/hackathon/event`, static fallback)
   - [x] Hackathon sponsorship → Google Sheets via Apps Script webhook template (`scripts/hackathon-sponsor-google-sheet.gs`)
   - [x] Hackathon sponsors: added Convex to marquee

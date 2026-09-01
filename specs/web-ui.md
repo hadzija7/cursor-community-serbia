@@ -10,7 +10,7 @@ The Cursor Community Serbia site is a Next.js 16 App Router application presenti
 |-------|-------|
 | Status | Implemented |
 | Verified | Partial |
-| Last updated | 2026-08-25 |
+| Last updated | 2026-09-01 |
 
 ## Architecture
 
@@ -45,7 +45,7 @@ The Cursor Community Serbia site is a Next.js 16 App Router application presenti
 - `lib/luma.ts` — Server-side Luma API mapping; city calendar env helpers (`getLumaCityCalendars`)
 - `components/AmbassadorSection.tsx` — Ambassador cards; orange eyebrow only (no extra heading); cards use a light orange gradient border
 - `components/Partners.tsx` — Partner logos; orange `SectionEyebrow` to match other homepage sections
-- `components/HackathonPromoCard.tsx` — Homepage hero hackathon promo card (top-left overlay; orange accent; live date/location via `useHackathonDetails`)
+- `components/HackathonPromoCard.tsx` — Homepage hero hackathon promo card (top-left overlay; Grok Bot mascot next to the title; orange accent; live date/location via `useHackathonDetails`)
 - `lib/use-hackathon-details.ts` — Client poll of `/api/hackathon/event`
 - `components/HackathonHero.tsx` — Hackathon page hero (facts + CTAs)
 - `components/HackathonHighlights.tsx` — Hackathon stat-style highlight grid

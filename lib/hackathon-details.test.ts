@@ -3,7 +3,7 @@ import { resolveHackathonDetails } from '@/lib/hackathon-details'
 import * as luma from '@/lib/luma'
 
 const FALLBACK = {
-  title: 'Cursor Hackathon Serbia',
+  title: 'Grok Bot Serbia Hackathon',
   tagline: 'Build the future with AI',
   date: '2026-09-12',
   displayDate: 'September 12, 2026',

@@ -12,8 +12,10 @@ import {
 } from '@/lib/types'
 
 export const hackathonConfig = {
-  title: 'Cursor Hackathon Serbia',
+  title: 'Grok Bot Serbia Hackathon',
   tagline: 'Build the future with AI — one full day of hacking, learning, and community.',
+  mascotImage: '/images/hackathon/grok-bot.png',
+  mascotPeekImage: '/images/hackathon/grok-bot-peek.png',
   // Static fallback when Luma is unreachable. Live date/location come from
   // `hackathonConfig.lumaUrl` via `/api/hackathon/event` (see lib/hackathon-details.ts).
   date: '2026-09-12',

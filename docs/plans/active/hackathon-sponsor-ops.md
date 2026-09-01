@@ -1,7 +1,7 @@
 # Hackathon sponsor operations — decision memo
 
 **Status:** Phase 0 — organize (do not publish new participant copy yet)  
-**Event:** Cursor Hackathon Serbia · Belgrade · 12 September 2026 · 1 day  
+**Event:** Grok Bot Serbia Hackathon · Belgrade · 12 September 2026 · 1 day  
 **Registration (already live):** [Luma](https://luma.com/ghvnbjlx)  
 **Story page (already live):** `/hackathon` — hero, highlights, Convex prize track, sponsor logo marquee, “become a sponsor” form  
 **Last updated:** 2026-08-17  

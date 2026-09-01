@@ -7,7 +7,7 @@ describe('GET /api/hackathon/event', () => {
 
   it('returns resolved hackathon details', async () => {
     vi.spyOn(hackathonDetails, 'resolveHackathonDetails').mockResolvedValue({
-      title: 'Cursor Hackathon Serbia',
+      title: 'Grok Bot Serbia Hackathon',
       tagline: 'Build',
       date: '2026-09-12',
       displayDate: 'September 12, 2026',

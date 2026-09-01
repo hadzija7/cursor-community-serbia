@@ -2,8 +2,10 @@
 
 import { motion } from 'framer-motion'
 import { Calendar, Clock, MapPin } from 'lucide-react'
+import Image from 'next/image'
 import { usePathname } from 'next/navigation'
 import { useEffect, type MouseEvent } from 'react'
+import { hackathonConfig } from '@/content/hackathon'
 import { useI18n } from '@/lib/i18n'
 import { useHackathonHref } from '@/lib/use-hackathon-base-path'
 import { useHackathonDetails } from '@/lib/use-hackathon-details'
@@ -102,14 +104,29 @@ export default function HackathonHero() {
           transition={{ duration: 0.5 }}
           className="space-y-8"
         >
-          <div className="space-y-5 max-w-3xl">
-            <p className="inline-flex items-center rounded-full border border-cursor-accent-orange/50 bg-cursor-accent-orange-bg px-3 py-1 text-xs font-semibold uppercase tracking-[0.18em] text-cursor-accent-orange">
-              {t('hackathon.upcoming')}
-            </p>
-            <h1 className="text-4xl font-bold tracking-tight md:text-6xl lg:text-7xl">{hackathon.title}</h1>
-            <p className="text-lg text-cursor-text-secondary md:text-xl lg:text-2xl leading-relaxed">
-              {hackathon.tagline}
-            </p>
+          <div className="relative">
+            <div className="space-y-5 max-w-3xl sm:max-w-[calc((100%-2rem)*2/3)]">
+              <p className="inline-flex items-center rounded-full border border-cursor-accent-orange/50 bg-cursor-accent-orange-bg px-3 py-1 text-xs font-semibold uppercase tracking-[0.18em] text-cursor-accent-orange">
+                {t('hackathon.upcoming')}
+              </p>
+              <h1 className="text-4xl font-bold tracking-tight md:text-6xl lg:text-7xl">{hackathon.title}</h1>
+              <p className="text-lg text-cursor-text-secondary md:text-xl lg:text-2xl leading-relaxed">
+                {hackathon.tagline}
+              </p>
+            </div>
+            <div
+              className="pointer-events-none absolute bottom-4 right-0 z-0 w-[15rem] sm:w-[16rem] md:w-[18rem] lg:w-[20rem]"
+              aria-hidden
+            >
+              <Image
+                src={hackathonConfig.mascotPeekImage}
+                alt=""
+                width={1024}
+                height={1024}
+                className="h-auto w-full mix-blend-lighten"
+                priority
+              />
+            </div>
           </div>
 
           <dl className="grid gap-4 sm:grid-cols-3">

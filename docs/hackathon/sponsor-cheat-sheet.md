@@ -1,4 +1,4 @@
-# Sponsor cheat sheet — Cursor Hackathon Serbia
+# Sponsor cheat sheet — Grok Bot Serbia Hackathon
 
 **Event:** Belgrade · 12 September 2026 · one day  
 **Build in:** [Cursor](https://cursor.com) (host / editor — not a sponsor)  
