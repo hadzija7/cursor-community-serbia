@@ -16,6 +16,7 @@ export const hackathonConfig = {
   tagline: 'Build the future with AI — one full day of hacking, learning, and community.',
   mascotImage: '/images/hackathon/grok-bot.png',
   mascotPeekImage: '/images/hackathon/grok-bot-peek.png',
+  ogImage: '/images/og-grok-bot-hackathon.jpg',
   // Static fallback when Luma is unreachable. Live date/location come from
   // `hackathonConfig.lumaUrl` via `/api/hackathon/event` (see lib/hackathon-details.ts).
   date: '2026-09-12',

@@ -4,6 +4,14 @@ import { hackathonConfig } from '@/content/hackathon'
 import { siteConfig } from '@/content/site.config'
 
 const siteTitle = `${siteConfig.communityName} ${siteConfig.communityNameLocal}`
+const hackathonUrl = (process.env.NEXT_PUBLIC_HACKATHON_SITE_URL ?? '').replace(/\/$/, '') || undefined
+
+const ogImage = {
+  url: hackathonConfig.ogImage,
+  width: 1024,
+  height: 1024,
+  alt: hackathonConfig.title,
+}
 
 export const metadata: Metadata = {
   title: `${hackathonConfig.title} | ${siteTitle}`,
@@ -12,20 +20,15 @@ export const metadata: Metadata = {
     title: hackathonConfig.title,
     description: hackathonConfig.tagline,
     type: 'website',
-    images: [
-      {
-        url: '/images/og-cursor-serbia.jpg',
-        width: 1024,
-        height: 1024,
-        alt: siteTitle,
-      },
-    ],
+    siteName: hackathonConfig.title,
+    ...(hackathonUrl ? { url: hackathonUrl } : {}),
+    images: [ogImage],
   },
   twitter: {
     card: 'summary_large_image',
     title: hackathonConfig.title,
     description: hackathonConfig.tagline,
-    images: ['/images/og-cursor-serbia.jpg'],
+    images: [ogImage.url],
   },
 }
 

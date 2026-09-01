@@ -70,6 +70,7 @@ The Cursor Community Serbia site is a Next.js 16 App Router application presenti
 ### Layout & Theming
 
 - `app/layout.tsx` — Root layout, metadata (Open Graph + Twitter share image: `/images/og-cursor-serbia.jpg`), favicon
+- `app/hackathon/layout.tsx` — Hackathon share preview uses `/images/og-grok-bot-hackathon.jpg` so Telegram/LinkedIn/X do not show the community Cursor thumbnail
 - `app/globals.css` — Tailwind, Cursor Serbia theme (dark background `#14120b`, light text `#edecec`)
 - `tailwind.config.ts` — Cursor color palette
 - Share preview: `metadataBase` + `openGraph.images` / `twitter.images` so LinkedIn/X show Cursor Serbia branding instead of scraping an ambassador photo

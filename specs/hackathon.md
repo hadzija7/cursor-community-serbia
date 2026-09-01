@@ -43,7 +43,7 @@ When `NEXT_PUBLIC_HACKATHON_SITE_URL` is set, `/hackathon` on the main domain re
 - `app/hackathon/stack/page.tsx` — Stack tab
 - `app/hackathon/prizes/page.tsx` — Prizes tab
 - `app/hackathon/sponsor/page.tsx` — Redirect to Overview `#become-a-sponsor`
-- `app/hackathon/layout.tsx` — Route metadata + `HackathonSiteHeader`
+- `app/hackathon/layout.tsx` — Route metadata + `HackathonSiteHeader`; OG/Twitter share image is `hackathonConfig.ogImage` (`/images/og-grok-bot-hackathon.jpg`)
 - `components/HackathonSiteHeader.tsx` — Hackathon-only chrome and tabs (Overview / Guide / Mentors / Prizes / Stack)
 - `components/HackathonGuide.tsx` — Purpose, team, shipping, guidelines, and extensible topics
 - `components/HackathonPeople.tsx` — Mentor and judge cards (`/hackathon/mentors`)
