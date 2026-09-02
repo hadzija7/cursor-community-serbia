@@ -141,6 +141,39 @@ export const hackathonMentors: HackathonPerson[] = [
     photoPosition: 'center',
     bio: 'Nick Tomić is a SaaS founder and growth consultant who specializes in helping tech startups build and launch AI products. His expertise is built on extensive research, including interviewing over 350 SaaS founders to understand the keys to product-market fit.',
     help: 'Go-to-market — positioning, story, and how to talk about what you shipped.',
+    links: {
+      x: 'https://x.com/dropoutsanta',
+      linkedin: 'https://www.linkedin.com/in/nicktomic/',
+    },
+  },
+]
+
+/** Day-of hosts — photos and socials match the homepage ambassadors. */
+export const hackathonHosts: HackathonPerson[] = [
+  {
+    id: 'aleksandar-hadzibabic',
+    name: 'Aleksandar Hadžibabić',
+    title: 'Community Lead for Novi Sad',
+    photo: '/images/ambassadors/aleks-cursor.jpg',
+    photoPosition: 'top',
+    bio: 'Cursor Ambassador and one of the hosts running the room.',
+    help: 'Whatever you need — we are here to help.',
+    links: {
+      x: 'https://x.com/AHadzibabic',
+      linkedin: 'https://www.linkedin.com/in/ah999/',
+    },
+  },
+  {
+    id: 'goran-petkovic',
+    name: 'Goran Petković',
+    title: 'Community Lead for Belgrade',
+    photo: '/images/ambassadors/goran.png',
+    bio: 'Cursor Ambassador and one of the hosts running the room.',
+    help: 'Whatever you need — we are here to help.',
+    links: {
+      x: 'https://x.com/goranux',
+      linkedin: 'https://www.linkedin.com/in/petkovicg/',
+    },
   },
 ]
 

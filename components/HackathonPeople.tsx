@@ -3,7 +3,7 @@
 import { motion } from 'framer-motion'
 import Image from 'next/image'
 import { Globe, Github, Linkedin, Twitter } from 'lucide-react'
-import { hackathonJudges, hackathonMentors } from '@/content/hackathon'
+import { hackathonHosts, hackathonJudges, hackathonMentors } from '@/content/hackathon'
 import { useI18n } from '@/lib/i18n'
 import type { HackathonPerson } from '@/lib/types'
 
@@ -29,40 +29,27 @@ function PersonCard({ person, index }: { person: HackathonPerson; index: number 
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: '-30px' }}
       transition={{ duration: 0.4, delay: index * 0.04 }}
-      className="flex flex-col gap-5 rounded-2xl border border-cursor-border-emphasis bg-cursor-surface/60 p-6 sm:flex-row"
+      className="flex h-full items-start gap-4 rounded-2xl border border-cursor-accent-orange/25 bg-gradient-to-br from-cursor-surface via-cursor-bg-dark to-cursor-accent-orange-bg p-4"
     >
-      <div className="relative aspect-square w-full overflow-hidden rounded-xl sm:h-40 sm:w-40 sm:shrink-0">
-        <Image
-          src={person.photo}
-          alt={person.name}
-          fill
-          className={`object-cover ${person.photoPosition === 'top' ? 'object-top' : 'object-center'}`}
-          sizes="(min-width: 640px) 160px, 100vw"
-        />
-      </div>
-      <div className="min-w-0 space-y-3">
-        <div className="space-y-1">
-          <h3 className="text-xl font-semibold tracking-tight md:text-2xl">{person.name}</h3>
-          <p className="text-sm text-cursor-text-muted">{person.title}</p>
+      <div className="flex shrink-0 flex-col items-center gap-2">
+        <div className="relative h-20 w-20 overflow-hidden rounded-full border-2 border-cursor-accent-orange/45 sm:h-24 sm:w-24">
+          <Image
+            src={person.photo}
+            alt={person.name}
+            fill
+            className={`object-cover ${person.photoPosition === 'top' ? 'object-top' : 'object-center'}`}
+            sizes="96px"
+          />
         </div>
-        {person.bio ? (
-          <p className="text-sm leading-relaxed text-cursor-text-secondary md:text-base">{person.bio}</p>
-        ) : null}
-        {person.help ? (
-          <p className="text-sm leading-relaxed text-cursor-text-secondary">
-            <span className="font-medium text-cursor-text">{t('hackathon.peopleAskAbout')} </span>
-            {person.help}
-          </p>
-        ) : null}
         {links.length > 0 ? (
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2">
             {links.map((link) => (
               <a
                 key={`${person.id}-${link.kind}`}
                 href={link.href}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="rounded border border-cursor-border p-2 text-cursor-text-muted transition-colors hover:border-cursor-border-emphasis hover:text-cursor-text"
+                className="rounded border border-cursor-border p-1.5 text-cursor-text-muted transition-colors hover:border-cursor-accent-orange/50 hover:text-cursor-accent-orange"
                 aria-label={`${person.name} ${link.kind}`}
               >
                 <SocialIcon kind={link.kind} />
@@ -71,7 +58,32 @@ function PersonCard({ person, index }: { person: HackathonPerson; index: number 
           </div>
         ) : null}
       </div>
+      <div className="flex min-w-0 flex-1 flex-col gap-1.5">
+        <div>
+          <h3 className="text-sm font-semibold tracking-tight sm:text-base">{person.name}</h3>
+          <p className="text-xs text-cursor-text-muted sm:text-sm">{person.title}</p>
+        </div>
+        {person.bio ? (
+          <p className="text-xs leading-relaxed text-cursor-text-secondary sm:text-sm">{person.bio}</p>
+        ) : null}
+        {person.help ? (
+          <p className="text-xs leading-relaxed text-cursor-text-secondary sm:text-sm">
+            <span className="font-medium text-cursor-text">{t('hackathon.peopleAskAbout')} </span>
+            {person.help}
+          </p>
+        ) : null}
+      </div>
     </motion.article>
+  )
+}
+
+function PeopleGrid({ people }: { people: HackathonPerson[] }) {
+  return (
+    <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+      {people.map((person, index) => (
+        <PersonCard key={person.id} person={person} index={index} />
+      ))}
+    </div>
   )
 }
 
@@ -80,6 +92,24 @@ export default function HackathonPeople() {
 
   return (
     <div className="space-y-12">
+      <motion.section
+        id="hosts"
+        initial={{ opacity: 0, y: 12 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, margin: '-50px' }}
+        transition={{ duration: 0.5 }}
+        className="space-y-5"
+        aria-labelledby="hackathon-hosts-heading"
+      >
+        <div className="space-y-2">
+          <h2 id="hackathon-hosts-heading" className="text-2xl font-semibold tracking-tight md:text-3xl">
+            {t('hackathon.hostsTitle')}
+          </h2>
+          <p className="max-w-2xl text-cursor-text-secondary md:text-lg">{t('hackathon.hostsDescription')}</p>
+        </div>
+        <PeopleGrid people={hackathonHosts} />
+      </motion.section>
+
       <motion.section
         id="mentors"
         initial={{ opacity: 0, y: 12 }}
@@ -95,11 +125,7 @@ export default function HackathonPeople() {
           </h2>
           <p className="max-w-2xl text-cursor-text-secondary md:text-lg">{t('hackathon.mentorsDescription')}</p>
         </div>
-        <div className="grid gap-4">
-          {hackathonMentors.map((person, index) => (
-            <PersonCard key={person.id} person={person} index={index} />
-          ))}
-        </div>
+        <PeopleGrid people={hackathonMentors} />
       </motion.section>
 
       <motion.section
@@ -121,13 +147,7 @@ export default function HackathonPeople() {
             <p className="max-w-2xl text-cursor-text-secondary md:text-lg">{t('hackathon.judgesDescription')}</p>
           )}
         </div>
-        {hackathonJudges.length > 0 ? (
-          <div className="grid gap-4">
-            {hackathonJudges.map((person, index) => (
-              <PersonCard key={person.id} person={person} index={index} />
-            ))}
-          </div>
-        ) : null}
+        {hackathonJudges.length > 0 ? <PeopleGrid people={hackathonJudges} /> : null}
       </motion.section>
     </div>
   )

@@ -4,6 +4,7 @@ import {
   hackathonGuidePurpose,
   hackathonGuideSteps,
   hackathonGuideTeam,
+  hackathonHosts,
   hackathonJudges,
   hackathonMentors,
   hackathonPrizes,
@@ -97,10 +98,14 @@ describe('hackathon sponsor stack content', () => {
     ])
   })
 
-  it('lists Nick Tomić first among mentors and keeps judges empty until announced', () => {
+  it('lists Nick Tomić first among mentors, hosts from ambassadors, and keeps judges empty', () => {
     expect(hackathonMentors[0]?.id).toBe('nick-tomic')
     expect(hackathonMentors[0]?.bio).toMatch(/350 SaaS founders/)
     expect(hackathonMentors[0]?.help?.toLowerCase()).toContain('go-to-market')
+    expect(hackathonMentors[0]?.links?.x).toBe('https://x.com/dropoutsanta')
+    expect(hackathonMentors[0]?.links?.linkedin).toBe('https://www.linkedin.com/in/nicktomic/')
+    expect(hackathonHosts.map((host) => host.id)).toEqual(['aleksandar-hadzibabic', 'goran-petkovic'])
+    expect(hackathonHosts.every((host) => host.links?.x && host.links.linkedin)).toBe(true)
     expect(hackathonJudges).toEqual([])
   })
 

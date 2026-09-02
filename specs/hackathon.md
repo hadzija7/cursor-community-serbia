@@ -46,7 +46,7 @@ When `NEXT_PUBLIC_HACKATHON_SITE_URL` is set, `/hackathon` on the main domain re
 - `app/hackathon/layout.tsx` — Route metadata + `HackathonSiteHeader`; OG/Twitter share image is `hackathonConfig.ogImage` (`/images/og-grok-bot-hackathon.jpg`)
 - `components/HackathonSiteHeader.tsx` — Hackathon-only chrome and tabs (Overview / Guide / Mentors / Prizes / Stack)
 - `components/HackathonGuide.tsx` — Purpose, team, shipping, guidelines, and extensible topics
-- `components/HackathonPeople.tsx` — Mentor and judge cards (`/hackathon/mentors`)
+- `components/HackathonPeople.tsx` — Mentor, host, and judge cards (`/hackathon/mentors`)
 - `middleware.ts` — Subdomain rewrite + optional main-host redirect
 - `lib/hackathon-site.ts` — Host detection and public hrefs
 - `components/HackathonHero.tsx` — Full-width hero with date/location/duration cards and CTAs; Grok Bot mascot peeks above the duration card
@@ -104,7 +104,7 @@ Edit `content/hackathon.ts` for:
 - Highlights grid (`hackathonStats`)
 - Prize tracks (`hackathonPrizes`: Convex cash 100.000 / 50.000 RSD; Kosmonaut coworking — 15 / 10 / 5 entries per teammate on the top 3 teams, use within 3 months, claimed on their platform; Daytona credits $3,000 / $2,000 / $1,000 plus $100 for every participant)
 - Hacker guide (`hackathonGuidePurpose`, `hackathonGuideTeam`, `hackathonGuideSteps`, `hackathonGuideTopics`) — source for `/hackathon/guide`
-- Mentors and judges (`hackathonMentors`, `hackathonJudges`) — source for `/hackathon/mentors`
+- Mentors, hosts, and judges (`hackathonMentors`, `hackathonHosts`, `hackathonJudges`) — source for `/hackathon/mentors`
 - Tech partner logos (`hackathonSponsors`: ElevenLabs, Firecrawl, Render, Convex, Daytona, Wispr Flow, Exa, Netlify, Fal.ai, Wonder) — Overview heading is **Tech partners**
 - Community partners (`hackathonCommunityPartners`: Startit, Superteam Balkan, ABC BootCamps, JigJoy, Kosmonaut) — Overview, below tech partners
 - Superteam Balkan uses a transparent PNG wordmark (`/images/partners/superteam-balkan.png`) at `h-10` (a step above Startit’s `h-8`) so the old JPEG black frame does not show on the dark marquee. ABC uses the official overlapping ABC + BOOTCAMP mark (`abc-bootcamps.png`) on a white pad (`logoBg: '#ffffff'`) at `h-10` so the dark wordmark stays readable on the dark marquee
@@ -130,9 +130,11 @@ Edit `content/hackathon.ts` for:
 ### Mentors and judges tab
 
 - Route: `/hackathon/mentors` (Mentors tab)
-- Two sections: mentors (published) and judges (empty until announced)
-- First mentor: Nick Tomić — CTO and builder; SaaS / AI GTM bio; ask about GTM
-- Photos in `public/images/hackathon/`
+- Three sections in order: hosts (published), mentors (published), judges (empty until announced)
+- Cards use a 1-column grid on small screens and 2 columns from `md` up
+- First mentor: Nick Tomić — CTO and builder; SaaS / AI GTM bio; ask about GTM; X `dropoutsanta`, LinkedIn `nicktomic`
+- Hosts: Aleksandar Hadžibabić and Goran Petković — photos and socials match homepage ambassadors; ask about anything
+- Mentor photos in `public/images/hackathon/`; host photos reuse `public/images/ambassadors/`
 - Types: `HackathonPerson` in `lib/types.ts`
 
 ### Prizes section
@@ -167,7 +169,7 @@ The app is ready for `hackathon.cursorserbia.com`. Creating the hostname is a da
 - [ ] `/hackathon` loads the Overview tab (hero, highlights, marquee, become-a-sponsor form)
 - [ ] Hero "Sponsor event" always scrolls to `#become-a-sponsor` (Overview with or without hash; from Prizes/Stack)
 - [ ] Tabs switch to Guide, Mentors, Prizes, and Stack (no Sponsor tab)
-- [ ] `/hackathon/mentors` shows Nick Tomić first and an empty judges placeholder
+- [ ] `/hackathon/mentors` shows Hosts (Aleksandar + Goran side by side from `md`), then Mentors (Nick with X + LinkedIn), then an empty judges placeholder
 - [ ] `/hackathon/guide` shows purpose, team size, shipping defaults, and an empty Topics placeholder
 - [ ] `/hackathon/sponsor` redirects to Overview `#become-a-sponsor`
 - [ ] `http://hackathon.localhost:<port>/` rewrites to the Overview tab

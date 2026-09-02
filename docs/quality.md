@@ -39,6 +39,8 @@ Living scorecard for Cursor Community Serbia. Update after each phase.
 
 | Date       | Change                          |
 |------------|----------------------------------|
+| 2026-09-01 | Hackathon Mentors tab: Hosts first, then mentors, then judges; person cards 2-col from `md` |
+| 2026-09-01 | Hackathon Mentors tab: Hosts section (Aleksandar Hadžibabić, Goran Petković from ambassadors); Nick Tomić X + LinkedIn |
 | 2026-09-01 | Hackathon OG/Twitter share image is Grok Bot poster (`og-grok-bot-hackathon.jpg`) so Telegram no longer uses the community Cursor thumbnail |
 | 2026-09-01 | Hackathon rebranded to Grok Bot Serbia Hackathon; Grok Bot mascot sits next to the title on homepage promo + Overview hero |
 | 2026-08-25 | Hackathon tech partners + Stack: Wonder (Design / UI; Pro for all participants; MCP at mcp.wonder.so) |
