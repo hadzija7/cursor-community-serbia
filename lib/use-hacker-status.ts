@@ -56,8 +56,10 @@ export function useHackerStatus(): HackerStatusResult {
       .catch(() => dispatch({ type: 'error' }))
   }, [email])
 
+  // Depend on session/email only — including shouldFetch would abort the in-flight
+  // request as soon as dispatch('start') sets fetchedFor and flips shouldFetch to false.
   useEffect(() => {
-    if (!shouldFetch || !email) return
+    if (sessionStatus !== 'authenticated' || !email) return
 
     const controller = new AbortController()
 
@@ -80,7 +82,7 @@ export function useHackerStatus(): HackerStatusResult {
       })
 
     return () => controller.abort()
-  }, [shouldFetch, email])
+  }, [sessionStatus, email])
 
   const isLoading = sessionStatus === 'loading' || state.fetchStatus === 'loading' || shouldFetch
 

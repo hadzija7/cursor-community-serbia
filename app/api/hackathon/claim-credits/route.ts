@@ -37,22 +37,32 @@ export async function POST(request: NextRequest) {
   }
 
   const apiKey = process.env.LUMA_BELGRADE_API_KEY?.trim()
-  if (apiKey) {
-    const eventApiId = await getEventApiId()
-    if (eventApiId) {
-      const status = await fetchEventGuestStatus(
-        apiKey,
-        eventApiId,
-        session.user.email,
-        process.env.LUMA_API_BASE_URL,
-      )
-      if (status !== 'checked_in') {
-        return NextResponse.json(
-          { error: 'You must be checked in at the event to claim credits' },
-          { status: 403 },
-        )
-      }
-    }
+  if (!apiKey) {
+    return NextResponse.json(
+      { error: 'Check-in verification unavailable' },
+      { status: 503 },
+    )
+  }
+
+  const eventApiId = await getEventApiId()
+  if (!eventApiId) {
+    return NextResponse.json(
+      { error: 'Check-in verification unavailable' },
+      { status: 503 },
+    )
+  }
+
+  const status = await fetchEventGuestStatus(
+    apiKey,
+    eventApiId,
+    session.user.email,
+    process.env.LUMA_API_BASE_URL,
+  )
+  if (status !== 'checked_in') {
+    return NextResponse.json(
+      { error: 'You must be checked in at the event to claim credits' },
+      { status: 403 },
+    )
   }
 
   const db = getDb()
