@@ -46,6 +46,50 @@ export default function HackerAuthButton({ variant = 'header' }: { variant?: Var
     ? 'inline-flex items-center justify-center rounded-lg bg-cursor-text px-6 py-3 text-sm font-semibold text-cursor-bg transition-colors hover:bg-cursor-text-secondary md:text-base'
     : 'inline-flex items-center justify-center rounded-lg bg-cursor-text px-4 py-2 text-sm font-semibold text-cursor-bg transition-colors hover:bg-cursor-text-secondary'
 
+  // Hero CTA is always Luma registration; Google login lives in the navbar only
+  if (isHero) {
+    if (session?.user) {
+      if (hackerStatus.status === 'loading') {
+        return (
+          <span className={`${buttonClass} pointer-events-none opacity-50`}>
+            {t('hackathon.registerCta')}
+          </span>
+        )
+      }
+
+      // not_found, or unknown after fetch error — keep Register CTA available
+      const lumaStatus = hackerStatus.lumaStatus
+      if (lumaStatus === 'not_found' || lumaStatus === null) {
+        return (
+          <a
+            href={hackathon.lumaUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className={buttonClass}
+          >
+            {t('hackathon.registerCta')}
+          </a>
+        )
+      }
+      return null
+    }
+
+    return (
+      <a
+        href={hackathon.lumaUrl}
+        target="_blank"
+        rel="noopener noreferrer"
+        className={
+          sessionStatus === 'loading'
+            ? `${buttonClass} pointer-events-none opacity-50`
+            : buttonClass
+        }
+      >
+        {t('hackathon.registerCta')}
+      </a>
+    )
+  }
+
   if (sessionStatus === 'loading') {
     return (
       <span className={`${buttonClass} pointer-events-none opacity-50`}>
@@ -60,34 +104,6 @@ export default function HackerAuthButton({ variant = 'header' }: { variant?: Var
         {t('hackathon.loginCta')}
       </button>
     )
-  }
-
-  // Hero variant: show "Register on Luma" if not registered, nothing otherwise
-  // (email + status badge are shown in the header only)
-  if (isHero) {
-    if (hackerStatus.status === 'loading') {
-      return (
-        <span className={`${buttonClass} pointer-events-none opacity-50`}>
-          {t('hackathon.loginCta')}
-        </span>
-      )
-    }
-
-    // not_found, or unknown after fetch error — keep Register CTA available
-    const lumaStatus = hackerStatus.lumaStatus
-    if (lumaStatus === 'not_found' || lumaStatus === null) {
-      return (
-        <a
-          href={hackathon.lumaUrl}
-          target="_blank"
-          rel="noopener noreferrer"
-          className={buttonClass}
-        >
-          {t('hackathon.registerCta')}
-        </a>
-      )
-    }
-    return null
   }
 
   // Header variant: show email, status badge, and sign-out menu

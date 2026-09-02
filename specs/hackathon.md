@@ -10,7 +10,7 @@ Hackathon mini-site with tabs (Overview, Guide, Mentors, Prizes, Stack). Served 
 |-------|-------|
 | Status | Implemented |
 | Verified | Partial |
-| Last updated | 2026-09-01 |
+| Last updated | 2026-09-02 |
 
 ## Page layout
 
@@ -156,11 +156,11 @@ Edit `content/hackathon.ts` for:
 - Homepage promo card (`HackathonPromoCard`) shows `hackathonConfig.mascotImage` next to the title
 - Overview hero peeks `hackathonConfig.mascotPeekImage` above the duration card; dark pixels are knocked out and `mix-blend-lighten` so it sits on the page background instead of a boxed image
 
-Hero CTAs: Log in Hacker (Google OAuth), View on Luma, and Sponsor event (`hackathon.viewSponsorsCta`). Sponsor event always scrolls to Overview `#become-a-sponsor` — including a second click while already on Overview with that hash. Off Overview (Guide / Mentors / Prizes / Stack) it navigates to the Overview form. The form section uses `scroll-mt-24` so header chrome does not cover the heading. Guide, Mentors, and Stack are header tabs only.
+Hero CTAs: Register on Luma (external Luma event link), View on Luma (when already registered/checked in), and Sponsor event (`hackathon.viewSponsorsCta`). Google login is navbar-only. Sponsor event always scrolls to Overview `#become-a-sponsor` — including a second click while already on Overview with that hash. Off Overview (Guide / Mentors / Prizes / Stack) it navigates to the Overview form. The form section uses `scroll-mt-24` so header chrome does not cover the heading. Guide, Mentors, and Stack are header tabs only.
 
 ## Hacker Auth (Google OAuth)
 
-Hackathon attendees sign in with Google via NextAuth.js v5 (JWT strategy, no DB adapter). The header "Register on Luma" button is replaced with "Log in Hacker". After sign-in the header shows the user's email and Luma status badge (Checked in / Registered / Not registered).
+Hackathon attendees sign in with Google via NextAuth.js v5 (JWT strategy, no DB adapter). The hero primary CTA is "Register on Luma"; the navbar shows "Log in". After sign-in the header shows the user's email and Luma status badge (Checked in / Registered / Not registered).
 
 ### Components
 
