@@ -15,6 +15,7 @@ Cursor Community Serbia is a Next.js community site based on the Cursor Ambassad
 | Luma Events Sync | specs/web-ui.md, specs/content-config.md | `app/api/events/upcoming/`, `lib/luma.ts`, `lib/use-upcoming-events.ts` |
 | Mailing List  | specs/mailing-list.md   | `app/api/subscribe/`, `db/`      |
 | Hackathon     | specs/hackathon.md      | `app/hackathon/`, `middleware.ts`, `app/api/hackathon/event/`, `app/api/hackathon/sponsor/` |
+| Hacker Auth   | specs/hackathon.md      | `lib/auth.ts`, `app/api/auth/`, `app/api/hackathon/attendee-status/`, `app/api/hackathon/claim-credits/` |
 | Education     | specs/education.md      | `app/education/`, `public/education/` |
 | Slides (optional)| specs/slides.md         | `modules/slides/`, `app/slides/` |
 
@@ -80,4 +81,9 @@ cursor-community-serbia/
 | `LUMA_NOVI_SAD_API_KEY`     | Server-only key for Novi Sad Luma calendar (events + import-people on subscribe) |
 | `LUMA_API_BASE_URL`         | Optional override for Luma API base URL |
 | `LUMA_IMPORT_TAG_NAMES`     | Optional comma-separated Luma tags applied when importing subscribers |
+| `AUTH_GOOGLE_ID`            | Google OAuth client ID for hacker login |
+| `AUTH_GOOGLE_SECRET`        | Google OAuth client secret |
+| `AUTH_SECRET`               | NextAuth JWT signing secret |
+| `CREDIT_CODE_*`             | Shared sponsor promo codes for checked-in attendees |
+| (DB) `hackathon_referral_codes` | Unique Cursor referral links issued one-by-one on claim |
 | `.env.local`                | Local env (gitignored)               |

@@ -42,6 +42,7 @@
   - [x] Hackathon Guide tab (`/hackathon/guide`): why, team, numbered timeline, topics
   - [x] Hackathon Stack: Add to Cursor MCP install on each sponsor modal
   - [x] Hackathon Stack: Add to Cursor uses `cursor://` deeplink (not the auto-closing install-mcp tab)
+  - [x] Hacker Google auth + Luma check-in status; claim shared env codes + unique Cursor referral pool
   - [x] Hackathon Overview: community partners band (Startit, Superteam Balkan) below sponsors
   - [x] Hackathon: tech companies labeled Tech partners (vs Community partners); Become a sponsor unchanged
   - [x] Hackathon Overview: community partners use the same scrolling marquee as tech partners

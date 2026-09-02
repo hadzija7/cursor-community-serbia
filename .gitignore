@@ -20,6 +20,9 @@ yarn-error.log*
 .env*.local
 .env
 
+# Secret one-time Cursor referral URLs (seed locally; never commit)
+db/data/cursor-referrals.txt
+
 # vercel
 .vercel
 

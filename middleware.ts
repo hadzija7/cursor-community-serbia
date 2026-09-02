@@ -10,6 +10,10 @@ export function middleware(request: NextRequest) {
   const host = request.headers.get('host')
   const { pathname } = request.nextUrl
 
+  if (pathname.startsWith('/api/auth')) {
+    return NextResponse.next()
+  }
+
   if (isHackathonHost(host)) {
     const rewritten = rewriteHackathonSubdomainPath(pathname)
     if (!rewritten) {

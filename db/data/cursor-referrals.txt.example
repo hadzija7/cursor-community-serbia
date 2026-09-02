@@ -1,0 +1,4 @@
+# Local-only seed file for unique Cursor Pro referral links.
+# Copy to cursor-referrals.txt (gitignored) and add one URL or code per line:
+#   https://cursor.com/referral?code=EXAMPLE
+# Then run: pnpm db:seed:cursor-referrals

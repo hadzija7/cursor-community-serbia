@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useState } from 'react'
 import { X } from 'lucide-react'
+import ClaimCreditsButton from '@/components/ClaimCreditsButton'
 import RenderLogoMark from '@/components/RenderLogoMark'
 import { getSponsorProfile, hackathonSdlcStages } from '@/content/hackathon'
 import { cursorMcpInstallHref } from '@/lib/cursor-mcp-install'
@@ -118,15 +119,17 @@ function SponsorModal({
               <h2 id="sponsor-modal-title" className="min-w-0 text-2xl font-semibold tracking-tight">
                 {profile.name}
               </h2>
-              {profile.mcp ? (
-                <a
-                  href={cursorMcpInstallHref(profile.mcp)}
-                  className="inline-flex shrink-0 items-center rounded-md bg-white px-2.5 py-1 text-xs font-semibold text-black transition-colors hover:bg-white/90"
-                  aria-label={t('hackathon.stackAddMcpAria', { name: profile.name })}
-                >
-                  {t('hackathon.stackAddMcp')}
-                </a>
-              ) : null}
+              <div className="flex shrink-0 items-center gap-2">
+                {profile.mcp ? (
+                  <a
+                    href={cursorMcpInstallHref(profile.mcp)}
+                    className="inline-flex shrink-0 items-center rounded-md bg-white px-2.5 py-1 text-xs font-semibold text-black transition-colors hover:bg-white/90"
+                    aria-label={t('hackathon.stackAddMcpAria', { name: profile.name })}
+                  >
+                    {t('hackathon.stackAddMcp')}
+                  </a>
+                ) : null}
+              </div>
             </div>
           </div>
           <button
@@ -139,6 +142,11 @@ function SponsorModal({
           </button>
         </div>
         <p className="mt-3 text-sm leading-relaxed text-cursor-text-secondary">{profile.oneLiner}</p>
+        {profile.perks.some((p) => p.kind === 'confirmed') ? (
+          <div className="mt-4">
+            <ClaimCreditsButton sponsorId={profile.id} />
+          </div>
+        ) : null}
         {profile.mcp?.note ? (
           <p className="mt-2 text-xs leading-relaxed text-cursor-text-muted">{profile.mcp.note}</p>
         ) : null}

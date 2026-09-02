@@ -30,6 +30,9 @@ Inspired by conference landing patterns (e.g. TUM Blockchain Conference): full-w
 | `/hackathon/sponsor` | Redirects to Overview `#become-a-sponsor` (bookmarks / `hackathon.*` `/sponsor` rewrite) |
 | `/api/hackathon/event` | GET live date/location from Luma (static fallback) |
 | `/api/hackathon/sponsor` | POST sponsorship applications |
+| `/api/auth/[...nextauth]` | Google OAuth sign-in/sign-out (NextAuth.js v5) |
+| `/api/hackathon/attendee-status` | GET Luma guest status for authenticated user |
+| `/api/hackathon/claim-credits` | POST claim sponsor credit code (requires check-in) |
 
 On host `hackathon.*` (e.g. `hackathon.cursorserbia.com` or `hackathon.localhost`), `middleware.ts` rewrites `/` → `/hackathon`, `/stack` → `/hackathon/stack`, and so on. Community chrome is replaced by `HackathonSiteHeader` tabs.
 
@@ -117,6 +120,7 @@ Edit `content/hackathon.ts` for:
 - Each modal has an **Add to Cursor** button (title row) that uses the official `cursor://anysphere.cursor-deeplink/mcp/install` deeplink (same tab — do not open `https://cursor.com/en/install-mcp`, which auto-closes). Configs live on `hackathonSponsorProfiles[].mcp` and are encoded by `lib/cursor-mcp-install.ts`
 - Cursor is host, not a sponsor. Wispr Flow is a tech partner (dictation into Cursor); ElevenLabs stays product voice
 - Confirmed perks only: Daytona $100 + winner credits (Best app that uses Daytona); Convex 100.000 / 50.000 RSD; Kosmonaut coworking for top 3 teams (15 / 10 / 5 entries per teammate, use within 3 months, claim on kosmonaut.rs); Wispr Flow 3 months Pro; Exa $50 credits each; Fal.ai $50 credits each; Netlify 3,000 credits for all participants; Wonder Pro for all participants
+- Stack path starts with **Grok Bot / Cursor** (Editor / host), then Firecrawl, Exa, Wonder, Daytona, Convex, ElevenLabs, Wispr, Fal.ai, Render, Netlify
 - Stack area cards also cover Exa (Search / web), Wonder (Design / UI), Wispr Flow (Voice input), Fal.ai (Generate / media), and Netlify (Host / frontend). Wispr has no public MCP install URL — desktop app only. Wonder MCP is `https://mcp.wonder.so/mcp` (OAuth after install)
 
 ### Guide tab
@@ -152,7 +156,41 @@ Edit `content/hackathon.ts` for:
 - Homepage promo card (`HackathonPromoCard`) shows `hackathonConfig.mascotImage` next to the title
 - Overview hero peeks `hackathonConfig.mascotPeekImage` above the duration card; dark pixels are knocked out and `mix-blend-lighten` so it sits on the page background instead of a boxed image
 
-Hero CTAs: Register (Luma) and Sponsor event (`hackathon.viewSponsorsCta`). Sponsor event always scrolls to Overview `#become-a-sponsor` — including a second click while already on Overview with that hash. Off Overview (Guide / Mentors / Prizes / Stack) it navigates to the Overview form. The form section uses `scroll-mt-24` so header chrome does not cover the heading. Guide, Mentors, and Stack are header tabs only.
+Hero CTAs: Log in Hacker (Google OAuth), View on Luma, and Sponsor event (`hackathon.viewSponsorsCta`). Sponsor event always scrolls to Overview `#become-a-sponsor` — including a second click while already on Overview with that hash. Off Overview (Guide / Mentors / Prizes / Stack) it navigates to the Overview form. The form section uses `scroll-mt-24` so header chrome does not cover the heading. Guide, Mentors, and Stack are header tabs only.
+
+## Hacker Auth (Google OAuth)
+
+Hackathon attendees sign in with Google via NextAuth.js v5 (JWT strategy, no DB adapter). The header "Register on Luma" button is replaced with "Log in Hacker". After sign-in the header shows the user's email and Luma status badge (Checked in / Registered / Not registered).
+
+### Components
+
+- `lib/auth.ts` — NextAuth config with Google provider
+- `app/api/auth/[...nextauth]/route.ts` — Route handler
+- `components/SessionProvider.tsx` — Client-side session provider (wraps hackathon layout)
+- `components/HackerAuthButton.tsx` — Login button / profile dropdown / status badge
+- `lib/use-hacker-status.ts` — Client hook fetching `/api/hackathon/attendee-status`
+
+### Luma status check
+
+`/api/hackathon/attendee-status` uses the authenticated user's email to query the Luma guests list API (`GET /v1/events/guests/list`). A guest is `checked_in` if any `event_tickets[].checked_in_at` is set, `registered` if `approval_status` is `approved` without check-in, or `not_found` otherwise.
+
+### Credit claiming
+
+Checked-in attendees can claim sponsor credit codes on the Stack page. Each sponsor modal with confirmed perks shows a "Claim Credits" control under the one-liner.
+
+- **Shared codes** (Exa, Firecrawl, Wonder, …): stored as env vars (`CREDIT_CODE_EXA`, etc.). Every claimant gets the same value; claims are recorded in `hackathon_credit_claims`.
+- **Unique pool codes** (Grok Bot / Cursor Pro referral links): stored in `hackathon_referral_codes`. Claim assigns the next unclaimed row to the attendee (idempotent per email). After claim, the modal shows the full referral URL with Copy / Open.
+- `/api/hackathon/claim-credits` verifies Luma check-in, then returns the code
+- Seed Cursor links with `pnpm db:seed:cursor-referrals` from the gitignored `db/data/cursor-referrals.txt` (see `.example`; never commit live URLs)
+
+### Env vars
+
+| Variable | Purpose |
+|----------|---------|
+| `AUTH_GOOGLE_ID` | Google OAuth client ID |
+| `AUTH_GOOGLE_SECRET` | Google OAuth client secret |
+| `AUTH_SECRET` | NextAuth JWT signing secret (`openssl rand -base64 32`) |
+| `CREDIT_CODE_*` | Shared per-sponsor promo codes (e.g. `CREDIT_CODE_EXA`) |
 
 ## Subdomain (Vercel + DNS)
 

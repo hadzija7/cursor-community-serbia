@@ -275,3 +275,91 @@ export async function fetchLumaEventBySlug(urlOrSlug: string): Promise<CursorEve
   }
   return fallback
 }
+
+// ---------------------------------------------------------------------------
+// Event guest status lookup (requires API key)
+// ---------------------------------------------------------------------------
+
+export type LumaGuestStatus = 'checked_in' | 'registered' | 'not_found'
+
+interface LumaGuestEntry {
+  approval_status?: string
+  event_tickets?: Array<{ checked_in_at?: string | null }>
+  user_email?: string
+  email?: string
+}
+
+interface LumaGuestListPage {
+  entries?: LumaGuestEntry[]
+  has_more?: boolean
+  next_cursor?: string | null
+}
+
+/**
+ * Resolve the Luma event API ID from a public slug.
+ * Fetches the public page and extracts the `api_id` from __NEXT_DATA__.
+ */
+export async function resolveEventApiId(urlOrSlug: string): Promise<string | null> {
+  const slug = extractLumaSlug(urlOrSlug)
+  if (!slug) return null
+
+  const raw = await fetchLumaPageEntries(slug)
+  for (const entry of raw) {
+    const apiId = firstString(entry, [['api_id'], ['event', 'api_id'], ['id'], ['event', 'id']])
+    if (apiId) return apiId
+  }
+  return null
+}
+
+/**
+ * Look up a single guest's status for an event by email.
+ * Uses the Luma v1 guests list endpoint with email filtering.
+ */
+export async function fetchEventGuestStatus(
+  apiKey: string,
+  eventApiId: string,
+  email: string,
+  baseUrl = LUMA_API_BASE,
+): Promise<LumaGuestStatus> {
+  const base = baseUrl.replace(/\/$/, '')
+
+  const params = new URLSearchParams({
+    event_id: eventApiId,
+    pagination_limit: '200',
+  })
+
+  let cursor: string | undefined
+
+  for (let page = 0; page < MAX_PAGES; page++) {
+    if (cursor) params.set('pagination_cursor', cursor)
+
+    const res = await fetch(`${base}/v1/events/guests/list?${params}`, {
+      headers: { 'x-luma-api-key': apiKey },
+      cache: 'no-store',
+    })
+
+    if (!res.ok) {
+      console.error(`Luma guests API responded with ${res.status}`)
+      return 'not_found'
+    }
+
+    const data = (await res.json()) as LumaGuestListPage
+
+    for (const guest of data.entries ?? []) {
+      const guestEmail = guest.user_email ?? guest.email
+      if (guestEmail?.toLowerCase() !== email.toLowerCase()) continue
+
+      if (guest.approval_status === 'declined') return 'not_found'
+
+      const isCheckedIn = guest.event_tickets?.some(
+        (ticket) => ticket.checked_in_at != null,
+      )
+      return isCheckedIn ? 'checked_in' : 'registered'
+    }
+
+    if (!data.has_more || !data.next_cursor) break
+    cursor = data.next_cursor
+  }
+
+  return 'not_found'
+}
