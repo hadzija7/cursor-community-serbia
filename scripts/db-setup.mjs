@@ -1,9 +1,9 @@
 #!/usr/bin/env node
 /**
- * Run this to create the subscribers table in your Neon/Postgres database.
+ * Run this to create mailing-list + hackathon tables in Neon/Postgres.
  * Loads .env.local for POSTGRES_URL or DATABASE_URL.
  *
- *   node --env-file=.env.local scripts/db-setup.mjs
+ *   pnpm db:setup
  */
 import { neon } from '@neondatabase/serverless'
 
@@ -27,6 +27,7 @@ try {
   `
   await sql`CREATE INDEX IF NOT EXISTS idx_subscribers_email ON subscribers (email)`
   await sql`CREATE INDEX IF NOT EXISTS idx_subscribers_subscribed_at ON subscribers (subscribed_at DESC)`
+
   await sql`
     CREATE TABLE IF NOT EXISTS hackathon_sponsor_applications (
       id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -42,6 +43,41 @@ try {
   `
   await sql`CREATE INDEX IF NOT EXISTS idx_hackathon_sponsor_applications_email ON hackathon_sponsor_applications (email)`
   await sql`CREATE INDEX IF NOT EXISTS idx_hackathon_sponsor_applications_submitted_at ON hackathon_sponsor_applications (submitted_at DESC)`
+
+  await sql`
+    CREATE TABLE IF NOT EXISTS hackathon_credit_claims (
+      id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+      email TEXT NOT NULL,
+      sponsor_id TEXT NOT NULL,
+      claimed_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+      UNIQUE(email, sponsor_id)
+    )
+  `
+  await sql`CREATE INDEX IF NOT EXISTS idx_hackathon_credit_claims_email ON hackathon_credit_claims (email)`
+  await sql`CREATE INDEX IF NOT EXISTS idx_hackathon_credit_claims_sponsor ON hackathon_credit_claims (sponsor_id)`
+
+  await sql`
+    CREATE TABLE IF NOT EXISTS hackathon_referral_codes (
+      id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+      sponsor_id TEXT NOT NULL,
+      code TEXT NOT NULL,
+      claimed_by TEXT,
+      claimed_at TIMESTAMPTZ,
+      created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+      UNIQUE(sponsor_id, code)
+    )
+  `
+  await sql`
+    CREATE UNIQUE INDEX IF NOT EXISTS idx_hackathon_referral_codes_one_per_email
+    ON hackathon_referral_codes (sponsor_id, claimed_by)
+    WHERE claimed_by IS NOT NULL
+  `
+  await sql`
+    CREATE INDEX IF NOT EXISTS idx_hackathon_referral_codes_unclaimed
+    ON hackathon_referral_codes (sponsor_id, created_at)
+    WHERE claimed_by IS NULL
+  `
+
   console.log('✓ Schema created successfully')
 } catch (err) {
   console.error('Schema setup failed:', err.message)

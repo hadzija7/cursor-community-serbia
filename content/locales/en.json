@@ -189,7 +189,13 @@
     "lumaStatusRegistered": "Registered",
     "lumaStatusNotFound": "Not registered on Luma",
     "claimCredits": "Claim Credits",
-    "creditsClaimed": "Code Copied!",
+    "creditsClaimed": "Your code",
+    "creditsReferralReady": "Your referral link",
+    "creditsCopyLink": "Copy link",
+    "creditsCopyCode": "Copy code",
+    "creditsCopied": "Copied!",
+    "creditsOpenLink": "Open link",
+    "creditsClaimError": "Try again",
     "creditsNotCheckedIn": "Check in at the event to claim",
     "creditsAlreadyClaimed": "Already claimed"
   }

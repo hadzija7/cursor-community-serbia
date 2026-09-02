@@ -298,6 +298,13 @@ export const hackathonCommunityPartners: Partner[] = [
 /** One-day build path — order is left-to-right on `/hackathon/stack`. */
 export const hackathonSdlcStages: HackathonSdlcStage[] = [
   {
+    id: 'editor',
+    label: 'Editor / host',
+    job: 'Build the project in Cursor with Grok Bot',
+    sponsorId: 'cursor',
+    accent: 'orange',
+  },
+  {
     id: 'research',
     label: 'Research / web data',
     job: 'Turn live websites into clean data',
@@ -397,13 +404,42 @@ export const hackathonSponsorProfiles: HackathonSponsorProfile[] = [
       'Reach data behind clicks you are allowed to automate',
     ],
     perks: [
-      { kind: 'tbd', label: 'Event credits', detail: 'Not confirmed yet. Do not assume a pack until a code is published.' },
+      { kind: 'confirmed', label: '10,000 credits for every participant' },
       { kind: 'public', label: 'Start here: 1,000 free credits / month', detail: 'Public free tier (keyless or after signup), not a hackathon gift.' },
     ],
     mcp: {
       name: 'firecrawl',
       config: { url: 'https://mcp.firecrawl.dev/v2/mcp' },
     },
+  },
+  {
+    id: 'cursor',
+    name: 'Grok Bot / Cursor',
+    logo: '/images/hackathon/grok-bot.png',
+    url: 'https://cursor.com',
+    docsUrl: 'https://cursor.com/docs',
+    logoBg: '#14120b',
+    logoHeight: 'h-10',
+    sdlcStage: 'editor',
+    oneLiner: 'The host editor for this hackathon — claim a unique Cursor Pro referral link when you check in.',
+    technologies: [
+      'Agentic coding in the editor and chat',
+      'MCP servers for partner tools',
+      'Inline edits, terminal, and multi-file refactors',
+      'Grok Bot Serbia Hackathon — build and ship the same day',
+    ],
+    useCases: [
+      'Ship the demo end-to-end in one day',
+      'Wire partner MCPs without leaving the editor',
+      'Pair with teammates on the same repo',
+    ],
+    perks: [
+      {
+        kind: 'confirmed',
+        label: 'Cursor Pro referral link for every checked-in participant',
+        detail: 'Unique link from the event pool — claim once, copy, and redeem. First come, first served.',
+      },
+    ],
   },
   {
     id: 'daytona',
@@ -737,6 +773,7 @@ export const hackathonStackRecipes: HackathonStackRecipe[] = [
 ]
 
 export const hackathonStackPicks: HackathonStackPick[] = [
+  { need: 'An AI editor to build the whole demo', use: 'Grok Bot / Cursor' },
   { need: 'Live website content inside the app', use: 'Firecrawl' },
   { need: 'The agent to find sources it does not already have', use: 'Exa' },
   { need: 'The agent to run code, tests, or a shell', use: 'Daytona' },

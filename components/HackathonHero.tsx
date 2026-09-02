@@ -8,6 +8,7 @@ import { useEffect, type MouseEvent } from 'react'
 import HackerAuthButton from '@/components/HackerAuthButton'
 import { hackathonConfig } from '@/content/hackathon'
 import { useI18n } from '@/lib/i18n'
+import { useHackerStatus } from '@/lib/use-hacker-status'
 import { useHackathonHref } from '@/lib/use-hackathon-base-path'
 import { useHackathonDetails } from '@/lib/use-hackathon-details'
 
@@ -32,6 +33,7 @@ export default function HackathonHero() {
   const { t } = useI18n()
   const pathname = usePathname()
   const hackathon = useHackathonDetails()
+  const { lumaStatus } = useHackerStatus()
   const overviewHref = useHackathonHref('overview')
   const sponsorHref = isOverviewPath(pathname)
     ? SPONSOR_SECTION_HASH
@@ -150,14 +152,16 @@ export default function HackathonHero() {
 
           <div className="flex flex-wrap items-center gap-4 pt-2">
             <HackerAuthButton variant="hero" />
-            <a
-              href={hackathon.lumaUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center justify-center rounded-lg border border-cursor-border-emphasis px-6 py-3 text-sm font-semibold text-cursor-text-secondary transition-colors hover:border-cursor-text-muted hover:text-cursor-text md:text-base"
-            >
-              {t('hackathon.viewOnLuma')}
-            </a>
+            {lumaStatus === 'registered' || lumaStatus === 'checked_in' ? (
+              <a
+                href={hackathon.lumaUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center justify-center rounded-lg border border-cursor-border-emphasis px-6 py-3 text-sm font-semibold text-cursor-text-secondary transition-colors hover:border-cursor-text-muted hover:text-cursor-text md:text-base"
+              >
+                {t('hackathon.viewOnLuma')}
+              </a>
+            ) : null}
             <a
               href={sponsorHref}
               onClick={handleSponsorClick}

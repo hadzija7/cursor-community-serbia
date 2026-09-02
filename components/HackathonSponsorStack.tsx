@@ -129,9 +129,6 @@ function SponsorModal({
                     {t('hackathon.stackAddMcp')}
                   </a>
                 ) : null}
-                {profile.perks.some((p) => p.kind === 'confirmed') ? (
-                  <ClaimCreditsButton sponsorId={profile.id} />
-                ) : null}
               </div>
             </div>
           </div>
@@ -145,6 +142,11 @@ function SponsorModal({
           </button>
         </div>
         <p className="mt-3 text-sm leading-relaxed text-cursor-text-secondary">{profile.oneLiner}</p>
+        {profile.perks.some((p) => p.kind === 'confirmed') ? (
+          <div className="mt-4">
+            <ClaimCreditsButton sponsorId={profile.id} />
+          </div>
+        ) : null}
         {profile.mcp?.note ? (
           <p className="mt-2 text-xs leading-relaxed text-cursor-text-muted">{profile.mcp.note}</p>
         ) : null}

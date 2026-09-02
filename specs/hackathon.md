@@ -120,6 +120,7 @@ Edit `content/hackathon.ts` for:
 - Each modal has an **Add to Cursor** button (title row) that uses the official `cursor://anysphere.cursor-deeplink/mcp/install` deeplink (same tab — do not open `https://cursor.com/en/install-mcp`, which auto-closes). Configs live on `hackathonSponsorProfiles[].mcp` and are encoded by `lib/cursor-mcp-install.ts`
 - Cursor is host, not a sponsor. Wispr Flow is a tech partner (dictation into Cursor); ElevenLabs stays product voice
 - Confirmed perks only: Daytona $100 + winner credits (Best app that uses Daytona); Convex 100.000 / 50.000 RSD; Kosmonaut coworking for top 3 teams (15 / 10 / 5 entries per teammate, use within 3 months, claim on kosmonaut.rs); Wispr Flow 3 months Pro; Exa $50 credits each; Fal.ai $50 credits each; Netlify 3,000 credits for all participants; Wonder Pro for all participants
+- Stack path starts with **Grok Bot / Cursor** (Editor / host), then Firecrawl, Exa, Wonder, Daytona, Convex, ElevenLabs, Wispr, Fal.ai, Render, Netlify
 - Stack area cards also cover Exa (Search / web), Wonder (Design / UI), Wispr Flow (Voice input), Fal.ai (Generate / media), and Netlify (Host / frontend). Wispr has no public MCP install URL — desktop app only. Wonder MCP is `https://mcp.wonder.so/mcp` (OAuth after install)
 
 ### Guide tab
@@ -175,11 +176,12 @@ Hackathon attendees sign in with Google via NextAuth.js v5 (JWT strategy, no DB 
 
 ### Credit claiming
 
-Checked-in attendees can claim sponsor credit codes on the Stack page. Each sponsor modal shows a "Claim Credits" button next to "Add to Cursor" for sponsors with confirmed perks.
+Checked-in attendees can claim sponsor credit codes on the Stack page. Each sponsor modal with confirmed perks shows a "Claim Credits" control under the one-liner.
 
-- Codes are stored as env vars (`CREDIT_CODE_DAYTONA`, `CREDIT_CODE_EXA`, etc.)
-- `/api/hackathon/claim-credits` verifies check-in status, returns the code, and records the claim in Postgres (`hackathon_credit_claims` table)
-- Claims are idempotent (UNIQUE constraint on email + sponsor_id)
+- **Shared codes** (Exa, Firecrawl, Wonder, …): stored as env vars (`CREDIT_CODE_EXA`, etc.). Every claimant gets the same value; claims are recorded in `hackathon_credit_claims`.
+- **Unique pool codes** (Grok Bot / Cursor Pro referral links): stored in `hackathon_referral_codes`. Claim assigns the next unclaimed row to the attendee (idempotent per email). After claim, the modal shows the full referral URL with Copy / Open.
+- `/api/hackathon/claim-credits` verifies Luma check-in, then returns the code
+- Seed Cursor links with `pnpm db:seed:cursor-referrals` from `db/data/cursor-referrals.txt`
 
 ### Env vars
 
@@ -188,7 +190,7 @@ Checked-in attendees can claim sponsor credit codes on the Stack page. Each spon
 | `AUTH_GOOGLE_ID` | Google OAuth client ID |
 | `AUTH_GOOGLE_SECRET` | Google OAuth client secret |
 | `AUTH_SECRET` | NextAuth JWT signing secret (`openssl rand -base64 32`) |
-| `CREDIT_CODE_*` | Per-sponsor promo codes (e.g. `CREDIT_CODE_DAYTONA`) |
+| `CREDIT_CODE_*` | Shared per-sponsor promo codes (e.g. `CREDIT_CODE_EXA`) |
 
 ## Subdomain (Vercel + DNS)
 

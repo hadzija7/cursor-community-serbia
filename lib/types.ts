@@ -92,6 +92,7 @@ export interface HackathonPerson {
 
 /** Where a sponsor sits on the one-day build path. */
 export type HackathonSdlcStageId =
+  | 'editor'
   | 'research'
   | 'search'
   | 'design'

@@ -84,5 +84,6 @@ cursor-community-serbia/
 | `AUTH_GOOGLE_ID`            | Google OAuth client ID for hacker login |
 | `AUTH_GOOGLE_SECRET`        | Google OAuth client secret |
 | `AUTH_SECRET`               | NextAuth JWT signing secret |
-| `CREDIT_CODE_*`             | Per-sponsor promo codes revealed to checked-in attendees |
+| `CREDIT_CODE_*`             | Shared sponsor promo codes for checked-in attendees |
+| (DB) `hackathon_referral_codes` | Unique Cursor referral links issued one-by-one on claim |
 | `.env.local`                | Local env (gitignored)               |
