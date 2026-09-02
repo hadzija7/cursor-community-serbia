@@ -76,6 +76,20 @@ export const hackathonPrizes: HackathonPrizeTrack[] = [
       { place: '3rd place', amount: '$1,000 credits', accent: 'purple' },
     ],
   },
+  {
+    sponsor: 'ABC BootCamps',
+    sponsorLogo: '/images/partners/abc-bootcamps.png',
+    sponsorUrl: 'https://abcbootcamps.com/',
+    logoBg: '#ffffff',
+    logoHeight: 'h-10',
+    category: 'Scholarships to ABC Silicon Valley 2027',
+    note: 'Percentages apply to ABC Silicon Valley 2027 tuition. Winners claim through ABC BootCamps after the event.',
+    places: [
+      { place: '1st place', amount: '50% scholarship', accent: 'orange' },
+      { place: '2nd place', amount: '40% scholarship', accent: 'yellow' },
+      { place: '3rd place', amount: '30% scholarship', accent: 'purple' },
+    ],
+  },
 ]
 
 /** Short purpose line for `/hackathon/guide`. */
@@ -466,11 +480,16 @@ export const hackathonSponsorProfiles: HackathonSponsorProfile[] = [
       'Fan out a few parallel experiments without local Docker',
     ],
     perks: [
-      { kind: 'confirmed', label: '$100 credits for every participant' },
+      {
+        kind: 'confirmed',
+        label: '$100 credits for every participant',
+        detail:
+          'Claim your coupon on the Stack page after check-in. Redeem at app.daytona.io → Billing → paste code → Redeem.',
+      },
       {
         kind: 'confirmed',
         label: 'Winners: $3,000 / $2,000 / $1,000 credits',
-        detail: 'Best app that uses Daytona. How you redeem (code vs dashboard grant) will be announced on the day.',
+        detail: 'Best app that uses Daytona. Winner redemption is announced on the day.',
       },
     ],
     mcp: {

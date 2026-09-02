@@ -126,10 +126,9 @@ flowchart LR
 
 **What you get (confirmed)**
 
-- **Every participant:** $100 Daytona platform credits.  
-- **Winners:** $3,000 / $2,000 / $1,000 in credits (1st / 2nd / 3rd).  
+- **Every participant:** $100 Daytona platform credits via coupon (`CREDIT_CODE_DAYTONA`). Claim on the Stack page after check-in, then redeem: [app.daytona.io](https://app.daytona.io/) → Billing → paste code → Redeem.  
+- **Winners:** $3,000 / $2,000 / $1,000 in credits (1st / 2nd / 3rd). Winner redemption is announced on the day.  
 - **Prize track:** Best app that uses Daytona (shown on the Prizes tab).  
-- **TBD:** how you redeem winner credits (code vs dashboard grant). Organizers will say on the day.  
 - Public start: Daytona also advertises free compute on signup — that is their product free tier, not an extra hackathon bounty.
 
 ---
@@ -393,7 +392,8 @@ Design the screen in Wonder → Convex holds users and live state → Netlify ho
 | To write the whole thing fast | **Cursor** (host editor) |
 | Cash prize for a Convex app | **Convex track** — 100.000 / 50.000 RSD |
 | Coworking for top 3 teams | **Kosmonaut** — 15 / 10 / 5 entries per teammate, use within 3 months; claim on kosmonaut.rs |
-| Confirmed platform credits on day one | **Daytona** $100 · **Exa** $50 · **Fal.ai** $50 · **Netlify** 3,000 · **Wispr Flow** 3 months Pro · **Wonder** Pro |
+| Scholarship to ABC Silicon Valley 2027 | **ABC BootCamps** — 50% / 40% / 30% for 1st / 2nd / 3rd |
+| Confirmed platform credits on day one | **Daytona** $100 (redeem in Billing) · **Exa** $50 · **Fal.ai** $50 · **Netlify** 3,000 · **Wispr Flow** 3 months Pro · **Wonder** Pro |
 | Event credits from ElevenLabs / Firecrawl / Render | **TBD** — use their public free tier until a code is announced |
 
 **Minimum viable stacks**

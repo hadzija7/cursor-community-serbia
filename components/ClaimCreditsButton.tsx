@@ -77,6 +77,7 @@ export default function ClaimCreditsButton({ sponsorId }: { sponsorId: string })
   if (state === 'claimed' && code) {
     const link = isHttpUrl(code)
     const showCursorTip = sponsorId === 'cursor' && link
+    const showDaytonaTip = sponsorId === 'daytona' && !link
     return (
       <div className="w-full min-w-0 rounded-lg border border-cursor-accent-green/40 bg-cursor-accent-green-bg p-3">
         <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-cursor-accent-green">
@@ -102,12 +103,31 @@ export default function ClaimCreditsButton({ sponsorId }: { sponsorId: string })
               {t('hackathon.creditsOpenLink')} →
             </a>
           ) : null}
+          {showDaytonaTip ? (
+            <a
+              href="https://app.daytona.io"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-xs font-medium text-cursor-accent-green hover:underline"
+            >
+              {t('hackathon.creditsDaytonaOpenApp')} →
+            </a>
+          ) : null}
         </div>
         {showCursorTip ? (
           <p className="mt-3 text-xs leading-relaxed text-cursor-text-secondary">
             <span className="font-semibold text-cursor-text">{t('hackathon.creditsCursorSetupTipLabel')}: </span>
             {t('hackathon.creditsCursorSetupTip')}
           </p>
+        ) : null}
+        {showDaytonaTip ? (
+          <div className="mt-3 space-y-1.5 text-xs leading-relaxed text-cursor-text-secondary">
+            <p>
+              <span className="font-semibold text-cursor-text">{t('hackathon.creditsDaytonaRedeemTipLabel')}: </span>
+              {t('hackathon.creditsDaytonaRedeemTip')}
+            </p>
+            <p>{t('hackathon.creditsDaytonaRedeemProTip')}</p>
+          </div>
         ) : null}
       </div>
     )
