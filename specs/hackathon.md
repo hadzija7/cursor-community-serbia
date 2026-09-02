@@ -30,6 +30,9 @@ Inspired by conference landing patterns (e.g. TUM Blockchain Conference): full-w
 | `/hackathon/sponsor` | Redirects to Overview `#become-a-sponsor` (bookmarks / `hackathon.*` `/sponsor` rewrite) |
 | `/api/hackathon/event` | GET live date/location from Luma (static fallback) |
 | `/api/hackathon/sponsor` | POST sponsorship applications |
+| `/api/auth/[...nextauth]` | Google OAuth sign-in/sign-out (NextAuth.js v5) |
+| `/api/hackathon/attendee-status` | GET Luma guest status for authenticated user |
+| `/api/hackathon/claim-credits` | POST claim sponsor credit code (requires check-in) |
 
 On host `hackathon.*` (e.g. `hackathon.cursorserbia.com` or `hackathon.localhost`), `middleware.ts` rewrites `/` → `/hackathon`, `/stack` → `/hackathon/stack`, and so on. Community chrome is replaced by `HackathonSiteHeader` tabs.
 
@@ -152,7 +155,40 @@ Edit `content/hackathon.ts` for:
 - Homepage promo card (`HackathonPromoCard`) shows `hackathonConfig.mascotImage` next to the title
 - Overview hero peeks `hackathonConfig.mascotPeekImage` above the duration card; dark pixels are knocked out and `mix-blend-lighten` so it sits on the page background instead of a boxed image
 
-Hero CTAs: Register (Luma) and Sponsor event (`hackathon.viewSponsorsCta`). Sponsor event always scrolls to Overview `#become-a-sponsor` — including a second click while already on Overview with that hash. Off Overview (Guide / Mentors / Prizes / Stack) it navigates to the Overview form. The form section uses `scroll-mt-24` so header chrome does not cover the heading. Guide, Mentors, and Stack are header tabs only.
+Hero CTAs: Log in Hacker (Google OAuth), View on Luma, and Sponsor event (`hackathon.viewSponsorsCta`). Sponsor event always scrolls to Overview `#become-a-sponsor` — including a second click while already on Overview with that hash. Off Overview (Guide / Mentors / Prizes / Stack) it navigates to the Overview form. The form section uses `scroll-mt-24` so header chrome does not cover the heading. Guide, Mentors, and Stack are header tabs only.
+
+## Hacker Auth (Google OAuth)
+
+Hackathon attendees sign in with Google via NextAuth.js v5 (JWT strategy, no DB adapter). The header "Register on Luma" button is replaced with "Log in Hacker". After sign-in the header shows the user's email and Luma status badge (Checked in / Registered / Not registered).
+
+### Components
+
+- `lib/auth.ts` — NextAuth config with Google provider
+- `app/api/auth/[...nextauth]/route.ts` — Route handler
+- `components/SessionProvider.tsx` — Client-side session provider (wraps hackathon layout)
+- `components/HackerAuthButton.tsx` — Login button / profile dropdown / status badge
+- `lib/use-hacker-status.ts` — Client hook fetching `/api/hackathon/attendee-status`
+
+### Luma status check
+
+`/api/hackathon/attendee-status` uses the authenticated user's email to query the Luma guests list API (`GET /v1/events/guests/list`). A guest is `checked_in` if any `event_tickets[].checked_in_at` is set, `registered` if `approval_status` is `approved` without check-in, or `not_found` otherwise.
+
+### Credit claiming
+
+Checked-in attendees can claim sponsor credit codes on the Stack page. Each sponsor modal shows a "Claim Credits" button next to "Add to Cursor" for sponsors with confirmed perks.
+
+- Codes are stored as env vars (`CREDIT_CODE_DAYTONA`, `CREDIT_CODE_EXA`, etc.)
+- `/api/hackathon/claim-credits` verifies check-in status, returns the code, and records the claim in Postgres (`hackathon_credit_claims` table)
+- Claims are idempotent (UNIQUE constraint on email + sponsor_id)
+
+### Env vars
+
+| Variable | Purpose |
+|----------|---------|
+| `AUTH_GOOGLE_ID` | Google OAuth client ID |
+| `AUTH_GOOGLE_SECRET` | Google OAuth client secret |
+| `AUTH_SECRET` | NextAuth JWT signing secret (`openssl rand -base64 32`) |
+| `CREDIT_CODE_*` | Per-sponsor promo codes (e.g. `CREDIT_CODE_DAYTONA`) |
 
 ## Subdomain (Vercel + DNS)
 

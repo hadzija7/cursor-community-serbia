@@ -26,3 +26,15 @@ CREATE TABLE IF NOT EXISTS hackathon_sponsor_applications (
 
 CREATE INDEX IF NOT EXISTS idx_hackathon_sponsor_applications_email ON hackathon_sponsor_applications (email);
 CREATE INDEX IF NOT EXISTS idx_hackathon_sponsor_applications_submitted_at ON hackathon_sponsor_applications (submitted_at DESC);
+
+-- Hackathon credit claims — tracks which checked-in attendees claimed sponsor codes.
+CREATE TABLE IF NOT EXISTS hackathon_credit_claims (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  email TEXT NOT NULL,
+  sponsor_id TEXT NOT NULL,
+  claimed_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+  UNIQUE(email, sponsor_id)
+);
+
+CREATE INDEX IF NOT EXISTS idx_hackathon_credit_claims_email ON hackathon_credit_claims (email);
+CREATE INDEX IF NOT EXISTS idx_hackathon_credit_claims_sponsor ON hackathon_credit_claims (sponsor_id);
