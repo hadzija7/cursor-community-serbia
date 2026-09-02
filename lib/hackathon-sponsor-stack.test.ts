@@ -19,12 +19,14 @@ describe('hackathon sponsor stack content', () => {
   it('covers every confirmed sponsor exactly once', () => {
     const profileIds = hackathonSponsorProfiles.map((profile) => profile.id).sort()
     const stageIds = hackathonSdlcStages.map((stage) => stage.sponsorId).sort()
-    const names = hackathonSponsors.map((sponsor) => sponsor.name).sort()
+    const marqueeNames = hackathonSponsors.map((sponsor) => sponsor.name).sort()
     const profileNames = hackathonSponsorProfiles.map((profile) => profile.name).sort()
+    const stackOnlyNames = ['Grok Bot / Cursor']
 
     expect(profileIds).toEqual(stageIds)
-    expect(profileNames).toEqual(names)
-    expect(hackathonSponsorProfiles).toHaveLength(10)
+    expect(hackathonSponsorProfiles).toHaveLength(11)
+    expect(profileNames.filter((name) => !stackOnlyNames.includes(name)).sort()).toEqual(marqueeNames)
+    expect(getSponsorProfile('cursor')?.name).toBe('Grok Bot / Cursor')
   })
 
   it('lists Startit, Superteam, ABC BootCamps, JigJoy, and Kosmonaut as community partners', () => {
@@ -39,7 +41,8 @@ describe('hackathon sponsor stack content', () => {
 
   it('gives every MCP-capable sponsor a Cursor install config', () => {
     for (const profile of hackathonSponsorProfiles) {
-      if (profile.id === 'wispr') {
+      // Wispr is desktop-only; Cursor is the host editor (no MCP install target).
+      if (profile.id === 'wispr' || profile.id === 'cursor') {
         expect(profile.mcp).toBeUndefined()
         continue
       }
@@ -57,7 +60,7 @@ describe('hackathon sponsor stack content', () => {
   })
 
   it('does not invent unconfirmed event credits', () => {
-    const tbdSponsors = ['firecrawl', 'elevenlabs', 'render']
+    const tbdSponsors = ['elevenlabs', 'render']
 
     for (const id of tbdSponsors) {
       const profile = getSponsorProfile(id)
@@ -65,7 +68,7 @@ describe('hackathon sponsor stack content', () => {
     }
   })
 
-  it('keeps confirmed Daytona, Convex, Wispr, Exa, Netlify, Fal, and Wonder perks', () => {
+  it('keeps confirmed Daytona, Convex, Wispr, Exa, Netlify, Fal, Wonder, Firecrawl, and Cursor perks', () => {
     const daytona = getSponsorProfile('daytona')
     const convex = getSponsorProfile('convex')
 
@@ -76,6 +79,8 @@ describe('hackathon sponsor stack content', () => {
     expect(getSponsorProfile('fal')?.perks.some((perk) => perk.kind === 'confirmed' && perk.label.includes('$50'))).toBe(true)
     expect(getSponsorProfile('netlify')?.perks.some((perk) => perk.kind === 'confirmed' && perk.label.includes('3,000'))).toBe(true)
     expect(getSponsorProfile('wonder')?.perks.some((perk) => perk.kind === 'confirmed' && perk.label.includes('Pro'))).toBe(true)
+    expect(getSponsorProfile('firecrawl')?.perks.some((perk) => perk.kind === 'confirmed' && perk.label.includes('10,000'))).toBe(true)
+    expect(getSponsorProfile('cursor')?.perks.some((perk) => perk.kind === 'confirmed' && perk.label.includes('referral'))).toBe(true)
   })
 
   it('lists Convex cash, Kosmonaut coworking, and Daytona credit prize tracks', () => {
