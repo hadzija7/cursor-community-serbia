@@ -181,6 +181,16 @@
     "judgesEmpty": "Judges are not published yet. They will appear here as they lock.",
     "stackPerkConfirmed": "Confirmed",
     "stackPerkPublic": "Public free tier",
-    "stackPerkTbd": "TBD"
+    "stackPerkTbd": "TBD",
+    "loginCta": "Log in Hacker",
+    "logoutCta": "Sign out",
+    "viewOnLuma": "View on Luma",
+    "lumaStatusCheckedIn": "Checked in",
+    "lumaStatusRegistered": "Registered",
+    "lumaStatusNotFound": "Not registered on Luma",
+    "claimCredits": "Claim Credits",
+    "creditsClaimed": "Code Copied!",
+    "creditsNotCheckedIn": "Check in at the event to claim",
+    "creditsAlreadyClaimed": "Already claimed"
   }
 }

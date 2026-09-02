@@ -3,11 +3,11 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
+import HackerAuthButton from '@/components/HackerAuthButton'
 import { siteConfig } from '@/content/site.config'
 import { useI18n } from '@/lib/i18n'
 import { getCommunitySiteUrl, type HackathonTab } from '@/lib/hackathon-site'
 import { useHackathonHref, useIsHackathonHost } from '@/lib/use-hackathon-base-path'
-import { useHackathonDetails } from '@/lib/use-hackathon-details'
 
 type VisibleHackathonTab = Exclude<HackathonTab, 'sponsor'>
 
@@ -30,7 +30,6 @@ function isTabActive(pathname: string, tab: HackathonTab): boolean {
 export default function HackathonSiteHeader() {
   const { t } = useI18n()
   const pathname = usePathname()
-  const hackathon = useHackathonDetails()
   const onHackathonHost = useIsHackathonHost()
   const overviewHref = useHackathonHref('overview')
   const guideHref = useHackathonHref('guide')
@@ -77,14 +76,7 @@ export default function HackathonSiteHeader() {
             >
               {t('hackathon.communityLink')}
             </Link>
-            <a
-              href={hackathon.lumaUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center justify-center rounded-lg bg-cursor-text px-4 py-2 text-sm font-semibold text-cursor-bg transition-colors hover:bg-cursor-text-secondary"
-            >
-              {t('hackathon.registerCta')}
-            </a>
+            <HackerAuthButton variant="header" />
           </div>
         </div>
 

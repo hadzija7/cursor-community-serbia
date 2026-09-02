@@ -5,6 +5,7 @@ import { Calendar, Clock, MapPin } from 'lucide-react'
 import Image from 'next/image'
 import { usePathname } from 'next/navigation'
 import { useEffect, type MouseEvent } from 'react'
+import HackerAuthButton from '@/components/HackerAuthButton'
 import { hackathonConfig } from '@/content/hackathon'
 import { useI18n } from '@/lib/i18n'
 import { useHackathonHref } from '@/lib/use-hackathon-base-path'
@@ -148,13 +149,14 @@ export default function HackathonHero() {
           </dl>
 
           <div className="flex flex-wrap items-center gap-4 pt-2">
+            <HackerAuthButton variant="hero" />
             <a
               href={hackathon.lumaUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center justify-center rounded-lg bg-cursor-text px-6 py-3 text-sm font-semibold text-cursor-bg transition-colors hover:bg-cursor-text-secondary md:text-base"
+              className="inline-flex items-center justify-center rounded-lg border border-cursor-border-emphasis px-6 py-3 text-sm font-semibold text-cursor-text-secondary transition-colors hover:border-cursor-text-muted hover:text-cursor-text md:text-base"
             >
-              {t('hackathon.registerCta')}
+              {t('hackathon.viewOnLuma')}
             </a>
             <a
               href={sponsorHref}
