@@ -4,7 +4,8 @@
  *
  *   pnpm db:seed:cursor-referrals
  *
- * Reads db/data/cursor-referrals.txt (one URL or code per line).
+ * Reads db/data/cursor-referrals.txt (gitignored; one URL or code per line).
+ * Copy from cursor-referrals.txt.example — never commit live referral URLs.
  */
 import { readFileSync } from 'node:fs'
 import { dirname, join } from 'node:path'

@@ -56,6 +56,15 @@ async function assertCheckedIn(email: string): Promise<NextResponse | null> {
   return null
 }
 
+function isUniqueViolation(err: unknown): boolean {
+  return (
+    typeof err === 'object' &&
+    err !== null &&
+    'code' in err &&
+    (err as { code: unknown }).code === '23505'
+  )
+}
+
 async function claimPoolCode(
   sponsorId: string,
   email: string,
@@ -75,22 +84,28 @@ async function claimPoolCode(
       return { code: existing[0].code as string }
     }
 
-    // Retry a few times in case two claimants race the same row.
+    // Retry a few times in case two claimants race the same row, or the same
+    // email concurrently claims two different free rows (unique index on claimed_by).
     for (let attempt = 0; attempt < 3; attempt += 1) {
-      const claimed = await db`
-        UPDATE hackathon_referral_codes
-        SET claimed_by = ${email}, claimed_at = now()
-        WHERE id = (
-          SELECT id FROM hackathon_referral_codes
-          WHERE sponsor_id = ${sponsorId} AND claimed_by IS NULL
-          ORDER BY created_at ASC, id ASC
-          LIMIT 1
-        )
-        AND claimed_by IS NULL
-        RETURNING code
-      `
-      if (claimed[0]?.code) {
-        return { code: claimed[0].code as string }
+      try {
+        const claimed = await db`
+          UPDATE hackathon_referral_codes
+          SET claimed_by = ${email}, claimed_at = now()
+          WHERE id = (
+            SELECT id FROM hackathon_referral_codes
+            WHERE sponsor_id = ${sponsorId} AND claimed_by IS NULL
+            ORDER BY created_at ASC, id ASC
+            LIMIT 1
+          )
+          AND claimed_by IS NULL
+          RETURNING code
+        `
+        if (claimed[0]?.code) {
+          return { code: claimed[0].code as string }
+        }
+      } catch (err) {
+        if (!isUniqueViolation(err)) throw err
+        // Same email already assigned via a concurrent request — read it below.
       }
 
       const again = await db`

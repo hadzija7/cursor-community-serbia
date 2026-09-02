@@ -2,7 +2,7 @@
 
 import { Gift, Check, Copy, Loader2, Lock } from 'lucide-react'
 import { useSession } from 'next-auth/react'
-import { useCallback, useState } from 'react'
+import { useCallback, useRef, useState } from 'react'
 import { useI18n } from '@/lib/i18n'
 import { useHackerStatus } from '@/lib/use-hacker-status'
 
@@ -19,12 +19,14 @@ export default function ClaimCreditsButton({ sponsorId }: { sponsorId: string })
   const [state, setState] = useState<ClaimState>('idle')
   const [code, setCode] = useState<string | null>(null)
   const [copied, setCopied] = useState(false)
+  const inFlightRef = useRef(false)
 
   const isCheckedIn = lumaStatus === 'checked_in'
   const isLoggedIn = !!session?.user
 
   const handleClaim = useCallback(async () => {
-    if (state === 'loading' || state === 'claimed') return
+    if (inFlightRef.current) return
+    inFlightRef.current = true
     setState('loading')
 
     try {
@@ -37,6 +39,7 @@ export default function ClaimCreditsButton({ sponsorId }: { sponsorId: string })
       if (!res.ok) {
         const data = await res.json().catch(() => ({}))
         console.error('Claim failed:', data)
+        inFlightRef.current = false
         setState('error')
         return
       }
@@ -45,9 +48,10 @@ export default function ClaimCreditsButton({ sponsorId }: { sponsorId: string })
       setCode(data.code)
       setState('claimed')
     } catch {
+      inFlightRef.current = false
       setState('error')
     }
-  }, [sponsorId, state])
+  }, [sponsorId])
 
   const handleCopy = useCallback(() => {
     if (!code) return

@@ -181,7 +181,7 @@ Checked-in attendees can claim sponsor credit codes on the Stack page. Each spon
 - **Shared codes** (Exa, Firecrawl, Wonder, …): stored as env vars (`CREDIT_CODE_EXA`, etc.). Every claimant gets the same value; claims are recorded in `hackathon_credit_claims`.
 - **Unique pool codes** (Grok Bot / Cursor Pro referral links): stored in `hackathon_referral_codes`. Claim assigns the next unclaimed row to the attendee (idempotent per email). After claim, the modal shows the full referral URL with Copy / Open.
 - `/api/hackathon/claim-credits` verifies Luma check-in, then returns the code
-- Seed Cursor links with `pnpm db:seed:cursor-referrals` from `db/data/cursor-referrals.txt`
+- Seed Cursor links with `pnpm db:seed:cursor-referrals` from the gitignored `db/data/cursor-referrals.txt` (see `.example`; never commit live URLs)
 
 ### Env vars
 
