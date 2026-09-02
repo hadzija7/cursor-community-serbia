@@ -65,8 +65,17 @@ export default function HackerAuthButton({ variant = 'header' }: { variant?: Var
   // Hero variant: show "Register on Luma" if not registered, nothing otherwise
   // (email + status badge are shown in the header only)
   if (isHero) {
+    if (hackerStatus.status === 'loading') {
+      return (
+        <span className={`${buttonClass} pointer-events-none opacity-50`}>
+          {t('hackathon.loginCta')}
+        </span>
+      )
+    }
+
+    // not_found, or unknown after fetch error — keep Register CTA available
     const lumaStatus = hackerStatus.lumaStatus
-    if (lumaStatus === 'not_found') {
+    if (lumaStatus === 'not_found' || lumaStatus === null) {
       return (
         <a
           href={hackathon.lumaUrl}
