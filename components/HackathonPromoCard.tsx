@@ -1,8 +1,6 @@
 'use client'
 
-import Image from 'next/image'
 import Link from 'next/link'
-import { hackathonConfig } from '@/content/hackathon'
 import { getPublicHackathonHref } from '@/lib/hackathon-site'
 import { useI18n } from '@/lib/i18n'
 import { useHackathonDetails } from '@/lib/use-hackathon-details'
@@ -21,13 +19,6 @@ export default function HackathonPromoCard() {
       </p>
       <p className="mt-3 text-xl font-semibold leading-tight tracking-tight sm:text-2xl md:text-3xl">
         {hackathon.title}
-        <Image
-          src={hackathonConfig.mascotImage}
-          alt={t('hackathon.mascotAlt')}
-          width={80}
-          height={64}
-          className="ml-2 inline-block h-[0.95em] w-[0.95em] rounded-full object-cover align-middle sm:ml-2.5"
-        />
       </p>
       <p className="mt-2 text-sm text-cursor-text-secondary sm:text-base">{hackathon.displayDate}</p>
       <p className="mt-1 text-sm text-cursor-text-muted sm:text-base">{hackathon.location}</p>
