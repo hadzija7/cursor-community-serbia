@@ -76,6 +76,7 @@ export default function ClaimCreditsButton({ sponsorId }: { sponsorId: string })
 
   if (state === 'claimed' && code) {
     const link = isHttpUrl(code)
+    const showCursorTip = sponsorId === 'cursor' && link
     return (
       <div className="w-full min-w-0 rounded-lg border border-cursor-accent-green/40 bg-cursor-accent-green-bg p-3">
         <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-cursor-accent-green">
@@ -102,6 +103,12 @@ export default function ClaimCreditsButton({ sponsorId }: { sponsorId: string })
             </a>
           ) : null}
         </div>
+        {showCursorTip ? (
+          <p className="mt-3 text-xs leading-relaxed text-cursor-text-secondary">
+            <span className="font-semibold text-cursor-text">{t('hackathon.creditsCursorSetupTipLabel')}: </span>
+            {t('hackathon.creditsCursorSetupTip')}
+          </p>
+        ) : null}
       </div>
     )
   }

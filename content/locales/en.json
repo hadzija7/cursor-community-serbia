@@ -191,6 +191,8 @@
     "claimCredits": "Claim Credits",
     "creditsClaimed": "Your code",
     "creditsReferralReady": "Your referral link",
+    "creditsCursorSetupTipLabel": "Setup tip",
+    "creditsCursorSetupTip": "$20 credits for Cursor → upgrade to Cursor Pro → log in to Grok Bot with Cursor → you're all set",
     "creditsCopyLink": "Copy link",
     "creditsCopyCode": "Copy code",
     "creditsCopied": "Copied!",
