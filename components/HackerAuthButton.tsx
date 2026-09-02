@@ -5,21 +5,9 @@ import { signIn, signOut, useSession } from 'next-auth/react'
 import { useState } from 'react'
 import { useI18n } from '@/lib/i18n'
 import { useHackerStatus } from '@/lib/use-hacker-status'
+import { useHackathonDetails } from '@/lib/use-hackathon-details'
 
 type Variant = 'header' | 'hero'
-
-const variantStyles: Record<Variant, { button: string; profile: string }> = {
-  header: {
-    button:
-      'inline-flex items-center justify-center rounded-lg bg-cursor-text px-4 py-2 text-sm font-semibold text-cursor-bg transition-colors hover:bg-cursor-text-secondary',
-    profile: 'flex items-center gap-2',
-  },
-  hero: {
-    button:
-      'inline-flex items-center justify-center rounded-lg bg-cursor-text px-6 py-3 text-sm font-semibold text-cursor-bg transition-colors hover:bg-cursor-text-secondary md:text-base',
-    profile: 'flex items-center gap-3',
-  },
-}
 
 const statusBadgeStyles: Record<string, string> = {
   checked_in:
@@ -50,12 +38,17 @@ export default function HackerAuthButton({ variant = 'header' }: { variant?: Var
   const { t } = useI18n()
   const { data: session, status: sessionStatus } = useSession()
   const hackerStatus = useHackerStatus()
+  const hackathon = useHackathonDetails()
   const [menuOpen, setMenuOpen] = useState(false)
-  const styles = variantStyles[variant]
+
+  const isHero = variant === 'hero'
+  const buttonClass = isHero
+    ? 'inline-flex items-center justify-center rounded-lg bg-cursor-text px-6 py-3 text-sm font-semibold text-cursor-bg transition-colors hover:bg-cursor-text-secondary md:text-base'
+    : 'inline-flex items-center justify-center rounded-lg bg-cursor-text px-4 py-2 text-sm font-semibold text-cursor-bg transition-colors hover:bg-cursor-text-secondary'
 
   if (sessionStatus === 'loading') {
     return (
-      <span className={`${styles.button} pointer-events-none opacity-50`}>
+      <span className={`${buttonClass} pointer-events-none opacity-50`}>
         {t('hackathon.loginCta')}
       </span>
     )
@@ -63,17 +56,37 @@ export default function HackerAuthButton({ variant = 'header' }: { variant?: Var
 
   if (!session?.user) {
     return (
-      <button type="button" onClick={() => signIn('google')} className={styles.button}>
+      <button type="button" onClick={() => signIn('google')} className={buttonClass}>
         {t('hackathon.loginCta')}
       </button>
     )
   }
 
+  // Hero variant: show "Register on Luma" if not registered, nothing otherwise
+  // (email + status badge are shown in the header only)
+  if (isHero) {
+    const lumaStatus = hackerStatus.lumaStatus
+    if (lumaStatus === 'not_found') {
+      return (
+        <a
+          href={hackathon.lumaUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          className={buttonClass}
+        >
+          {t('hackathon.registerCta')}
+        </a>
+      )
+    }
+    return null
+  }
+
+  // Header variant: show email, status badge, and sign-out menu
   const email = session.user.email ?? ''
   const truncated = email.length > 22 ? `${email.slice(0, 19)}…` : email
 
   return (
-    <div className={`${styles.profile} relative`}>
+    <div className="flex items-center gap-2 relative">
       {hackerStatus.status !== 'loading' && hackerStatus.lumaStatus ? (
         <StatusBadge status={hackerStatus.lumaStatus} />
       ) : null}
