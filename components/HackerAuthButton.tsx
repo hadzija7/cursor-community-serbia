@@ -111,7 +111,7 @@ export default function HackerAuthButton({ variant = 'header' }: { variant?: Var
   const truncated = email.length > 22 ? `${email.slice(0, 19)}…` : email
 
   return (
-    <div className="flex items-center gap-2 relative">
+    <div className="relative flex items-center gap-2">
       {hackerStatus.status !== 'loading' && hackerStatus.lumaStatus ? (
         <StatusBadge status={hackerStatus.lumaStatus} />
       ) : null}
@@ -119,11 +119,13 @@ export default function HackerAuthButton({ variant = 'header' }: { variant?: Var
       <button
         type="button"
         onClick={() => setMenuOpen((prev) => !prev)}
-        className="inline-flex items-center gap-1.5 rounded-lg border border-cursor-border-emphasis bg-cursor-surface px-3 py-1.5 text-xs font-medium text-cursor-text transition-colors hover:border-cursor-text-muted"
+        className="inline-flex items-center gap-1.5 rounded-lg border border-cursor-border-emphasis bg-cursor-surface px-2.5 py-1.5 text-xs font-medium text-cursor-text transition-colors hover:border-cursor-text-muted sm:px-3"
         title={email}
       >
-        <span className="max-w-[140px] truncate">{truncated}</span>
-        <span className="text-cursor-text-muted" aria-hidden>▾</span>
+        <span className="hidden max-w-[140px] truncate sm:inline">{truncated}</span>
+        <span className="text-cursor-text-muted" aria-hidden>
+          ▾
+        </span>
       </button>
 
       {menuOpen ? (

@@ -39,6 +39,9 @@ Living scorecard for Cursor Community Serbia. Update after each phase.
 
 | Date       | Change                          |
 |------------|----------------------------------|
+| 2026-09-03 | Hackathon header uses `/grokbot.svg` with expanded viewBox so the full circle mark is not clipped |
+| 2026-09-03 | Hackathon header uses cropped Grok Bot wordmark lockup + “Serbia Hackathon”; silk bg clipped in a rounded chip |
+| 2026-09-03 | Hackathon brand: header shows Grok Bot Serbia Hackathon; marketing copy prioritizes Grok Bot; hero mascot stays in flow on mobile |
 | 2026-09-02 | Hackathon prizes: ABC BootCamps scholarships (50% / 40% / 30% to ABC Silicon Valley 2027); Daytona claim shows Billing redeem tip via `CREDIT_CODE_DAYTONA` |
 | 2026-09-01 | Hackathon Mentors tab: Hosts first, then mentors, then judges; person cards 2-col from `md` |
 | 2026-09-01 | Hackathon Mentors tab: Hosts section (Aleksandar Hadžibabić, Goran Petković from ambassadors); Nick Tomić X + LinkedIn |

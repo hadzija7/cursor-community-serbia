@@ -42,7 +42,7 @@ flowchart LR
 | Execute / AI sandboxes | **Daytona** | Run AI-generated or user-untrusted code in an isolated machine |
 | Backend / state | **Convex** | Database, auth, realtime sync — the app’s memory |
 | Voice / experience | **ElevenLabs** | Speech in, speech out, or a full voice agent |
-| Voice input | **Wispr Flow** | Dictate into Cursor — not speech inside the product |
+| Voice input | **Wispr Flow** | Dictate into Grok Bot — not speech inside the product |
 | Generate / media | **Fal.ai** | Image, video, and audio models through one API |
 | Host / infra | **Render** | Public demo URL: web service, static site, Postgres, workers |
 | Host / frontend | **Netlify** | Public site from Git, deploy previews, functions |
@@ -52,7 +52,7 @@ flowchart LR
 - **Convex vs Render / Netlify:** Convex can be the whole backend (and often the deploy target for the API). Render and Netlify are conventional hosting — the HTTPS URL judges open.
 - **Daytona is not production hosting.** It is a disposable computer for agents and untrusted code. Ship the product on Convex and/or Render or Netlify.
 - **Firecrawl scrapes a URL you already have. Exa searches** for sources you do not.
-- **ElevenLabs is speech in the product. Wispr Flow is how you dictate into Cursor.**
+- **ElevenLabs is speech in the product. Wispr Flow is how you dictate into Grok Bot (or Cursor).**
 - **Fal.ai generates media.** It is not search and not hosting.
 - **Wonder is the design canvas that ships as React.** Fal.ai generates media. They are not the same job.
 - **Cursor** is how you write and wire all of this. It is the host tool, not a sponsor product.
@@ -286,7 +286,7 @@ flowchart LR
 
 ### Voice input — Wispr Flow
 
-**One-liner:** Dictate into Cursor — speech becomes clean text in the editor and chat.
+**One-liner:** Dictate into Grok Bot — speech becomes clean text in the editor and chat.
 
 **Products / technologies**
 
@@ -384,12 +384,12 @@ Design the screen in Wonder → Convex holds users and live state → Netlify ho
 | The agent to *run* code / tests / a shell | **Daytona** |
 | Users, rows, and instant UI updates | **Convex** |
 | The demo to *talk* or *listen* | **ElevenLabs** |
-| To dictate into Cursor instead of typing | **Wispr Flow** |
+| To dictate into Grok Bot instead of typing | **Wispr Flow** |
 | Generated images, video, or audio | **Fal.ai** |
 | A designed UI that is already React + Tailwind | **Wonder** |
 | A public HTTPS URL / classic host / extra Postgres | **Render** |
 | A public frontend with deploy previews | **Netlify** |
-| To write the whole thing fast | **Cursor** (host editor) |
+| To write the whole thing fast | **Grok Bot** (host editor; Cursor works too) |
 | Cash prize for a Convex app | **Convex track** — 100.000 / 50.000 RSD |
 | Coworking for top 3 teams | **Kosmonaut** — 15 / 10 / 5 entries per teammate, use within 3 months; claim on kosmonaut.rs |
 | Scholarship to ABC Silicon Valley 2027 | **ABC BootCamps** — 50% / 40% / 30% for 1st / 2nd / 3rd |

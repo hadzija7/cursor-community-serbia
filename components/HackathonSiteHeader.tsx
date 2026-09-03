@@ -4,7 +4,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import HackerAuthButton from '@/components/HackerAuthButton'
-import { siteConfig } from '@/content/site.config'
+import { hackathonConfig } from '@/content/hackathon'
 import { useI18n } from '@/lib/i18n'
 import { getCommunitySiteUrl, type HackathonTab } from '@/lib/hackathon-site'
 import { useHackathonHref, useIsHackathonHost } from '@/lib/use-hackathon-base-path'
@@ -49,27 +49,24 @@ export default function HackathonSiteHeader() {
   return (
     <header className="border-b border-cursor-border bg-cursor-bg/90 backdrop-blur-md">
       <div className="mx-auto flex max-w-6xl flex-col gap-4 px-6 py-4 md:px-8">
-        <div className="flex flex-wrap items-center justify-between gap-4">
-          <Link href={overviewHref} className="flex items-center gap-1.5">
+        <div className="flex flex-wrap items-center justify-between gap-3 sm:gap-4">
+          <Link href={overviewHref} className="flex min-w-0 items-center gap-2.5">
             <Image
-              src="/cursor-logo.svg"
-              alt="Cursor"
-              width={120}
-              height={32}
+              src={hackathonConfig.headerMark}
+              alt=""
+              width={40}
+              height={40}
               priority
-              className="h-6 w-auto md:h-7"
+              className="h-9 w-9 shrink-0 object-contain sm:h-10 sm:w-10"
             />
-            <span className="font-cursor text-lg font-semibold tracking-tight text-cursor-text md:text-xl">
-              {siteConfig.communityNameLocal ? (
-                <span className="ml-1 font-thai text-xl font-bold tracking-wide text-cursor-text-secondary md:text-2xl">
-                  {siteConfig.communityNameLocal}
-                </span>
-              ) : null}
+            <span className="min-w-0 text-sm font-semibold leading-snug tracking-tight sm:text-base md:text-lg">
+              <span className="text-cursor-text">Grok Bot</span>{' '}
+              <span className="font-medium text-cursor-text-secondary">Serbia</span>{' '}
+              <span className="font-medium text-cursor-text-muted">Hackathon</span>
             </span>
-            <span className="ml-2 hidden text-sm text-cursor-text-muted sm:inline">{t('hackathon.nav')}</span>
           </Link>
 
-          <div className="flex items-center gap-3">
+          <div className="flex shrink-0 items-center gap-3">
             <Link
               href={communityHref}
               className="hidden text-sm text-cursor-text-muted transition-colors hover:text-cursor-text sm:inline"

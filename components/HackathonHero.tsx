@@ -107,18 +107,18 @@ export default function HackathonHero() {
           transition={{ duration: 0.5 }}
           className="space-y-8"
         >
-          <div className="relative">
-            <div className="space-y-5 max-w-3xl sm:max-w-[calc((100%-2rem)*2/3)]">
+          <div className="flex flex-col items-center gap-6 sm:relative sm:block">
+            <div className="relative z-10 w-full max-w-3xl space-y-5 sm:max-w-[calc((100%-2rem)*2/3)]">
               <p className="inline-flex items-center rounded-full border border-cursor-accent-orange/50 bg-cursor-accent-orange-bg px-3 py-1 text-xs font-semibold uppercase tracking-[0.18em] text-cursor-accent-orange">
                 {t('hackathon.upcoming')}
               </p>
               <h1 className="text-4xl font-bold tracking-tight md:text-6xl lg:text-7xl">{hackathon.title}</h1>
-              <p className="text-lg text-cursor-text-secondary md:text-xl lg:text-2xl leading-relaxed">
+              <p className="text-lg leading-relaxed text-cursor-text-secondary md:text-xl lg:text-2xl">
                 {hackathon.tagline}
               </p>
             </div>
             <div
-              className="pointer-events-none absolute bottom-4 right-0 z-0 w-[15rem] sm:w-[16rem] md:w-[18rem] lg:w-[20rem]"
+              className="pointer-events-none relative w-28 shrink-0 sm:absolute sm:bottom-0 sm:right-0 sm:z-0 sm:w-[16rem] md:w-[18rem] lg:w-[20rem]"
               aria-hidden
             >
               <Image

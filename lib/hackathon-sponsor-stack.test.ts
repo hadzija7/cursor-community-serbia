@@ -21,12 +21,12 @@ describe('hackathon sponsor stack content', () => {
     const stageIds = hackathonSdlcStages.map((stage) => stage.sponsorId).sort()
     const marqueeNames = hackathonSponsors.map((sponsor) => sponsor.name).sort()
     const profileNames = hackathonSponsorProfiles.map((profile) => profile.name).sort()
-    const stackOnlyNames = ['Grok Bot / Cursor']
+    const stackOnlyNames = ['Grok Bot']
 
     expect(profileIds).toEqual(stageIds)
     expect(hackathonSponsorProfiles).toHaveLength(11)
     expect(profileNames.filter((name) => !stackOnlyNames.includes(name)).sort()).toEqual(marqueeNames)
-    expect(getSponsorProfile('cursor')?.name).toBe('Grok Bot / Cursor')
+    expect(getSponsorProfile('cursor')?.name).toBe('Grok Bot')
   })
 
   it('lists Startit, Superteam, ABC BootCamps, JigJoy, and Kosmonaut as community partners', () => {
@@ -83,10 +83,10 @@ describe('hackathon sponsor stack content', () => {
     expect(getSponsorProfile('cursor')?.perks.some((perk) => perk.kind === 'confirmed' && perk.label.includes('referral'))).toBe(true)
   })
 
-  it('lists Convex cash, Kosmonaut coworking, and Daytona credit prize tracks', () => {
+  it('lists Convex cash, Kosmonaut coworking, Daytona credits, and ABC BootCamps scholarships', () => {
     const sponsors = hackathonPrizes.map((track) => track.sponsor)
 
-    expect(sponsors).toEqual(['Convex', 'Kosmonaut', 'Daytona'])
+    expect(sponsors).toEqual(['Convex', 'Kosmonaut', 'Daytona', 'ABC BootCamps'])
     expect(hackathonPrizes[0]?.places.map((place) => place.amount)).toEqual(['100.000 RSD', '50.000 RSD'])
     expect(hackathonPrizes[1]?.category).toBe('Free coworking for top 3 teams')
     expect(hackathonPrizes[1]?.places.map((place) => place.amount)).toEqual([
@@ -100,6 +100,11 @@ describe('hackathon sponsor stack content', () => {
       '$3,000 credits',
       '$2,000 credits',
       '$1,000 credits',
+    ])
+    expect(hackathonPrizes[3]?.places.map((place) => place.amount)).toEqual([
+      '50% scholarship',
+      '40% scholarship',
+      '30% scholarship',
     ])
   })
 

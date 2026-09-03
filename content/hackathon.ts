@@ -16,6 +16,7 @@ export const hackathonConfig = {
   tagline: 'Build the future with AI — one full day of hacking, learning, and community.',
   mascotImage: '/images/hackathon/grok-bot.png',
   mascotPeekImage: '/images/hackathon/grok-bot-peek.png',
+  headerMark: '/grokbot.svg',
   ogImage: '/images/og-grok-bot-hackathon.jpg',
   // Static fallback when Luma is unreachable. Live date/location come from
   // `hackathonConfig.lumaUrl` via `/api/hackathon/event` (see lib/hackathon-details.ts).
@@ -27,8 +28,8 @@ export const hackathonConfig = {
 }
 
 export const hackathonStats = [
-  { value: '1 day', label: 'Build sprint with Cursor', accent: 'orange' as const },
-  { value: 'Mentors', label: 'Guidance from Cursor ambassadors', accent: 'green' as const },
+  { value: '1 day', label: 'Build sprint with Grok Bot', accent: 'orange' as const },
+  { value: 'Mentors', label: 'Guidance from hosts and mentors', accent: 'green' as const },
   { value: 'Prizes', label: 'Awards for top projects', accent: 'yellow' as const },
   { value: 'Community', label: 'Food, drinks, and good vibes', accent: 'purple' as const },
 ]
@@ -95,7 +96,7 @@ export const hackathonPrizes: HackathonPrizeTrack[] = [
 /** Short purpose line for `/hackathon/guide`. */
 export const hackathonGuidePurpose: HackathonGuideCopy = {
   title: 'Why we run this',
-  body: 'A one-day sprint to ship something real with Cursor and the tech partner tools. Not a polished startup — a working demo the same day.',
+  body: 'A one-day sprint to ship something real with Grok Bot and the tech partner tools. Cursor works too — not a polished startup, a working demo the same day.',
 }
 
 export const hackathonGuideTeam: HackathonGuideCopy = {
@@ -117,18 +118,18 @@ export const hackathonGuideSteps: HackathonGuideStep[] = [
   },
   {
     id: 'cursor',
-    title: 'Build in Cursor',
-    body: 'The host editor. Agents, rules, and MCPs live here.',
+    title: 'Build in Grok Bot',
+    body: 'The host editor for this hackathon. Agents, rules, and MCPs live here — Cursor works too.',
   },
   {
     id: 'mcps',
     title: 'Use partner MCPs',
-    body: 'Wire the tools in Cursor. Do not rebuild what tech partners already give you.',
+    body: 'Wire the tools in Grok Bot (or Cursor). Do not rebuild what tech partners already give you.',
   },
   {
     id: 'origin',
     title: 'Host the repo on Origin',
-    body: 'Put the project on Cursor’s git host so the team and judges can find it.',
+    body: 'Put the project on Origin so the team and judges can find it.',
   },
   {
     id: 'demo',
@@ -314,7 +315,7 @@ export const hackathonSdlcStages: HackathonSdlcStage[] = [
   {
     id: 'editor',
     label: 'Editor / host',
-    job: 'Build the project in Cursor with Grok Bot',
+    job: 'Build the project in Grok Bot',
     sponsorId: 'cursor',
     accent: 'orange',
   },
@@ -363,7 +364,7 @@ export const hackathonSdlcStages: HackathonSdlcStage[] = [
   {
     id: 'dictate',
     label: 'Voice input',
-    job: 'Dictate into Cursor instead of typing',
+    job: 'Dictate into Grok Bot instead of typing',
     sponsorId: 'wispr',
     accent: 'purple',
   },
@@ -428,14 +429,15 @@ export const hackathonSponsorProfiles: HackathonSponsorProfile[] = [
   },
   {
     id: 'cursor',
-    name: 'Grok Bot / Cursor',
+    name: 'Grok Bot',
     logo: '/images/hackathon/grok-bot.png',
     url: 'https://cursor.com',
     docsUrl: 'https://cursor.com/docs',
     logoBg: '#14120b',
     logoHeight: 'h-10',
     sdlcStage: 'editor',
-    oneLiner: 'The host editor for this hackathon — claim a unique Cursor Pro referral link when you check in.',
+    oneLiner:
+      'The host editor for this hackathon — build with Grok Bot (Cursor works too). Claim a unique Cursor Pro referral when you check in.',
     technologies: [
       'Agentic coding in the editor and chat',
       'MCP servers for partner tools',
@@ -653,12 +655,12 @@ export const hackathonSponsorProfiles: HackathonSponsorProfile[] = [
     logoBg: '#14120b',
     logoHeight: 'h-7',
     sdlcStage: 'dictate',
-    oneLiner: 'Dictate into Cursor — speech becomes clean text in the editor and chat.',
+    oneLiner: 'Dictate into Grok Bot — speech becomes clean text in the editor and chat.',
     technologies: [
       'Desktop + mobile dictation — Mac, Windows, iPhone, Android',
       'Cleans filler words and formats as you speak',
-      'Works in Cursor chat, the editor, and the terminal',
-      'File tagging by voice in Cursor chat (say “at main.ts”)',
+      'Works in Grok Bot / Cursor chat, the editor, and the terminal',
+      'File tagging by voice in chat (say “at main.ts”)',
     ],
     useCases: [
       'Talk the prompt instead of typing a long agent brief',
@@ -771,7 +773,7 @@ export const hackathonStackRecipes: HackathonStackRecipe[] = [
   },
   {
     title: 'Coding agent',
-    summary: 'Write code in Cursor, run it in a Daytona sandbox, keep runs and logs in Convex.',
+    summary: 'Write code in Grok Bot, run it in a Daytona sandbox, keep runs and logs in Convex.',
     sponsorIds: ['daytona', 'convex'],
   },
   {
@@ -792,13 +794,13 @@ export const hackathonStackRecipes: HackathonStackRecipe[] = [
 ]
 
 export const hackathonStackPicks: HackathonStackPick[] = [
-  { need: 'An AI editor to build the whole demo', use: 'Grok Bot / Cursor' },
+  { need: 'An AI editor to build the whole demo', use: 'Grok Bot' },
   { need: 'Live website content inside the app', use: 'Firecrawl' },
   { need: 'The agent to find sources it does not already have', use: 'Exa' },
   { need: 'The agent to run code, tests, or a shell', use: 'Daytona' },
   { need: 'Users, rows, and instant UI updates', use: 'Convex' },
   { need: 'The demo to talk or listen', use: 'ElevenLabs' },
-  { need: 'To dictate into Cursor instead of typing', use: 'Wispr Flow' },
+  { need: 'To dictate into Grok Bot instead of typing', use: 'Wispr Flow' },
   { need: 'Generated images, video, or audio', use: 'Fal.ai' },
   { need: 'A designed UI that is already React + Tailwind', use: 'Wonder' },
   { need: 'A public HTTPS URL or extra Postgres', use: 'Render' },
@@ -809,7 +811,7 @@ export const hackathonStackOverlap = [
   'Convex can be the whole backend. Render and Netlify are public demo URLs and conventional hosting.',
   'Daytona is not production hosting — it is an isolated runtime for agent or untrusted code.',
   'Firecrawl scrapes a URL you already have. Exa searches the web for sources you do not.',
-  'ElevenLabs is speech in the product. Wispr Flow is how you dictate into Cursor.',
+  'ElevenLabs is speech in the product. Wispr Flow is how you dictate into Grok Bot (or Cursor).',
   'Fal.ai generates media. It is not search and not hosting.',
   'Wonder is the design canvas that ships as React. Fal.ai generates media. They are not the same job.',
 ]

@@ -47,12 +47,12 @@ When `NEXT_PUBLIC_HACKATHON_SITE_URL` is set, `/hackathon` on the main domain re
 - `app/hackathon/prizes/page.tsx` — Prizes tab
 - `app/hackathon/sponsor/page.tsx` — Redirect to Overview `#become-a-sponsor`
 - `app/hackathon/layout.tsx` — Route metadata + `HackathonSiteHeader`; OG/Twitter share image is `hackathonConfig.ogImage` (`/images/og-grok-bot-hackathon.jpg`)
-- `components/HackathonSiteHeader.tsx` — Hackathon-only chrome and tabs (Overview / Guide / Mentors / Prizes / Stack)
+- `components/HackathonSiteHeader.tsx` — Hackathon-only chrome and tabs (Overview / Guide / Mentors / Prizes / Stack); brand is full-circle `/grokbot.svg` mark + “Grok Bot Serbia Hackathon”
 - `components/HackathonGuide.tsx` — Purpose, team, shipping, guidelines, and extensible topics
 - `components/HackathonPeople.tsx` — Mentor, host, and judge cards (`/hackathon/mentors`)
 - `middleware.ts` — Subdomain rewrite + optional main-host redirect
 - `lib/hackathon-site.ts` — Host detection and public hrefs
-- `components/HackathonHero.tsx` — Full-width hero with date/location/duration cards and CTAs; Grok Bot mascot peeks above the duration card
+- `components/HackathonHero.tsx` — Full-width hero with date/location/duration cards and CTAs; Grok Bot mascot sits under the tagline on mobile and peeks beside the title from `sm` up
 - `components/HackathonHighlights.tsx` — Stat-style highlight grid (TUM-inspired)
 - `components/HackathonPrizes.tsx` — Prize tracks with per-place cards (above sponsors)
 - `components/SponsorMarquee.tsx` — Tech partner and community partner marquees (Startit, Superteam Balkan, ABC BootCamps, JigJoy, Kosmonaut)
@@ -120,7 +120,8 @@ Edit `content/hackathon.ts` for:
 - Each modal has an **Add to Cursor** button (title row) that uses the official `cursor://anysphere.cursor-deeplink/mcp/install` deeplink (same tab — do not open `https://cursor.com/en/install-mcp`, which auto-closes). Configs live on `hackathonSponsorProfiles[].mcp` and are encoded by `lib/cursor-mcp-install.ts`
 - Cursor is host, not a sponsor. Wispr Flow is a tech partner (dictation into Cursor); ElevenLabs stays product voice
 - Confirmed perks only: Daytona $100 coupon (claim via `CREDIT_CODE_DAYTONA`, redeem in app.daytona.io Billing) + winner credits (Best app that uses Daytona); Convex 100.000 / 50.000 RSD; Kosmonaut coworking for top 3 teams (15 / 10 / 5 entries per teammate, use within 3 months, claim on kosmonaut.rs); ABC BootCamps scholarships for top 3 (50% / 40% / 30% to ABC Silicon Valley 2027); Wispr Flow 3 months Pro; Exa $50 credits each; Fal.ai $50 credits each; Netlify 3,000 credits for all participants; Wonder Pro for all participants
-- Stack path starts with **Grok Bot / Cursor** (Editor / host), then Firecrawl, Exa, Wonder, Daytona, Convex, ElevenLabs, Wispr, Fal.ai, Render, Netlify
+- Stack path starts with **Grok Bot** (Editor / host; Cursor works too), then Firecrawl, Exa, Wonder, Daytona, Convex, ElevenLabs, Wispr, Fal.ai, Render, Netlify
+- Marketing copy prioritizes Grok Bot; Cursor remains supported and named where the product action is Cursor-specific (MCP install deeplink, Cursor Pro referral, Origin)
 - Stack area cards also cover Exa (Search / web), Wonder (Design / UI), Wispr Flow (Voice input), Fal.ai (Generate / media), and Netlify (Host / frontend). Wispr has no public MCP install URL — desktop app only. Wonder MCP is `https://mcp.wonder.so/mcp` (OAuth after install)
 
 ### Guide tab
@@ -154,7 +155,7 @@ Edit `content/hackathon.ts` for:
 - Client: `useHackathonDetails` polls `/api/hackathon/event` every 5 minutes (same pattern as upcoming events)
 - Title, tagline, mascot image, and duration stay content-owned so marketing copy does not flip with Luma’s event name
 - Homepage promo card (`HackathonPromoCard`) shows `hackathonConfig.mascotImage` next to the title
-- Overview hero peeks `hackathonConfig.mascotPeekImage` above the duration card; dark pixels are knocked out and `mix-blend-lighten` so it sits on the page background instead of a boxed image
+- Overview hero shows `hackathonConfig.mascotPeekImage` under the tagline on mobile (compact, in flow) and peeks beside the title from `sm` up; dark pixels are knocked out and `mix-blend-lighten` so it sits on the page background instead of a boxed image
 
 Hero CTAs: Register on Luma (external Luma event link), View on Luma (when already registered/checked in), and Sponsor event (`hackathon.viewSponsorsCta`). Google login is navbar-only. Sponsor event always scrolls to Overview `#become-a-sponsor` — including a second click while already on Overview with that hash. Off Overview (Guide / Mentors / Prizes / Stack) it navigates to the Overview form. The form section uses `scroll-mt-24` so header chrome does not cover the heading. Guide, Mentors, and Stack are header tabs only.
 
