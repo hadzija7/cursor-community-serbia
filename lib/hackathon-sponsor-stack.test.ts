@@ -108,7 +108,7 @@ describe('hackathon sponsor stack content', () => {
     ])
   })
 
-  it('lists Nick Tomić first among mentors, hosts from ambassadors, and keeps judges empty', () => {
+  it('lists Nick Tomić first among mentors, hosts from ambassadors, and publishes Ben Kim as a judge', () => {
     expect(hackathonMentors[0]?.id).toBe('nick-tomic')
     expect(hackathonMentors[0]?.bio).toMatch(/350 SaaS founders/)
     expect(hackathonMentors[0]?.help?.toLowerCase()).toContain('go-to-market')
@@ -116,7 +116,15 @@ describe('hackathon sponsor stack content', () => {
     expect(hackathonMentors[0]?.links?.linkedin).toBe('https://www.linkedin.com/in/nicktomic/')
     expect(hackathonHosts.map((host) => host.id)).toEqual(['aleksandar-hadzibabic', 'goran-petkovic'])
     expect(hackathonHosts.every((host) => host.links?.x && host.links.linkedin)).toBe(true)
-    expect(hackathonJudges).toEqual([])
+    expect(hackathonJudges).toHaveLength(1)
+    expect(hackathonJudges[0]?.id).toBe('ben-kim')
+    expect(hackathonJudges[0]?.name).toBe('Ben Kim')
+    expect(hackathonJudges[0]?.title).toBe('Founder, investor & community builder')
+    expect(hackathonJudges[0]?.photo).toBe('/images/hackathon/ben-kim.jpg')
+    expect(hackathonJudges[0]?.photoPosition).toBe('center')
+    expect(hackathonJudges[0]?.bio).toMatch(/Mexico City/)
+    expect(hackathonJudges[0]?.links?.x).toBe('https://x.com/benkimbuilds')
+    expect(hackathonJudges[0]?.links?.linkedin).toBe('https://www.linkedin.com/in/benkimbuilds/')
   })
 
   it('keeps a minimal hacker guide with a seven-step timeline', () => {

@@ -194,8 +194,21 @@ export const hackathonHosts: HackathonPerson[] = [
   },
 ]
 
-/** Judges — add rows as they lock. Empty until then. */
-export const hackathonJudges: HackathonPerson[] = []
+/** Judges — published as they lock. */
+export const hackathonJudges: HackathonPerson[] = [
+  {
+    id: 'ben-kim',
+    name: 'Ben Kim',
+    title: 'Founder, investor & community builder',
+    photo: '/images/hackathon/ben-kim.jpg',
+    photoPosition: 'center',
+    bio: 'Founder, investor, community builder, and developer who comes from Silicon Valley but now lives in Mexico City. Codex and SpaceX ambassador.',
+    links: {
+      x: 'https://x.com/benkimbuilds',
+      linkedin: 'https://www.linkedin.com/in/benkimbuilds/',
+    },
+  },
+]
 
 /** Tech partners (tools for hackers) — edit logos in `public/images/partners/` or add new entries. */
 export const hackathonSponsors: Partner[] = [
