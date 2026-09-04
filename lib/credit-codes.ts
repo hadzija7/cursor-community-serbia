@@ -1,7 +1,8 @@
 /**
  * Shared promo codes (same value for every claimant) live in env vars.
- * Unique one-by-one codes (e.g. Cursor referral links) live in
- * `hackathon_referral_codes` and are assigned on claim.
+ * Unique $20 Cursor Pro referrals live in `hackathon_referral_codes`.
+ * Unique $50 Cursor Pro referrals live in `hackathon_grok_bot_referral_codes`
+ * (legacy table name — $50 Cursor pool, not Grok Bot).
  */
 
 const SHARED_SPONSOR_CODE_ENV_MAP: Record<string, string> = {
@@ -17,11 +18,24 @@ const SHARED_SPONSOR_CODE_ENV_MAP: Record<string, string> = {
   render: 'CREDIT_CODE_RENDER',
 }
 
-/** Sponsors that issue unique codes from the DB pool (first claim wins). */
-const POOL_SPONSOR_IDS = new Set(['cursor'])
+/** Claim keys that issue unique codes from a DB pool (first claim wins). */
+export const CURSOR_POOL_ID = 'cursor'
+export const CURSOR_50_POOL_ID = 'cursor-50'
 
-export function isPoolSponsor(sponsorId: string): boolean {
+const POOL_SPONSOR_IDS = new Set([CURSOR_POOL_ID, CURSOR_50_POOL_ID])
+
+export type ReferralPoolId = typeof CURSOR_POOL_ID | typeof CURSOR_50_POOL_ID
+
+export function isPoolSponsor(sponsorId: string): sponsorId is ReferralPoolId {
   return POOL_SPONSOR_IDS.has(sponsorId)
+}
+
+export function isCursor50Pool(sponsorId: string): boolean {
+  return sponsorId === CURSOR_50_POOL_ID
+}
+
+export function isCursorPool(sponsorId: string): boolean {
+  return sponsorId === CURSOR_POOL_ID
 }
 
 export function getSharedCreditCode(sponsorId: string): string | null {

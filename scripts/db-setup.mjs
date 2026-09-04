@@ -79,6 +79,26 @@ try {
   `
 
   await sql`
+    CREATE TABLE IF NOT EXISTS hackathon_grok_bot_referral_codes (
+      id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+      code TEXT NOT NULL UNIQUE,
+      claimed_by TEXT,
+      claimed_at TIMESTAMPTZ,
+      created_at TIMESTAMPTZ NOT NULL DEFAULT now()
+    )
+  `
+  await sql`
+    CREATE UNIQUE INDEX IF NOT EXISTS idx_hackathon_grok_bot_referral_codes_one_per_email
+    ON hackathon_grok_bot_referral_codes (claimed_by)
+    WHERE claimed_by IS NOT NULL
+  `
+  await sql`
+    CREATE INDEX IF NOT EXISTS idx_hackathon_grok_bot_referral_codes_unclaimed
+    ON hackathon_grok_bot_referral_codes (created_at)
+    WHERE claimed_by IS NULL
+  `
+
+  await sql`
     CREATE TABLE IF NOT EXISTS hackathon_project_submissions (
       id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
       email TEXT NOT NULL UNIQUE,

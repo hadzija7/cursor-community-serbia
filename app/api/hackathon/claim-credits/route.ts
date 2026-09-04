@@ -3,6 +3,8 @@ import { auth } from '@/lib/auth'
 import {
   getSharedCreditCode,
   hasCreditCode,
+  isCursor50Pool,
+  isCursorPool,
   isPoolSponsor,
 } from '@/lib/credit-codes'
 import { getDb } from '@/lib/db'
@@ -19,14 +21,15 @@ function isUniqueViolation(err: unknown): boolean {
   )
 }
 
-async function claimPoolCode(
-  sponsorId: string,
+async function claimCursorPoolCode(
   email: string,
 ): Promise<{ code: string } | { error: string; status: number }> {
   const db = getDb()
   if (!db) {
     return { error: 'Database unavailable', status: 503 }
   }
+
+  const sponsorId = 'cursor'
 
   try {
     const existing = await db`
@@ -38,8 +41,6 @@ async function claimPoolCode(
       return { code: existing[0].code as string }
     }
 
-    // Retry a few times in case two claimants race the same row, or the same
-    // email concurrently claims two different free rows (unique index on claimed_by).
     for (let attempt = 0; attempt < 3; attempt += 1) {
       try {
         const claimed = await db`
@@ -59,7 +60,6 @@ async function claimPoolCode(
         }
       } catch (err) {
         if (!isUniqueViolation(err)) throw err
-        // Same email already assigned via a concurrent request — read it below.
       }
 
       const again = await db`
@@ -72,11 +72,80 @@ async function claimPoolCode(
       }
     }
 
-    return { error: 'No referral codes left for this sponsor', status: 410 }
+    return { error: 'No $20 Cursor referral codes left', status: 410 }
   } catch (err) {
-    console.error('Failed to claim pool code:', err)
+    console.error('Failed to claim $20 Cursor pool code:', err)
     return { error: 'Failed to claim referral code', status: 500 }
   }
+}
+
+async function claimCursor50PoolCode(
+  email: string,
+): Promise<{ code: string } | { error: string; status: number }> {
+  const db = getDb()
+  if (!db) {
+    return { error: 'Database unavailable', status: 503 }
+  }
+
+  try {
+    const existing = await db`
+      SELECT code FROM hackathon_grok_bot_referral_codes
+      WHERE claimed_by = ${email}
+      LIMIT 1
+    `
+    if (existing[0]?.code) {
+      return { code: existing[0].code as string }
+    }
+
+    for (let attempt = 0; attempt < 3; attempt += 1) {
+      try {
+        const claimed = await db`
+          UPDATE hackathon_grok_bot_referral_codes
+          SET claimed_by = ${email}, claimed_at = now()
+          WHERE id = (
+            SELECT id FROM hackathon_grok_bot_referral_codes
+            WHERE claimed_by IS NULL
+            ORDER BY created_at ASC, id ASC
+            LIMIT 1
+          )
+          AND claimed_by IS NULL
+          RETURNING code
+        `
+        if (claimed[0]?.code) {
+          return { code: claimed[0].code as string }
+        }
+      } catch (err) {
+        if (!isUniqueViolation(err)) throw err
+      }
+
+      const again = await db`
+        SELECT code FROM hackathon_grok_bot_referral_codes
+        WHERE claimed_by = ${email}
+        LIMIT 1
+      `
+      if (again[0]?.code) {
+        return { code: again[0].code as string }
+      }
+    }
+
+    return { error: 'No $50 Cursor referral codes left', status: 410 }
+  } catch (err) {
+    console.error('Failed to claim $50 Cursor pool code:', err)
+    return { error: 'Failed to claim referral code', status: 500 }
+  }
+}
+
+async function claimPoolCode(
+  sponsorId: string,
+  email: string,
+): Promise<{ code: string } | { error: string; status: number }> {
+  if (isCursor50Pool(sponsorId)) {
+    return claimCursor50PoolCode(email)
+  }
+  if (isCursorPool(sponsorId)) {
+    return claimCursorPoolCode(email)
+  }
+  return { error: 'Unknown referral pool', status: 404 }
 }
 
 async function claimSharedCode(sponsorId: string, email: string): Promise<void> {

@@ -80,7 +80,9 @@ describe('hackathon sponsor stack content', () => {
     expect(getSponsorProfile('netlify')?.perks.some((perk) => perk.kind === 'confirmed' && perk.label.includes('3,000'))).toBe(true)
     expect(getSponsorProfile('wonder')?.perks.some((perk) => perk.kind === 'confirmed' && perk.label.includes('Pro'))).toBe(true)
     expect(getSponsorProfile('firecrawl')?.perks.some((perk) => perk.kind === 'confirmed' && perk.label.includes('10,000'))).toBe(true)
-    expect(getSponsorProfile('cursor')?.perks.some((perk) => perk.kind === 'confirmed' && perk.label.includes('referral'))).toBe(true)
+    expect(getSponsorProfile('cursor')?.perks.filter((perk) => perk.kind === 'confirmed')).toHaveLength(2)
+    expect(getSponsorProfile('cursor')?.perks.some((perk) => perk.label.includes('$20 Cursor'))).toBe(true)
+    expect(getSponsorProfile('cursor')?.perks.some((perk) => perk.label.includes('$50 Cursor'))).toBe(true)
   })
 
   it('lists Convex cash, Kosmonaut coworking, Daytona credits, and ABC BootCamps scholarships', () => {
@@ -110,7 +112,9 @@ describe('hackathon sponsor stack content', () => {
 
   it('lists Nick Tomić first among mentors, hosts from ambassadors, and publishes Ben Kim as a judge', () => {
     expect(hackathonMentors[0]?.id).toBe('nick-tomic')
-    expect(hackathonMentors[0]?.bio).toMatch(/350 SaaS founders/)
+    expect(hackathonMentors[0]?.bio).toMatch(/SaaS founder and growth consultant/)
+    expect(hackathonMentors[0]?.bio).not.toMatch(/350 SaaS founders/)
+    expect(hackathonHosts.every((host) => host.bio.includes('SpaceXAI ambassadors'))).toBe(true)
     expect(hackathonMentors[0]?.help?.toLowerCase()).toContain('go-to-market')
     expect(hackathonMentors[0]?.links?.x).toBe('https://x.com/dropoutsanta')
     expect(hackathonMentors[0]?.links?.linkedin).toBe('https://www.linkedin.com/in/nicktomic/')

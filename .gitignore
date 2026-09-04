@@ -24,6 +24,10 @@ yarn-error.log*
 # Secret one-time Cursor referral URLs (seed locally; never commit)
 db/data/cursor-referrals.txt
 
+# Secret one-time Grok Bot referral URLs (seed locally; never commit)
+db/data/grok-bot-referrals.csv
+db/data/grok-bot-referrals.txt
+
 # vercel
 .vercel
 

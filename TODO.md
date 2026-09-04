@@ -61,6 +61,8 @@
   - [x] Hackathon sponsor form lives on Overview (`#become-a-sponsor`); `/hackathon/sponsor` redirects there; no Sponsor tab
   - [x] Hero "Sponsor event" always scrolls to Overview `#become-a-sponsor` (same-page hash + `scroll-mt-24`)
   - [x] Hackathon project submit form (`/hackathon/submit`): Google auth + Luma `checked_in` gate; public GitHub + demo/live URLs; upsert per email
+  - [x] Hackathon Overview hero + Stack use full-circle `/grokbot.svg` (same as header); hosts bio SpaceXAI ambassadors; Nick mentor bio shortened
+  - [x] Hackathon credits: dual Cursor pools ($20 + $50) in separate tables; Stack modal claims both (`cursor` + `cursor-50`; seed via `pnpm db:seed:grok-bot-referrals`)
   - [ ] Review and update content (events, ambassadors, partners) for Serbia
 
 - [ ] Ensure education resources are complete and linked correctly

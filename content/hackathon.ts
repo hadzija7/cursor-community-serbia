@@ -14,8 +14,8 @@ import {
 export const hackathonConfig = {
   title: 'Grok Bot Serbia Hackathon',
   tagline: 'Build the future with AI — one full day of hacking, learning, and community.',
-  mascotImage: '/images/hackathon/grok-bot.png',
-  mascotPeekImage: '/images/hackathon/grok-bot-peek.png',
+  mascotImage: '/grokbot.svg',
+  mascotPeekImage: '/grokbot.svg',
   headerMark: '/grokbot.svg',
   ogImage: '/images/og-grok-bot-hackathon.jpg',
   // Static fallback when Luma is unreachable. Live date/location come from
@@ -156,7 +156,7 @@ export const hackathonMentors: HackathonPerson[] = [
     title: 'CTO and builder',
     photo: '/images/hackathon/nick-tomic.jpg',
     photoPosition: 'center',
-    bio: 'Nick Tomić is a SaaS founder and growth consultant who specializes in helping tech startups build and launch AI products. His expertise is built on extensive research, including interviewing over 350 SaaS founders to understand the keys to product-market fit.',
+    bio: 'Nick Tomić is a SaaS founder and growth consultant who specializes in helping tech startups build and launch AI products.',
     help: 'Go-to-market — positioning, story, and how to talk about what you shipped.',
     links: {
       x: 'https://x.com/dropoutsanta',
@@ -173,7 +173,7 @@ export const hackathonHosts: HackathonPerson[] = [
     title: 'Community Lead for Novi Sad',
     photo: '/images/ambassadors/aleks-cursor.jpg',
     photoPosition: 'top',
-    bio: 'Cursor Ambassador and one of the hosts running the room.',
+    bio: 'SpaceXAI ambassadors and one of the hosts running the room.',
     help: 'Whatever you need — we are here to help.',
     links: {
       x: 'https://x.com/AHadzibabic',
@@ -185,7 +185,7 @@ export const hackathonHosts: HackathonPerson[] = [
     name: 'Goran Petković',
     title: 'Community Lead for Belgrade',
     photo: '/images/ambassadors/goran.png',
-    bio: 'Cursor Ambassador and one of the hosts running the room.',
+    bio: 'SpaceXAI ambassadors and one of the hosts running the room.',
     help: 'Whatever you need — we are here to help.',
     links: {
       x: 'https://x.com/goranux',
@@ -445,14 +445,14 @@ export const hackathonSponsorProfiles: HackathonSponsorProfile[] = [
   {
     id: 'cursor',
     name: 'Grok Bot',
-    logo: '/images/hackathon/grok-bot.png',
+    logo: '/grokbot.svg',
     url: 'https://cursor.com',
     docsUrl: 'https://cursor.com/docs',
     logoBg: '#14120b',
     logoHeight: 'h-10',
     sdlcStage: 'editor',
     oneLiner:
-      'The host editor for this hackathon — build with Grok Bot (Cursor works too). Claim a unique Cursor Pro referral when you check in.',
+      'The host editor for this hackathon — build with Grok Bot (Cursor works too). Claim both $20 and $50 Cursor credit referrals when you check in.',
     technologies: [
       'Agentic coding in the editor and chat',
       'MCP servers for partner tools',
@@ -467,8 +467,13 @@ export const hackathonSponsorProfiles: HackathonSponsorProfile[] = [
     perks: [
       {
         kind: 'confirmed',
-        label: 'Cursor Pro referral link for every checked-in participant',
-        detail: 'Unique link from the event pool — claim once, copy, and redeem. First come, first served.',
+        label: '$20 Cursor credits for every checked-in participant',
+        detail: 'Unique referral from the $20 pool — claim once, copy, and redeem. First come, first served.',
+      },
+      {
+        kind: 'confirmed',
+        label: '$50 Cursor credits for every checked-in participant',
+        detail: 'Separate $50 Cursor pool — claim both. First come, first served.',
       },
     ],
   },

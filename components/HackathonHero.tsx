@@ -118,15 +118,15 @@ export default function HackathonHero() {
               </p>
             </div>
             <div
-              className="pointer-events-none relative w-28 shrink-0 sm:absolute sm:bottom-0 sm:right-0 sm:z-0 sm:w-[16rem] md:w-[18rem] lg:w-[20rem]"
+              className="pointer-events-none relative w-24 shrink-0 sm:absolute sm:bottom-2 sm:right-0 sm:z-0 sm:w-[11rem] md:w-[13rem] lg:w-[15rem]"
               aria-hidden
             >
               <Image
                 src={hackathonConfig.mascotPeekImage}
                 alt=""
-                width={1024}
-                height={1024}
-                className="h-auto w-full mix-blend-lighten"
+                width={2020}
+                height={2020}
+                className="h-auto w-full object-contain"
                 priority
               />
             </div>

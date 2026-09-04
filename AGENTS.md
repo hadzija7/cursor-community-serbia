@@ -41,6 +41,8 @@
 | Test | `pnpm test` |
 | Lint | `pnpm lint` |
 | DB setup | `pnpm db:setup` |
+| Seed Cursor $20 referrals | `pnpm db:seed:cursor-referrals` |
+| Seed Cursor $50 referrals | `pnpm db:seed:grok-bot-referrals` |
 
 ## Key Directories
 - `app/` — Next.js routes (page, recaps, subscribe, education, slides)

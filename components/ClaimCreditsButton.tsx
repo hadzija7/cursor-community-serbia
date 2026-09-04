@@ -3,6 +3,7 @@
 import { Gift, Check, Copy, Loader2, Lock } from 'lucide-react'
 import { useSession } from 'next-auth/react'
 import { useCallback, useRef, useState } from 'react'
+import { CURSOR_POOL_ID, CURSOR_50_POOL_ID } from '@/lib/credit-codes'
 import { useI18n } from '@/lib/i18n'
 import { useHackerStatus } from '@/lib/use-hacker-status'
 
@@ -12,7 +13,21 @@ function isHttpUrl(value: string): boolean {
   return /^https?:\/\//i.test(value)
 }
 
-export default function ClaimCreditsButton({ sponsorId }: { sponsorId: string }) {
+type ClaimCreditsButtonProps = {
+  sponsorId: string
+  /** Short label shown above the claim control (e.g. "Cursor Pro"). */
+  title?: string
+  /** Optional button / lock label override. */
+  claimLabel?: string
+  className?: string
+}
+
+export default function ClaimCreditsButton({
+  sponsorId,
+  title,
+  claimLabel,
+  className = '',
+}: ClaimCreditsButtonProps) {
   const { t } = useI18n()
   const { data: session } = useSession()
   const { lumaStatus } = useHackerStatus()
@@ -23,6 +38,7 @@ export default function ClaimCreditsButton({ sponsorId }: { sponsorId: string })
 
   const isCheckedIn = lumaStatus === 'checked_in'
   const isLoggedIn = !!session?.user
+  const buttonLabel = claimLabel ?? t('hackathon.claimCredits')
 
   const handleClaim = useCallback(async () => {
     if (inFlightRef.current) return
@@ -62,26 +78,38 @@ export default function ClaimCreditsButton({ sponsorId }: { sponsorId: string })
 
   if (!isLoggedIn) return null
 
+  const shellClass = `min-w-0 ${className}`.trim()
+
   if (!isCheckedIn) {
     return (
-      <span
-        className="inline-flex shrink-0 items-center gap-1 rounded-md border border-cursor-border-emphasis bg-cursor-overlay px-2.5 py-1 text-xs font-medium text-cursor-text-muted"
-        title={t('hackathon.creditsNotCheckedIn')}
-      >
-        <Lock className="h-3 w-3" />
-        {t('hackathon.claimCredits')}
-      </span>
+      <div className={shellClass}>
+        {title ? (
+          <p className="mb-2 text-[10px] font-semibold uppercase tracking-[0.16em] text-cursor-text-muted">
+            {title}
+          </p>
+        ) : null}
+        <span
+          className="inline-flex shrink-0 items-center gap-1 rounded-md border border-cursor-border-emphasis bg-cursor-overlay px-2.5 py-1 text-xs font-medium text-cursor-text-muted"
+          title={t('hackathon.creditsNotCheckedIn')}
+        >
+          <Lock className="h-3 w-3" />
+          {buttonLabel}
+        </span>
+      </div>
     )
   }
 
   if (state === 'claimed' && code) {
     const link = isHttpUrl(code)
-    const showCursorTip = sponsorId === 'cursor' && link
+    const showCursor20Tip = sponsorId === CURSOR_POOL_ID && link
+    const showCursor50Tip = sponsorId === CURSOR_50_POOL_ID && link
     const showDaytonaTip = sponsorId === 'daytona' && !link
     return (
-      <div className="w-full min-w-0 rounded-lg border border-cursor-accent-green/40 bg-cursor-accent-green-bg p-3">
+      <div
+        className={`w-full rounded-lg border border-cursor-accent-green/40 bg-cursor-accent-green-bg p-3 ${shellClass}`}
+      >
         <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-cursor-accent-green">
-          {link ? t('hackathon.creditsReferralReady') : t('hackathon.creditsClaimed')}
+          {title ?? (link ? t('hackathon.creditsReferralReady') : t('hackathon.creditsClaimed'))}
         </p>
         <p className="mt-2 break-all font-mono text-sm leading-relaxed text-cursor-text">{code}</p>
         <div className="mt-3 flex flex-wrap items-center gap-2">
@@ -91,7 +119,11 @@ export default function ClaimCreditsButton({ sponsorId }: { sponsorId: string })
             className="inline-flex items-center gap-1 rounded-md bg-cursor-accent-green px-2.5 py-1 text-xs font-semibold text-black transition-colors hover:bg-cursor-accent-green/80"
           >
             {copied ? <Check className="h-3 w-3" /> : <Copy className="h-3 w-3" />}
-            {copied ? t('hackathon.creditsCopied') : link ? t('hackathon.creditsCopyLink') : t('hackathon.creditsCopyCode')}
+            {copied
+              ? t('hackathon.creditsCopied')
+              : link
+                ? t('hackathon.creditsCopyLink')
+                : t('hackathon.creditsCopyCode')}
           </button>
           {link ? (
             <a
@@ -114,10 +146,16 @@ export default function ClaimCreditsButton({ sponsorId }: { sponsorId: string })
             </a>
           ) : null}
         </div>
-        {showCursorTip ? (
+        {showCursor20Tip ? (
           <p className="mt-3 text-xs leading-relaxed text-cursor-text-secondary">
             <span className="font-semibold text-cursor-text">{t('hackathon.creditsCursorSetupTipLabel')}: </span>
-            {t('hackathon.creditsCursorSetupTip')}
+            {t('hackathon.creditsCursor20SetupTip')}
+          </p>
+        ) : null}
+        {showCursor50Tip ? (
+          <p className="mt-3 text-xs leading-relaxed text-cursor-text-secondary">
+            <span className="font-semibold text-cursor-text">{t('hackathon.creditsCursorSetupTipLabel')}: </span>
+            {t('hackathon.creditsCursor50SetupTip')}
           </p>
         ) : null}
         {showDaytonaTip ? (
@@ -135,33 +173,93 @@ export default function ClaimCreditsButton({ sponsorId }: { sponsorId: string })
 
   if (state === 'loading') {
     return (
-      <span className="inline-flex shrink-0 items-center gap-1 rounded-md bg-cursor-accent-orange px-2.5 py-1 text-xs font-semibold text-black">
-        <Loader2 className="h-3 w-3 animate-spin" />
-        {t('hackathon.claimCredits')}
-      </span>
+      <div className={shellClass}>
+        {title ? (
+          <p className="mb-2 text-[10px] font-semibold uppercase tracking-[0.16em] text-cursor-text-muted">
+            {title}
+          </p>
+        ) : null}
+        <span className="inline-flex shrink-0 items-center gap-1 rounded-md bg-cursor-accent-orange px-2.5 py-1 text-xs font-semibold text-black">
+          <Loader2 className="h-3 w-3 animate-spin" />
+          {buttonLabel}
+        </span>
+      </div>
     )
   }
 
   if (state === 'error') {
     return (
-      <button
-        type="button"
-        onClick={handleClaim}
-        className="inline-flex shrink-0 items-center gap-1 rounded-md border border-red-500/40 bg-red-500/10 px-2.5 py-1 text-xs font-semibold text-red-300 transition-colors hover:bg-red-500/20"
-      >
-        {t('hackathon.creditsClaimError')}
-      </button>
+      <div className={shellClass}>
+        {title ? (
+          <p className="mb-2 text-[10px] font-semibold uppercase tracking-[0.16em] text-cursor-text-muted">
+            {title}
+          </p>
+        ) : null}
+        <button
+          type="button"
+          onClick={handleClaim}
+          className="inline-flex shrink-0 items-center gap-1 rounded-md border border-red-500/40 bg-red-500/10 px-2.5 py-1 text-xs font-semibold text-red-300 transition-colors hover:bg-red-500/20"
+        >
+          {t('hackathon.creditsClaimError')}
+        </button>
+      </div>
     )
   }
 
   return (
-    <button
-      type="button"
-      onClick={handleClaim}
-      className="inline-flex shrink-0 items-center gap-1 rounded-md bg-cursor-accent-orange px-2.5 py-1 text-xs font-semibold text-black transition-colors hover:bg-cursor-accent-orange/80"
-    >
-      <Gift className="h-3 w-3" />
-      {t('hackathon.claimCredits')}
-    </button>
+    <div className={shellClass}>
+      {title ? (
+        <p className="mb-2 text-[10px] font-semibold uppercase tracking-[0.16em] text-cursor-text-muted">
+          {title}
+        </p>
+      ) : null}
+      <button
+        type="button"
+        onClick={handleClaim}
+        className="inline-flex shrink-0 items-center gap-1 rounded-md bg-cursor-accent-orange px-2.5 py-1 text-xs font-semibold text-black transition-colors hover:bg-cursor-accent-orange/80"
+      >
+        <Gift className="h-3 w-3" />
+        {buttonLabel}
+      </button>
+    </div>
+  )
+}
+
+/** Dual claim panel for the host editor modal ($20 + $50 Cursor credit pools). */
+export function HostEditorCreditsClaim() {
+  const { t } = useI18n()
+  const { data: session } = useSession()
+
+  if (!session?.user) return null
+
+  return (
+    <div className="mt-4 space-y-3">
+      <div>
+        <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-cursor-accent-orange">
+          {t('hackathon.creditsHostClaimEyebrow')}
+        </p>
+        <p className="mt-1 text-xs leading-relaxed text-cursor-text-secondary">
+          {t('hackathon.creditsHostClaimHint')}
+        </p>
+      </div>
+      <div className="space-y-3">
+        <div className="rounded-xl border border-cursor-border-emphasis bg-cursor-overlay/60 p-3">
+          <ClaimCreditsButton
+            sponsorId={CURSOR_POOL_ID}
+            title={t('hackathon.creditsCursor20PoolTitle')}
+            claimLabel={t('hackathon.creditsClaimCursor20')}
+            className="w-full"
+          />
+        </div>
+        <div className="rounded-xl border border-cursor-border-emphasis bg-cursor-overlay/60 p-3">
+          <ClaimCreditsButton
+            sponsorId={CURSOR_50_POOL_ID}
+            title={t('hackathon.creditsCursor50PoolTitle')}
+            claimLabel={t('hackathon.creditsClaimCursor50')}
+            className="w-full"
+          />
+        </div>
+      </div>
+    </div>
   )
 }

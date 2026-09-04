@@ -58,6 +58,24 @@ CREATE INDEX IF NOT EXISTS idx_hackathon_referral_codes_unclaimed
   ON hackathon_referral_codes (sponsor_id, created_at)
   WHERE claimed_by IS NULL;
 
+-- Unique $50 Cursor Pro referral links (separate pool from $20 Cursor referrals).
+-- Legacy table name — pool is Cursor $50 credits, not Grok Bot.
+CREATE TABLE IF NOT EXISTS hackathon_grok_bot_referral_codes (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  code TEXT NOT NULL UNIQUE,
+  claimed_by TEXT,
+  claimed_at TIMESTAMPTZ,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+
+CREATE UNIQUE INDEX IF NOT EXISTS idx_hackathon_grok_bot_referral_codes_one_per_email
+  ON hackathon_grok_bot_referral_codes (claimed_by)
+  WHERE claimed_by IS NOT NULL;
+
+CREATE INDEX IF NOT EXISTS idx_hackathon_grok_bot_referral_codes_unclaimed
+  ON hackathon_grok_bot_referral_codes (created_at)
+  WHERE claimed_by IS NULL;
+
 -- Hackathon project submissions — one row per checked-in attendee email (upsert on resubmit).
 CREATE TABLE IF NOT EXISTS hackathon_project_submissions (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),

@@ -69,7 +69,7 @@ When `NEXT_PUBLIC_HACKATHON_SITE_URL` is set, `/hackathon` on the main domain re
 - `lib/project-submission.ts` — Field validation for project submissions
 - `lib/project-gallery.ts` — Score bounds, favorite cap, average aggregate
 - `lib/demo-embed.ts` — YouTube / Loom embed resolution for demo recordings
-- `components/HackathonHero.tsx` — Full-width hero with date/location/duration cards and CTAs; Grok Bot mascot sits under the tagline on mobile and peeks beside the title from `sm` up
+- `components/HackathonHero.tsx` — Full-width hero with date/location/duration cards and CTAs; full-circle Grok Bot mark (`/grokbot.svg`, same as header) sits under the tagline on mobile and beside the title from `sm` up
 - `components/HackathonHighlights.tsx` — Stat-style highlight grid (TUM-inspired)
 - `components/HackathonPrizes.tsx` — Prize tracks with per-place cards (above sponsors)
 - `components/SponsorMarquee.tsx` — Tech partner and community partner marquees (Startit, Superteam Balkan, ABC BootCamps, JigJoy, Kosmonaut)
@@ -122,7 +122,7 @@ Postgres can stay configured; webhook notify runs after a successful insert (not
 
 Edit `content/hackathon.ts` for:
 
-- Event title (`Grok Bot Serbia Hackathon`), tagline, `mascotImage` (promo), `mascotPeekImage` (Overview hero), duration, and **Luma URL** (source of truth for live sync)
+- Event title (`Grok Bot Serbia Hackathon`), tagline, `mascotImage` / `mascotPeekImage` / `headerMark` (all full-circle `/grokbot.svg`), duration, and **Luma URL** (source of truth for live sync)
 - Static fallback `date` / `displayDate` / `location` (Belgrade, September 12, 2026 — used when Luma is unreachable)
 - Highlights grid (`hackathonStats`)
 - Prize tracks (`hackathonPrizes`: Convex cash 100.000 / 50.000 RSD; Kosmonaut coworking — 15 / 10 / 5 entries per teammate on the top 3 teams, use within 3 months, claimed on their platform; Daytona credits $3,000 / $2,000 / $1,000 plus $100 for every participant; ABC BootCamps — 50% / 40% / 30% scholarships to ABC Silicon Valley 2027)
@@ -157,8 +157,8 @@ Edit `content/hackathon.ts` for:
 - Route: `/hackathon/mentors` (Mentors tab)
 - Three sections in order: hosts (published), mentors (published), judges (published as they lock)
 - Cards use a 1-column grid on small screens and 2 columns from `md` up
-- First mentor: Nick Tomić — CTO and builder; SaaS / AI GTM bio; ask about GTM; X `dropoutsanta`, LinkedIn `nicktomic`
-- Hosts: Aleksandar Hadžibabić and Goran Petković — photos and socials match homepage ambassadors; ask about anything
+- First mentor: Nick Tomić — CTO and builder; short SaaS / AI GTM bio (no 350-founder research sentence); ask about GTM; X `dropoutsanta`, LinkedIn `nicktomic`
+- Hosts: Aleksandar Hadžibabić and Goran Petković — SpaceXAI ambassadors; photos and socials match homepage ambassadors; ask about anything
 - First judge: Ben Kim — founder, investor & community builder; Codex and SpaceX ambassador; photo `public/images/hackathon/ben-kim.jpg` (`photoPosition: center`); X `benkimbuilds`, LinkedIn `benkimbuilds`
 - Mentor and judge photos in `public/images/hackathon/`; host photos reuse `public/images/ambassadors/`
 - Types: `HackathonPerson` in `lib/types.ts`
@@ -175,8 +175,8 @@ Edit `content/hackathon.ts` for:
 - Server: `fetchLumaEventBySlug` reads the public Luma event page (no API key); `resolveHackathonDetails` merges date/location onto static copy
 - Client: `useHackathonDetails` polls `/api/hackathon/event` every 5 minutes (same pattern as upcoming events)
 - Title, tagline, mascot image, and duration stay content-owned so marketing copy does not flip with Luma’s event name
-- Homepage promo card (`HackathonPromoCard`) shows `hackathonConfig.mascotImage` next to the title
-- Overview hero shows `hackathonConfig.mascotPeekImage` under the tagline on mobile (compact, in flow) and peeks beside the title from `sm` up; dark pixels are knocked out and `mix-blend-lighten` so it sits on the page background instead of a boxed image
+- Homepage promo card (`HackathonPromoCard`) can show `hackathonConfig.mascotImage` next to the title (same full-circle `/grokbot.svg` as the header)
+- Overview hero shows `hackathonConfig.mascotPeekImage` (full-circle `/grokbot.svg`) under the tagline on mobile (compact, in flow) and beside the title from `sm` up; Stack Grok Bot card uses the same mark as `logo`
 
 Hero CTAs: Register on Luma (external Luma event link), View on Luma (when already registered/checked in), and Sponsor event (`hackathon.viewSponsorsCta`). Google login is navbar-only. Sponsor event always scrolls to Overview `#become-a-sponsor` — including a second click while already on Overview with that hash. Off Overview (Guide / Mentors / Prizes / Stack) it navigates to the Overview form. The form section uses `scroll-mt-24` so header chrome does not cover the heading. Guide, Mentors, and Stack are header tabs only.
 
@@ -198,12 +198,14 @@ Hackathon attendees sign in with Google via NextAuth.js v5 (JWT strategy, no DB 
 
 ### Credit claiming
 
-Checked-in attendees can claim sponsor credit codes on the Stack page. Each sponsor modal with confirmed perks shows a "Claim Credits" control under the one-liner.
+Checked-in attendees can claim sponsor credit codes on the Stack page. Each sponsor modal with confirmed perks shows a "Claim Credits" control under the one-liner. The Grok Bot (host editor) modal shows **two** claim lanes ($20 and $50 Cursor credits).
 
 - **Shared codes** (Daytona, Exa, Firecrawl, Wonder, …): stored as env vars (`CREDIT_CODE_DAYTONA`, `CREDIT_CODE_EXA`, etc.). Every claimant gets the same value; claims are recorded in `hackathon_credit_claims`. Daytona claim UI shows Billing redeem steps (app.daytona.io → Billing → paste → Redeem).
-- **Unique pool codes** (Grok Bot / Cursor Pro referral links): stored in `hackathon_referral_codes`. Claim assigns the next unclaimed row to the attendee (idempotent per email). After claim, the modal shows the full referral URL with Copy / Open, plus a setup tip: $20 Cursor credits → upgrade to Pro → log in to Grok Bot with Cursor.
-- `/api/hackathon/claim-credits` verifies Luma check-in, then returns the code
-- Seed Cursor links with `pnpm db:seed:cursor-referrals` from the gitignored `db/data/cursor-referrals.txt` (see `.example`; never commit live URLs)
+- **Cursor $20 unique pool**: stored in `hackathon_referral_codes` (`sponsor_id = cursor`). Claim assigns the next unclaimed row (idempotent per email). Setup tip: redeem $20 → upgrade to Pro → log in to Grok Bot.
+- **Cursor $50 unique pool**: stored in a **separate** table `hackathon_grok_bot_referral_codes` (legacy table name). Claim via `sponsorId: "cursor-50"` (idempotent per email). Seed with `pnpm db:seed:grok-bot-referrals` from gitignored `db/data/grok-bot-referrals.csv` (see `.example`).
+- The Grok Bot (host editor) Stack modal shows **two** claim lanes so hackers can take both Cursor credit pools ($20 and $50).
+- `/api/hackathon/claim-credits` verifies Luma check-in, then returns the code for the requested pool / shared sponsor
+- Seed Cursor $20 links with `pnpm db:seed:cursor-referrals` from the gitignored `db/data/cursor-referrals.txt` (see `.example`; never commit live URLs)
 
 ### Project submissions
 

@@ -10,6 +10,7 @@
     "test": "vitest run",
     "db:setup": "node --env-file=.env.local scripts/db-setup.mjs",
     "db:seed:cursor-referrals": "node --env-file=.env.local scripts/seed-cursor-referrals.mjs",
+    "db:seed:grok-bot-referrals": "node --env-file=.env.local scripts/seed-grok-bot-referrals.mjs",
     "db:query": "node --env-file=.env.local scripts/db-query.mjs"
   },
   "dependencies": {

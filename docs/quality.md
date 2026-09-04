@@ -39,6 +39,9 @@ Living scorecard for Cursor Community Serbia. Update after each phase.
 
 | Date       | Change                          |
 |------------|----------------------------------|
+| 2026-09-04 | Hackathon credits UI: dual pools labeled $20 / $50 Cursor credits (not Grok Bot); claim key `cursor-50` for the second pool |
+| 2026-09-04 | Hackathon credits: separate `hackathon_grok_bot_referral_codes` pool; Stack Grok Bot modal lets checked-in hackers claim both Cursor Pro and Grok Bot referrals |
+| 2026-09-04 | Hackathon: full-circle `/grokbot.svg` mark on Overview hero + Stack Grok Bot card (same as header); hosts bio → SpaceXAI ambassadors; Nick bio shortened for card height |
 | 2026-09-04 | Hackathon Judges: published Ben Kim on `/hackathon/mentors` (`hackathonJudges`, photo `public/images/hackathon/ben-kim.jpg`) |
 | 2026-09-04 | Hackathon projects gallery: `/hackathon/projects` cards; judge scores via `HACKATHON_JUDGE_EMAILS` (avg aggregate); community favorites capped at 3 |
 | 2026-09-04 | Hackathon project submissions: `/hackathon/submit` + `POST /api/hackathon/submit`; auth + Luma check-in gate; public GitHub verify; demo recording as URL; upsert per email |

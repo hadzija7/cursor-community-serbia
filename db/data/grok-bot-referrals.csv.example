@@ -1,0 +1,9 @@
+# Local-only seed file for unique $50 Cursor Pro referral links.
+# Copy to grok-bot-referrals.csv (gitignored) and fill rows:
+#   Code,URL
+#   NOVISAD-EXAMPLE,https://cursor.com/referral?code=NOVISAD-EXAMPLE
+# Then run: pnpm db:seed:grok-bot-referrals
+#
+# Prefer the URL column when both are present.
+# (Filename/table are legacy — this pool is $50 Cursor credits.)
+Code,URL
