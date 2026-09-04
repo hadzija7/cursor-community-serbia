@@ -1,60 +1,14 @@
 import { NextResponse, type NextRequest } from 'next/server'
 import { auth } from '@/lib/auth'
-import { hackathonConfig } from '@/content/hackathon'
 import {
   getSharedCreditCode,
   hasCreditCode,
   isPoolSponsor,
 } from '@/lib/credit-codes'
 import { getDb } from '@/lib/db'
-import {
-  fetchEventGuestStatus,
-  resolveEventApiId,
-} from '@/lib/luma'
+import { assertCheckedIn } from '@/lib/hackathon-checkin'
 
 export const dynamic = 'force-dynamic'
-
-let cachedEventId: string | null = null
-
-async function getEventApiId(): Promise<string | null> {
-  if (cachedEventId) return cachedEventId
-  const id = await resolveEventApiId(hackathonConfig.lumaUrl)
-  if (id) cachedEventId = id
-  return id
-}
-
-async function assertCheckedIn(email: string): Promise<NextResponse | null> {
-  const apiKey = process.env.LUMA_BELGRADE_API_KEY?.trim()
-  if (!apiKey) {
-    return NextResponse.json(
-      { error: 'Check-in verification unavailable' },
-      { status: 503 },
-    )
-  }
-
-  const eventApiId = await getEventApiId()
-  if (!eventApiId) {
-    return NextResponse.json(
-      { error: 'Check-in verification unavailable' },
-      { status: 503 },
-    )
-  }
-
-  const status = await fetchEventGuestStatus(
-    apiKey,
-    eventApiId,
-    email,
-    process.env.LUMA_API_BASE_URL,
-  )
-  if (status !== 'checked_in') {
-    return NextResponse.json(
-      { error: 'You must be checked in at the event to claim credits' },
-      { status: 403 },
-    )
-  }
-
-  return null
-}
 
 function isUniqueViolation(err: unknown): boolean {
   return (
@@ -156,7 +110,10 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: 'No credit code available for this sponsor' }, { status: 404 })
   }
 
-  const denied = await assertCheckedIn(session.user.email)
+  const denied = await assertCheckedIn(
+    session.user.email,
+    'You must be checked in at the event to claim credits',
+  )
   if (denied) return denied
 
   if (isPoolSponsor(sponsorId)) {

@@ -58,6 +58,7 @@
   - [x] Hackathon Overview hero: Grok Bot peek is in-flow and compact on mobile (no text overlap)
   - [x] Hackathon sponsor form lives on Overview (`#become-a-sponsor`); `/hackathon/sponsor` redirects there; no Sponsor tab
   - [x] Hero "Sponsor event" always scrolls to Overview `#become-a-sponsor` (same-page hash + `scroll-mt-24`)
+  - [x] Hackathon project submit form (`/hackathon/submit`): Google auth + Luma `checked_in` gate; public GitHub + demo/live URLs; upsert per email
   - [ ] Review and update content (events, ambassadors, partners) for Serbia
 
 - [ ] Ensure education resources are complete and linked correctly

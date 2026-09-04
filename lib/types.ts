@@ -69,6 +69,9 @@ export interface HackathonGuideStep {
   id: string
   title: string
   body: string
+  /** Optional in-app path for a step CTA (e.g. `/hackathon/submit`). */
+  href?: string
+  cta?: string
 }
 
 /** Theme or challenge track — add rows as topics lock. */
