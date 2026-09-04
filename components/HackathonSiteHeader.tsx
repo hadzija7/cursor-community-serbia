@@ -18,6 +18,7 @@ const tabs: { id: VisibleHackathonTab; labelKey: string }[] = [
   { id: 'prizes', labelKey: 'hackathon.tabPrizes' },
   { id: 'stack', labelKey: 'hackathon.tabStack' },
   { id: 'submit', labelKey: 'hackathon.tabSubmit' },
+  { id: 'projects', labelKey: 'hackathon.tabProjects' },
 ]
 
 function isTabActive(pathname: string, tab: HackathonTab): boolean {
@@ -38,6 +39,7 @@ export default function HackathonSiteHeader() {
   const prizesHref = useHackathonHref('prizes')
   const stackHref = useHackathonHref('stack')
   const submitHref = useHackathonHref('submit')
+  const projectsHref = useHackathonHref('projects')
   const hrefs: Record<VisibleHackathonTab, string> = {
     overview: overviewHref,
     guide: guideHref,
@@ -45,6 +47,7 @@ export default function HackathonSiteHeader() {
     prizes: prizesHref,
     stack: stackHref,
     submit: submitHref,
+    projects: projectsHref,
   }
 
   const communityHref = onHackathonHost ? getCommunitySiteUrl() : '/'
