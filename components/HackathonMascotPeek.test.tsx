@@ -73,10 +73,7 @@ describe('HackathonMascotPeek', () => {
     ).toBeTruthy()
     expect(video).toHaveAttribute('poster', hackathonConfig.mascotPeekImage)
     expect(video).toHaveAttribute('preload', 'metadata')
-    expect(container.querySelector('source')).toHaveAttribute(
-      'src',
-      hackathonConfig.mascotPeekVideo
-    )
+    expect(video).toHaveAttribute('src', hackathonConfig.mascotPeekVideo)
   })
 
   it('renders the static peek image when reduced motion is preferred', async () => {

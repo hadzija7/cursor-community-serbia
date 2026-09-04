@@ -62,6 +62,7 @@ export default function HackathonMascotPeek() {
   return (
     <video
       ref={videoRef}
+      src={hackathonConfig.mascotPeekVideo}
       autoPlay
       muted
       loop
@@ -72,8 +73,6 @@ export default function HackathonMascotPeek() {
       height={1024}
       className={MEDIA_CLASS}
       onError={() => setVideoFailed(true)}
-    >
-      <source src={hackathonConfig.mascotPeekVideo} type="video/mp4" />
-    </video>
+    />
   )
 }
