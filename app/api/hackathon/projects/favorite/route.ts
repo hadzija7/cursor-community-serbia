@@ -130,12 +130,17 @@ export async function POST(request: NextRequest) {
       )
       SELECT
         (
-          SELECT COUNT(*)::int FROM hackathon_project_favorites
-          WHERE user_email = ${email}
+          (
+            SELECT COUNT(*)::int FROM hackathon_project_favorites
+            WHERE user_email = ${email}
+          ) + (SELECT COUNT(*)::int FROM ins)
         ) AS favorite_count,
-        EXISTS (
-          SELECT 1 FROM hackathon_project_favorites
-          WHERE user_email = ${email} AND submission_id = ${submissionId}::uuid
+        (
+          EXISTS (SELECT 1 FROM ins)
+          OR EXISTS (
+            SELECT 1 FROM hackathon_project_favorites
+            WHERE user_email = ${email} AND submission_id = ${submissionId}::uuid
+          )
         ) AS favorited
     `
     const inserted = insertRows[0] as
