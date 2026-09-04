@@ -16,6 +16,8 @@ export const hackathonConfig = {
   tagline: 'Build the future with AI — one full day of hacking, learning, and community.',
   mascotImage: '/images/hackathon/grok-bot.png',
   mascotPeekImage: '/images/hackathon/grok-bot-peek.png',
+  /** Official Grok Bot MP4 (~4MB). Drop the file at `public/images/hackathon/grok-bot-peek.mp4`. */
+  mascotPeekVideo: '/images/hackathon/grok-bot-peek.mp4',
   headerMark: '/grokbot.svg',
   ogImage: '/images/og-grok-bot-hackathon.jpg',
   // Static fallback when Luma is unreachable. Live date/location come from

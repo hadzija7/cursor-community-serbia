@@ -20,7 +20,7 @@ Content is driven by TypeScript/JSON files in `content/`. No CMS; content lives 
 | `content/events.ts` | Upcoming/past fallback events, Luma links, recap paths; `pastEvents` sorted newest `date` first |
 | `content/ambassadors.ts` | Ambassador names, photos, social links |
 | `content/partners.ts` | Partner logos, URLs |
-| `content/hackathon.ts` | Hackathon event copy (title: Grok Bot Serbia Hackathon), Grok Bot mascot, Luma URL, prize tracks, hacker guide, mentors/judges, sponsor logos, community partners, stack profiles (including `mcp` install config) |
+| `content/hackathon.ts` | Hackathon event copy (title: Grok Bot Serbia Hackathon), Grok Bot mascot (`mascotPeekImage` + `mascotPeekVideo`), Luma URL, prize tracks, hacker guide, mentors/judges, sponsor logos, community partners, stack profiles (including `mcp` install config) |
 | `content/education.ts` | Educational resources (presentations, PDFs) |
 | `content/header-photos.ts` | Hero bento grid images (local `public/images/` paths and optional Google Drive `uc?export=view&id=` URLs, same pattern as recap galleries and past-event thumbnails) |
 | `content/locales/*.json` | i18n dictionaries |

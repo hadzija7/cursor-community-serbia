@@ -53,6 +53,7 @@ When `NEXT_PUBLIC_HACKATHON_SITE_URL` is set, `/hackathon` on the main domain re
 - `middleware.ts` — Subdomain rewrite + optional main-host redirect
 - `lib/hackathon-site.ts` — Host detection and public hrefs
 - `components/HackathonHero.tsx` — Full-width hero with date/location/duration cards and CTAs; Grok Bot mascot sits under the tagline on mobile and peeks beside the title from `sm` up
+- `components/HackathonMascotPeek.tsx` — Overview hero mascot: muted looping MP4 (`hackathonConfig.mascotPeekVideo`) when motion is allowed; static `mascotPeekImage` for `prefers-reduced-motion` and as video poster / load-error fallback
 - `components/HackathonHighlights.tsx` — Stat-style highlight grid (TUM-inspired)
 - `components/HackathonPrizes.tsx` — Prize tracks with per-place cards (above sponsors)
 - `components/SponsorMarquee.tsx` — Tech partner and community partner marquees (Startit, Superteam Balkan, ABC BootCamps, JigJoy, Kosmonaut)
@@ -102,7 +103,7 @@ Postgres can stay configured; webhook notify runs after a successful insert (not
 
 Edit `content/hackathon.ts` for:
 
-- Event title (`Grok Bot Serbia Hackathon`), tagline, `mascotImage` (promo), `mascotPeekImage` (Overview hero), duration, and **Luma URL** (source of truth for live sync)
+- Event title (`Grok Bot Serbia Hackathon`), tagline, `mascotImage` (promo), `mascotPeekImage` (Overview hero poster / reduced-motion fallback), `mascotPeekVideo` (Overview hero MP4 at `public/images/hackathon/grok-bot-peek.mp4`), duration, and **Luma URL** (source of truth for live sync)
 - Static fallback `date` / `displayDate` / `location` (Belgrade, September 12, 2026 — used when Luma is unreachable)
 - Highlights grid (`hackathonStats`)
 - Prize tracks (`hackathonPrizes`: Convex cash 100.000 / 50.000 RSD; Kosmonaut coworking — 15 / 10 / 5 entries per teammate on the top 3 teams, use within 3 months, claimed on their platform; Daytona credits $3,000 / $2,000 / $1,000 plus $100 for every participant; ABC BootCamps — 50% / 40% / 30% scholarships to ABC Silicon Valley 2027)
@@ -155,7 +156,7 @@ Edit `content/hackathon.ts` for:
 - Client: `useHackathonDetails` polls `/api/hackathon/event` every 5 minutes (same pattern as upcoming events)
 - Title, tagline, mascot image, and duration stay content-owned so marketing copy does not flip with Luma’s event name
 - Homepage promo card (`HackathonPromoCard`) shows `hackathonConfig.mascotImage` next to the title
-- Overview hero shows `hackathonConfig.mascotPeekImage` under the tagline on mobile (compact, in flow) and peeks beside the title from `sm` up; dark pixels are knocked out and `mix-blend-lighten` so it sits on the page background instead of a boxed image
+- Overview hero shows `hackathonConfig.mascotPeekVideo` (HTML5 `<video>`: autoplay, muted, loop, playsInline, `preload="metadata"`, poster = peek PNG) under the tagline on mobile (compact, in flow) and peeks beside the title from `sm` up; dark pixels are knocked out and `mix-blend-lighten` so it sits on the page background instead of a boxed image. When `prefers-reduced-motion: reduce`, `HackathonMascotPeek` renders only the static peek PNG (video is not mounted). Drop the official MP4 at `public/images/hackathon/grok-bot-peek.mp4` (~4MB); until present, the video `onError` path falls back to the PNG.
 
 Hero CTAs: Register on Luma (external Luma event link), View on Luma (when already registered/checked in), and Sponsor event (`hackathon.viewSponsorsCta`). Google login is navbar-only. Sponsor event always scrolls to Overview `#become-a-sponsor` — including a second click while already on Overview with that hash. Off Overview (Guide / Mentors / Prizes / Stack) it navigates to the Overview form. The form section uses `scroll-mt-24` so header chrome does not cover the heading. Guide, Mentors, and Stack are header tabs only.
 
