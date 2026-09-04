@@ -48,6 +48,7 @@ The Cursor Community Serbia site is a Next.js 16 App Router application presenti
 - `components/HackathonPromoCard.tsx` — Homepage hero hackathon promo card (top-left overlay; Grok Bot mascot next to the title; orange accent; live date/location via `useHackathonDetails`)
 - `lib/use-hackathon-details.ts` — Client poll of `/api/hackathon/event`
 - `components/HackathonHero.tsx` — Hackathon page hero (facts + CTAs)
+- `components/HackathonMascotPeek.tsx` — Overview hero Grok Bot MP4 with reduced-motion static fallback
 - `components/HackathonHighlights.tsx` — Hackathon stat-style highlight grid
 - `components/HackathonPrizes.tsx` — Hackathon prize tracks (place cards above sponsors)
 - `components/SponsorMarquee.tsx` — Hackathon tech partner and community partner marquees

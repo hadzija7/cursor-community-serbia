@@ -2,11 +2,10 @@
 
 import { motion } from 'framer-motion'
 import { Calendar, Clock, MapPin } from 'lucide-react'
-import Image from 'next/image'
 import { usePathname } from 'next/navigation'
 import { useEffect, type MouseEvent } from 'react'
 import HackerAuthButton from '@/components/HackerAuthButton'
-import { hackathonConfig } from '@/content/hackathon'
+import HackathonMascotPeek from '@/components/HackathonMascotPeek'
 import { useI18n } from '@/lib/i18n'
 import { useHackerStatus } from '@/lib/use-hacker-status'
 import { useHackathonHref } from '@/lib/use-hackathon-base-path'
@@ -121,14 +120,7 @@ export default function HackathonHero() {
               className="pointer-events-none relative w-28 shrink-0 sm:absolute sm:bottom-0 sm:right-0 sm:z-0 sm:w-[16rem] md:w-[18rem] lg:w-[20rem]"
               aria-hidden
             >
-              <Image
-                src={hackathonConfig.mascotPeekImage}
-                alt=""
-                width={1024}
-                height={1024}
-                className="h-auto w-full mix-blend-lighten"
-                priority
-              />
+              <HackathonMascotPeek />
             </div>
           </div>
 

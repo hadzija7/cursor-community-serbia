@@ -39,6 +39,7 @@ Living scorecard for Cursor Community Serbia. Update after each phase.
 
 | Date       | Change                          |
 |------------|----------------------------------|
+| 2026-09-04 | Overview hero Grok Bot: muted looping MP4 (`mascotPeekVideo`) with static peek PNG poster + `prefers-reduced-motion` / load-error fallback; asset path `public/images/hackathon/grok-bot-peek.mp4` (~4MB, supply before merge) |
 | 2026-09-03 | Hackathon header uses `/grokbot.svg` with expanded viewBox so the full circle mark is not clipped |
 | 2026-09-03 | Hackathon header uses cropped Grok Bot wordmark lockup + “Serbia Hackathon”; silk bg clipped in a rounded chip |
 | 2026-09-03 | Hackathon brand: header shows Grok Bot Serbia Hackathon; marketing copy prioritizes Grok Bot; hero mascot stays in flow on mobile |
