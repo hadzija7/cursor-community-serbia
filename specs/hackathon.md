@@ -24,7 +24,7 @@ Inspired by conference landing patterns (e.g. TUM Blockchain Conference): full-w
 |-------|---------|
 | `/hackathon` | Overview tab (hero, highlights, tech partners marquee, community partners, become-a-sponsor form) |
 | `/hackathon/guide` | Guide tab: purpose, team size, shipping defaults, hacker guidelines; topics list is empty until tracks lock |
-| `/hackathon/mentors` | Mentors and judges tab; judges stay empty until announced |
+| `/hackathon/mentors` | Mentors and judges tab; published judges appear in the Judges section |
 | `/hackathon/stack` | Stack tab: expertise group panels + card modal |
 | `/hackathon/prizes` | Prizes tab |
 | `/hackathon/submit` | Project submission form (checked-in Google-auth hackers only) |
@@ -155,11 +155,12 @@ Edit `content/hackathon.ts` for:
 ### Mentors and judges tab
 
 - Route: `/hackathon/mentors` (Mentors tab)
-- Three sections in order: hosts (published), mentors (published), judges (empty until announced)
+- Three sections in order: hosts (published), mentors (published), judges (published as they lock)
 - Cards use a 1-column grid on small screens and 2 columns from `md` up
 - First mentor: Nick Tomić — CTO and builder; SaaS / AI GTM bio; ask about GTM; X `dropoutsanta`, LinkedIn `nicktomic`
 - Hosts: Aleksandar Hadžibabić and Goran Petković — photos and socials match homepage ambassadors; ask about anything
-- Mentor photos in `public/images/hackathon/`; host photos reuse `public/images/ambassadors/`
+- First judge: Ben Kim — founder, investor & community builder; Codex and SpaceX ambassador; photo `public/images/hackathon/ben-kim.jpg` (`photoPosition: center`); no social links published
+- Mentor and judge photos in `public/images/hackathon/`; host photos reuse `public/images/ambassadors/`
 - Types: `HackathonPerson` in `lib/types.ts`
 
 ### Prizes section
@@ -283,7 +284,7 @@ The app is ready for `hackathon.cursorserbia.com`. Creating the hostname is a da
 - [ ] `/hackathon` loads the Overview tab (hero, highlights, marquee, become-a-sponsor form)
 - [ ] Hero "Sponsor event" always scrolls to `#become-a-sponsor` (Overview with or without hash; from Prizes/Stack)
 - [ ] Tabs switch to Guide, Mentors, Prizes, Stack, Submit, and Projects (no Sponsor tab)
-- [ ] `/hackathon/mentors` shows Hosts (Aleksandar + Goran side by side from `md`), then Mentors (Nick with X + LinkedIn), then an empty judges placeholder
+- [ ] `/hackathon/mentors` shows Hosts (Aleksandar + Goran side by side from `md`), then Mentors (Nick with X + LinkedIn), then Judges (Ben Kim)
 - [ ] `/hackathon/guide` shows purpose, team size, shipping defaults, and an empty Topics placeholder
 - [ ] Guide submit step links to `/hackathon/submit`
 - [ ] `/hackathon/submit` shows login CTA when signed out; check-in message when registered; form when checked in

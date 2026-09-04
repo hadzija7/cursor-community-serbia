@@ -39,6 +39,7 @@ Living scorecard for Cursor Community Serbia. Update after each phase.
 
 | Date       | Change                          |
 |------------|----------------------------------|
+| 2026-09-04 | Hackathon Judges: published Ben Kim on `/hackathon/mentors` (`hackathonJudges`, photo `public/images/hackathon/ben-kim.jpg`) |
 | 2026-09-04 | Hackathon projects gallery: `/hackathon/projects` cards; judge scores via `HACKATHON_JUDGE_EMAILS` (avg aggregate); community favorites capped at 3 |
 | 2026-09-04 | Hackathon project submissions: `/hackathon/submit` + `POST /api/hackathon/submit`; auth + Luma check-in gate; public GitHub verify; demo recording as URL; upsert per email |
 | 2026-09-03 | Hackathon header uses `/grokbot.svg` with expanded viewBox so the full circle mark is not clipped |
