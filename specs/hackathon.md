@@ -159,7 +159,7 @@ Edit `content/hackathon.ts` for:
 - Cards use a 1-column grid on small screens and 2 columns from `md` up
 - First mentor: Nick Tomić — CTO and builder; SaaS / AI GTM bio; ask about GTM; X `dropoutsanta`, LinkedIn `nicktomic`
 - Hosts: Aleksandar Hadžibabić and Goran Petković — photos and socials match homepage ambassadors; ask about anything
-- First judge: Ben Kim — founder, investor & community builder; Codex and SpaceX ambassador; photo `public/images/hackathon/ben-kim.jpg` (`photoPosition: center`); no social links published
+- First judge: Ben Kim — founder, investor & community builder; Codex and SpaceX ambassador; photo `public/images/hackathon/ben-kim.jpg` (`photoPosition: center`); X `benkimbuilds`, LinkedIn `benkimbuilds`
 - Mentor and judge photos in `public/images/hackathon/`; host photos reuse `public/images/ambassadors/`
 - Types: `HackathonPerson` in `lib/types.ts`
 

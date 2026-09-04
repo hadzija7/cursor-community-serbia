@@ -123,7 +123,8 @@ describe('hackathon sponsor stack content', () => {
     expect(hackathonJudges[0]?.photo).toBe('/images/hackathon/ben-kim.jpg')
     expect(hackathonJudges[0]?.photoPosition).toBe('center')
     expect(hackathonJudges[0]?.bio).toMatch(/Mexico City/)
-    expect(hackathonJudges[0]?.links).toBeUndefined()
+    expect(hackathonJudges[0]?.links?.x).toBe('https://x.com/benkimbuilds')
+    expect(hackathonJudges[0]?.links?.linkedin).toBe('https://www.linkedin.com/in/benkimbuilds/')
   })
 
   it('keeps a minimal hacker guide with a seven-step timeline', () => {

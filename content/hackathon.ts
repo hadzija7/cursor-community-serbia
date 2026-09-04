@@ -203,6 +203,10 @@ export const hackathonJudges: HackathonPerson[] = [
     photo: '/images/hackathon/ben-kim.jpg',
     photoPosition: 'center',
     bio: 'Founder, investor, community builder, and developer who comes from Silicon Valley but now lives in Mexico City. Codex and SpaceX ambassador.',
+    links: {
+      x: 'https://x.com/benkimbuilds',
+      linkedin: 'https://www.linkedin.com/in/benkimbuilds/',
+    },
   },
 ]
 
