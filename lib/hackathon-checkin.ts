@@ -51,12 +51,10 @@ export async function assertCheckedIn(
   }
 
   if (status !== 'checked_in') {
-    const message =
-      status === 'registered'
-        ? notCheckedInMessage
-        : 'You must be registered and checked in at the event to submit'
-
-    return NextResponse.json({ error: message, lumaStatus: status }, { status: 403 })
+    return NextResponse.json(
+      { error: notCheckedInMessage, lumaStatus: status },
+      { status: 403 },
+    )
   }
 
   return null
