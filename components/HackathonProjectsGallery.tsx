@@ -26,68 +26,21 @@ type ApiResponse = {
   viewer?: ViewerState
 }
 
+/** Dev-only preview fixture — official submission only (no mock projects). */
 const PREVIEW_PROJECTS: ProjectGalleryItem[] = [
   {
-    id: 'preview-1',
-    title: 'Grok Bot Concierge',
-    description:
-      'A voice-first concierge that books coworking desks and drafts follow-ups in Serbian and English.',
-    githubUrl: 'https://github.com/octocat/Hello-World',
-    demoRecordingUrl: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
-    liveDemoUrl: 'https://demo.example.com/concierge',
-    submitterName: 'Ada Hacker',
-    submittedAt: '2026-09-04T10:00:00.000Z',
-    averageScore: 8.5,
-    reviewCount: 2,
-    favoriteCount: 4,
-    favoritedByMe: false,
-    myScore: null,
-  },
-  {
-    id: 'preview-2',
-    title: 'Firecrawl Field Notes',
-    description:
-      'Crawl partner docs into a Cursor-ready knowledge pack with citations and MCP install tips.',
-    githubUrl: 'https://github.com/octocat/Spoon-Knife',
-    demoRecordingUrl: 'https://www.loom.com/share/previewdemo0001',
-    liveDemoUrl: 'https://demo.example.com/field-notes',
-    submitterName: 'Nikola Builder',
-    submittedAt: '2026-09-04T11:00:00.000Z',
+    id: '2939d78c-09ac-49b6-b2fc-abe951c94667',
+    title: 'Cursor Serbia Community',
+    description: 'Serbian Cursor AI community (Now SpaceXAI)',
+    githubUrl: 'https://github.com/hadzija7/cursor-community-serbia',
+    demoRecordingUrl: 'https://www.youtube.com/watch?v=ApGre9Btaq0',
+    liveDemoUrl: 'https://cursorserbia.com/',
+    submitterName: 'Aleksandar Hadzibabic',
+    submittedAt: '2026-09-04T09:11:41.722Z',
     averageScore: null,
     reviewCount: 0,
-    favoriteCount: 1,
-    favoritedByMe: true,
-    myScore: null,
-  },
-  {
-    id: 'preview-3',
-    title: 'Daytona Sandbox Studio',
-    description:
-      'Spin ephemeral sandboxes for hackathon demos with one-click deploy and share links.',
-    githubUrl: 'https://github.com/octocat/Hello-World',
-    demoRecordingUrl: 'https://example.com/not-an-embed',
-    liveDemoUrl: 'https://demo.example.com/sandbox',
-    submitterName: null,
-    submittedAt: '2026-09-04T12:00:00.000Z',
-    averageScore: 7,
-    reviewCount: 1,
-    favoriteCount: 2,
-    favoritedByMe: true,
-    myScore: 7,
-  },
-  {
-    id: 'preview-4',
-    title: 'Wonder UI Kit',
-    description: 'Generate branded UI kits for hackathon MVPs with Wonder Pro.',
-    githubUrl: 'https://github.com/octocat/Hello-World',
-    demoRecordingUrl: 'https://youtu.be/dQw4w9WgXcQ',
-    liveDemoUrl: 'https://demo.example.com/wonder',
-    submitterName: 'Mila Design',
-    submittedAt: '2026-09-04T13:00:00.000Z',
-    averageScore: 9,
-    reviewCount: 1,
     favoriteCount: 0,
-    favoritedByMe: true,
+    favoritedByMe: false,
     myScore: null,
   },
 ]
@@ -96,7 +49,7 @@ function previewViewer(asJudge: boolean): ViewerState {
   return {
     email: asJudge ? 'judge@preview.local' : 'voter@preview.local',
     isJudge: asJudge,
-    favoriteCount: 3,
+    favoriteCount: 0,
     maxFavorites: MAX_FAVORITES_PER_USER,
   }
 }
