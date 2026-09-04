@@ -7,7 +7,7 @@ Living scorecard for Cursor Community Serbia. Update after each phase.
 | Domain        | Spec | Code | Tests | Review | Overall |
 |---------------|------|------|-------|--------|---------|
 | Web UI        | C    | B    | C     | -      | C       |
-| Hackathon     | B    | B    | B     | -      | B       |
+| Hackathon     | B    | B    | B+    | -      | B       |
 | Content Config| C    | B    | C     | -      | C       |
 | Mailing List  | C    | B    | C     | -      | C       |
 | Education     | C    | B    | -     | -      | C       |
@@ -39,6 +39,7 @@ Living scorecard for Cursor Community Serbia. Update after each phase.
 
 | Date       | Change                          |
 |------------|----------------------------------|
+| 2026-09-04 | Hackathon project submissions: `/hackathon/submit` + `POST /api/hackathon/submit`; auth + Luma check-in gate; public GitHub verify; demo recording as URL; upsert per email |
 | 2026-09-03 | Hackathon header uses `/grokbot.svg` with expanded viewBox so the full circle mark is not clipped |
 | 2026-09-03 | Hackathon header uses cropped Grok Bot wordmark lockup + “Serbia Hackathon”; silk bg clipped in a rounded chip |
 | 2026-09-03 | Hackathon brand: header shows Grok Bot Serbia Hackathon; marketing copy prioritizes Grok Bot; hero mascot stays in flow on mobile |

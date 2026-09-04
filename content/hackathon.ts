@@ -139,7 +139,9 @@ export const hackathonGuideSteps: HackathonGuideStep[] = [
   {
     id: 'submit',
     title: 'Submit through the form',
-    body: 'The submission form lands on the day. Do not skip it.',
+    body: 'Open the submission form when you are checked in. You can update your entry later the same day.',
+    href: '/hackathon/submit',
+    cta: 'Open submit form',
   },
 ]
 

@@ -78,6 +78,25 @@ try {
     WHERE claimed_by IS NULL
   `
 
+  await sql`
+    CREATE TABLE IF NOT EXISTS hackathon_project_submissions (
+      id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+      email TEXT NOT NULL UNIQUE,
+      name TEXT,
+      project_title TEXT NOT NULL,
+      project_description TEXT NOT NULL,
+      github_url TEXT NOT NULL,
+      demo_recording_url TEXT NOT NULL,
+      live_demo_url TEXT NOT NULL,
+      submitted_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+      updated_at TIMESTAMPTZ NOT NULL DEFAULT now()
+    )
+  `
+  await sql`
+    CREATE INDEX IF NOT EXISTS idx_hackathon_project_submissions_submitted_at
+    ON hackathon_project_submissions (submitted_at DESC)
+  `
+
   console.log('✓ Schema created successfully')
 } catch (err) {
   console.error('Schema setup failed:', err.message)

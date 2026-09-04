@@ -10,7 +10,7 @@ Hackathon mini-site with tabs (Overview, Guide, Mentors, Prizes, Stack). Served 
 |-------|-------|
 | Status | Implemented |
 | Verified | Partial |
-| Last updated | 2026-09-02 |
+| Last updated | 2026-09-04 |
 
 ## Page layout
 
@@ -27,14 +27,16 @@ Inspired by conference landing patterns (e.g. TUM Blockchain Conference): full-w
 | `/hackathon/mentors` | Mentors and judges tab; judges stay empty until announced |
 | `/hackathon/stack` | Stack tab: expertise group panels + card modal |
 | `/hackathon/prizes` | Prizes tab |
+| `/hackathon/submit` | Project submission form (checked-in Google-auth hackers only) |
 | `/hackathon/sponsor` | Redirects to Overview `#become-a-sponsor` (bookmarks / `hackathon.*` `/sponsor` rewrite) |
 | `/api/hackathon/event` | GET live date/location from Luma (static fallback) |
 | `/api/hackathon/sponsor` | POST sponsorship applications |
+| `/api/hackathon/submit` | POST project submission (auth + Luma `checked_in` required; upserts one row per email) |
 | `/api/auth/[...nextauth]` | Google OAuth sign-in/sign-out (NextAuth.js v5) |
 | `/api/hackathon/attendee-status` | GET Luma guest status for authenticated user |
 | `/api/hackathon/claim-credits` | POST claim sponsor credit code (requires check-in) |
 
-On host `hackathon.*` (e.g. `hackathon.cursorserbia.com` or `hackathon.localhost`), `middleware.ts` rewrites `/` → `/hackathon`, `/stack` → `/hackathon/stack`, and so on. Community chrome is replaced by `HackathonSiteHeader` tabs.
+On host `hackathon.*` (e.g. `hackathon.cursorserbia.com` or `hackathon.localhost`), `middleware.ts` rewrites `/` → `/hackathon`, `/stack` → `/hackathon/stack`, `/submit` → `/hackathon/submit`, and so on. Community chrome is replaced by `HackathonSiteHeader` tabs.
 
 When `NEXT_PUBLIC_HACKATHON_SITE_URL` is set, `/hackathon` on the main domain redirects to that host. Do not set the env until the Vercel domain is live.
 
@@ -45,13 +47,18 @@ When `NEXT_PUBLIC_HACKATHON_SITE_URL` is set, `/hackathon` on the main domain re
 - `app/hackathon/mentors/page.tsx` — Mentors and judges tab
 - `app/hackathon/stack/page.tsx` — Stack tab
 - `app/hackathon/prizes/page.tsx` — Prizes tab
+- `app/hackathon/submit/page.tsx` — Project submission tab
 - `app/hackathon/sponsor/page.tsx` — Redirect to Overview `#become-a-sponsor`
 - `app/hackathon/layout.tsx` — Route metadata + `HackathonSiteHeader`; OG/Twitter share image is `hackathonConfig.ogImage` (`/images/og-grok-bot-hackathon.jpg`)
-- `components/HackathonSiteHeader.tsx` — Hackathon-only chrome and tabs (Overview / Guide / Mentors / Prizes / Stack); brand is full-circle `/grokbot.svg` mark + “Grok Bot Serbia Hackathon”
+- `components/HackathonSiteHeader.tsx` — Hackathon-only chrome and tabs (Overview / Guide / Mentors / Prizes / Stack / Submit); brand is full-circle `/grokbot.svg` mark + “Grok Bot Serbia Hackathon”
 - `components/HackathonGuide.tsx` — Purpose, team, shipping, guidelines, and extensible topics
+- `components/HackathonProjectSubmitForm.tsx` — Project submission form (login / check-in gates + fields)
 - `components/HackathonPeople.tsx` — Mentor, host, and judge cards (`/hackathon/mentors`)
 - `middleware.ts` — Subdomain rewrite + optional main-host redirect
 - `lib/hackathon-site.ts` — Host detection and public hrefs
+- `lib/hackathon-checkin.ts` — Shared Luma `checked_in` gate (credit claims + project submit)
+- `lib/github-repo.ts` — GitHub URL parse + public-repo check via unauthenticated API
+- `lib/project-submission.ts` — Field validation for project submissions
 - `components/HackathonHero.tsx` — Full-width hero with date/location/duration cards and CTAs; Grok Bot mascot sits under the tagline on mobile and peeks beside the title from `sm` up
 - `components/HackathonHighlights.tsx` — Stat-style highlight grid (TUM-inspired)
 - `components/HackathonPrizes.tsx` — Prize tracks with per-place cards (above sponsors)
@@ -74,6 +81,7 @@ When `NEXT_PUBLIC_HACKATHON_SITE_URL` is set, `/hackathon` on the main domain re
 ### Postgres (recommended)
 
 - Table: `hackathon_sponsor_applications` in `db/schema.sql`
+- Table: `hackathon_project_submissions` in `db/schema.sql` (one row per attendee email; upsert on resubmit)
 - Env: `POSTGRES_URL` or `DATABASE_URL`
 
 ### Webhook
@@ -128,7 +136,7 @@ Edit `content/hackathon.ts` for:
 
 - Route: `/hackathon/guide` (Guide tab)
 - Minimal briefing: why, team (solo or a team), numbered guidelines timeline, topics
-- Timeline: Stack → mentors → Cursor → partner MCPs → Origin → 3-minute demo → submit form (plain text, no step links)
+- Timeline: Stack → mentors → Cursor → partner MCPs → Origin → 3-minute demo → submit form (submit step links to `/hackathon/submit`)
 - Content-first: add theme rows to `hackathonGuideTopics` when tracks lock; do not invent topics
 - Types: `HackathonGuideCopy` / `HackathonGuideStep` / `HackathonGuideTopic` in `lib/types.ts`
 
@@ -184,6 +192,31 @@ Checked-in attendees can claim sponsor credit codes on the Stack page. Each spon
 - `/api/hackathon/claim-credits` verifies Luma check-in, then returns the code
 - Seed Cursor links with `pnpm db:seed:cursor-referrals` from the gitignored `db/data/cursor-referrals.txt` (see `.example`; never commit live URLs)
 
+### Project submissions
+
+Checked-in attendees submit one project for judging via `/hackathon/submit` (header **Submit** tab). Demo recording is a URL only (YouTube / Loom / similar) — no file upload.
+
+**Access control** (same gate as credit claims via `lib/hackathon-checkin.ts`):
+
+| Client state | UI | API |
+|--------------|----|-----|
+| Not signed in | Google login CTA | `401 Not authenticated` |
+| Signed in, Luma `registered` | Check-in-first message | `403` with clear check-in message |
+| Signed in, Luma `not_found` | Register on Luma CTA | `403` |
+| Signed in, Luma `checked_in` | Form | Accepts POST |
+
+**Fields (all required):** project title (short), project description (multi-line), public GitHub repo URL, demo recording URL (3–5 min helper text), live demo http(s) URL.
+
+**GitHub validation:** URL must parse as `github.com/owner/repo`; server verifies the repo is public via unauthenticated `GET https://api.github.com/repos/{owner}/{repo}` (404 / private rejected).
+
+**Persistence:** table `hackathon_project_submissions` in `db/schema.sql` / `pnpm db:setup`. One row per email (`UNIQUE(email)`); resubmit upserts and bumps `updated_at`.
+
+**Components / routes:**
+
+- `app/hackathon/submit/page.tsx` + `components/HackathonProjectSubmitForm.tsx`
+- `POST /api/hackathon/submit`
+- `lib/project-submission.ts`, `lib/github-repo.ts`
+
 ### Env vars
 
 | Variable | Purpose |
@@ -207,11 +240,16 @@ The app is ready for `hackathon.cursorserbia.com`. Creating the hostname is a da
 
 - [ ] `/hackathon` loads the Overview tab (hero, highlights, marquee, become-a-sponsor form)
 - [ ] Hero "Sponsor event" always scrolls to `#become-a-sponsor` (Overview with or without hash; from Prizes/Stack)
-- [ ] Tabs switch to Guide, Mentors, Prizes, and Stack (no Sponsor tab)
+- [ ] Tabs switch to Guide, Mentors, Prizes, Stack, and Submit (no Sponsor tab)
 - [ ] `/hackathon/mentors` shows Hosts (Aleksandar + Goran side by side from `md`), then Mentors (Nick with X + LinkedIn), then an empty judges placeholder
 - [ ] `/hackathon/guide` shows purpose, team size, shipping defaults, and an empty Topics placeholder
+- [ ] Guide submit step links to `/hackathon/submit`
+- [ ] `/hackathon/submit` shows login CTA when signed out; check-in message when registered; form when checked in
+- [ ] `POST /api/hackathon/submit` rejects unauthenticated and not-checked-in callers; upserts one row per email
+- [ ] GitHub URL must be a public repo (shape + API check)
 - [ ] `/hackathon/sponsor` redirects to Overview `#become-a-sponsor`
 - [ ] `http://hackathon.localhost:<port>/` rewrites to the Overview tab
+- [ ] `http://hackathon.localhost:<port>/submit` rewrites to the Submit tab
 - [ ] Date/location update when Luma event changes (or fall back to static)
 - [ ] Marquee animates smoothly and pauses on hover
 - [ ] Sponsorship form validates required fields

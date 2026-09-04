@@ -1,5 +1,6 @@
 'use client'
 
+import Link from 'next/link'
 import { motion } from 'framer-motion'
 import {
   hackathonGuidePurpose,
@@ -8,9 +9,11 @@ import {
   hackathonGuideTopics,
 } from '@/content/hackathon'
 import { useI18n } from '@/lib/i18n'
+import { useHackathonHref } from '@/lib/use-hackathon-base-path'
 
 export default function HackathonGuide() {
   const { t } = useI18n()
+  const submitHref = useHackathonHref('submit')
 
   return (
     <div className="space-y-16">
@@ -61,6 +64,7 @@ export default function HackathonGuide() {
           {hackathonGuideSteps.map((step, index) => {
             const last = index === hackathonGuideSteps.length - 1
             const number = String(index + 1).padStart(2, '0')
+            const stepHref = step.id === 'submit' && step.href ? submitHref : step.href
 
             return (
               <motion.li
@@ -87,6 +91,14 @@ export default function HackathonGuide() {
                   <p className="mt-1 max-w-xl text-sm leading-relaxed text-cursor-text-secondary md:text-base">
                     {step.body}
                   </p>
+                  {stepHref && step.cta ? (
+                    <Link
+                      href={stepHref}
+                      className="mt-3 inline-flex text-sm font-medium text-cursor-accent-orange transition-colors hover:text-cursor-text"
+                    >
+                      {step.cta} →
+                    </Link>
+                  ) : null}
                 </div>
               </motion.li>
             )
