@@ -365,7 +365,7 @@ export default function HackathonProjectsGallery() {
             project={project}
             isJudge={isJudge}
             isSignedIn={isSignedIn}
-            busy={busyId === project.id}
+            busy={busyId !== null}
             onFavorite={onFavorite}
             onScore={onScore}
             onLogin={onLogin}

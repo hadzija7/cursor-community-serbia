@@ -111,33 +111,51 @@ export async function POST(request: NextRequest) {
       })
     }
 
-    const countRows = await db`
-      SELECT COUNT(*)::int AS count
-      FROM hackathon_project_favorites
-      WHERE user_email = ${email}
+    // Atomic cap enforcement: advisory lock + conditional INSERT in one statement
+    // so concurrent requests cannot race past MAX_FAVORITES_PER_USER.
+    const insertRows = await db`
+      WITH lock AS (
+        SELECT pg_advisory_xact_lock(hashtext(${email}))
+      ),
+      ins AS (
+        INSERT INTO hackathon_project_favorites (submission_id, user_email)
+        SELECT ${submissionId}::uuid, ${email}
+        FROM lock
+        WHERE (
+          SELECT COUNT(*) FROM hackathon_project_favorites
+          WHERE user_email = ${email}
+        ) < ${MAX_FAVORITES_PER_USER}
+        ON CONFLICT (user_email, submission_id) DO NOTHING
+        RETURNING id
+      )
+      SELECT
+        (
+          SELECT COUNT(*)::int FROM hackathon_project_favorites
+          WHERE user_email = ${email}
+        ) AS favorite_count,
+        EXISTS (
+          SELECT 1 FROM hackathon_project_favorites
+          WHERE user_email = ${email} AND submission_id = ${submissionId}::uuid
+        ) AS favorited
     `
-    const currentCount = Number(
-      (countRows[0] as { count: number } | undefined)?.count ?? 0,
-    )
+    const inserted = insertRows[0] as
+      | { favorite_count: number; favorited: boolean }
+      | undefined
+    const favoriteCount = Number(inserted?.favorite_count ?? 0)
+    const favorited = Boolean(inserted?.favorited)
 
-    if (currentCount >= MAX_FAVORITES_PER_USER) {
+    if (!favorited) {
       return toError(favoriteCapMessage(), 409, {
         code: 'FAVORITE_CAP',
-        favoriteCount: currentCount,
+        favoriteCount,
         maxFavorites: MAX_FAVORITES_PER_USER,
       })
     }
 
-    await db`
-      INSERT INTO hackathon_project_favorites (submission_id, user_email)
-      VALUES (${submissionId}::uuid, ${email})
-      ON CONFLICT (user_email, submission_id) DO NOTHING
-    `
-
     return NextResponse.json({
       ok: true,
       favorited: true,
-      favoriteCount: currentCount + 1,
+      favoriteCount,
       maxFavorites: MAX_FAVORITES_PER_USER,
       message: 'Favorited.',
     })

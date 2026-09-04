@@ -92,4 +92,19 @@ describe('demo embed resolution', () => {
       href: 'https://vimeo.com/123',
     })
   })
+
+  it('does not iframe untrusted hosts that mention youtube embed paths', () => {
+    expect(
+      resolveDemoEmbed('https://evil.example/youtube.com/embed/dQw4w9WgXcQ'),
+    ).toEqual({
+      kind: 'external',
+      href: 'https://evil.example/youtube.com/embed/dQw4w9WgXcQ',
+    })
+    expect(
+      resolveDemoEmbed('https://www.youtube.com/embed/dQw4w9WgXcQ'),
+    ).toEqual({
+      kind: 'youtube',
+      embedUrl: 'https://www.youtube.com/embed/dQw4w9WgXcQ',
+    })
+  })
 })

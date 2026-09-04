@@ -47,8 +47,8 @@ describe('POST /api/hackathon/projects/favorite', () => {
       .mockResolvedValueOnce([{ id: SUBMISSION_ID }])
       // not already favorited
       .mockResolvedValueOnce([])
-      // current favorite count = 3
-      .mockResolvedValueOnce([{ count: 3 }])
+      // atomic insert blocked by cap
+      .mockResolvedValueOnce([{ favorite_count: 3, favorited: false }])
 
     vi.spyOn(db, 'getDb').mockReturnValue(sql as unknown as ReturnType<typeof db.getDb>)
 
@@ -77,8 +77,7 @@ describe('POST /api/hackathon/projects/favorite', () => {
       .fn()
       .mockResolvedValueOnce([{ id: SUBMISSION_ID }])
       .mockResolvedValueOnce([])
-      .mockResolvedValueOnce([{ count: 2 }])
-      .mockResolvedValueOnce([])
+      .mockResolvedValueOnce([{ favorite_count: 3, favorited: true }])
 
     vi.spyOn(db, 'getDb').mockReturnValue(sql as unknown as ReturnType<typeof db.getDb>)
 
