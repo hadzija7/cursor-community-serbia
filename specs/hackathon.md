@@ -28,15 +28,19 @@ Inspired by conference landing patterns (e.g. TUM Blockchain Conference): full-w
 | `/hackathon/stack` | Stack tab: expertise group panels + card modal |
 | `/hackathon/prizes` | Prizes tab |
 | `/hackathon/submit` | Project submission form (checked-in Google-auth hackers only) |
+| `/hackathon/projects` | Public projects gallery — cards, judge scores, community favorites |
 | `/hackathon/sponsor` | Redirects to Overview `#become-a-sponsor` (bookmarks / `hackathon.*` `/sponsor` rewrite) |
 | `/api/hackathon/event` | GET live date/location from Luma (static fallback) |
 | `/api/hackathon/sponsor` | POST sponsorship applications |
 | `/api/hackathon/submit` | POST project submission (auth + Luma `checked_in` required; upserts one row per email) |
+| `/api/hackathon/projects` | GET public gallery list with aggregates + viewer favorite/score state |
+| `/api/hackathon/projects/review` | POST upsert judge score 1–10 (env-gated judge emails) |
+| `/api/hackathon/projects/favorite` | POST toggle community favorite (max 3 per signed-in user) |
 | `/api/auth/[...nextauth]` | Google OAuth sign-in/sign-out (NextAuth.js v5) |
 | `/api/hackathon/attendee-status` | GET Luma guest status for authenticated user |
 | `/api/hackathon/claim-credits` | POST claim sponsor credit code (requires check-in) |
 
-On host `hackathon.*` (e.g. `hackathon.cursorserbia.com` or `hackathon.localhost`), `middleware.ts` rewrites `/` → `/hackathon`, `/stack` → `/hackathon/stack`, `/submit` → `/hackathon/submit`, and so on. Community chrome is replaced by `HackathonSiteHeader` tabs.
+On host `hackathon.*` (e.g. `hackathon.cursorserbia.com` or `hackathon.localhost`), `middleware.ts` rewrites `/` → `/hackathon`, `/stack` → `/hackathon/stack`, `/submit` → `/hackathon/submit`, `/projects` → `/hackathon/projects`, and so on. Community chrome is replaced by `HackathonSiteHeader` tabs.
 
 When `NEXT_PUBLIC_HACKATHON_SITE_URL` is set, `/hackathon` on the main domain redirects to that host. Do not set the env until the Vercel domain is live.
 
@@ -48,17 +52,23 @@ When `NEXT_PUBLIC_HACKATHON_SITE_URL` is set, `/hackathon` on the main domain re
 - `app/hackathon/stack/page.tsx` — Stack tab
 - `app/hackathon/prizes/page.tsx` — Prizes tab
 - `app/hackathon/submit/page.tsx` — Project submission tab
+- `app/hackathon/projects/page.tsx` — Public projects gallery tab
 - `app/hackathon/sponsor/page.tsx` — Redirect to Overview `#become-a-sponsor`
 - `app/hackathon/layout.tsx` — Route metadata + `HackathonSiteHeader`; OG/Twitter share image is `hackathonConfig.ogImage` (`/images/og-grok-bot-hackathon.jpg`)
-- `components/HackathonSiteHeader.tsx` — Hackathon-only chrome and tabs (Overview / Guide / Mentors / Prizes / Stack / Submit); brand is full-circle `/grokbot.svg` mark + “Grok Bot Serbia Hackathon”
+- `components/HackathonSiteHeader.tsx` — Hackathon-only chrome and tabs (Overview / Guide / Mentors / Prizes / Stack / Submit / Projects); brand is full-circle `/grokbot.svg` mark + “Grok Bot Serbia Hackathon”
 - `components/HackathonGuide.tsx` — Purpose, team, shipping, guidelines, and extensible topics
 - `components/HackathonProjectSubmitForm.tsx` — Project submission form (login / check-in gates + fields)
+- `components/HackathonProjectsGallery.tsx` — Gallery list, favorite/score actions, empty + preview states
+- `components/HackathonProjectCard.tsx` — Project card (embed, live/GitHub links, aggregates, controls)
 - `components/HackathonPeople.tsx` — Mentor, host, and judge cards (`/hackathon/mentors`)
 - `middleware.ts` — Subdomain rewrite + optional main-host redirect
 - `lib/hackathon-site.ts` — Host detection and public hrefs
 - `lib/hackathon-checkin.ts` — Shared Luma `checked_in` gate (credit claims + project submit)
+- `lib/hackathon-judges.ts` — Parse `HACKATHON_JUDGE_EMAILS` and gate judge scoring
 - `lib/github-repo.ts` — GitHub URL parse + public-repo check via unauthenticated API
 - `lib/project-submission.ts` — Field validation for project submissions
+- `lib/project-gallery.ts` — Score bounds, favorite cap, average aggregate
+- `lib/demo-embed.ts` — YouTube / Loom embed resolution for demo recordings
 - `components/HackathonHero.tsx` — Full-width hero with date/location/duration cards and CTAs; Grok Bot mascot sits under the tagline on mobile and peeks beside the title from `sm` up
 - `components/HackathonHighlights.tsx` — Stat-style highlight grid (TUM-inspired)
 - `components/HackathonPrizes.tsx` — Prize tracks with per-place cards (above sponsors)
@@ -82,6 +92,8 @@ When `NEXT_PUBLIC_HACKATHON_SITE_URL` is set, `/hackathon` on the main domain re
 
 - Table: `hackathon_sponsor_applications` in `db/schema.sql`
 - Table: `hackathon_project_submissions` in `db/schema.sql` (one row per attendee email; upsert on resubmit)
+- Table: `hackathon_project_reviews` — one score (1–10) per judge email per submission (`UNIQUE(judge_email, submission_id)`)
+- Table: `hackathon_project_favorites` — community favorites (`UNIQUE(user_email, submission_id)`); API enforces max 3 per user
 - Env: `POSTGRES_URL` or `DATABASE_URL`
 
 ### Webhook
@@ -217,6 +229,35 @@ Checked-in attendees submit one project for judging via `/hackathon/submit` (hea
 - `POST /api/hackathon/submit`
 - `lib/project-submission.ts`, `lib/github-repo.ts`
 
+### Projects gallery, judging, and community votes
+
+Public gallery at `/hackathon/projects` (header **Projects** tab). Anyone can browse cards; check-in is **not** required to view. Builds on existing `hackathon_project_submissions` (does not reimplement submit).
+
+**Card contents:** title, short description, submitter name (when present), embedded YouTube/Loom demo when `demo_recording_url` resolves (else external link), prominent live demo link, optional GitHub link, public aggregate judge score, favorite count (highlighted when the viewer favorited it).
+
+**Aggregate score:** arithmetic **mean** of all judge scores for that project (1–10), rounded to one decimal. Shown to everyone. `null` / “No judge scores yet” when there are no reviews. Review count is shown beside the average.
+
+**Judges (env-gated):**
+
+- `HACKATHON_JUDGE_EMAILS` — comma-separated Google emails, case-insensitive
+- Only signed-in users whose email is in that list see score controls and can `POST /api/hackathon/projects/review`
+- One review per judge per project (upsert on `UNIQUE(judge_email, submission_id)`)
+- Score must be an integer 1–10 (`CHECK` + API validation)
+
+**Community favorites:**
+
+- Any signed-in user can favorite / unfavorite via `POST /api/hackathon/projects/favorite`
+- Hard cap: **3 favorites per user** across all projects; a 4th returns `409` with `code: FAVORITE_CAP` and a clear message
+- Unauthenticated visitors see the gallery plus a login CTA for voting
+
+**Local UI preview (dev only):** `/hackathon/projects?preview=1` loads fixture cards without Postgres; add `&judge=1` to mock judge score controls (for demos).
+
+**Components / routes:**
+
+- `app/hackathon/projects/page.tsx` + `components/HackathonProjectsGallery.tsx` + `components/HackathonProjectCard.tsx`
+- `GET /api/hackathon/projects`, `POST /api/hackathon/projects/review`, `POST /api/hackathon/projects/favorite`
+- `lib/hackathon-judges.ts`, `lib/project-gallery.ts`, `lib/demo-embed.ts`
+
 ### Env vars
 
 | Variable | Purpose |
@@ -225,6 +266,7 @@ Checked-in attendees submit one project for judging via `/hackathon/submit` (hea
 | `AUTH_GOOGLE_SECRET` | Google OAuth client secret |
 | `AUTH_SECRET` | NextAuth JWT signing secret (`openssl rand -base64 32`) |
 | `CREDIT_CODE_*` | Shared per-sponsor promo codes (e.g. `CREDIT_CODE_DAYTONA`, `CREDIT_CODE_EXA`) |
+| `HACKATHON_JUDGE_EMAILS` | Comma-separated judge emails allowed to score projects 1–10 |
 
 ## Subdomain (Vercel + DNS)
 
@@ -240,16 +282,20 @@ The app is ready for `hackathon.cursorserbia.com`. Creating the hostname is a da
 
 - [ ] `/hackathon` loads the Overview tab (hero, highlights, marquee, become-a-sponsor form)
 - [ ] Hero "Sponsor event" always scrolls to `#become-a-sponsor` (Overview with or without hash; from Prizes/Stack)
-- [ ] Tabs switch to Guide, Mentors, Prizes, Stack, and Submit (no Sponsor tab)
+- [ ] Tabs switch to Guide, Mentors, Prizes, Stack, Submit, and Projects (no Sponsor tab)
 - [ ] `/hackathon/mentors` shows Hosts (Aleksandar + Goran side by side from `md`), then Mentors (Nick with X + LinkedIn), then an empty judges placeholder
 - [ ] `/hackathon/guide` shows purpose, team size, shipping defaults, and an empty Topics placeholder
 - [ ] Guide submit step links to `/hackathon/submit`
 - [ ] `/hackathon/submit` shows login CTA when signed out; check-in message when registered; form when checked in
 - [ ] `POST /api/hackathon/submit` rejects unauthenticated and not-checked-in callers; upserts one row per email
 - [ ] GitHub URL must be a public repo (shape + API check)
+- [ ] `/hackathon/projects` lists submission cards (or empty state); embeds YouTube/Loom when possible
+- [ ] Judge score controls only for emails in `HACKATHON_JUDGE_EMAILS`; upsert 1–10; average shown publicly
+- [ ] Signed-in users can favorite up to 3 projects; 4th returns clear cap error
 - [ ] `/hackathon/sponsor` redirects to Overview `#become-a-sponsor`
 - [ ] `http://hackathon.localhost:<port>/` rewrites to the Overview tab
 - [ ] `http://hackathon.localhost:<port>/submit` rewrites to the Submit tab
+- [ ] `http://hackathon.localhost:<port>/projects` rewrites to the Projects tab
 - [ ] Date/location update when Luma event changes (or fall back to static)
 - [ ] Marquee animates smoothly and pauses on hover
 - [ ] Sponsorship form validates required fields

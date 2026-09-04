@@ -97,6 +97,44 @@ try {
     ON hackathon_project_submissions (submitted_at DESC)
   `
 
+  await sql`
+    CREATE TABLE IF NOT EXISTS hackathon_project_reviews (
+      id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+      submission_id UUID NOT NULL REFERENCES hackathon_project_submissions (id) ON DELETE CASCADE,
+      judge_email TEXT NOT NULL,
+      score INTEGER NOT NULL CHECK (score >= 1 AND score <= 10),
+      created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+      updated_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+      UNIQUE (judge_email, submission_id)
+    )
+  `
+  await sql`
+    CREATE INDEX IF NOT EXISTS idx_hackathon_project_reviews_submission
+    ON hackathon_project_reviews (submission_id)
+  `
+  await sql`
+    CREATE INDEX IF NOT EXISTS idx_hackathon_project_reviews_judge
+    ON hackathon_project_reviews (judge_email)
+  `
+
+  await sql`
+    CREATE TABLE IF NOT EXISTS hackathon_project_favorites (
+      id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+      submission_id UUID NOT NULL REFERENCES hackathon_project_submissions (id) ON DELETE CASCADE,
+      user_email TEXT NOT NULL,
+      created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+      UNIQUE (user_email, submission_id)
+    )
+  `
+  await sql`
+    CREATE INDEX IF NOT EXISTS idx_hackathon_project_favorites_submission
+    ON hackathon_project_favorites (submission_id)
+  `
+  await sql`
+    CREATE INDEX IF NOT EXISTS idx_hackathon_project_favorites_user
+    ON hackathon_project_favorites (user_email)
+  `
+
   console.log('✓ Schema created successfully')
 } catch (err) {
   console.error('Schema setup failed:', err.message)

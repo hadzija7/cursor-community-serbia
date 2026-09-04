@@ -38,6 +38,7 @@ describe('hackathon site host helpers', () => {
     expect(rewriteHackathonSubdomainPath('/prizes')).toBe('/hackathon/prizes')
     expect(rewriteHackathonSubdomainPath('/sponsor')).toBe('/hackathon/sponsor')
     expect(rewriteHackathonSubdomainPath('/submit')).toBe('/hackathon/submit')
+    expect(rewriteHackathonSubdomainPath('/projects')).toBe('/hackathon/projects')
     expect(rewriteHackathonSubdomainPath('/hackathon/stack')).toBeNull()
     expect(rewriteHackathonSubdomainPath('/api/hackathon/event')).toBeNull()
     expect(rewriteHackathonSubdomainPath('/images/og-[REDACTED].jpg')).toBeNull()
@@ -47,6 +48,7 @@ describe('hackathon site host helpers', () => {
     expect(subdomainPathFromHackathonPath('/hackathon')).toBe('/')
     expect(subdomainPathFromHackathonPath('/hackathon/stack')).toBe('/stack')
     expect(subdomainPathFromHackathonPath('/hackathon/submit')).toBe('/submit')
+    expect(subdomainPathFromHackathonPath('/hackathon/projects')).toBe('/projects')
   })
 
   it('builds tab hrefs for both hosts', () => {
@@ -59,6 +61,8 @@ describe('hackathon site host helpers', () => {
     expect(hackathonHref('/hackathon', 'mentors')).toBe('/hackathon/mentors')
     expect(hackathonHref('/hackathon', 'submit')).toBe('/hackathon/submit')
     expect(hackathonHref('', 'submit')).toBe('/submit')
+    expect(hackathonHref('/hackathon', 'projects')).toBe('/hackathon/projects')
+    expect(hackathonHref('', 'projects')).toBe('/projects')
   })
 
   it('uses the configured subdomain for public community links', () => {
