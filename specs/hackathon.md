@@ -250,7 +250,7 @@ Public gallery at `/hackathon/projects` (header **Projects** tab). Anyone can br
 - Hard cap: **3 favorites per user** across all projects; a 4th returns `409` with `code: FAVORITE_CAP` and a clear message
 - Unauthenticated visitors see the gallery plus a login CTA for voting
 
-**Local UI preview (dev only):** `/hackathon/projects?preview=1` loads fixture cards without Postgres; add `&judge=1` to mock judge score controls (for demos).
+**Local UI preview (dev only):** `/hackathon/projects?preview=1` loads a single official fixture card (Cursor Serbia Community) without Postgres; add `&judge=1` to mock judge score controls. Prefer live DB data when available — do not add mock submissions to the fixture list.
 
 **Components / routes:**
 
