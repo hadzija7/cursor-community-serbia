@@ -208,6 +208,18 @@ export const hackathonJudges: HackathonPerson[] = [
       linkedin: 'https://www.linkedin.com/in/benkimbuilds/',
     },
   },
+  {
+    id: 'milan-lazarevic',
+    name: 'Milan Lazarević',
+    title: 'Software engineer & ML specialist',
+    photo: '/images/hackathon/milan-lazarevic.jpg',
+    photoPosition: 'center',
+    bio: 'Software engineer with 7+ years in ML — computer vision, edge AI, LLMs, agents, and RAG. Focused on optimized inference and real-time, context-aware apps.',
+    links: {
+      x: 'https://x.com/MrLaki5',
+      linkedin: 'https://www.linkedin.com/in/mrlaki5/',
+    },
+  },
 ]
 
 /** Tech partners (tools for hackers) — edit logos in `public/images/partners/` or add new entries. */
