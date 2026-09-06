@@ -39,6 +39,7 @@ Living scorecard for Cursor Community Serbia. Update after each phase.
 
 | Date       | Change                          |
 |------------|----------------------------------|
+| 2026-09-06 | Hackathon Guide: day agenda + judging (19 Sep winners); three optional idea sparks (FinTech / gaming-art / personal assistant); build-anything framing |
 | 2026-09-04 | Hackathon credits UI: dual pools labeled $20 / $50 Cursor credits (not Grok Bot); claim key `cursor-50` for the second pool |
 | 2026-09-04 | Hackathon credits: separate `hackathon_grok_bot_referral_codes` pool; Stack Grok Bot modal lets checked-in hackers claim both Cursor Pro and Grok Bot referrals |
 | 2026-09-04 | Hackathon: full-circle `/grokbot.svg` mark on Overview hero + Stack Grok Bot card (same as header); hosts bio → SpaceXAI ambassadors; Nick bio shortened for card height |

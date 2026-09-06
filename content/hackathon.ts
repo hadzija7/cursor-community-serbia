@@ -1,4 +1,5 @@
 import {
+  HackathonGuideAgendaItem,
   HackathonGuideCopy,
   HackathonGuideStep,
   HackathonGuideTopic,
@@ -139,14 +140,79 @@ export const hackathonGuideSteps: HackathonGuideStep[] = [
   {
     id: 'submit',
     title: 'Submit through the form',
-    body: 'Open the submission form when you are checked in. You can update your entry later the same day.',
+    body: 'Open the submission form when you are checked in. Deadline is 8 PM — you can update your entry earlier the same day.',
     href: '/hackathon/submit',
     cta: 'Open submit form',
   },
 ]
 
-/** Empty until challenge tracks or themes are confirmed. */
-export const hackathonGuideTopics: HackathonGuideTopic[] = []
+/** Day-of schedule for `/hackathon/guide`. */
+export const hackathonGuideAgenda: HackathonGuideAgendaItem[] = [
+  {
+    id: 'intro',
+    time: '11:00',
+    title: 'Intro & welcome',
+    body: 'Opening presentation about the hackathon — what to expect and how the day runs.',
+  },
+  {
+    id: 'hacking',
+    time: 'All day',
+    title: 'Hacking',
+    body: 'Network, build, and exchange ideas. Relaxed atmosphere — no pressure, just ship.',
+  },
+  {
+    id: 'demo',
+    time: '18:00 – 20:00',
+    title: 'Demo showcase',
+    body: 'Optional. Share what you are building with others if you want — not mandatory.',
+  },
+  {
+    id: 'deadline',
+    time: '20:00',
+    title: 'Submission deadline',
+    body: 'Submit your project through the form by 8 PM.',
+  },
+  {
+    id: 'close',
+    time: '21:00',
+    title: 'Event ends',
+    body: 'Doors close at 9 PM.',
+  },
+]
+
+/** Judging window — results after the live day. */
+export const hackathonGuideJudging: HackathonGuideCopy = {
+  title: 'Judging & winners',
+  body: 'Judging happens after the event. Winners are announced on 19 September — about one week later.',
+}
+
+/**
+ * Optional idea verticals. Build anything is allowed — these are sparks if you need them.
+ */
+export const hackathonGuideTopicsIntro: HackathonGuideCopy = {
+  title: 'Idea sparks',
+  body: 'You can build whatever you want. These three verticals are optional suggestions if you do not already have an idea — not required tracks.',
+}
+
+export const hackathonGuideTopics: HackathonGuideTopic[] = [
+  {
+    id: 'fintech',
+    title: 'FinTech agents',
+    summary:
+      'Autonomous agents that execute payments and transactions for you — on blockchain or traditional financial rails.',
+  },
+  {
+    id: 'gaming-art',
+    title: 'Gaming, visual & art',
+    summary: 'AI that helps create, play, or experience games, visuals, and art.',
+  },
+  {
+    id: 'personal-assistant',
+    title: 'Personal assistant',
+    summary:
+      'A helpful assistant with strong UX — look up flights, plan your day, and talk by voice.',
+  },
+]
 
 /** Mentors — first listed is featured first on `/hackathon/mentors`. */
 export const hackathonMentors: HackathonPerson[] = [

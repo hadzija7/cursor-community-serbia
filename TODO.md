@@ -41,7 +41,8 @@
   - [x] Hackathon prizes: added Daytona credit track ($3,000 / $2,000 / $1,000 + $100 each)
   - [x] Hackathon prizes: ABC BootCamps scholarships (50% / 40% / 30% to ABC Silicon Valley 2027)
   - [x] Daytona participant coupon: `CREDIT_CODE_DAYTONA` + claim UI redeem tip (Billing Dashboard)
-  - [x] Hackathon Guide tab (`/hackathon/guide`): why, team, numbered timeline, topics
+  - [x] Hackathon Guide tab (`/hackathon/guide`): why, team, agenda, numbered timeline, optional idea sparks
+  - [x] Hackathon Guide: three optional verticals (FinTech agents, Gaming/visual & art, Personal assistant) + build-anything framing; day agenda + 19 Sep winners
   - [x] Hackathon Stack: Add to Cursor MCP install on each sponsor modal
   - [x] Hackathon Stack: Add to Cursor uses `cursor://` deeplink (not the auto-closing install-mcp tab)
   - [x] Hacker Google auth + Luma check-in status; claim shared env codes + unique Cursor referral pool

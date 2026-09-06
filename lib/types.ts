@@ -74,11 +74,19 @@ export interface HackathonGuideStep {
   cta?: string
 }
 
-/** Theme or challenge track — add rows as topics lock. */
+/** Optional idea vertical — suggestions only; build anything is allowed. */
 export interface HackathonGuideTopic {
   id: string
   title: string
   summary: string
+}
+
+/** Day-of schedule row for `/hackathon/guide`. */
+export interface HackathonGuideAgendaItem {
+  id: string
+  time: string
+  title: string
+  body: string
 }
 
 export interface HackathonPerson {
