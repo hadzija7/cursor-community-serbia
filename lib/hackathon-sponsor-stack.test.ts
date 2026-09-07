@@ -24,7 +24,7 @@ describe('hackathon sponsor stack content', () => {
     const stackOnlyNames = ['Grok Bot']
 
     expect(profileIds).toEqual(stageIds)
-    expect(hackathonSponsorProfiles).toHaveLength(11)
+    expect(hackathonSponsorProfiles).toHaveLength(10)
     expect(profileNames.filter((name) => !stackOnlyNames.includes(name)).sort()).toEqual(marqueeNames)
     expect(getSponsorProfile('cursor')?.name).toBe('Grok Bot')
   })
@@ -60,7 +60,7 @@ describe('hackathon sponsor stack content', () => {
   })
 
   it('does not invent unconfirmed event credits', () => {
-    const tbdSponsors = ['elevenlabs', 'render']
+    const tbdSponsors = ['render']
 
     for (const id of tbdSponsors) {
       const profile = getSponsorProfile(id)

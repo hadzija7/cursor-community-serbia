@@ -55,6 +55,7 @@
   - [x] Superteam Balkan logo: transparent PNG (no black JPEG frame), sized a step above Startit (`h-10`)
   - [x] Hackathon tech partners + Stack: Wispr Flow, Exa, Netlify, Fal.ai (confirmed credits)
   - [x] Hackathon tech partners + Stack: Wonder (Design / UI; Pro for all participants)
+  - [x] Hackathon: removed ElevenLabs from tech partners / Stack; Fal claim via `CREDIT_CODE_FAL`
   - [x] Exa logo: official icon + “exa” wordmark on a white pad
   - [x] ABC BootCamps logo: official overlapping ABC + BOOTCAMP mark on white pad (`h-10`)
   - [x] Hackathon header brand is Grok Bot Serbia Hackathon (mascot + title); marketing copy prioritizes Grok Bot
@@ -62,6 +63,7 @@
   - [x] Hackathon sponsor form lives on Overview (`#become-a-sponsor`); `/hackathon/sponsor` redirects there; no Sponsor tab
   - [x] Hero "Sponsor event" always scrolls to Overview `#become-a-sponsor` (same-page hash + `scroll-mt-24`)
   - [x] Hackathon project submit form (`/hackathon/submit`): Google auth + Luma `checked_in` gate; public GitHub + demo/live URLs; upsert per email
+  - [x] Hackathon submit: optional teammate emails (max 2; teams 1–3)
   - [x] Hackathon Overview hero + Stack use full-circle `/grokbot.svg` (same as header); hosts bio SpaceXAI ambassadors; Nick mentor bio shortened
   - [x] Hackathon Overview hero mascot is animated ink orb SVG (`/bloub-cercle-neutre-encre-anime.svg`)
   - [x] Hackathon credits: dual Cursor pools ($20 + $50) in separate tables; Stack modal claims both (`cursor` + `cursor-50`; seed via `pnpm db:seed:grok-bot-referrals`)

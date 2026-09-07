@@ -47,6 +47,8 @@ Living scorecard for Cursor Community Serbia. Update after each phase.
 | 2026-09-04 | Hackathon Judges: published Ben Kim on `/hackathon/mentors` (`hackathonJudges`, photo `public/images/hackathon/ben-kim.jpg`) |
 | 2026-09-04 | Hackathon projects gallery: `/hackathon/projects` cards; judge scores via `HACKATHON_JUDGE_EMAILS` (avg aggregate); community favorites capped at 3 |
 | 2026-09-04 | Hackathon project submissions: `/hackathon/submit` + `POST /api/hackathon/submit`; auth + Luma check-in gate; public GitHub verify; demo recording as URL; upsert per email |
+| 2026-09-07 | Hackathon submit: optional teammate emails (max 2; teams 1–3); `teammate_emails` on submissions |
+| 2026-09-07 | Hackathon: removed ElevenLabs from tech partners / Stack; Fal credits claim via `CREDIT_CODE_FAL` |
 | 2026-09-03 | Hackathon header uses `/grokbot.svg` with expanded viewBox so the full circle mark is not clipped |
 | 2026-09-03 | Hackathon header uses cropped Grok Bot wordmark lockup + “Serbia Hackathon”; silk bg clipped in a rounded chip |
 | 2026-09-03 | Hackathon brand: header shows Grok Bot Serbia Hackathon; marketing copy prioritizes Grok Bot; hero mascot stays in flow on mobile |

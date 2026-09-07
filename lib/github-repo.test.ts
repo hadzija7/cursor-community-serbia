@@ -107,5 +107,68 @@ describe('validateProjectSubmissionFields', () => {
       liveDemoUrl: 'https://demo.example',
     })
     expect(ok.ok).toBe(true)
+    if (ok.ok) {
+      expect(ok.data.teammateEmails).toEqual([])
+    }
+  })
+
+  it('accepts up to two teammate emails and rejects extras / self / duplicates', () => {
+    const withTwo = validateProjectSubmissionFields(
+      {
+        projectTitle: 'X',
+        projectDescription: 'Y',
+        githubUrl: 'https://github.com/a/b',
+        demoRecordingUrl: 'https://www.loom.com/share/abc',
+        liveDemoUrl: 'https://demo.example',
+        teammateEmails: [' Ada@Example.com ', 'bob@test.com'],
+      },
+      { submitterEmail: 'hacker@example.com' },
+    )
+    expect(withTwo.ok).toBe(true)
+    if (withTwo.ok) {
+      expect(withTwo.data.teammateEmails).toEqual(['ada@example.com', 'bob@test.com'])
+    }
+
+    expect(
+      validateProjectSubmissionFields(
+        {
+          projectTitle: 'X',
+          projectDescription: 'Y',
+          githubUrl: 'https://github.com/a/b',
+          demoRecordingUrl: 'https://www.loom.com/share/abc',
+          liveDemoUrl: 'https://demo.example',
+          teammateEmails: ['a@x.com', 'b@x.com', 'c@x.com'],
+        },
+        { submitterEmail: 'hacker@example.com' },
+      ).ok,
+    ).toBe(false)
+
+    expect(
+      validateProjectSubmissionFields(
+        {
+          projectTitle: 'X',
+          projectDescription: 'Y',
+          githubUrl: 'https://github.com/a/b',
+          demoRecordingUrl: 'https://www.loom.com/share/abc',
+          liveDemoUrl: 'https://demo.example',
+          teammateEmails: ['Hacker@Example.com'],
+        },
+        { submitterEmail: 'hacker@example.com' },
+      ).ok,
+    ).toBe(false)
+
+    expect(
+      validateProjectSubmissionFields(
+        {
+          projectTitle: 'X',
+          projectDescription: 'Y',
+          githubUrl: 'https://github.com/a/b',
+          demoRecordingUrl: 'https://www.loom.com/share/abc',
+          liveDemoUrl: 'https://demo.example',
+          teammateEmails: ['same@x.com', 'same@x.com'],
+        },
+        { submitterEmail: 'hacker@example.com' },
+      ).ok,
+    ).toBe(false)
   })
 })

@@ -108,9 +108,15 @@ try {
       github_url TEXT NOT NULL,
       demo_recording_url TEXT NOT NULL,
       live_demo_url TEXT NOT NULL,
+      teammate_emails TEXT[] NOT NULL DEFAULT '{}',
       submitted_at TIMESTAMPTZ NOT NULL DEFAULT now(),
       updated_at TIMESTAMPTZ NOT NULL DEFAULT now()
     )
+  `
+  // Existing DBs created before teammate emails — add column idempotently.
+  await sql`
+    ALTER TABLE hackathon_project_submissions
+    ADD COLUMN IF NOT EXISTS teammate_emails TEXT[] NOT NULL DEFAULT '{}'
   `
   await sql`
     CREATE INDEX IF NOT EXISTS idx_hackathon_project_submissions_submitted_at

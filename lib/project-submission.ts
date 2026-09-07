@@ -1,6 +1,10 @@
 /** Validation helpers for hackathon project submissions. */
 
 const HTTP_URL_PATTERN = /^https?:\/\/.+/i
+const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+
+/** Submitter + teammates; form allows at most this many teammate emails. */
+export const MAX_TEAMMATE_EMAILS = 2
 
 export type ProjectSubmissionInput = {
   projectTitle?: string
@@ -8,6 +12,8 @@ export type ProjectSubmissionInput = {
   githubUrl?: string
   demoRecordingUrl?: string
   liveDemoUrl?: string
+  /** Optional teammate emails (max {@link MAX_TEAMMATE_EMAILS}). */
+  teammateEmails?: unknown
 }
 
 export type ValidatedProjectSubmission = {
@@ -16,6 +22,7 @@ export type ValidatedProjectSubmission = {
   githubUrl: string
   demoRecordingUrl: string
   liveDemoUrl: string
+  teammateEmails: string[]
 }
 
 export type ValidationFailure = { ok: false; message: string }
@@ -34,8 +41,68 @@ export function isHttpUrl(value: string): boolean {
   }
 }
 
+export function isEmailAddress(value: string): boolean {
+  return EMAIL_PATTERN.test(value)
+}
+
+/**
+ * Normalize optional teammate emails: trim, lowercase, drop blanks.
+ * Rejects more than {@link MAX_TEAMMATE_EMAILS}, invalid addresses, duplicates,
+ * and the submitter's own email.
+ */
+export function validateTeammateEmails(
+  raw: unknown,
+  submitterEmail: string,
+): { ok: true; emails: string[] } | ValidationFailure {
+  const submitter = submitterEmail.trim().toLowerCase()
+
+  let candidates: string[] = []
+  if (raw === undefined || raw === null || raw === '') {
+    candidates = []
+  } else if (Array.isArray(raw)) {
+    candidates = raw.map((value) => (typeof value === 'string' ? value : String(value)))
+  } else if (typeof raw === 'string') {
+    candidates = raw.split(/[,;\n]+/)
+  } else {
+    return { ok: false, message: 'Teammate emails must be a list of email addresses.' }
+  }
+
+  const emails: string[] = []
+  const seen = new Set<string>()
+
+  for (const candidate of candidates) {
+    const email = candidate.trim().toLowerCase()
+    if (!email) continue
+
+    if (!isEmailAddress(email)) {
+      return { ok: false, message: `Invalid teammate email: ${candidate.trim()}` }
+    }
+    if (submitter && email === submitter) {
+      return {
+        ok: false,
+        message: 'Teammate emails cannot include your own email.',
+      }
+    }
+    if (seen.has(email)) {
+      return { ok: false, message: 'Teammate emails must be unique.' }
+    }
+    seen.add(email)
+    emails.push(email)
+  }
+
+  if (emails.length > MAX_TEAMMATE_EMAILS) {
+    return {
+      ok: false,
+      message: `Teams are 1–3 people — add at most ${MAX_TEAMMATE_EMAILS} teammates.`,
+    }
+  }
+
+  return { ok: true, emails }
+}
+
 export function validateProjectSubmissionFields(
   payload: ProjectSubmissionInput,
+  options?: { submitterEmail?: string },
 ): ValidationSuccess | ValidationFailure {
   const projectTitle = payload.projectTitle?.trim() ?? ''
   const projectDescription = payload.projectDescription?.trim() ?? ''
@@ -77,6 +144,14 @@ export function validateProjectSubmissionFields(
     return { ok: false, message: 'Live demo must be a valid http(s) URL.' }
   }
 
+  const teammates = validateTeammateEmails(
+    payload.teammateEmails,
+    options?.submitterEmail ?? '',
+  )
+  if (!teammates.ok) {
+    return teammates
+  }
+
   return {
     ok: true,
     data: {
@@ -85,6 +160,7 @@ export function validateProjectSubmissionFields(
       githubUrl,
       demoRecordingUrl,
       liveDemoUrl,
+      teammateEmails: teammates.emails,
     },
   }
 }

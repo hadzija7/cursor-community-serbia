@@ -128,7 +128,7 @@ Edit `content/hackathon.ts` for:
 - Prize tracks (`hackathonPrizes`: Convex cash 100.000 / 50.000 RSD; Kosmonaut coworking — 15 / 10 / 5 entries per teammate on the top 3 teams, use within 3 months, claimed on their platform; Daytona credits $3,000 / $2,000 / $1,000 plus $100 for every participant; ABC BootCamps — 50% / 40% / 30% scholarships to ABC Silicon Valley 2027)
 - Hacker guide (`hackathonGuidePurpose`, `hackathonGuideTeam`, `hackathonGuideAgenda`, `hackathonGuideJudging`, `hackathonGuideSteps`, `hackathonGuideTopicsIntro`, `hackathonGuideTopics`) — source for `/hackathon/guide`
 - Mentors, hosts, and judges (`hackathonMentors`, `hackathonHosts`, `hackathonJudges`) — source for `/hackathon/mentors`
-- Tech partner logos (`hackathonSponsors`: ElevenLabs, Firecrawl, Render, Convex, Daytona, Wispr Flow, Exa, Netlify, Fal.ai, Wonder) — Overview heading is **Tech partners**
+- Tech partner logos (`hackathonSponsors`: Firecrawl, Render, Convex, Daytona, Wispr Flow, Exa, Netlify, Fal.ai, Wonder) — Overview heading is **Tech partners**
 - Community partners (`hackathonCommunityPartners`: Startit, Superteam Balkan, ABC BootCamps, JigJoy, Kosmonaut) — Overview, below tech partners
 - Superteam Balkan uses a transparent PNG wordmark (`/images/partners/superteam-balkan.png`) at `h-10` (a step above Startit’s `h-8`) so the old JPEG black frame does not show on the dark marquee. ABC uses the official overlapping ABC + BOOTCAMP mark (`abc-bootcamps.png`) on a white pad (`logoBg: '#ffffff'`) at `h-10` so the dark wordmark stays readable on the dark marquee
 - Sponsor stack (`hackathonSdlcStages`, `hackathonSponsorProfiles` including `mcp`, recipes, picks) — source for `/hackathon/stack` and `docs/hackathon/sponsor-cheat-sheet.md`
@@ -136,18 +136,18 @@ Edit `content/hackathon.ts` for:
 ### Sponsor stack tab
 
 - Route: `/hackathon/stack` (Stack tab)
-- Flat 2-column grid of sponsor cards (not a linear pipeline). Area label lives on the card (e.g. Host / infra, Voice / audio); details open in a modal
+- Flat 2-column grid of sponsor cards (not a linear pipeline). Area label lives on the card (e.g. Host / infra, Voice input); details open in a modal
 - Each modal has an **Add to Cursor** button (title row) that uses the official `cursor://anysphere.cursor-deeplink/mcp/install` deeplink (same tab — do not open `https://cursor.com/en/install-mcp`, which auto-closes). Configs live on `hackathonSponsorProfiles[].mcp` and are encoded by `lib/cursor-mcp-install.ts`
-- Cursor is host, not a sponsor. Wispr Flow is a tech partner (dictation into Cursor); ElevenLabs stays product voice
-- Confirmed perks only: Daytona $100 coupon (claim via `CREDIT_CODE_DAYTONA`, redeem in app.daytona.io Billing) + winner credits (Best app that uses Daytona); Convex 100.000 / 50.000 RSD; Kosmonaut coworking for top 3 teams (15 / 10 / 5 entries per teammate, use within 3 months, claim on kosmonaut.rs); ABC BootCamps scholarships for top 3 (50% / 40% / 30% to ABC Silicon Valley 2027); Wispr Flow 3 months Pro; Exa $50 credits each; Fal.ai $50 credits each; Netlify 3,000 credits for all participants; Wonder Pro for all participants
-- Stack path starts with **Grok Bot** (Editor / host; Cursor works too), then Firecrawl, Exa, Wonder, Daytona, Convex, ElevenLabs, Wispr, Fal.ai, Render, Netlify
+- Cursor is host, not a sponsor. Wispr Flow is a tech partner (dictation into Cursor)
+- Confirmed perks only: Daytona $100 coupon (claim via `CREDIT_CODE_DAYTONA`, redeem in app.daytona.io Billing) + winner credits (Best app that uses Daytona); Convex 100.000 / 50.000 RSD; Kosmonaut coworking for top 3 teams (15 / 10 / 5 entries per teammate, use within 3 months, claim on kosmonaut.rs); ABC BootCamps scholarships for top 3 (50% / 40% / 30% to ABC Silicon Valley 2027); Wispr Flow 3 months Pro; Exa $50 credits each; Fal.ai $50 credits each (claim via `CREDIT_CODE_FAL`); Netlify 3,000 credits for all participants; Wonder Pro for all participants
+- Stack path starts with **Grok Bot** (Editor / host; Cursor works too), then Firecrawl, Exa, Wonder, Daytona, Convex, Wispr, Fal.ai, Render, Netlify
 - Marketing copy prioritizes Grok Bot; Cursor remains supported and named where the product action is Cursor-specific (MCP install deeplink, Cursor Pro referral, Origin)
 - Stack area cards also cover Exa (Search / web), Wonder (Design / UI), Wispr Flow (Voice input), Fal.ai (Generate / media), and Netlify (Host / frontend). Wispr has no public MCP install URL — desktop app only. Wonder MCP is `https://mcp.wonder.so/mcp` (OAuth after install)
 
 ### Guide tab
 
 - Route: `/hackathon/guide` (Guide tab)
-- Briefing: why, team (solo or a team), day agenda, numbered guidelines timeline, optional idea sparks
+- Briefing: why, team (solo or up to 3 people), day agenda, numbered guidelines timeline, optional idea sparks
 - Agenda: 11:00 intro & welcome → hacking all day (relaxed network/build) → 18:00–20:00 optional demo showcase → 20:00 submission deadline → 21:00 event ends; winners announced 19 September (≈ one week later)
 - Timeline: Stack → mentors → Grok Bot → partner MCPs → Origin → 3-minute demo → submit form by 8 PM (submit step links to `/hackathon/submit`)
 - Topics are **optional suggestions**, not required tracks — hackers may build anything. Three published verticals: FinTech agents (payments on blockchain or traditional rails), Gaming / visual & art, Personal assistant (flights + voice UX)
@@ -221,11 +221,11 @@ Checked-in attendees submit one project for judging via `/hackathon/submit` (hea
 | Signed in, Luma `not_found` | Register on Luma CTA | `403` |
 | Signed in, Luma `checked_in` | Form | Accepts POST |
 
-**Fields (all required):** project title (short), project description (multi-line), public GitHub repo URL, demo recording URL (3–5 min helper text), live demo http(s) URL.
+**Fields:** project title (short), project description (multi-line), public GitHub repo URL, demo recording URL (3–5 min helper text), live demo http(s) URL — all required. Optional **teammate emails** (max **2**; teams are 1–3 including the submitter). Empty slots allowed for solo. Server rejects more than 2, invalid emails, duplicates, and the submitter’s own email.
 
 **GitHub validation:** URL must parse as `github.com/owner/repo`; server verifies the repo is public via unauthenticated `GET https://api.github.com/repos/{owner}/{repo}` (404 / private rejected).
 
-**Persistence:** table `hackathon_project_submissions` in `db/schema.sql` / `pnpm db:setup`. One row per email (`UNIQUE(email)`); resubmit upserts and bumps `updated_at`.
+**Persistence:** table `hackathon_project_submissions` in `db/schema.sql` / `pnpm db:setup`. Columns include `teammate_emails TEXT[]` (default `{}`). One row per email (`UNIQUE(email)`); resubmit upserts (including teammates) and bumps `updated_at`.
 
 **Components / routes:**
 
@@ -237,7 +237,7 @@ Checked-in attendees submit one project for judging via `/hackathon/submit` (hea
 
 Public gallery at `/hackathon/projects` (header **Projects** tab). Anyone can browse cards; check-in is **not** required to view. Builds on existing `hackathon_project_submissions` (does not reimplement submit).
 
-**Card contents:** title, short description, submitter name (when present), embedded YouTube/Loom demo when `demo_recording_url` resolves (else external link), prominent live demo link, optional GitHub link, public aggregate judge score, favorite count (highlighted when the viewer favorited it).
+**Card contents:** title, short description, submitter name (when present), optional teammate emails, embedded YouTube/Loom demo when `demo_recording_url` resolves (else external link), prominent live demo link, optional GitHub link, public aggregate judge score, favorite count (highlighted when the viewer favorited it).
 
 **Aggregate score:** arithmetic **mean** of all judge scores for that project (1–10), rounded to one decimal. Shown to everyone. `null` / “No judge scores yet” when there are no reviews. Review count is shown beside the average.
 

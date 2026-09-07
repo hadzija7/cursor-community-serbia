@@ -33,7 +33,7 @@ const validBody = {
   liveDemoUrl: 'https://demo.example.com',
 }
 
-function buildRequest(body: Record<string, string | undefined>) {
+function buildRequest(body: Record<string, unknown>) {
   return new Request('http://localhost/api/hackathon/submit', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
@@ -144,7 +144,12 @@ describe('POST /api/hackathon/submit', () => {
     ])
     vi.spyOn(db, 'getDb').mockReturnValue(insert as unknown as ReturnType<typeof db.getDb>)
 
-    const response = await POST(buildRequest(validBody))
+    const response = await POST(
+      buildRequest({
+        ...validBody,
+        teammateEmails: ['mate@example.com'],
+      }),
+    )
     const body = (await response.json()) as { ok: boolean; id: string }
 
     expect(response.status).toBe(200)
@@ -155,6 +160,24 @@ describe('POST /api/hackathon/submit', () => {
       expect.stringMatching(/check in/i),
     )
     expect(insert).toHaveBeenCalled()
+  })
+
+  it('rejects more than two teammate emails', async () => {
+    vi.mocked(auth).mockResolvedValue({
+      user: { email: 'hacker@example.com' },
+      expires: '2099-01-01',
+    })
+
+    const response = await POST(
+      buildRequest({
+        ...validBody,
+        teammateEmails: ['a@x.com', 'b@x.com', 'c@x.com'],
+      }),
+    )
+    const body = (await response.json()) as { ok: boolean; message: string }
+
+    expect(response.status).toBe(400)
+    expect(body.message).toMatch(/1–3|teammates/i)
   })
 
   it('returns 503 when database is not configured', async () => {

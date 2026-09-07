@@ -91,6 +91,13 @@ export default function HackathonProjectCard({
           {project.submitterName ? (
             <p className="text-sm text-cursor-text-muted">
               {t('hackathon.projectsBy')} {project.submitterName}
+              {project.teammateEmails.length > 0
+                ? ` · ${t('hackathon.projectsWith')} ${project.teammateEmails.join(', ')}`
+                : null}
+            </p>
+          ) : project.teammateEmails.length > 0 ? (
+            <p className="text-sm text-cursor-text-muted">
+              {t('hackathon.projectsWith')} {project.teammateEmails.join(', ')}
             </p>
           ) : null}
           <p className="text-sm leading-relaxed text-cursor-text-secondary">

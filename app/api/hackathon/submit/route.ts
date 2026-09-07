@@ -3,7 +3,10 @@ import { auth } from '@/lib/auth'
 import { getDb } from '@/lib/db'
 import { assertPublicGitHubRepo } from '@/lib/github-repo'
 import { assertCheckedIn } from '@/lib/hackathon-checkin'
-import { validateProjectSubmissionFields } from '@/lib/project-submission'
+import {
+  type ProjectSubmissionInput,
+  validateProjectSubmissionFields,
+} from '@/lib/project-submission'
 
 export const dynamic = 'force-dynamic'
 
@@ -27,9 +30,9 @@ export async function POST(request: NextRequest) {
     return toError('Invalid request body.', 400)
   }
 
-  const validated = validateProjectSubmissionFields(
-    (payload ?? {}) as Record<string, string | undefined>,
-  )
+  const validated = validateProjectSubmissionFields(payload as ProjectSubmissionInput, {
+    submitterEmail: email,
+  })
   if (!validated.ok) {
     return toError(validated.message, 400)
   }
@@ -84,7 +87,8 @@ export async function POST(request: NextRequest) {
         project_description,
         github_url,
         demo_recording_url,
-        live_demo_url
+        live_demo_url,
+        teammate_emails
       )
       VALUES (
         ${email},
@@ -93,7 +97,8 @@ export async function POST(request: NextRequest) {
         ${validated.data.projectDescription},
         ${githubCheck.canonicalUrl},
         ${validated.data.demoRecordingUrl},
-        ${validated.data.liveDemoUrl}
+        ${validated.data.liveDemoUrl},
+        ${validated.data.teammateEmails}
       )
       ON CONFLICT (email) DO UPDATE SET
         name = EXCLUDED.name,
@@ -102,6 +107,7 @@ export async function POST(request: NextRequest) {
         github_url = EXCLUDED.github_url,
         demo_recording_url = EXCLUDED.demo_recording_url,
         live_demo_url = EXCLUDED.live_demo_url,
+        teammate_emails = EXCLUDED.teammate_emails,
         updated_at = now()
       RETURNING id, submitted_at, updated_at
     `
