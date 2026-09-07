@@ -250,6 +250,10 @@ export const hackathonMentors: HackathonPerson[] = [
     photoPosition: 'center',
     bio: 'I build tools for running AI agents in production: Mozaik Cloud, baro, and the agent workflows we use at JigJoy.',
     help: 'Multi-agent architectures, Grok Bot, shipping a working demo in a weekend.',
+    links: {
+      x: 'https://x.com/lotus_sbc',
+      linkedin: 'https://www.linkedin.com/in/lotus015',
+    },
   },
 ]
 

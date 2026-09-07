@@ -142,7 +142,8 @@ describe('hackathon sponsor stack content', () => {
     expect(hackathonMentors[2]?.bio).toMatch(/Mozaik Cloud/)
     expect(hackathonMentors[2]?.bio).toMatch(/baro/)
     expect(hackathonMentors[2]?.help?.toLowerCase()).toContain('multi-agent architectures')
-    expect(hackathonMentors[2]?.links).toBeUndefined()
+    expect(hackathonMentors[2]?.links?.x).toBe('https://x.com/lotus_sbc')
+    expect(hackathonMentors[2]?.links?.linkedin).toBe('https://www.linkedin.com/in/lotus015')
     expect(hackathonHosts.map((host) => host.id)).toEqual([
       'aleksandar-hadzibabic',
       'goran-petkovic',
