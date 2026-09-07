@@ -110,7 +110,7 @@ describe('hackathon sponsor stack content', () => {
     ])
   })
 
-  it('lists Nick Tomić first among mentors, hosts from ambassadors, and publishes Ben Kim as a judge', () => {
+  it('lists Nick Tomić first among mentors, hosts from ambassadors, and publishes Ben Kim and Milan Lazarević as judges', () => {
     expect(hackathonMentors[0]?.id).toBe('nick-tomic')
     expect(hackathonMentors[0]?.bio).toMatch(/SaaS founder and growth consultant/)
     expect(hackathonMentors[0]?.bio).not.toMatch(/350 SaaS founders/)
@@ -120,7 +120,7 @@ describe('hackathon sponsor stack content', () => {
     expect(hackathonMentors[0]?.links?.linkedin).toBe('https://www.linkedin.com/in/nicktomic/')
     expect(hackathonHosts.map((host) => host.id)).toEqual(['aleksandar-hadzibabic', 'goran-petkovic'])
     expect(hackathonHosts.every((host) => host.links?.x && host.links.linkedin)).toBe(true)
-    expect(hackathonJudges).toHaveLength(1)
+    expect(hackathonJudges).toHaveLength(2)
     expect(hackathonJudges[0]?.id).toBe('ben-kim')
     expect(hackathonJudges[0]?.name).toBe('Ben Kim')
     expect(hackathonJudges[0]?.title).toBe('Founder, investor & community builder')
@@ -129,6 +129,14 @@ describe('hackathon sponsor stack content', () => {
     expect(hackathonJudges[0]?.bio).toMatch(/Mexico City/)
     expect(hackathonJudges[0]?.links?.x).toBe('https://x.com/benkimbuilds')
     expect(hackathonJudges[0]?.links?.linkedin).toBe('https://www.linkedin.com/in/benkimbuilds/')
+    expect(hackathonJudges[1]?.id).toBe('milan-lazarevic')
+    expect(hackathonJudges[1]?.name).toBe('Milan Lazarević')
+    expect(hackathonJudges[1]?.title).toBe('Software engineer & ML specialist')
+    expect(hackathonJudges[1]?.photo).toBe('/images/hackathon/milan-lazarevic.jpg')
+    expect(hackathonJudges[1]?.photoPosition).toBe('center')
+    expect(hackathonJudges[1]?.bio).toMatch(/computer vision/)
+    expect(hackathonJudges[1]?.links?.x).toBe('https://x.com/MrLaki5')
+    expect(hackathonJudges[1]?.links?.linkedin).toBe('https://www.linkedin.com/in/mrlaki5/')
   })
 
   it('keeps a minimal hacker guide with a seven-step timeline', () => {
