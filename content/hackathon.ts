@@ -102,7 +102,7 @@ export const hackathonGuidePurpose: HackathonGuideCopy = {
 
 export const hackathonGuideTeam: HackathonGuideCopy = {
   title: 'Team',
-  body: 'Solo or a team. Keep it small enough to ship in a day.',
+  body: 'Solo or up to 3 people. Keep it small enough to ship in a day.',
 }
 
 /** Day-of path — order is the visual timeline on `/hackathon/guide`. */
@@ -291,13 +291,6 @@ export const hackathonJudges: HackathonPerson[] = [
 /** Tech partners (tools for hackers) — edit logos in `public/images/partners/` or add new entries. */
 export const hackathonSponsors: Partner[] = [
   {
-    name: 'ElevenLabs',
-    logo: '/images/partners/elevenlabs.svg',
-    url: 'https://elevenlabs.io',
-    logoBg: '#14120b',
-    logoHeight: 'h-6',
-  },
-  {
     name: 'Firecrawl',
     logo: '/images/partners/firecrawl.svg',
     url: 'https://firecrawl.dev',
@@ -446,13 +439,6 @@ export const hackathonSdlcStages: HackathonSdlcStage[] = [
     job: 'Store data and sync the UI live',
     sponsorId: 'convex',
     accent: 'yellow',
-  },
-  {
-    id: 'experience',
-    label: 'Voice / audio',
-    job: 'Speech in, speech out, voice agents',
-    sponsorId: 'elevenlabs',
-    accent: 'purple',
   },
   {
     id: 'dictate',
@@ -635,43 +621,6 @@ export const hackathonSponsorProfiles: HackathonSponsorProfile[] = [
     mcp: {
       name: 'convex',
       config: { command: 'npx -y convex@latest mcp start' },
-    },
-  },
-  {
-    id: 'elevenlabs',
-    name: 'ElevenLabs',
-    logo: '/images/partners/elevenlabs.svg',
-    url: 'https://elevenlabs.io',
-    docsUrl: 'https://elevenlabs.io/developer',
-    logoBg: '#14120b',
-    logoHeight: 'h-6',
-    sdlcStage: 'experience',
-    oneLiner: 'Production speech: text-to-speech, speech-to-text, and full voice agents.',
-    technologies: [
-      'Text to Speech — including low-latency Flash and streaming',
-      'Speech to Text (Scribe)',
-      'Agents platform — conversational voice with tools',
-      'Voice clone / design / remix',
-      'Also: music, sound effects, dubbing',
-    ],
-    useCases: [
-      'Voice tutor: talk in, logic in the middle, speak the answer',
-      'Demo narration for judges',
-      'Read results aloud for accessibility',
-      'Voice agent that calls Firecrawl or Convex as tools',
-      'Multilingual greeting for a Serbia + English demo',
-    ],
-    perks: [
-      { kind: 'tbd', label: 'Event credits or prize track', detail: 'Not confirmed yet.' },
-      {
-        kind: 'public',
-        label: 'Start here: 10,000 credits on signup',
-        detail: 'ElevenLabs public free tier, not a confirmed hackathon grant.',
-      },
-    ],
-    mcp: {
-      name: 'elevenlabs',
-      config: { url: 'https://api.elevenlabs.io/v1/mcp' },
     },
   },
   {
@@ -865,9 +814,9 @@ export const hackathonSponsorProfiles: HackathonSponsorProfile[] = [
 
 export const hackathonStackRecipes: HackathonStackRecipe[] = [
   {
-    title: 'Voice research agent',
-    summary: 'Scrape or search the web, store answers in Convex, then talk to the result.',
-    sponsorIds: ['firecrawl', 'convex', 'elevenlabs'],
+    title: 'Web research agent',
+    summary: 'Scrape live pages with Firecrawl, store answers in Convex, keep the UI live.',
+    sponsorIds: ['firecrawl', 'convex'],
   },
   {
     title: 'Coding agent',
@@ -897,7 +846,6 @@ export const hackathonStackPicks: HackathonStackPick[] = [
   { need: 'The agent to find sources it does not already have', use: 'Exa' },
   { need: 'The agent to run code, tests, or a shell', use: 'Daytona' },
   { need: 'Users, rows, and instant UI updates', use: 'Convex' },
-  { need: 'The demo to talk or listen', use: 'ElevenLabs' },
   { need: 'To dictate into Grok Bot instead of typing', use: 'Wispr Flow' },
   { need: 'Generated images, video, or audio', use: 'Fal.ai' },
   { need: 'A designed UI that is already React + Tailwind', use: 'Wonder' },
@@ -909,7 +857,7 @@ export const hackathonStackOverlap = [
   'Convex can be the whole backend. Render and Netlify are public demo URLs and conventional hosting.',
   'Daytona is not production hosting — it is an isolated runtime for agent or untrusted code.',
   'Firecrawl scrapes a URL you already have. Exa searches the web for sources you do not.',
-  'ElevenLabs is speech in the product. Wispr Flow is how you dictate into Grok Bot (or Cursor).',
+  'Wispr Flow is how you dictate into Grok Bot (or Cursor) — voice input for building, not TTS in the product.',
   'Fal.ai generates media. It is not search and not hosting.',
   'Wonder is the design canvas that ships as React. Fal.ai generates media. They are not the same job.',
 ]

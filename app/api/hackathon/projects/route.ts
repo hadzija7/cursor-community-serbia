@@ -14,6 +14,7 @@ export type ProjectGalleryItem = {
   demoRecordingUrl: string
   liveDemoUrl: string
   submitterName: string | null
+  teammateEmails: string[]
   submittedAt: string
   /** Arithmetic mean of judge scores (1–10); null when no reviews. */
   averageScore: number | null
@@ -31,6 +32,7 @@ type SubmissionRow = {
   github_url: string
   demo_recording_url: string
   live_demo_url: string
+  teammate_emails: string[] | null
   submitted_at: string
 }
 
@@ -70,6 +72,7 @@ export async function GET() {
         github_url,
         demo_recording_url,
         live_demo_url,
+        teammate_emails,
         submitted_at
       FROM hackathon_project_submissions
       ORDER BY submitted_at DESC
@@ -147,6 +150,7 @@ export async function GET() {
         demoRecordingUrl: row.demo_recording_url,
         liveDemoUrl: row.live_demo_url,
         submitterName: row.name,
+        teammateEmails: Array.isArray(row.teammate_emails) ? row.teammate_emails : [],
         submittedAt:
           typeof row.submitted_at === 'string'
             ? row.submitted_at

@@ -36,6 +36,7 @@ const PREVIEW_PROJECTS: ProjectGalleryItem[] = [
     demoRecordingUrl: 'https://www.youtube.com/watch?v=ApGre9Btaq0',
     liveDemoUrl: 'https://cursorserbia.com/',
     submitterName: 'Aleksandar Hadzibabic',
+    teammateEmails: [],
     submittedAt: '2026-09-04T09:11:41.722Z',
     averageScore: null,
     reviewCount: 0,

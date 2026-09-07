@@ -109,7 +109,6 @@ export type HackathonSdlcStageId =
   | 'design'
   | 'execute'
   | 'backend'
-  | 'experience'
   | 'dictate'
   | 'generate'
   | 'deploy'

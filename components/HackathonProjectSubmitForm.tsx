@@ -5,6 +5,7 @@ import { signIn, useSession } from 'next-auth/react'
 import { useI18n } from '@/lib/i18n'
 import { useHackerStatus } from '@/lib/use-hacker-status'
 import { useHackathonDetails } from '@/lib/use-hackathon-details'
+import { MAX_TEAMMATE_EMAILS } from '@/lib/project-submission'
 
 type FormState = 'idle' | 'submitting' | 'success' | 'error'
 
@@ -22,6 +23,9 @@ export default function HackathonProjectSubmitForm() {
   const [githubUrl, setGithubUrl] = useState('')
   const [demoRecordingUrl, setDemoRecordingUrl] = useState('')
   const [liveDemoUrl, setLiveDemoUrl] = useState('')
+  const [teammateEmails, setTeammateEmails] = useState<string[]>(
+    Array.from({ length: MAX_TEAMMATE_EMAILS }, () => ''),
+  )
   const [formState, setFormState] = useState<FormState>('idle')
   const [statusMessage, setStatusMessage] = useState('')
 
@@ -100,6 +104,7 @@ export default function HackathonProjectSubmitForm() {
     const trimmedGithub = githubUrl.trim()
     const trimmedRecording = demoRecordingUrl.trim()
     const trimmedLive = liveDemoUrl.trim()
+    const trimmedTeammates = teammateEmails.map((email) => email.trim()).filter(Boolean)
 
     if (
       !trimmedTitle ||
@@ -126,6 +131,7 @@ export default function HackathonProjectSubmitForm() {
           githubUrl: trimmedGithub,
           demoRecordingUrl: trimmedRecording,
           liveDemoUrl: trimmedLive,
+          teammateEmails: trimmedTeammates,
         }),
       })
 
@@ -155,6 +161,34 @@ export default function HackathonProjectSubmitForm() {
         {t('hackathon.submitSignedInAs')}{' '}
         <span className="text-cursor-text">{session.user.email}</span>
       </p>
+
+      <fieldset className="space-y-3">
+        <legend className="text-sm text-cursor-text-muted">{t('hackathon.submitTeammatesLabel')}</legend>
+        <p className="text-xs text-cursor-text-faint">{t('hackathon.submitTeammatesHint')}</p>
+        {teammateEmails.map((email, index) => (
+          <div key={`teammate-${index}`} className="space-y-2">
+            <label
+              htmlFor={`teammateEmail${index + 1}`}
+              className="block text-sm text-cursor-text-muted"
+            >
+              {t('hackathon.submitTeammateEmailLabel').replace('{n}', String(index + 1))}
+            </label>
+            <input
+              id={`teammateEmail${index + 1}`}
+              type="email"
+              autoComplete="email"
+              value={email}
+              onChange={(event) => {
+                const next = [...teammateEmails]
+                next[index] = event.target.value
+                setTeammateEmails(next)
+              }}
+              placeholder={t('hackathon.submitTeammateEmailPlaceholder')}
+              className={inputClassName}
+            />
+          </div>
+        ))}
+      </fieldset>
 
       <div className="space-y-2">
         <label htmlFor="projectTitle" className="block text-sm text-cursor-text-muted">

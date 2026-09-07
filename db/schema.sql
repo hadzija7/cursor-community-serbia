@@ -86,6 +86,7 @@ CREATE TABLE IF NOT EXISTS hackathon_project_submissions (
   github_url TEXT NOT NULL,
   demo_recording_url TEXT NOT NULL,
   live_demo_url TEXT NOT NULL,
+  teammate_emails TEXT[] NOT NULL DEFAULT '{}',
   submitted_at TIMESTAMPTZ NOT NULL DEFAULT now(),
   updated_at TIMESTAMPTZ NOT NULL DEFAULT now()
 );

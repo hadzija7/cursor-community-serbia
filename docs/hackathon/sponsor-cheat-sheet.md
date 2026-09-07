@@ -21,13 +21,11 @@ flowchart LR
   U["Design / UI<br/>Wonder"]
   D["Execute / AI sandboxes<br/>Daytona"]
   C["Backend / state<br/>Convex"]
-  E["Voice / experience<br/>ElevenLabs"]
   W["Voice input<br/>Wispr Flow"]
   A["Generate / media<br/>Fal.ai"]
   R["Host / infra<br/>Render"]
   N["Host / frontend<br/>Netlify"]
   F --> X --> U --> D --> C
-  C --> E
   C --> W
   C --> A
   C --> R
@@ -41,7 +39,6 @@ flowchart LR
 | Design / UI | **Wonder** | Design the interface as production React + Tailwind, not a handoff mockup |
 | Execute / AI sandboxes | **Daytona** | Run AI-generated or user-untrusted code in an isolated machine |
 | Backend / state | **Convex** | Database, auth, realtime sync — the app’s memory |
-| Voice / experience | **ElevenLabs** | Speech in, speech out, or a full voice agent |
 | Voice input | **Wispr Flow** | Dictate into Grok Bot — not speech inside the product |
 | Generate / media | **Fal.ai** | Image, video, and audio models through one API |
 | Host / infra | **Render** | Public demo URL: web service, static site, Postgres, workers |
@@ -52,7 +49,7 @@ flowchart LR
 - **Convex vs Render / Netlify:** Convex can be the whole backend (and often the deploy target for the API). Render and Netlify are conventional hosting — the HTTPS URL judges open.
 - **Daytona is not production hosting.** It is a disposable computer for agents and untrusted code. Ship the product on Convex and/or Render or Netlify.
 - **Firecrawl scrapes a URL you already have. Exa searches** for sources you do not.
-- **ElevenLabs is speech in the product. Wispr Flow is how you dictate into Grok Bot (or Cursor).**
+- **Wispr Flow is how you dictate into Grok Bot (or Cursor)** — voice input for building, not TTS in the product.
 - **Fal.ai generates media.** It is not search and not hosting.
 - **Wonder is the design canvas that ships as React.** Fal.ai generates media. They are not the same job.
 - **Cursor** is how you write and wire all of this. It is the host tool, not a sponsor product.
@@ -167,39 +164,6 @@ flowchart LR
 - **Prize track — Best app that uses Convex:** 1st **100.000 RSD**, 2nd **50.000 RSD**. You must actually use Convex.  
 - Participant coupon / Pro code: **TBD**.  
 - Start today: Convex is free for small teams — that is their public tier, not a published event credit.
-
----
-
-### Voice / experience — ElevenLabs
-
-**One-liner:** Production speech: text-to-speech, speech-to-text, and full voice agents.
-
-**Products / technologies**
-
-- **Text to Speech (TTS)** — including low-latency Flash models and streaming  
-- **Speech to Text (Scribe)** — transcription  
-- **Agents platform** — conversational voice agents (turn-taking, tools, phone)  
-- **Voice clone / design / remix** — custom voices (keep it tasteful and allowed)  
-- **Also on the API:** music, sound effects, dubbing, voice changer, isolation  
-
-**Ship in a day**
-
-1. Voice tutor or coach: user talks → STT → your logic → TTS reply.  
-2. Demo narration: generate a walkthrough of the product for judges.  
-3. Accessibility: “read this page / this result aloud.”  
-4. Voice agent with tools: “search the docs” (Firecrawl) or “save this” (Convex).  
-5. Multilingual greeting or dubbed clip for a Serbia + English demo.
-
-**Start here**
-
-- [elevenlabs.io](https://elevenlabs.io) · [Developer / API](https://elevenlabs.io/developer)  
-- Sign up: [elevenlabs.io/app/sign-up](https://elevenlabs.io/app/sign-up)  
-- Agents quickstart: [docs — Eleven Agents](https://elevenlabs.io/docs/eleven-agents/quickstart)  
-
-**What you get**
-
-- Hackathon event credits or prize track: **TBD**.  
-- Start today: public free tier — **10,000 credits** on signup (no card required, per their developer signup). That is ElevenLabs’ free tier, not a confirmed event grant.
 
 ---
 
@@ -343,11 +307,11 @@ flowchart LR
 
 You can win with one sponsor used well. These are for when you want a full story.
 
-### A — Voice research agent
+### A — Web research agent
 
-**Firecrawl + Convex + ElevenLabs**
+**Firecrawl + Convex**
 
-Scrape or search the web → store sources and answers in Convex → talk to the result. Good for “ask our docs / the news / this competitor page.” Skip Daytona unless the agent must execute code. Skip Render if Convex + a hosted frontend is enough; add Render if you need a separate public API.
+Scrape or search the web → store sources and answers in Convex → keep the UI live. Good for “ask our docs / the news / this competitor page.” Skip Daytona unless the agent must execute code. Skip Render if Convex + a hosted frontend is enough; add Render if you need a separate public API.
 
 ### B — Coding agent
 
@@ -359,7 +323,7 @@ Model writes code in Cursor → Daytona runs it in a sandbox → Convex stores r
 
 **Firecrawl + Convex + Render**
 
-Firecrawl pulls live pages on a cadence (or on button click) → Convex is the live table → Render hosts the dashboard (or host UI on Convex/Vercel — Render if you want the sponsor in the deploy slot). Add ElevenLabs if the dashboard **reads** alerts aloud.
+Firecrawl pulls live pages on a cadence (or on button click) → Convex is the live table → Render hosts the dashboard (or host UI on Convex/Vercel — Render if you want the sponsor in the deploy slot).
 
 ### D — Search and generate
 
@@ -383,7 +347,6 @@ Design the screen in Wonder → Convex holds users and live state → Netlify ho
 | The agent to *find* sources it does not already have | **Exa** |
 | The agent to *run* code / tests / a shell | **Daytona** |
 | Users, rows, and instant UI updates | **Convex** |
-| The demo to *talk* or *listen* | **ElevenLabs** |
 | To dictate into Grok Bot instead of typing | **Wispr Flow** |
 | Generated images, video, or audio | **Fal.ai** |
 | A designed UI that is already React + Tailwind | **Wonder** |
@@ -394,13 +357,12 @@ Design the screen in Wonder → Convex holds users and live state → Netlify ho
 | Coworking for top 3 teams | **Kosmonaut** — 15 / 10 / 5 entries per teammate, use within 3 months; claim on kosmonaut.rs |
 | Scholarship to ABC Silicon Valley 2027 | **ABC BootCamps** — 50% / 40% / 30% for 1st / 2nd / 3rd |
 | Confirmed platform credits on day one | **Daytona** $100 (redeem in Billing) · **Exa** $50 · **Fal.ai** $50 · **Netlify** 3,000 · **Wispr Flow** 3 months Pro · **Wonder** Pro |
-| Event credits from ElevenLabs / Firecrawl / Render | **TBD** — use their public free tier until a code is announced |
+| Event credits from Render | **TBD** — use their public free tier until a code is announced |
 
 **Minimum viable stacks**
 
 - Data product: Firecrawl + Convex  
 - Agent that executes: Daytona + Convex  
-- Voice demo: ElevenLabs + Convex  
 - “Just get it online”: Render (+ whatever backend you already have)
 
 Do not collect all five unless the idea needs all five. Judges see a working slice, not a logo checklist.

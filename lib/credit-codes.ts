@@ -14,7 +14,6 @@ const SHARED_SPONSOR_CODE_ENV_MAP: Record<string, string> = {
   netlify: 'CREDIT_CODE_NETLIFY',
   firecrawl: 'CREDIT_CODE_FIRECRAWL',
   convex: 'CREDIT_CODE_CONVEX',
-  elevenlabs: 'CREDIT_CODE_ELEVENLABS',
   render: 'CREDIT_CODE_RENDER',
 }
 
