@@ -13,8 +13,12 @@ const SHARED_SPONSOR_CODE_ENV_MAP: Record<string, string> = {
   wonder: 'CREDIT_CODE_WONDER',
   netlify: 'CREDIT_CODE_NETLIFY',
   firecrawl: 'CREDIT_CODE_FIRECRAWL',
-  convex: 'CREDIT_CODE_CONVEX',
   render: 'CREDIT_CODE_RENDER',
+}
+
+/** Sponsors that issue a shared claimable code (not prize-only partners like Convex). */
+export function isCreditClaimSponsor(sponsorId: string): boolean {
+  return Object.hasOwn(SHARED_SPONSOR_CODE_ENV_MAP, sponsorId)
 }
 
 /** Claim keys that issue unique codes from a DB pool (first claim wins). */

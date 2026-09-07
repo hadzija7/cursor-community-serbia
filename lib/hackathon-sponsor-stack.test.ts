@@ -74,7 +74,10 @@ describe('hackathon sponsor stack content', () => {
 
     expect(daytona?.perks.some((perk) => perk.kind === 'confirmed' && perk.label.includes('$100'))).toBe(true)
     expect(convex?.perks.some((perk) => perk.kind === 'confirmed' && perk.label.includes('Convex'))).toBe(true)
+    expect(convex?.perks.some((perk) => /coupon|pro code/i.test(perk.label))).toBe(false)
     expect(getSponsorProfile('wispr')?.perks.some((perk) => perk.kind === 'confirmed' && perk.label.includes('3 months'))).toBe(true)
+    expect(getSponsorProfile('wispr')?.perks[0]?.detail).toMatch(/check-in/)
+    expect(JSON.stringify(getSponsorProfile('wispr')?.perks)).not.toMatch(/wisprflow/i)
     expect(getSponsorProfile('exa')?.perks.some((perk) => perk.kind === 'confirmed' && perk.label.includes('$50'))).toBe(true)
     expect(getSponsorProfile('fal')?.perks.some((perk) => perk.kind === 'confirmed' && perk.label.includes('$50'))).toBe(true)
     expect(getSponsorProfile('netlify')?.perks.some((perk) => perk.kind === 'confirmed' && perk.label.includes('3,000'))).toBe(true)
@@ -111,12 +114,23 @@ describe('hackathon sponsor stack content', () => {
   })
 
   it('lists Nick Tomić first among mentors, hosts including Vladimir, and publishes Ben Kim and Milan Lazarević as judges', () => {
-    expect(hackathonMentors[0]?.id).toBe('nick-tomic')
+    expect(hackathonMentors.map((mentor) => mentor.id)).toEqual(['nick-tomic', 'miodrag-vilotijevic'])
     expect(hackathonMentors[0]?.bio).toMatch(/SaaS founder and growth consultant/)
     expect(hackathonMentors[0]?.bio).not.toMatch(/350 SaaS founders/)
     expect(hackathonMentors[0]?.help?.toLowerCase()).toContain('go-to-market')
     expect(hackathonMentors[0]?.links?.x).toBe('https://x.com/dropoutsanta')
     expect(hackathonMentors[0]?.links?.linkedin).toBe('https://www.linkedin.com/in/nicktomic/')
+    expect(hackathonMentors[1]?.name).toBe('Miodrag Vilotijević')
+    expect(hackathonMentors[1]?.title).toBe('Co-founder and CEO, JigJoy')
+    expect(hackathonMentors[1]?.photo).toBe('/images/hackathon/miodrag-vilotijevic.jpg')
+    expect(hackathonMentors[1]?.photoPosition).toBe('top')
+    expect(hackathonMentors[1]?.bio).toMatch(/Mozaik/)
+    expect(hackathonMentors[1]?.bio).not.toMatch(/unconventional ways/)
+    expect(hackathonMentors[1]?.help?.toLowerCase()).toContain('domain-driven design')
+    expect(hackathonMentors[1]?.links?.x).toBe('https://x.com/Mijuraaa')
+    expect(hackathonMentors[1]?.links?.linkedin).toBe(
+      'https://www.linkedin.com/in/miodrag-vilotijevic/',
+    )
     expect(hackathonHosts.map((host) => host.id)).toEqual([
       'aleksandar-hadzibabic',
       'goran-petkovic',

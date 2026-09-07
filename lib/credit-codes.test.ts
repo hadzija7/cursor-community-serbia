@@ -4,6 +4,7 @@ import {
   CURSOR_50_POOL_ID,
   getSponsorIdsWithCodes,
   hasCreditCode,
+  isCreditClaimSponsor,
   isCursor50Pool,
   isCursorPool,
   isPoolSponsor,
@@ -22,5 +23,12 @@ describe('credit-codes pools', () => {
     expect(getSponsorIdsWithCodes()).toEqual(
       expect.arrayContaining([CURSOR_POOL_ID, CURSOR_50_POOL_ID]),
     )
+  })
+
+  it('does not treat Convex as a credit-claim sponsor', () => {
+    expect(isCreditClaimSponsor('convex')).toBe(false)
+    expect(isCreditClaimSponsor('daytona')).toBe(true)
+    expect(isCreditClaimSponsor('fal')).toBe(true)
+    expect(isCreditClaimSponsor('wispr')).toBe(true)
   })
 })

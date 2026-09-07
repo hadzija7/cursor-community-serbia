@@ -229,6 +229,19 @@ export const hackathonMentors: HackathonPerson[] = [
       linkedin: 'https://www.linkedin.com/in/nicktomic/',
     },
   },
+  {
+    id: 'miodrag-vilotijevic',
+    name: 'Miodrag Vilotijević',
+    title: 'Co-founder and CEO, JigJoy',
+    photo: '/images/hackathon/miodrag-vilotijevic.jpg',
+    photoPosition: 'top',
+    bio: 'Co-founder and CEO of JigJoy and creator of Mozaik, an open-source runtime for AI agents. Specializes in Domain-Driven Design, category design, and product positioning.',
+    help: 'Domain-Driven Design, category design, and product positioning.',
+    links: {
+      x: 'https://x.com/Mijuraaa',
+      linkedin: 'https://www.linkedin.com/in/miodrag-vilotijevic/',
+    },
+  },
 ]
 
 /** Day-of hosts — ambassador photos/socials match the homepage; additional hosts use `public/images/hackathon/`. */
@@ -627,7 +640,6 @@ export const hackathonSponsorProfiles: HackathonSponsorProfile[] = [
         label: 'Best app that uses Convex',
         detail: '1st 100.000 RSD · 2nd 50.000 RSD. You must actually use Convex.',
       },
-      { kind: 'tbd', label: 'Participant coupon / Pro code', detail: 'Not confirmed for this event.' },
       { kind: 'public', label: 'Start here: free for small teams', detail: 'Public Convex tier, not a published event credit.' },
     ],
     mcp: {
@@ -727,7 +739,11 @@ export const hackathonSponsorProfiles: HackathonSponsorProfile[] = [
       'Hands-busy coding: speak the next instruction',
     ],
     perks: [
-      { kind: 'confirmed', label: '3 months of Pro for every participant' },
+      {
+        kind: 'confirmed',
+        label: '3 months of Pro for every participant',
+        detail: 'Claim on the Stack page after check-in.',
+      },
     ],
   },
   {

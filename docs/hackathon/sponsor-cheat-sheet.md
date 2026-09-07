@@ -156,13 +156,11 @@ flowchart LR
 
 - [convex.dev](https://www.convex.dev) · `npm create convex@latest`  
 - Hackathon pack: [convex.dev/hackathons/resources](https://www.convex.dev/hackathons/resources)  
-- Docs: [docs.convex.dev](https://docs.convex.dev)  
-- If you get a coupon later: Team Settings → Billing (only when a code is issued).
+- Docs: [docs.convex.dev](https://docs.convex.dev)
 
 **What you get (confirmed)**
 
 - **Prize track — Best app that uses Convex:** 1st **100.000 RSD**, 2nd **50.000 RSD**. You must actually use Convex.  
-- Participant coupon / Pro code: **TBD**.  
 - Start today: Convex is free for small teams — that is their public tier, not a published event credit.
 
 ---
@@ -261,7 +259,7 @@ flowchart LR
 
 **What you get (confirmed)**
 
-- **Every participant:** 3 months of Wispr Flow Pro.
+- **Every participant:** 3 months of Wispr Flow Pro (claim on the Stack page after check-in).
 
 ---
 

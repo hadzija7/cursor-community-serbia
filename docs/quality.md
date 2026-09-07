@@ -39,6 +39,9 @@ Living scorecard for Cursor Community Serbia. Update after each phase.
 
 | Date       | Change                          |
 |------------|----------------------------------|
+| 2026-09-07 | Hackathon Stack: Convex is prize-only — no Claim Credits button or participant coupon perk |
+| 2026-09-07 | Hackathon Wispr Flow: 3 months Pro claimed via `CREDIT_CODE_WISPR` after check-in (referral URL not on the Stack card) |
+| 2026-09-07 | Hackathon mentors: added Miodrag Vilotijević (JigJoy / Mozaik; short DDD / category design / positioning bio; X + LinkedIn) |
 | 2026-09-07 | Hackathon hosts: added Vladimir Hristov (embedded → AI; technical documentation tools; LinkedIn only); all hosts share “Whatever you need, we are here to help.” |
 | 2026-09-07 | Hackathon Overview hero mascot is animated ink orb SVG (`/bloub-cercle-neutre-encre-anime.svg`) |
 | 2026-09-06 | Hackathon Guide: day agenda + judging (19 Sep winners); three optional idea sparks (FinTech / gaming-art / personal assistant); build-anything framing |

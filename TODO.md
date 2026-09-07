@@ -37,7 +37,7 @@
   - [x] Hackathon sponsors: added Daytona; removed Cursor (host, not sponsor)
   - [x] Hackathon sponsor stack preview (`/hackathon/stack`): grouped cards, path, read-more
   - [x] Hackathon tabbed mini-site (Overview / Guide / Mentors / Prizes / Stack) + `hackathon.*` host rewrite
-  - [x] Hackathon Mentors tab (`/hackathon/mentors`): Hosts first (Aleksandar, Goran, Vladimir Hristov), then Mentors (Nick with X + LinkedIn), then Judges (Ben Kim, Milan Lazarević); 2-col cards from `md`
+  - [x] Hackathon Mentors tab (`/hackathon/mentors`): Hosts first (Aleksandar, Goran, Vladimir Hristov), then Mentors (Nick, Miodrag Vilotijević with X + LinkedIn), then Judges (Ben Kim, Milan Lazarević); 2-col cards from `md`
   - [x] Hackathon prizes: added Daytona credit track ($3,000 / $2,000 / $1,000 + $100 each)
   - [x] Hackathon prizes: ABC BootCamps scholarships (50% / 40% / 30% to ABC Silicon Valley 2027)
   - [x] Daytona participant coupon: `CREDIT_CODE_DAYTONA` + claim UI redeem tip (Billing Dashboard)
@@ -54,6 +54,8 @@
   - [x] Hackathon community partners: added ABC BootCamps, JigJoy, Kosmonaut
   - [x] Superteam Balkan logo: transparent PNG (no black JPEG frame), sized a step above Startit (`h-10`)
   - [x] Hackathon tech partners + Stack: Wispr Flow, Exa, Netlify, Fal.ai (confirmed credits)
+  - [x] Wispr Flow 3 months Pro: claim via `CREDIT_CODE_WISPR` after check-in (referral URL not published in UI)
+  - [x] Hackathon Stack: Convex prize-only (no Claim Credits; no participant coupon perk)
   - [x] Hackathon tech partners + Stack: Wonder (Design / UI; Pro for all participants)
   - [x] Hackathon: removed ElevenLabs from tech partners / Stack; Fal claim via `CREDIT_CODE_FAL`
   - [x] Exa logo: official icon + “exa” wordmark on a white pad

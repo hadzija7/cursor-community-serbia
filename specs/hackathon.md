@@ -139,7 +139,7 @@ Edit `content/hackathon.ts` for:
 - Flat 2-column grid of sponsor cards (not a linear pipeline). Area label lives on the card (e.g. Host / infra, Voice input); details open in a modal
 - Each modal has an **Add to Cursor** button (title row) that uses the official `cursor://anysphere.cursor-deeplink/mcp/install` deeplink (same tab — do not open `https://cursor.com/en/install-mcp`, which auto-closes). Configs live on `hackathonSponsorProfiles[].mcp` and are encoded by `lib/cursor-mcp-install.ts`
 - Cursor is host, not a sponsor. Wispr Flow is a tech partner (dictation into Cursor)
-- Confirmed perks only: Daytona $100 coupon (claim via `CREDIT_CODE_DAYTONA`, redeem in app.daytona.io Billing) + winner credits (Best app that uses Daytona); Convex 100.000 / 50.000 RSD; Kosmonaut coworking for top 3 teams (15 / 10 / 5 entries per teammate, use within 3 months, claim on kosmonaut.rs); ABC BootCamps scholarships for top 3 (50% / 40% / 30% to ABC Silicon Valley 2027); Wispr Flow 3 months Pro; Exa $50 credits each; Fal.ai $50 credits each (claim via `CREDIT_CODE_FAL`); Netlify 3,000 credits for all participants; Wonder Pro for all participants
+- Confirmed perks only: Daytona $100 coupon (claim via `CREDIT_CODE_DAYTONA`, redeem in app.daytona.io Billing) + winner credits (Best app that uses Daytona); Convex 100.000 / 50.000 RSD; Kosmonaut coworking for top 3 teams (15 / 10 / 5 entries per teammate, use within 3 months, claim on kosmonaut.rs); ABC BootCamps scholarships for top 3 (50% / 40% / 30% to ABC Silicon Valley 2027); Wispr Flow 3 months Pro (claim via `CREDIT_CODE_WISPR` after check-in); Exa $50 credits each; Fal.ai $50 credits each (claim via `CREDIT_CODE_FAL`); Netlify 3,000 credits for all participants; Wonder Pro for all participants
 - Stack path starts with **Grok Bot** (Editor / host; Cursor works too), then Firecrawl, Exa, Wonder, Daytona, Convex, Wispr, Fal.ai, Render, Netlify
 - Marketing copy prioritizes Grok Bot; Cursor remains supported and named where the product action is Cursor-specific (MCP install deeplink, Cursor Pro referral, Origin)
 - Stack area cards also cover Exa (Search / web), Wonder (Design / UI), Wispr Flow (Voice input), Fal.ai (Generate / media), and Netlify (Host / frontend). Wispr has no public MCP install URL — desktop app only. Wonder MCP is `https://mcp.wonder.so/mcp` (OAuth after install)
@@ -158,7 +158,7 @@ Edit `content/hackathon.ts` for:
 - Route: `/hackathon/mentors` (Mentors tab)
 - Three sections in order: hosts (published), mentors (published), judges (published as they lock)
 - Cards use a 1-column grid on small screens and 2 columns from `md` up
-- First mentor: Nick Tomić — CTO and builder; short SaaS / AI GTM bio (no 350-founder research sentence); ask about GTM; X `dropoutsanta`, LinkedIn `nicktomic`
+- First mentor: Nick Tomić — CTO and builder; short SaaS / AI GTM bio (no 350-founder research sentence); ask about GTM; X `dropoutsanta`, LinkedIn `nicktomic`. Second: Miodrag Vilotijević — co-founder and CEO of JigJoy, creator of Mozaik; short DDD / category design / positioning bio; photo `public/images/hackathon/miodrag-vilotijevic.jpg` (`photoPosition: top`); X `Mijuraaa`, LinkedIn `miodrag-vilotijevic`
 - Hosts: Aleksandar Hadžibabić and Goran Petković — SpaceXAI ambassadors; photos and socials match homepage ambassadors. Vladimir Hristov — Embedded Software Engineer transitioning into AI, building tools for processing technical documentation; photo `public/images/hackathon/vladimir-hristov.jpg` (`photoPosition: top`); LinkedIn `vladimir-hristov-6645011a3` (no public X). All hosts share help copy: “Whatever you need, we are here to help.”
 - Judges: Ben Kim — founder, investor & community builder; Codex and SpaceX ambassador; photo `public/images/hackathon/ben-kim.jpg` (`photoPosition: center`); X `benkimbuilds`, LinkedIn `benkimbuilds`. Milan Lazarević — software engineer & ML specialist (CV, edge AI, LLMs, agents, RAG; optimized inference / real-time apps); photo `public/images/hackathon/milan-lazarevic.jpg` (`photoPosition: center`); X `MrLaki5`, LinkedIn `mrlaki5`
 - Mentor and judge photos in `public/images/hackathon/`; ambassador host photos reuse `public/images/ambassadors/`; additional hosts may use `public/images/hackathon/`
@@ -199,9 +199,9 @@ Hackathon attendees sign in with Google via NextAuth.js v5 (JWT strategy, no DB 
 
 ### Credit claiming
 
-Checked-in attendees can claim sponsor credit codes on the Stack page. Each sponsor modal with confirmed perks shows a "Claim Credits" control under the one-liner. The Grok Bot (host editor) modal shows **two** claim lanes ($20 and $50 Cursor credits).
+Checked-in attendees can claim sponsor credit codes on the Stack page. Claim Credits is shown only for sponsors that issue a shared code (`isCreditClaimSponsor` — Daytona, Exa, Fal, Wispr, Wonder, Netlify, Firecrawl, Render). Convex is prize-only (no claim button). The Grok Bot (host editor) modal shows **two** claim lanes ($20 and $50 Cursor credits).
 
-- **Shared codes** (Daytona, Exa, Firecrawl, Wonder, …): stored as env vars (`CREDIT_CODE_DAYTONA`, `CREDIT_CODE_EXA`, etc.). Every claimant gets the same value; claims are recorded in `hackathon_credit_claims`. Daytona claim UI shows Billing redeem steps (app.daytona.io → Billing → paste → Redeem).
+- **Shared codes** (Daytona, Exa, Firecrawl, Wonder, Wispr Flow, …): stored as env vars (`CREDIT_CODE_DAYTONA`, `CREDIT_CODE_EXA`, `CREDIT_CODE_WISPR`, etc.). Every claimant gets the same value; claims are recorded in `hackathon_credit_claims`. Daytona claim UI shows Billing redeem steps (app.daytona.io → Billing → paste → Redeem). Do not publish Wispr / Fal referral URLs in page copy — they are returned only after check-in.
 - **Cursor $20 unique pool**: stored in `hackathon_referral_codes` (`sponsor_id = cursor`). Claim assigns the next unclaimed row (idempotent per email). Setup tip: redeem $20 → upgrade to Pro → log in to Grok Bot.
 - **Cursor $50 unique pool**: stored in a **separate** table `hackathon_grok_bot_referral_codes` (legacy table name). Claim via `sponsorId: "cursor-50"` (idempotent per email). Seed with `pnpm db:seed:grok-bot-referrals` from gitignored `db/data/grok-bot-referrals.csv` (see `.example`).
 - The Grok Bot (host editor) Stack modal shows **two** claim lanes so hackers can take both Cursor credit pools ($20 and $50).
@@ -287,7 +287,7 @@ The app is ready for `hackathon.cursorserbia.com`. Creating the hostname is a da
 - [ ] `/hackathon` loads the Overview tab (hero, highlights, marquee, become-a-sponsor form)
 - [ ] Hero "Sponsor event" always scrolls to `#become-a-sponsor` (Overview with or without hash; from Prizes/Stack)
 - [ ] Tabs switch to Guide, Mentors, Prizes, Stack, Submit, and Projects (no Sponsor tab)
-- [ ] `/hackathon/mentors` shows Hosts (Aleksandar, Goran, Vladimir Hristov; 2-col from `md`), then Mentors (Nick with X + LinkedIn), then Judges (Ben Kim, Milan Lazarević)
+- [ ] `/hackathon/mentors` shows Hosts (Aleksandar, Goran, Vladimir Hristov; 2-col from `md`), then Mentors (Nick, Miodrag Vilotijević with X + LinkedIn), then Judges (Ben Kim, Milan Lazarević)
 - [ ] `/hackathon/guide` shows purpose, team, agenda (incl. 19 Sep winners), guidelines, and three optional idea sparks
 - [ ] Guide submit step links to `/hackathon/submit`
 - [ ] `/hackathon/submit` shows login CTA when signed out; check-in message when registered; form when checked in

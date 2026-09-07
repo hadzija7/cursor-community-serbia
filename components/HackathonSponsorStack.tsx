@@ -6,6 +6,7 @@ import ClaimCreditsButton, { HostEditorCreditsClaim } from '@/components/ClaimCr
 import RenderLogoMark from '@/components/RenderLogoMark'
 import { getSponsorProfile, hackathonSdlcStages } from '@/content/hackathon'
 import { cursorMcpInstallHref } from '@/lib/cursor-mcp-install'
+import { isCreditClaimSponsor } from '@/lib/credit-codes'
 import { useI18n } from '@/lib/i18n'
 import type { HackathonSdlcStage, HackathonSponsorPerkKind, HackathonSponsorProfile } from '@/lib/types'
 
@@ -142,14 +143,12 @@ function SponsorModal({
           </button>
         </div>
         <p className="mt-3 text-sm leading-relaxed text-cursor-text-secondary">{profile.oneLiner}</p>
-        {profile.perks.some((p) => p.kind === 'confirmed') ? (
-          profile.id === 'cursor' ? (
-            <HostEditorCreditsClaim />
-          ) : (
-            <div className="mt-4">
-              <ClaimCreditsButton sponsorId={profile.id} />
-            </div>
-          )
+        {profile.id === 'cursor' ? (
+          <HostEditorCreditsClaim />
+        ) : isCreditClaimSponsor(profile.id) && profile.perks.some((p) => p.kind === 'confirmed') ? (
+          <div className="mt-4">
+            <ClaimCreditsButton sponsorId={profile.id} />
+          </div>
         ) : null}
         {profile.mcp?.note ? (
           <p className="mt-2 text-xs leading-relaxed text-cursor-text-muted">{profile.mcp.note}</p>
