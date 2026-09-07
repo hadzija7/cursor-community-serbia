@@ -114,7 +114,11 @@ describe('hackathon sponsor stack content', () => {
   })
 
   it('lists Nick Tomić first among mentors, hosts including Vladimir, and publishes Ben Kim and Milan Lazarević as judges', () => {
-    expect(hackathonMentors.map((mentor) => mentor.id)).toEqual(['nick-tomic', 'miodrag-vilotijevic'])
+    expect(hackathonMentors.map((mentor) => mentor.id)).toEqual([
+      'nick-tomic',
+      'miodrag-vilotijevic',
+      'miodrag-todorovic',
+    ])
     expect(hackathonMentors[0]?.bio).toMatch(/SaaS founder and growth consultant/)
     expect(hackathonMentors[0]?.bio).not.toMatch(/350 SaaS founders/)
     expect(hackathonMentors[0]?.help?.toLowerCase()).toContain('go-to-market')
@@ -131,6 +135,14 @@ describe('hackathon sponsor stack content', () => {
     expect(hackathonMentors[1]?.links?.linkedin).toBe(
       'https://www.linkedin.com/in/miodrag-vilotijevic/',
     )
+    expect(hackathonMentors[2]?.name).toBe('Miodrag Todorović')
+    expect(hackathonMentors[2]?.title).toBe('Co-founder, JigJoy')
+    expect(hackathonMentors[2]?.photo).toBe('/images/hackathon/miodrag-todorovic.jpg')
+    expect(hackathonMentors[2]?.photoPosition).toBe('center')
+    expect(hackathonMentors[2]?.bio).toMatch(/Mozaik Cloud/)
+    expect(hackathonMentors[2]?.bio).toMatch(/baro/)
+    expect(hackathonMentors[2]?.help?.toLowerCase()).toContain('multi-agent architectures')
+    expect(hackathonMentors[2]?.links).toBeUndefined()
     expect(hackathonHosts.map((host) => host.id)).toEqual([
       'aleksandar-hadzibabic',
       'goran-petkovic',

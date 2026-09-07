@@ -242,6 +242,15 @@ export const hackathonMentors: HackathonPerson[] = [
       linkedin: 'https://www.linkedin.com/in/miodrag-vilotijevic/',
     },
   },
+  {
+    id: 'miodrag-todorovic',
+    name: 'Miodrag Todorović',
+    title: 'Co-founder, JigJoy',
+    photo: '/images/hackathon/miodrag-todorovic.jpg',
+    photoPosition: 'center',
+    bio: 'I build tools for running AI agents in production: Mozaik Cloud, baro, and the agent workflows we use at JigJoy.',
+    help: 'Multi-agent architectures, Grok Bot, shipping a working demo in a weekend.',
+  },
 ]
 
 /** Day-of hosts — ambassador photos/socials match the homepage; additional hosts use `public/images/hackathon/`. */
