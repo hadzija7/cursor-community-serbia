@@ -69,7 +69,7 @@ When `NEXT_PUBLIC_HACKATHON_SITE_URL` is set, `/hackathon` on the main domain re
 - `lib/project-submission.ts` — Field validation for project submissions
 - `lib/project-gallery.ts` — Score bounds, favorite cap, average aggregate
 - `lib/demo-embed.ts` — YouTube / Loom embed resolution for demo recordings
-- `components/HackathonHero.tsx` — Full-width hero with date/location/duration cards and CTAs; full-circle Grok Bot mark (`/grokbot.svg`, same as header) sits under the tagline on mobile and beside the title from `sm` up
+- `components/HackathonHero.tsx` — Full-width hero with date/location/duration cards and CTAs; animated ink Grok Bot orb (`/bloub-cercle-neutre-encre-anime.svg` via `mascotPeekImage`) sits under the tagline on mobile and beside the title from `sm` up
 - `components/HackathonHighlights.tsx` — Stat-style highlight grid (TUM-inspired)
 - `components/HackathonPrizes.tsx` — Prize tracks with per-place cards (above sponsors)
 - `components/SponsorMarquee.tsx` — Tech partner and community partner marquees (Startit, Superteam Balkan, ABC BootCamps, JigJoy, Kosmonaut)
@@ -122,7 +122,7 @@ Postgres can stay configured; webhook notify runs after a successful insert (not
 
 Edit `content/hackathon.ts` for:
 
-- Event title (`Grok Bot Serbia Hackathon`), tagline, `mascotImage` / `mascotPeekImage` / `headerMark` (all full-circle `/grokbot.svg`), duration, and **Luma URL** (source of truth for live sync)
+- Event title (`Grok Bot Serbia Hackathon`), tagline, `mascotImage` / `headerMark` (full-circle `/grokbot.svg`), `mascotPeekImage` (animated ink orb `/bloub-cercle-neutre-encre-anime.svg`), duration, and **Luma URL** (source of truth for live sync)
 - Static fallback `date` / `displayDate` / `location` (Belgrade, September 12, 2026 — used when Luma is unreachable)
 - Highlights grid (`hackathonStats`)
 - Prize tracks (`hackathonPrizes`: Convex cash 100.000 / 50.000 RSD; Kosmonaut coworking — 15 / 10 / 5 entries per teammate on the top 3 teams, use within 3 months, claimed on their platform; Daytona credits $3,000 / $2,000 / $1,000 plus $100 for every participant; ABC BootCamps — 50% / 40% / 30% scholarships to ABC Silicon Valley 2027)
@@ -177,7 +177,7 @@ Edit `content/hackathon.ts` for:
 - Client: `useHackathonDetails` polls `/api/hackathon/event` every 5 minutes (same pattern as upcoming events)
 - Title, tagline, mascot image, and duration stay content-owned so marketing copy does not flip with Luma’s event name
 - Homepage promo card (`HackathonPromoCard`) can show `hackathonConfig.mascotImage` next to the title (same full-circle `/grokbot.svg` as the header)
-- Overview hero shows `hackathonConfig.mascotPeekImage` (full-circle `/grokbot.svg`) under the tagline on mobile (compact, in flow) and beside the title from `sm` up; Stack Grok Bot card uses the same mark as `logo`
+- Overview hero shows `hackathonConfig.mascotPeekImage` (animated ink orb `/bloub-cercle-neutre-encre-anime.svg`) under the tagline on mobile (compact, in flow) and beside the title from `sm` up; header mark + Stack Grok Bot card keep static full-circle `/grokbot.svg`
 
 Hero CTAs: Register on Luma (external Luma event link), View on Luma (when already registered/checked in), and Sponsor event (`hackathon.viewSponsorsCta`). Google login is navbar-only. Sponsor event always scrolls to Overview `#become-a-sponsor` — including a second click while already on Overview with that hash. Off Overview (Guide / Mentors / Prizes / Stack) it navigates to the Overview form. The form section uses `scroll-mt-24` so header chrome does not cover the heading. Guide, Mentors, and Stack are header tabs only.
 

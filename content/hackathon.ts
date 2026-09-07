@@ -16,7 +16,7 @@ export const hackathonConfig = {
   title: 'Grok Bot Serbia Hackathon',
   tagline: 'Build the future with AI — one full day of hacking, learning, and community.',
   mascotImage: '/grokbot.svg',
-  mascotPeekImage: '/grokbot.svg',
+  mascotPeekImage: '/bloub-cercle-neutre-encre-anime.svg',
   headerMark: '/grokbot.svg',
   ogImage: '/images/og-grok-bot-hackathon.jpg',
   // Static fallback when Luma is unreachable. Live date/location come from

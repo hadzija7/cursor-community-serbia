@@ -124,10 +124,11 @@ export default function HackathonHero() {
               <Image
                 src={hackathonConfig.mascotPeekImage}
                 alt=""
-                width={2020}
-                height={2020}
+                width={250}
+                height={250}
                 className="h-auto w-full object-contain"
                 priority
+                unoptimized
               />
             </div>
           </div>
