@@ -10,7 +10,7 @@ The Cursor Community Serbia site is a Next.js 16 App Router application presenti
 |-------|-------|
 | Status | Implemented |
 | Verified | Partial |
-| Last updated | 2026-09-01 |
+| Last updated | 2026-09-07 |
 
 ## Architecture
 
@@ -92,6 +92,6 @@ The Cursor Community Serbia site is a Next.js 16 App Router application presenti
 - [ ] Favicon displays Cursor logo
 - [ ] `/hackathon` shows the become-a-sponsor form; header tabs are Overview / Guide / Mentors / Prizes / Stack
 - [ ] `/hackathon/guide` loads purpose, team, shipping, and guidelines
-- [ ] `/hackathon/mentors` shows Nick Tomić and published judges (Ben Kim)
+- [ ] `/hackathon/mentors` shows Hosts (Aleksandar, Goran, Vladimir Hristov), Nick Tomić, and published judges (Ben Kim, Milan Lazarević)
 - [ ] `/hackathon/stack` loads sponsor cards labeled by area
 - [ ] Sponsor modal has Add to Cursor, which uses the `cursor://` MCP install deeplink (no bounce tab)

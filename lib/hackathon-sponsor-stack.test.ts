@@ -110,16 +110,34 @@ describe('hackathon sponsor stack content', () => {
     ])
   })
 
-  it('lists Nick Tomić first among mentors, hosts from ambassadors, and publishes Ben Kim and Milan Lazarević as judges', () => {
+  it('lists Nick Tomić first among mentors, hosts including Vladimir, and publishes Ben Kim and Milan Lazarević as judges', () => {
     expect(hackathonMentors[0]?.id).toBe('nick-tomic')
     expect(hackathonMentors[0]?.bio).toMatch(/SaaS founder and growth consultant/)
     expect(hackathonMentors[0]?.bio).not.toMatch(/350 SaaS founders/)
-    expect(hackathonHosts.every((host) => host.bio.includes('SpaceXAI ambassadors'))).toBe(true)
     expect(hackathonMentors[0]?.help?.toLowerCase()).toContain('go-to-market')
     expect(hackathonMentors[0]?.links?.x).toBe('https://x.com/dropoutsanta')
     expect(hackathonMentors[0]?.links?.linkedin).toBe('https://www.linkedin.com/in/nicktomic/')
-    expect(hackathonHosts.map((host) => host.id)).toEqual(['aleksandar-hadzibabic', 'goran-petkovic'])
-    expect(hackathonHosts.every((host) => host.links?.x && host.links.linkedin)).toBe(true)
+    expect(hackathonHosts.map((host) => host.id)).toEqual([
+      'aleksandar-hadzibabic',
+      'goran-petkovic',
+      'vladimir-hristov',
+    ])
+    expect(hackathonHosts[0]?.bio).toMatch(/SpaceXAI ambassadors/)
+    expect(hackathonHosts[1]?.bio).toMatch(/SpaceXAI ambassadors/)
+    expect(hackathonHosts[0]?.links?.x && hackathonHosts[0]?.links.linkedin).toBeTruthy()
+    expect(hackathonHosts[1]?.links?.x && hackathonHosts[1]?.links.linkedin).toBeTruthy()
+    expect(hackathonHosts[2]?.name).toBe('Vladimir Hristov')
+    expect(hackathonHosts[2]?.title).toBe('Embedded Software Engineer')
+    expect(hackathonHosts[2]?.photo).toBe('/images/hackathon/vladimir-hristov.jpg')
+    expect(hackathonHosts[2]?.photoPosition).toBe('top')
+    expect(hackathonHosts[2]?.bio).toMatch(/technical documentation/)
+    expect(hackathonHosts.every((host) => host.help === 'Whatever you need, we are here to help.')).toBe(
+      true,
+    )
+    expect(hackathonHosts[2]?.links?.linkedin).toBe(
+      'https://www.linkedin.com/in/vladimir-hristov-6645011a3/',
+    )
+    expect(hackathonHosts[2]?.links?.x).toBeUndefined()
     expect(hackathonJudges).toHaveLength(2)
     expect(hackathonJudges[0]?.id).toBe('ben-kim')
     expect(hackathonJudges[0]?.name).toBe('Ben Kim')

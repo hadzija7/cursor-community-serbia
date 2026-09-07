@@ -10,7 +10,7 @@ Hackathon mini-site with tabs (Overview, Guide, Mentors, Prizes, Stack). Served 
 |-------|-------|
 | Status | Implemented |
 | Verified | Partial |
-| Last updated | 2026-09-06 |
+| Last updated | 2026-09-07 |
 
 ## Page layout
 
@@ -159,9 +159,9 @@ Edit `content/hackathon.ts` for:
 - Three sections in order: hosts (published), mentors (published), judges (published as they lock)
 - Cards use a 1-column grid on small screens and 2 columns from `md` up
 - First mentor: Nick Tomić — CTO and builder; short SaaS / AI GTM bio (no 350-founder research sentence); ask about GTM; X `dropoutsanta`, LinkedIn `nicktomic`
-- Hosts: Aleksandar Hadžibabić and Goran Petković — SpaceXAI ambassadors; photos and socials match homepage ambassadors; ask about anything
+- Hosts: Aleksandar Hadžibabić and Goran Petković — SpaceXAI ambassadors; photos and socials match homepage ambassadors. Vladimir Hristov — Embedded Software Engineer transitioning into AI, building tools for processing technical documentation; photo `public/images/hackathon/vladimir-hristov.jpg` (`photoPosition: top`); LinkedIn `vladimir-hristov-6645011a3` (no public X). All hosts share help copy: “Whatever you need, we are here to help.”
 - Judges: Ben Kim — founder, investor & community builder; Codex and SpaceX ambassador; photo `public/images/hackathon/ben-kim.jpg` (`photoPosition: center`); X `benkimbuilds`, LinkedIn `benkimbuilds`. Milan Lazarević — software engineer & ML specialist (CV, edge AI, LLMs, agents, RAG; optimized inference / real-time apps); photo `public/images/hackathon/milan-lazarevic.jpg` (`photoPosition: center`); X `MrLaki5`, LinkedIn `mrlaki5`
-- Mentor and judge photos in `public/images/hackathon/`; host photos reuse `public/images/ambassadors/`
+- Mentor and judge photos in `public/images/hackathon/`; ambassador host photos reuse `public/images/ambassadors/`; additional hosts may use `public/images/hackathon/`
 - Types: `HackathonPerson` in `lib/types.ts`
 
 ### Prizes section
@@ -287,7 +287,7 @@ The app is ready for `hackathon.cursorserbia.com`. Creating the hostname is a da
 - [ ] `/hackathon` loads the Overview tab (hero, highlights, marquee, become-a-sponsor form)
 - [ ] Hero "Sponsor event" always scrolls to `#become-a-sponsor` (Overview with or without hash; from Prizes/Stack)
 - [ ] Tabs switch to Guide, Mentors, Prizes, Stack, Submit, and Projects (no Sponsor tab)
-- [ ] `/hackathon/mentors` shows Hosts (Aleksandar + Goran side by side from `md`), then Mentors (Nick with X + LinkedIn), then Judges (Ben Kim, Milan Lazarević)
+- [ ] `/hackathon/mentors` shows Hosts (Aleksandar, Goran, Vladimir Hristov; 2-col from `md`), then Mentors (Nick with X + LinkedIn), then Judges (Ben Kim, Milan Lazarević)
 - [ ] `/hackathon/guide` shows purpose, team, agenda (incl. 19 Sep winners), guidelines, and three optional idea sparks
 - [ ] Guide submit step links to `/hackathon/submit`
 - [ ] `/hackathon/submit` shows login CTA when signed out; check-in message when registered; form when checked in

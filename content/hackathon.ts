@@ -231,7 +231,7 @@ export const hackathonMentors: HackathonPerson[] = [
   },
 ]
 
-/** Day-of hosts — photos and socials match the homepage ambassadors. */
+/** Day-of hosts — ambassador photos/socials match the homepage; additional hosts use `public/images/hackathon/`. */
 export const hackathonHosts: HackathonPerson[] = [
   {
     id: 'aleksandar-hadzibabic',
@@ -240,7 +240,7 @@ export const hackathonHosts: HackathonPerson[] = [
     photo: '/images/ambassadors/aleks-cursor.jpg',
     photoPosition: 'top',
     bio: 'SpaceXAI ambassadors and one of the hosts running the room.',
-    help: 'Whatever you need — we are here to help.',
+    help: 'Whatever you need, we are here to help.',
     links: {
       x: 'https://x.com/AHadzibabic',
       linkedin: 'https://www.linkedin.com/in/ah999/',
@@ -252,10 +252,22 @@ export const hackathonHosts: HackathonPerson[] = [
     title: 'Community Lead for Belgrade',
     photo: '/images/ambassadors/goran.png',
     bio: 'SpaceXAI ambassadors and one of the hosts running the room.',
-    help: 'Whatever you need — we are here to help.',
+    help: 'Whatever you need, we are here to help.',
     links: {
       x: 'https://x.com/goranux',
       linkedin: 'https://www.linkedin.com/in/petkovicg/',
+    },
+  },
+  {
+    id: 'vladimir-hristov',
+    name: 'Vladimir Hristov',
+    title: 'Embedded Software Engineer',
+    photo: '/images/hackathon/vladimir-hristov.jpg',
+    photoPosition: 'top',
+    bio: 'Embedded Software Engineer transitioning into AI. Building tools for processing technical documentation.',
+    help: 'Whatever you need, we are here to help.',
+    links: {
+      linkedin: 'https://www.linkedin.com/in/vladimir-hristov-6645011a3/',
     },
   },
 ]
