@@ -261,13 +261,8 @@ export const hackathonMentors: HackathonPerson[] = [
     title: 'SRE & Infra Leader',
     photo: '/images/hackathon/alexandra-borisova.jpg',
     photoPosition: 'center',
-<<<<<<< HEAD
-    bio: 'Almost a decade focused on making cloud infrastructure reliable and automated. Belgrade-based SRE & infra leader; currently DevOps/SRE at Typeable, building AWS + Kubernetes platforms (Terraform/Ansible, EKS, CI/CD) and observability with Grafana, Prometheus, and Loki. Also explores agentic harnesses on AWS and Kubernetes.',
-    help: 'SRE & platform engineering, AWS/Kubernetes, observability (Grafana/Prometheus/Loki), IaC and CI/CD, shipping infra for a weekend demo.',
-=======
     bio: 'DevOps/SRE at Typeable — AWS, Kubernetes, and observability. Also explores agentic harnesses on AWS and Kubernetes.',
     help: 'SRE & platform engineering, AWS/Kubernetes, observability, IaC and CI/CD.',
->>>>>>> e6b25d0 (fix(hackathon): shorten Alexandra mentor bio to match peers)
     links: {
       linkedin: 'https://www.linkedin.com/in/princessfruittt/',
     },
