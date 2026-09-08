@@ -111,6 +111,7 @@ export type HackathonSdlcStageId =
   | 'backend'
   | 'dictate'
   | 'generate'
+  | 'models'
   | 'deploy'
   | 'ship'
 

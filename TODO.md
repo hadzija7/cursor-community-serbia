@@ -69,6 +69,7 @@
   - [x] Hackathon Overview hero + Stack use full-circle `/grokbot.svg` (same as header); hosts bio SpaceXAI ambassadors; Nick mentor bio shortened
   - [x] Hackathon Overview hero mascot is animated ink orb SVG (`/bloub-cercle-neutre-encre-anime.svg`)
   - [x] Hackathon credits: dual Cursor pools ($20 + $50) in separate tables; Stack modal claims both (`cursor` + `cursor-50`; seed via `pnpm db:seed:grok-bot-referrals`)
+  - [x] Hackathon tech partners + Stack: SpaceXAI / x.ai API credits (`CREDIT_CODE_XAI`; claim after check-in; redeem at console.x.ai Billing)
   - [ ] Review and update content (events, ambassadors, partners) for Serbia
 
 - [ ] Ensure education resources are complete and linked correctly

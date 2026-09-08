@@ -24,9 +24,10 @@ describe('hackathon sponsor stack content', () => {
     const stackOnlyNames = ['Grok Bot']
 
     expect(profileIds).toEqual(stageIds)
-    expect(hackathonSponsorProfiles).toHaveLength(10)
+    expect(hackathonSponsorProfiles).toHaveLength(11)
     expect(profileNames.filter((name) => !stackOnlyNames.includes(name)).sort()).toEqual(marqueeNames)
     expect(getSponsorProfile('cursor')?.name).toBe('Grok Bot')
+    expect(getSponsorProfile('xai')?.name).toBe('x.ai')
   })
 
   it('lists Startit, Superteam, ABC BootCamps, JigJoy, and Kosmonaut as community partners', () => {
@@ -41,8 +42,8 @@ describe('hackathon sponsor stack content', () => {
 
   it('gives every MCP-capable sponsor a Cursor install config', () => {
     for (const profile of hackathonSponsorProfiles) {
-      // Wispr is desktop-only; Cursor is the host editor (no MCP install target).
-      if (profile.id === 'wispr' || profile.id === 'cursor') {
+      // Wispr is desktop-only; Cursor is the host editor; x.ai is Console API key only.
+      if (profile.id === 'wispr' || profile.id === 'cursor' || profile.id === 'xai') {
         expect(profile.mcp).toBeUndefined()
         continue
       }
@@ -68,9 +69,10 @@ describe('hackathon sponsor stack content', () => {
     }
   })
 
-  it('keeps confirmed Daytona, Convex, Wispr, Exa, Netlify, Fal, Wonder, Firecrawl, and Cursor perks', () => {
+  it('keeps confirmed Daytona, Convex, Wispr, Exa, Netlify, Fal, Wonder, Firecrawl, Cursor, and x.ai perks', () => {
     const daytona = getSponsorProfile('daytona')
     const convex = getSponsorProfile('convex')
+    const xai = getSponsorProfile('xai')
 
     expect(daytona?.perks.some((perk) => perk.kind === 'confirmed' && perk.label.includes('$100'))).toBe(true)
     expect(convex?.perks.some((perk) => perk.kind === 'confirmed' && perk.label.includes('Convex'))).toBe(true)
@@ -86,6 +88,11 @@ describe('hackathon sponsor stack content', () => {
     expect(getSponsorProfile('cursor')?.perks.filter((perk) => perk.kind === 'confirmed')).toHaveLength(2)
     expect(getSponsorProfile('cursor')?.perks.some((perk) => perk.label.includes('$20 Cursor'))).toBe(true)
     expect(getSponsorProfile('cursor')?.perks.some((perk) => perk.label.includes('$50 Cursor'))).toBe(true)
+    expect(xai?.perks.some((perk) => perk.kind === 'confirmed' && perk.label.includes('~$35'))).toBe(true)
+    expect(xai?.perks[0]?.detail).toMatch(/check-in/)
+    expect(xai?.perks[0]?.detail).toMatch(/console\.x\.ai/)
+    expect(xai?.perks[0]?.detail).toMatch(/does not work for Grok Bot/)
+    expect(JSON.stringify(xai?.perks)).not.toMatch(/CREDIT_CODE/)
   })
 
   it('lists Convex cash, Kosmonaut coworking, Daytona credits, and ABC BootCamps scholarships', () => {

@@ -39,6 +39,7 @@ Living scorecard for Cursor Community Serbia. Update after each phase.
 
 | Date       | Change                          |
 |------------|----------------------------------|
+| 2026-09-08 | Hackathon tech partners + Stack: SpaceXAI / x.ai (`id: xai`) ~$35 Console API credits via `CREDIT_CODE_XAI` after check-in; redeem at console.x.ai Billing (code never in repo) |
 | 2026-09-07 | Hackathon Stack: Convex is prize-only — no Claim Credits button or participant coupon perk |
 | 2026-09-07 | Hackathon Wispr Flow: 3 months Pro claimed via `CREDIT_CODE_WISPR` after check-in (referral URL not on the Stack card) |
 | 2026-09-07 | Hackathon mentors: added Miodrag Todorović (JigJoy co-founder; Mozaik Cloud / baro / agent workflows; photo `miodrag-todorovic.jpg`, center crop; X `lotus_sbc`, LinkedIn `lotus015`) |

@@ -14,6 +14,7 @@ const SHARED_SPONSOR_CODE_ENV_MAP: Record<string, string> = {
   netlify: 'CREDIT_CODE_NETLIFY',
   firecrawl: 'CREDIT_CODE_FIRECRAWL',
   render: 'CREDIT_CODE_RENDER',
+  xai: 'CREDIT_CODE_XAI',
 }
 
 /** Sponsors that issue a shared claimable code (not prize-only partners like Convex). */

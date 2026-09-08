@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 88 32" role="img" aria-label="x.ai">
+  <title>x.ai</title>
+  <!-- Clean text mark for marquee/stack  not an official brand asset recreation -->
+  <text
+    x="4"
+    y="23"
+    fill="#ffffff"
+    font-family="ui-sans-serif, system-ui, -apple-system, Segoe UI, Helvetica, Arial, sans-serif"
+    font-size="22"
+    font-weight="700"
+    letter-spacing="-0.04em"
+  >x.ai</text>
+</svg>
