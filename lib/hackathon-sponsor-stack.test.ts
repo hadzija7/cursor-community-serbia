@@ -125,6 +125,7 @@ describe('hackathon sponsor stack content', () => {
       'nick-tomic',
       'miodrag-vilotijevic',
       'miodrag-todorovic',
+      'alexandra-borisova',
     ])
     expect(hackathonMentors[0]?.bio).toMatch(/SaaS founder and growth consultant/)
     expect(hackathonMentors[0]?.bio).not.toMatch(/350 SaaS founders/)
@@ -151,6 +152,16 @@ describe('hackathon sponsor stack content', () => {
     expect(hackathonMentors[2]?.help?.toLowerCase()).toContain('multi-agent architectures')
     expect(hackathonMentors[2]?.links?.x).toBe('https://x.com/lotus_sbc')
     expect(hackathonMentors[2]?.links?.linkedin).toBe('https://www.linkedin.com/in/lotus015')
+    expect(hackathonMentors[3]?.name).toBe('Alexandra Borisova')
+    expect(hackathonMentors[3]?.title).toBe('SRE & Infra Leader')
+    expect(hackathonMentors[3]?.photo).toBe('/images/hackathon/alexandra-borisova.jpg')
+    expect(hackathonMentors[3]?.photoPosition).toBe('center')
+    expect(hackathonMentors[3]?.bio).toMatch(/Typeable/)
+    expect(hackathonMentors[3]?.help?.toLowerCase()).toContain('sre')
+    expect(hackathonMentors[3]?.links?.linkedin).toBe(
+      'https://www.linkedin.com/in/princessfruittt/',
+    )
+    expect(hackathonMentors[3]?.links?.x).toBeUndefined()
     expect(hackathonHosts.map((host) => host.id)).toEqual([
       'aleksandar-hadzibabic',
       'goran-petkovic',

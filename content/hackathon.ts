@@ -255,6 +255,18 @@ export const hackathonMentors: HackathonPerson[] = [
       linkedin: 'https://www.linkedin.com/in/lotus015',
     },
   },
+  {
+    id: 'alexandra-borisova',
+    name: 'Alexandra Borisova',
+    title: 'SRE & Infra Leader',
+    photo: '/images/hackathon/alexandra-borisova.jpg',
+    photoPosition: 'center',
+    bio: 'DevOps/SRE at Typeable — AWS, Kubernetes, and observability. Also explores agentic harnesses on AWS and Kubernetes.',
+    help: 'SRE & platform engineering, AWS/Kubernetes, observability, IaC and CI/CD.',
+    links: {
+      linkedin: 'https://www.linkedin.com/in/princessfruittt/',
+    },
+  },
 ]
 
 /** Day-of hosts — ambassador photos/socials match the homepage; additional hosts use `public/images/hackathon/`. */

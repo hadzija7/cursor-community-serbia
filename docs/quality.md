@@ -39,6 +39,7 @@ Living scorecard for Cursor Community Serbia. Update after each phase.
 
 | Date       | Change                          |
 |------------|----------------------------------|
+| 2026-09-08 | Hackathon mentors: added Alexandra Borisova (SRE & Infra Leader; Typeable; AWS/K8s/observability; photo `public/images/hackathon/alexandra-borisova.jpg`, center crop; LinkedIn `princessfruittt`) |
 | 2026-09-08 | Hackathon Judges: published Marija Mladenović on `/hackathon/mentors` (lead product designer & angel investor; Solflare; photo `public/images/hackathon/marija-mladenovic.jpg`; X `MarijaHolt`, LinkedIn `marijamladenovic`) |
 | 2026-09-08 | Hackathon Judges: published Agrim Singh on `/hackathon/mentors` (AI adoption, SpaceXAI; SEA/Singapore community; photo `public/images/hackathon/agrim-singh.jpg`; X `agrimsingh`, LinkedIn `agrims`) |
 | 2026-09-08 | Hackathon tech partners + Stack: SpaceXAI / x.ai (`id: xai`) ~$35 Console API credits via `CREDIT_CODE_XAI` after check-in; redeem at console.x.ai Billing (code never in repo) |
