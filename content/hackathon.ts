@@ -393,6 +393,14 @@ export const hackathonSponsors: Partner[] = [
     logoHeight: 'h-7',
     logoWidth: 'w-32',
   },
+  {
+    name: 'x.ai',
+    logo: '/images/partners/spacexai.svg',
+    url: 'https://x.ai/',
+    logoBg: '#ffffff',
+    logoHeight: 'h-7',
+    logoWidth: 'w-28',
+  },
 ]
 
 /** Local hosts and community orgs — shown below tech partners on Overview. */
@@ -491,6 +499,13 @@ export const hackathonSdlcStages: HackathonSdlcStage[] = [
     job: 'Images, video, and audio from models',
     sponsorId: 'fal',
     accent: 'orange',
+  },
+  {
+    id: 'models',
+    label: 'API / models',
+    job: 'Call SpaceXAI / x.ai Voice, Chat, Imagine, Grok Build',
+    sponsorId: 'xai',
+    accent: 'green',
   },
   {
     id: 'deploy',
@@ -851,6 +866,38 @@ export const hackathonSponsorProfiles: HackathonSponsorProfile[] = [
       note: 'After install, authenticate Wonder in Cursor MCP settings (browser sign-in).',
     },
   },
+  {
+    id: 'xai',
+    name: 'x.ai',
+    logo: '/images/partners/spacexai.svg',
+    url: 'https://x.ai/',
+    docsUrl: 'https://docs.x.ai/developers/model-capabilities/audio/voice',
+    logoBg: '#ffffff',
+    logoHeight: 'h-7',
+    sdlcStage: 'models',
+    oneLiner:
+      'SpaceXAI / x.ai API — Voice, Chat, Imagine, and Grok Build via a Console API key (not Grok Bot).',
+    technologies: [
+      'Voice API — realtime audio agents (docs.x.ai voice capabilities)',
+      'Chat / Imagine / Grok Build — models through the Console API',
+      'Console API key — wire into your app backend or agent',
+      'Voice landing — https://x.ai/voice',
+    ],
+    useCases: [
+      'Voice agent demo that talks over the x.ai Voice API',
+      'Chat completion or multimodal Imagine calls from your backend',
+      'Grok Build workflows driven by a Console key',
+      'Anything that needs x.ai models outside Grok Bot',
+    ],
+    perks: [
+      {
+        kind: 'confirmed',
+        label: '~$35 API credits per Console team',
+        detail:
+          'Claim on the Stack page after check-in. Redeem at console.x.ai → Billing → Redeem promo code. Valid Saturday 12 Sep 2026 (Belgrade time). 160 total redemptions, one per team. Works for Voice / Chat / Imagine / Grok Build via Console API key — does not work for Grok Bot.',
+      },
+    ],
+  },
 ]
 
 export const hackathonStackRecipes: HackathonStackRecipe[] = [
@@ -889,6 +936,7 @@ export const hackathonStackPicks: HackathonStackPick[] = [
   { need: 'Users, rows, and instant UI updates', use: 'Convex' },
   { need: 'To dictate into Grok Bot instead of typing', use: 'Wispr Flow' },
   { need: 'Generated images, video, or audio', use: 'Fal.ai' },
+  { need: 'x.ai Voice / Chat / Imagine / Grok Build via API key', use: 'x.ai' },
   { need: 'A designed UI that is already React + Tailwind', use: 'Wonder' },
   { need: 'A public HTTPS URL or extra Postgres', use: 'Render' },
   { need: 'A public frontend with deploy previews', use: 'Netlify' },
@@ -899,6 +947,7 @@ export const hackathonStackOverlap = [
   'Daytona is not production hosting — it is an isolated runtime for agent or untrusted code.',
   'Firecrawl scrapes a URL you already have. Exa searches the web for sources you do not.',
   'Wispr Flow is how you dictate into Grok Bot (or Cursor) — voice input for building, not TTS in the product.',
+  'x.ai API credits power Voice / Chat / Imagine / Grok Build via a Console key — they do not apply to Grok Bot.',
   'Fal.ai generates media. It is not search and not hosting.',
   'Wonder is the design canvas that ships as React. Fal.ai generates media. They are not the same job.',
 ]

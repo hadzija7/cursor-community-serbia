@@ -23,11 +23,13 @@ flowchart LR
   C["Backend / state<br/>Convex"]
   W["Voice input<br/>Wispr Flow"]
   A["Generate / media<br/>Fal.ai"]
+  M["API / models<br/>x.ai"]
   R["Host / infra<br/>Render"]
   N["Host / frontend<br/>Netlify"]
   F --> X --> U --> D --> C
   C --> W
   C --> A
+  C --> M
   C --> R
   C --> N
 ```
@@ -41,6 +43,7 @@ flowchart LR
 | Backend / state | **Convex** | Database, auth, realtime sync — the app’s memory |
 | Voice input | **Wispr Flow** | Dictate into Grok Bot — not speech inside the product |
 | Generate / media | **Fal.ai** | Image, video, and audio models through one API |
+| API / models | **x.ai** | SpaceXAI / x.ai Voice, Chat, Imagine, Grok Build via Console API key |
 | Host / infra | **Render** | Public demo URL: web service, static site, Postgres, workers |
 | Host / frontend | **Netlify** | Public site from Git, deploy previews, functions |
 
@@ -50,6 +53,7 @@ flowchart LR
 - **Daytona is not production hosting.** It is a disposable computer for agents and untrusted code. Ship the product on Convex and/or Render or Netlify.
 - **Firecrawl scrapes a URL you already have. Exa searches** for sources you do not.
 - **Wispr Flow is how you dictate into Grok Bot (or Cursor)** — voice input for building, not TTS in the product.
+- **x.ai API credits** power Voice / Chat / Imagine / Grok Build via a Console key — they do **not** apply to Grok Bot.
 - **Fal.ai generates media.** It is not search and not hosting.
 - **Wonder is the design canvas that ships as React.** Fal.ai generates media. They are not the same job.
 - **Cursor** is how you write and wire all of this. It is the host tool, not a sponsor product.
@@ -282,6 +286,26 @@ flowchart LR
 
 ---
 
+### API / models — x.ai
+
+**One-liner:** SpaceXAI / x.ai API — Voice, Chat, Imagine, and Grok Build via a Console API key (not Grok Bot).
+
+**Products / technologies**
+
+- Voice / Chat / Imagine / Grok Build through the Console API  
+- Console API key for your app backend or agent  
+- Docs: [Voice capabilities](https://docs.x.ai/developers/model-capabilities/audio/voice) · [x.ai/voice](https://x.ai/voice)
+
+**What you get (confirmed)**
+
+- **Every checked-in team:** ~$35 API credits per Console team. Claim on the Stack page after check-in, then redeem at [console.x.ai](https://console.x.ai) → Billing → Redeem promo code. Valid Saturday 12 Sep 2026 (Belgrade time). 160 total redemptions, one per team. Does **not** work for Grok Bot.
+
+**Start here**
+
+- [x.ai](https://x.ai/) · [Console](https://console.x.ai) · [Voice docs](https://docs.x.ai/developers/model-capabilities/audio/voice)
+
+---
+
 ### Host / frontend — Netlify
 
 **One-liner:** Deploy a public site from Git — previews, forms, and a URL judges can open.
@@ -347,6 +371,7 @@ Design the screen in Wonder → Convex holds users and live state → Netlify ho
 | Users, rows, and instant UI updates | **Convex** |
 | To dictate into Grok Bot instead of typing | **Wispr Flow** |
 | Generated images, video, or audio | **Fal.ai** |
+| x.ai Voice / Chat / Imagine / Grok Build via API key | **x.ai** |
 | A designed UI that is already React + Tailwind | **Wonder** |
 | A public HTTPS URL / classic host / extra Postgres | **Render** |
 | A public frontend with deploy previews | **Netlify** |
@@ -354,7 +379,7 @@ Design the screen in Wonder → Convex holds users and live state → Netlify ho
 | Cash prize for a Convex app | **Convex track** — 100.000 / 50.000 RSD |
 | Coworking for top 3 teams | **Kosmonaut** — 15 / 10 / 5 entries per teammate, use within 3 months; claim on kosmonaut.rs |
 | Scholarship to ABC Silicon Valley 2027 | **ABC BootCamps** — 50% / 40% / 30% for 1st / 2nd / 3rd |
-| Confirmed platform credits on day one | **Daytona** $100 (redeem in Billing) · **Exa** $50 · **Fal.ai** $50 · **Netlify** 3,000 · **Wispr Flow** 3 months Pro · **Wonder** Pro |
+| Confirmed platform credits on day one | **Daytona** $100 (redeem in Billing) · **Exa** $50 · **Fal.ai** $50 · **Netlify** 3,000 · **Wispr Flow** 3 months Pro · **Wonder** Pro · **x.ai** ~$35 Console API (redeem in Billing) |
 | Event credits from Render | **TBD** — use their public free tier until a code is announced |
 
 **Minimum viable stacks**

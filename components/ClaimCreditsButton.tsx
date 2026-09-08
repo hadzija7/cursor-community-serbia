@@ -104,6 +104,10 @@ export default function ClaimCreditsButton({
     const showCursor20Tip = sponsorId === CURSOR_POOL_ID && link
     const showCursor50Tip = sponsorId === CURSOR_50_POOL_ID && link
     const showDaytonaTip = sponsorId === 'daytona' && !link
+    const showXaiTip = sponsorId === 'xai' && !link
+    const xaiRedeemHref = showXaiTip
+      ? `https://console.x.ai/team/default/billing?coupon=${encodeURIComponent(code)}`
+      : null
     return (
       <div
         className={`w-full rounded-lg border border-cursor-accent-green/40 bg-cursor-accent-green-bg p-3 ${shellClass}`}
@@ -145,6 +149,26 @@ export default function ClaimCreditsButton({
               {t('hackathon.creditsDaytonaOpenApp')} →
             </a>
           ) : null}
+          {showXaiTip ? (
+            <a
+              href="https://console.x.ai"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-xs font-medium text-cursor-accent-green hover:underline"
+            >
+              {t('hackathon.creditsXaiOpenConsole')} →
+            </a>
+          ) : null}
+          {xaiRedeemHref ? (
+            <a
+              href={xaiRedeemHref}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-xs font-medium text-cursor-accent-green hover:underline"
+            >
+              {t('hackathon.creditsXaiRedeemWithCode')} →
+            </a>
+          ) : null}
         </div>
         {showCursor20Tip ? (
           <p className="mt-3 text-xs leading-relaxed text-cursor-text-secondary">
@@ -165,6 +189,15 @@ export default function ClaimCreditsButton({
               {t('hackathon.creditsDaytonaRedeemTip')}
             </p>
             <p>{t('hackathon.creditsDaytonaRedeemProTip')}</p>
+          </div>
+        ) : null}
+        {showXaiTip ? (
+          <div className="mt-3 space-y-1.5 text-xs leading-relaxed text-cursor-text-secondary">
+            <p>
+              <span className="font-semibold text-cursor-text">{t('hackathon.creditsXaiRedeemTipLabel')}: </span>
+              {t('hackathon.creditsXaiRedeemTip')}
+            </p>
+            <p>{t('hackathon.creditsXaiRedeemProTip')}</p>
           </div>
         ) : null}
       </div>
