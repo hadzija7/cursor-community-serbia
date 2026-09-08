@@ -395,10 +395,11 @@ export const hackathonSponsors: Partner[] = [
   },
   {
     name: 'x.ai',
-    logo: '/images/partners/xai.svg',
+    logo: '/images/partners/spacexai.svg',
     url: 'https://x.ai/',
-    logoBg: '#14120b',
+    logoBg: '#ffffff',
     logoHeight: 'h-7',
+    logoWidth: 'w-28',
   },
 ]
 
@@ -868,10 +869,10 @@ export const hackathonSponsorProfiles: HackathonSponsorProfile[] = [
   {
     id: 'xai',
     name: 'x.ai',
-    logo: '/images/partners/xai.svg',
+    logo: '/images/partners/spacexai.svg',
     url: 'https://x.ai/',
     docsUrl: 'https://docs.x.ai/developers/model-capabilities/audio/voice',
-    logoBg: '#14120b',
+    logoBg: '#ffffff',
     logoHeight: 'h-7',
     sdlcStage: 'models',
     oneLiner:
