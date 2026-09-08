@@ -286,7 +286,7 @@ The app is ready for `hackathon.cursorserbia.com`. Creating the hostname is a da
 - [ ] `/hackathon` loads the Overview tab (hero, highlights, marquee, become-a-sponsor form)
 - [ ] Hero "Sponsor event" always scrolls to `#become-a-sponsor` (Overview with or without hash; from Prizes/Stack)
 - [ ] Tabs switch to Guide, Mentors, Prizes, Stack, Submit, and Projects (no Sponsor tab)
-- [ ] `/hackathon/mentors` shows Hosts (Aleksandar, Goran, Vladimir Hristov; 2-col from `md`), then Mentors (Nick, Miodrag Vilotijević with X + LinkedIn), then Judges (Ben Kim, Milan Lazarević)
+- [ ] `/hackathon/mentors` shows Hosts (Aleksandar, Goran, Vladimir Hristov; 2-col from `md`), then Mentors (Nick, Miodrag Vilotijević, Miodrag Todorović, Alexandra Borisova), then Judges (Ben Kim, Milan Lazarević)
 - [ ] `/hackathon/guide` shows purpose, team, agenda (incl. 19 Sep winners), guidelines, and three optional idea sparks
 - [ ] Guide submit step links to `/hackathon/submit`
 - [ ] `/hackathon/submit` shows login CTA when signed out; check-in message when registered; form when checked in
