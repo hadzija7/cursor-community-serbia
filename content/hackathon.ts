@@ -336,6 +336,18 @@ export const hackathonJudges: HackathonPerson[] = [
       linkedin: 'https://www.linkedin.com/in/agrims/',
     },
   },
+  {
+    id: 'marija-mladenovic',
+    name: 'Marija Mladenović',
+    title: 'Lead product designer & angel investor',
+    photo: '/images/hackathon/marija-mladenovic.jpg',
+    photoPosition: 'top',
+    bio: 'Fifteen years in product and design across fintech, crypto, gaming and AI. Led design and product on two live games, and now works at Solflare on trading and privacy. Former startup founder with a data science and machine learning background.',
+    links: {
+      x: 'https://x.com/MarijaHolt',
+      linkedin: 'https://www.linkedin.com/in/marijamladenovic/',
+    },
+  },
 ]
 
 /** Tech partners (tools for hackers) — edit logos in `public/images/partners/` or add new entries. */

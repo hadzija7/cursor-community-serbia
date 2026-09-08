@@ -120,7 +120,7 @@ describe('hackathon sponsor stack content', () => {
     ])
   })
 
-  it('lists Nick Tomić first among mentors, hosts including Vladimir, and publishes Ben Kim, Milan Lazarević, and Agrim Singh as judges', () => {
+  it('lists Nick Tomić first among mentors, hosts including Vladimir, and publishes Ben Kim, Milan Lazarević, Agrim Singh, and Marija Mladenović as judges', () => {
     expect(hackathonMentors.map((mentor) => mentor.id)).toEqual([
       'nick-tomic',
       'miodrag-vilotijevic',
@@ -172,7 +172,7 @@ describe('hackathon sponsor stack content', () => {
       'https://www.linkedin.com/in/vladimir-hristov-6645011a3/',
     )
     expect(hackathonHosts[2]?.links?.x).toBeUndefined()
-    expect(hackathonJudges).toHaveLength(3)
+    expect(hackathonJudges).toHaveLength(4)
     expect(hackathonJudges[0]?.id).toBe('ben-kim')
     expect(hackathonJudges[0]?.name).toBe('Ben Kim')
     expect(hackathonJudges[0]?.title).toBe('Founder, investor & community builder')
@@ -199,6 +199,16 @@ describe('hackathon sponsor stack content', () => {
     expect(hackathonJudges[2]?.links?.x).toBe('https://x.com/agrimsingh')
     expect(hackathonJudges[2]?.links?.linkedin).toBe('https://www.linkedin.com/in/agrims/')
     expect(hackathonJudges[2]?.links?.website).toBeUndefined()
+    expect(hackathonJudges[3]?.id).toBe('marija-mladenovic')
+    expect(hackathonJudges[3]?.name).toBe('Marija Mladenović')
+    expect(hackathonJudges[3]?.title).toBe('Lead product designer & angel investor')
+    expect(hackathonJudges[3]?.photo).toBe('/images/hackathon/marija-mladenovic.jpg')
+    expect(hackathonJudges[3]?.photoPosition).toBe('top')
+    expect(hackathonJudges[3]?.bio).toMatch(/Solflare/)
+    expect(hackathonJudges[3]?.bio).toMatch(/machine learning/)
+    expect(hackathonJudges[3]?.links?.x).toBe('https://x.com/MarijaHolt')
+    expect(hackathonJudges[3]?.links?.linkedin).toBe('https://www.linkedin.com/in/marijamladenovic/')
+    expect(hackathonJudges[3]?.links?.website).toBeUndefined()
   })
 
   it('keeps a minimal hacker guide with a seven-step timeline', () => {
