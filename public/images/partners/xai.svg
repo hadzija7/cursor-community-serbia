@@ -1,13 +1,15 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 88 32" role="img" aria-label="x.ai">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 72 28" role="img" aria-label="x.ai">
   <title>x.ai</title>
-  <!-- Clean text mark for marquee/stack  not an official brand asset recreation -->
-  <text
-    x="4"
-    y="23"
-    fill="#ffffff"
-    font-family="ui-sans-serif, system-ui, -apple-system, Segoe UI, Helvetica, Arial, sans-serif"
-    font-size="22"
-    font-weight="700"
-    letter-spacing="-0.04em"
-  >x.ai</text>
+  <!-- Path-based wordmark for reliable img rendering (not an official brand recreation) -->
+  <g fill="#ffffff">
+    <!-- x -->
+    <path d="M3.2 5.2 L10.8 14 L3.5 22.8 H8.1 L13.2 16.6 L18.3 22.8 H22.9 L15.6 14 L23.1 5.2 H18.5 L13.2 11.4 L8 5.2 Z"/>
+    <!-- . -->
+    <circle cx="28.2" cy="21.2" r="2.1"/>
+    <!-- a -->
+    <path d="M41.2 12.1 C38.1 12.1 35.9 14.2 35.9 17.6 C35.9 21 38.2 23.1 41.5 23.1 C43.4 23.1 44.9 22.3 45.8 21 V16.6 H40.8 V18.8 H43.2 C42.7 20 41.8 20.7 40.7 20.7 C39 20.7 37.9 19.4 37.9 17.6 C37.9 15.8 38.9 14.5 40.8 14.5 C41.9 14.5 42.7 15 43.1 15.9 H45.6 C45 13.6 43.4 12.1 41.2 12.1 Z"/>
+    <!-- i -->
+    <rect x="49.2" y="5.4" width="2.6" height="2.6" rx="0.4"/>
+    <path d="M49.2 12.4 H51.8 V22.8 H49.2 Z"/>
+  </g>
 </svg>
