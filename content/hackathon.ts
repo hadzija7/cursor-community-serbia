@@ -324,6 +324,18 @@ export const hackathonJudges: HackathonPerson[] = [
       linkedin: 'https://www.linkedin.com/in/mrlaki5/',
     },
   },
+  {
+    id: 'agrim-singh',
+    name: 'Agrim Singh',
+    title: 'AI adoption, SpaceXAI',
+    photo: '/images/hackathon/agrim-singh.jpg',
+    photoPosition: 'center',
+    bio: 'Leads AI adoption at SpaceXAI and the regional community for SEA/Singapore. Teaches at Code with AI and runs 65 Labs. Whisky guru and DJ.',
+    links: {
+      x: 'https://x.com/agrimsingh',
+      linkedin: 'https://www.linkedin.com/in/agrims/',
+    },
+  },
 ]
 
 /** Tech partners (tools for hackers) — edit logos in `public/images/partners/` or add new entries. */

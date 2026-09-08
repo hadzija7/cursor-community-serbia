@@ -120,7 +120,7 @@ describe('hackathon sponsor stack content', () => {
     ])
   })
 
-  it('lists Nick Tomić first among mentors, hosts including Vladimir, and publishes Ben Kim and Milan Lazarević as judges', () => {
+  it('lists Nick Tomić first among mentors, hosts including Vladimir, and publishes Ben Kim, Milan Lazarević, and Agrim Singh as judges', () => {
     expect(hackathonMentors.map((mentor) => mentor.id)).toEqual([
       'nick-tomic',
       'miodrag-vilotijevic',
@@ -172,7 +172,7 @@ describe('hackathon sponsor stack content', () => {
       'https://www.linkedin.com/in/vladimir-hristov-6645011a3/',
     )
     expect(hackathonHosts[2]?.links?.x).toBeUndefined()
-    expect(hackathonJudges).toHaveLength(2)
+    expect(hackathonJudges).toHaveLength(3)
     expect(hackathonJudges[0]?.id).toBe('ben-kim')
     expect(hackathonJudges[0]?.name).toBe('Ben Kim')
     expect(hackathonJudges[0]?.title).toBe('Founder, investor & community builder')
@@ -189,6 +189,16 @@ describe('hackathon sponsor stack content', () => {
     expect(hackathonJudges[1]?.bio).toMatch(/computer vision/)
     expect(hackathonJudges[1]?.links?.x).toBe('https://x.com/MrLaki5')
     expect(hackathonJudges[1]?.links?.linkedin).toBe('https://www.linkedin.com/in/mrlaki5/')
+    expect(hackathonJudges[2]?.id).toBe('agrim-singh')
+    expect(hackathonJudges[2]?.name).toBe('Agrim Singh')
+    expect(hackathonJudges[2]?.title).toBe('AI adoption, SpaceXAI')
+    expect(hackathonJudges[2]?.photo).toBe('/images/hackathon/agrim-singh.jpg')
+    expect(hackathonJudges[2]?.photoPosition).toBe('center')
+    expect(hackathonJudges[2]?.bio).toMatch(/SEA\/Singapore/)
+    expect(hackathonJudges[2]?.bio).toMatch(/65 Labs/)
+    expect(hackathonJudges[2]?.links?.x).toBe('https://x.com/agrimsingh')
+    expect(hackathonJudges[2]?.links?.linkedin).toBe('https://www.linkedin.com/in/agrims/')
+    expect(hackathonJudges[2]?.links?.website).toBeUndefined()
   })
 
   it('keeps a minimal hacker guide with a seven-step timeline', () => {
