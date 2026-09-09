@@ -150,9 +150,13 @@ describe('hackathon sponsor stack content', () => {
     expect(hackathonMentors[1]?.title).toBe('Co-founder and CEO, JigJoy')
     expect(hackathonMentors[1]?.photo).toBe('/images/hackathon/miodrag-vilotijevic.jpg')
     expect(hackathonMentors[1]?.photoPosition).toBe('top')
-    expect(hackathonMentors[1]?.bio).toMatch(/Mozaik/)
+    expect(hackathonMentors[1]?.bio).toBe(
+      'Co-founder and CEO of JigJoy and creator of Mozaik, an open-source runtime for AI agents.',
+    )
     expect(hackathonMentors[1]?.bio).not.toMatch(/unconventional ways/)
-    expect(hackathonMentors[1]?.help?.toLowerCase()).toContain('domain-driven design')
+    expect(hackathonMentors[1]?.help).toBe(
+      'code quality, startup insights, and product positioning.',
+    )
     expect(hackathonMentors[1]?.links?.x).toBe('https://x.com/Mijuraaa')
     expect(hackathonMentors[1]?.links?.linkedin).toBe(
       'https://www.linkedin.com/in/miodrag-vilotijevic/',

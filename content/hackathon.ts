@@ -305,8 +305,8 @@ export const hackathonMentors: HackathonPerson[] = [
     title: 'Co-founder and CEO, JigJoy',
     photo: '/images/hackathon/miodrag-vilotijevic.jpg',
     photoPosition: 'top',
-    bio: 'Co-founder and CEO of JigJoy and creator of Mozaik, an open-source runtime for AI agents. Specializes in Domain-Driven Design, category design, and product positioning.',
-    help: 'Domain-Driven Design, category design, and product positioning.',
+    bio: 'Co-founder and CEO of JigJoy and creator of Mozaik, an open-source runtime for AI agents.',
+    help: 'code quality, startup insights, and product positioning.',
     links: {
       x: 'https://x.com/Mijuraaa',
       linkedin: 'https://www.linkedin.com/in/miodrag-vilotijevic/',
