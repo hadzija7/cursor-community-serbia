@@ -185,15 +185,15 @@ export const hackathonGuideSteps: HackathonGuideStep[] = [
 export const hackathonGuideAgenda: HackathonGuideAgendaItem[] = [
   {
     id: 'intro',
-    time: '11:00',
+    time: '10:30',
     title: 'Intro & welcome',
     body: 'Opening presentation about the hackathon — what to expect and how the day runs.',
   },
   {
     id: 'hacking',
-    time: 'All day',
+    time: '11:00',
     title: 'Hacking',
-    body: 'Network, build, and exchange ideas. Optional workshops run during the day — drop in if you want. Relaxed atmosphere — no pressure, just ship.',
+    body: 'Hacking starts at 11:00. Network, build, and exchange ideas. Optional workshops run during the day — drop in if you want. Relaxed atmosphere — no pressure, just ship.',
   },
   {
     id: 'demo',
@@ -335,6 +335,18 @@ export const hackathonMentors: HackathonPerson[] = [
     help: 'SRE & platform engineering, AWS/Kubernetes, observability, IaC and CI/CD.',
     links: {
       linkedin: 'https://www.linkedin.com/in/princessfruittt/',
+    },
+  },
+  {
+    id: 'dusan-radivojevic',
+    name: 'Dušan Radivojević',
+    title: 'Head of AI & Platform, Wonder',
+    photo: '/images/hackathon/dusan-radivojevic.jpg',
+    photoPosition: 'center',
+    bio: 'Bridging the gap between design and code by building an AI-native design platform where design is equal to code and creativity is increased.',
+    links: {
+      x: 'https://x.com/radivojevic_1',
+      linkedin: 'https://www.linkedin.com/in/dusan-g-radivojevic',
     },
   },
 ]

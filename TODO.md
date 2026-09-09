@@ -37,8 +37,9 @@
   - [x] Hackathon sponsors: added Daytona; removed Cursor (host, not sponsor)
   - [x] Hackathon sponsor stack preview (`/hackathon/stack`): grouped cards, path, read-more
   - [x] Hackathon tabbed mini-site (Overview / Guide / Mentors / Prizes / Stack) + `hackathon.*` host rewrite
-  - [x] Hackathon Mentors tab (`/hackathon/mentors`): Hosts first (Aleksandar, Goran, Vladimir Hristov), then Mentors (Nick, Miodrag Vilotijević, Miodrag Todorović, Alexandra Borisova — LinkedIn; X where listed), then Judges (Ben Kim, Milan Lazarević, Agrim Singh, Marija Mladenović); 2-col cards from `md`
+  - [x] Hackathon Mentors tab (`/hackathon/mentors`): Hosts first (Aleksandar, Goran, Vladimir Hristov), then Mentors (Nick, Miodrag Vilotijević, Miodrag Todorović, Alexandra Borisova, Dušan Radivojević — LinkedIn; X where listed), then Judges (Ben Kim, Milan Lazarević, Agrim Singh, Marija Mladenović); 2-col cards from `md`
   - [x] Miodrag Vilotijević mentor bio: CEO/Mozaik open-source runtime; ask about code quality, startup insights, product positioning
+  - [x] Hackathon Guide agenda: intro & welcome at 10:30; hacking starts at 11:00
   - [x] Hackathon prizes: added Daytona credit track ($3,000 / $2,000 / $1,000 + $100 each)
   - [x] Hackathon prizes: ABC BootCamps scholarships (50% / 40% / 30% to ABC Silicon Valley 2027)
   - [x] Daytona participant coupon: `CREDIT_CODE_DAYTONA` + claim UI redeem tip (Billing Dashboard)
