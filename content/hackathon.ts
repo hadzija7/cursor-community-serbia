@@ -185,15 +185,15 @@ export const hackathonGuideSteps: HackathonGuideStep[] = [
 export const hackathonGuideAgenda: HackathonGuideAgendaItem[] = [
   {
     id: 'intro',
-    time: '11:00',
+    time: '10:30',
     title: 'Intro & welcome',
     body: 'Opening presentation about the hackathon — what to expect and how the day runs.',
   },
   {
     id: 'hacking',
-    time: 'All day',
+    time: '11:00',
     title: 'Hacking',
-    body: 'Network, build, and exchange ideas. Optional workshops run during the day — drop in if you want. Relaxed atmosphere — no pressure, just ship.',
+    body: 'Hacking starts at 11:00. Network, build, and exchange ideas. Optional workshops run during the day — drop in if you want. Relaxed atmosphere — no pressure, just ship.',
   },
   {
     id: 'demo',
@@ -305,8 +305,8 @@ export const hackathonMentors: HackathonPerson[] = [
     title: 'Co-founder and CEO, JigJoy',
     photo: '/images/hackathon/miodrag-vilotijevic.jpg',
     photoPosition: 'top',
-    bio: 'Co-founder and CEO of JigJoy and creator of Mozaik, an open-source runtime for AI agents. Specializes in Domain-Driven Design, category design, and product positioning.',
-    help: 'Domain-Driven Design, category design, and product positioning.',
+    bio: 'Co-founder and CEO of JigJoy and creator of Mozaik, an open-source runtime for AI agents.',
+    help: 'code quality, startup insights, and product positioning.',
     links: {
       x: 'https://x.com/Mijuraaa',
       linkedin: 'https://www.linkedin.com/in/miodrag-vilotijevic/',
@@ -335,6 +335,19 @@ export const hackathonMentors: HackathonPerson[] = [
     help: 'SRE & platform engineering, AWS/Kubernetes, observability, IaC and CI/CD.',
     links: {
       linkedin: 'https://www.linkedin.com/in/princessfruittt/',
+    },
+  },
+  {
+    id: 'dusan-radivojevic',
+    name: 'Dušan Radivojević',
+    title: 'Head of AI & Platform, Wonder',
+    photo: '/images/hackathon/dusan-radivojevic.jpg',
+    photoPosition: 'center',
+    bio: 'Bridging the gap between design and code by building an AI-native design platform where design is equal to code and creativity is increased.',
+    help: 'design and AI.',
+    links: {
+      x: 'https://x.com/radivojevic_1',
+      linkedin: 'https://www.linkedin.com/in/dusan-g-radivojevic',
     },
   },
 ]

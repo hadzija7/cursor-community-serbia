@@ -140,6 +140,7 @@ describe('hackathon sponsor stack content', () => {
       'miodrag-vilotijevic',
       'miodrag-todorovic',
       'alexandra-borisova',
+      'dusan-radivojevic',
     ])
     expect(hackathonMentors[0]?.bio).toMatch(/SaaS founder and growth consultant/)
     expect(hackathonMentors[0]?.bio).not.toMatch(/350 SaaS founders/)
@@ -150,9 +151,13 @@ describe('hackathon sponsor stack content', () => {
     expect(hackathonMentors[1]?.title).toBe('Co-founder and CEO, JigJoy')
     expect(hackathonMentors[1]?.photo).toBe('/images/hackathon/miodrag-vilotijevic.jpg')
     expect(hackathonMentors[1]?.photoPosition).toBe('top')
-    expect(hackathonMentors[1]?.bio).toMatch(/Mozaik/)
+    expect(hackathonMentors[1]?.bio).toBe(
+      'Co-founder and CEO of JigJoy and creator of Mozaik, an open-source runtime for AI agents.',
+    )
     expect(hackathonMentors[1]?.bio).not.toMatch(/unconventional ways/)
-    expect(hackathonMentors[1]?.help?.toLowerCase()).toContain('domain-driven design')
+    expect(hackathonMentors[1]?.help).toBe(
+      'code quality, startup insights, and product positioning.',
+    )
     expect(hackathonMentors[1]?.links?.x).toBe('https://x.com/Mijuraaa')
     expect(hackathonMentors[1]?.links?.linkedin).toBe(
       'https://www.linkedin.com/in/miodrag-vilotijevic/',
@@ -176,6 +181,16 @@ describe('hackathon sponsor stack content', () => {
       'https://www.linkedin.com/in/princessfruittt/',
     )
     expect(hackathonMentors[3]?.links?.x).toBeUndefined()
+    expect(hackathonMentors[4]?.name).toBe('Dušan Radivojević')
+    expect(hackathonMentors[4]?.title).toBe('Head of AI & Platform, Wonder')
+    expect(hackathonMentors[4]?.photo).toBe('/images/hackathon/dusan-radivojevic.jpg')
+    expect(hackathonMentors[4]?.photoPosition).toBe('center')
+    expect(hackathonMentors[4]?.bio).toMatch(/AI-native design platform/)
+    expect(hackathonMentors[4]?.help).toBe('design and AI.')
+    expect(hackathonMentors[4]?.links?.x).toBe('https://x.com/radivojevic_1')
+    expect(hackathonMentors[4]?.links?.linkedin).toBe(
+      'https://www.linkedin.com/in/dusan-g-radivojevic',
+    )
     expect(hackathonHosts.map((host) => host.id)).toEqual([
       'aleksandar-hadzibabic',
       'goran-petkovic',
@@ -247,6 +262,26 @@ describe('hackathon sponsor stack content', () => {
       'video-demo',
     ])
     expect(hackathonGuideRules[0]?.body).toMatch(/1–3/)
+    expect(hackathonGuideAgenda.map((item) => item.id)).toEqual([
+      'intro',
+      'hacking',
+      'demo',
+      'pizza',
+      'deadline',
+      'close',
+    ])
+    expect(hackathonGuideAgenda[0]).toMatchObject({
+      time: '10:30',
+      title: 'Intro & welcome',
+    })
+    expect(hackathonGuideAgenda[1]).toMatchObject({
+      time: '11:00',
+      title: 'Hacking',
+    })
+    expect(hackathonGuideAgenda[1]?.body).toMatch(/starts at 11:00/)
+    expect(hackathonGuideAgenda[1]?.body.toLowerCase()).toMatch(/workshop/)
+    expect(hackathonGuideAgenda.find((item) => item.id === 'demo')?.time).toBe('18:00 – 19:00')
+    expect(hackathonGuideAgenda.find((item) => item.id === 'pizza')?.time).toBe('19:00')
     expect(hackathonGuideJudging.body).toMatch(/19 September/)
     expect(hackathonGuideJudgingCriteria.map((item) => item.id)).toEqual([
       'innovation',
@@ -272,19 +307,6 @@ describe('hackathon sponsor stack content', () => {
     )
     expect(hackathonGuideSteps.find((step) => step.id === 'deploy')?.body.toLowerCase()).toMatch(
       /public url|live/,
-    )
-    expect(hackathonGuideAgenda.map((item) => item.id)).toEqual([
-      'intro',
-      'hacking',
-      'demo',
-      'pizza',
-      'deadline',
-      'close',
-    ])
-    expect(hackathonGuideAgenda.find((item) => item.id === 'demo')?.time).toBe('18:00 – 19:00')
-    expect(hackathonGuideAgenda.find((item) => item.id === 'pizza')?.time).toBe('19:00')
-    expect(hackathonGuideAgenda.find((item) => item.id === 'hacking')?.body.toLowerCase()).toMatch(
-      /workshop/,
     )
   })
 
