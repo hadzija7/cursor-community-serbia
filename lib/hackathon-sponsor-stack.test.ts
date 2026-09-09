@@ -186,7 +186,7 @@ describe('hackathon sponsor stack content', () => {
     expect(hackathonMentors[4]?.photo).toBe('/images/hackathon/dusan-radivojevic.jpg')
     expect(hackathonMentors[4]?.photoPosition).toBe('center')
     expect(hackathonMentors[4]?.bio).toMatch(/AI-native design platform/)
-    expect(hackathonMentors[4]?.help).toBeUndefined()
+    expect(hackathonMentors[4]?.help).toBe('design and AI.')
     expect(hackathonMentors[4]?.links?.x).toBe('https://x.com/radivojevic_1')
     expect(hackathonMentors[4]?.links?.linkedin).toBe(
       'https://www.linkedin.com/in/dusan-g-radivojevic',

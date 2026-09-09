@@ -344,6 +344,7 @@ export const hackathonMentors: HackathonPerson[] = [
     photo: '/images/hackathon/dusan-radivojevic.jpg',
     photoPosition: 'center',
     bio: 'Bridging the gap between design and code by building an AI-native design platform where design is equal to code and creativity is increased.',
+    help: 'design and AI.',
     links: {
       x: 'https://x.com/radivojevic_1',
       linkedin: 'https://www.linkedin.com/in/dusan-g-radivojevic',
