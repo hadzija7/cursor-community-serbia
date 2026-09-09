@@ -61,17 +61,22 @@ describe('hackathon sponsor stack content', () => {
   })
 
   it('does not invent unconfirmed event credits', () => {
-    const tbdSponsors = ['render']
+    const tbdSponsors: string[] = []
 
     for (const id of tbdSponsors) {
       const profile = getSponsorProfile(id)
       expect(profile?.perks.some((perk) => perk.kind === 'confirmed')).toBe(false)
     }
+
+    for (const profile of hackathonSponsorProfiles) {
+      expect(profile.perks.some((perk) => perk.kind === 'tbd')).toBe(false)
+    }
   })
 
-  it('keeps confirmed Daytona, Convex, Wispr, Exa, Netlify, Fal, Wonder, Firecrawl, Cursor, and x.ai perks', () => {
+  it('keeps confirmed Daytona, Convex, Wispr, Exa, Netlify, Fal, Wonder, Firecrawl, Render, Cursor, and x.ai perks', () => {
     const daytona = getSponsorProfile('daytona')
     const convex = getSponsorProfile('convex')
+    const render = getSponsorProfile('render')
     const xai = getSponsorProfile('xai')
 
     expect(daytona?.perks.some((perk) => perk.kind === 'confirmed' && perk.label.includes('$100'))).toBe(true)
@@ -85,6 +90,11 @@ describe('hackathon sponsor stack content', () => {
     expect(getSponsorProfile('netlify')?.perks.some((perk) => perk.kind === 'confirmed' && perk.label.includes('3,000'))).toBe(true)
     expect(getSponsorProfile('wonder')?.perks.some((perk) => perk.kind === 'confirmed' && perk.label.includes('Pro'))).toBe(true)
     expect(getSponsorProfile('firecrawl')?.perks.some((perk) => perk.kind === 'confirmed' && perk.label.includes('10,000'))).toBe(true)
+    expect(render?.perks.some((perk) => perk.kind === 'confirmed' && perk.label.includes('Promo credits'))).toBe(true)
+    expect(render?.perks[0]?.detail).toMatch(/check-in/)
+    expect(render?.perks[0]?.detail).toMatch(/dashboard\.render\.com/)
+    expect(render?.perks.some((perk) => perk.kind === 'public' && perk.label.includes('free tier'))).toBe(true)
+    expect(JSON.stringify(render?.perks)).not.toMatch(/CREDIT_CODE/)
     expect(getSponsorProfile('cursor')?.perks.filter((perk) => perk.kind === 'confirmed')).toHaveLength(2)
     expect(getSponsorProfile('cursor')?.perks.some((perk) => perk.label.includes('$20 Cursor'))).toBe(true)
     expect(getSponsorProfile('cursor')?.perks.some((perk) => perk.label.includes('$50 Cursor'))).toBe(true)
