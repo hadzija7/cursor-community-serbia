@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest'
 import {
   getSponsorProfile,
+  hackathonGuideAgenda,
   hackathonGuideJudging,
   hackathonGuideJudgingCriteria,
   hackathonGuidePurpose,
@@ -235,7 +236,7 @@ describe('hackathon sponsor stack content', () => {
     expect(hackathonJudges[3]?.links?.website).toBeUndefined()
   })
 
-  it('keeps a minimal hacker guide with rules, judging, and a seven-step timeline', () => {
+  it('keeps a minimal hacker guide with rules, judging, and an eight-step timeline', () => {
     expect(hackathonGuidePurpose.title).toBe('Why we run this')
     expect(hackathonGuideRulesIntro.title).toBe('Rules')
     expect(hackathonGuideRules.map((rule) => rule.id)).toEqual([
@@ -260,10 +261,31 @@ describe('hackathon sponsor stack content', () => {
       'mentors',
       'cursor',
       'mcps',
-      'origin',
+      'repo',
+      'deploy',
       'demo',
       'submit',
     ])
+    expect(hackathonGuideSteps.find((step) => step.id === 'repo')?.body).toMatch(/GitHub/)
+    expect(hackathonGuideSteps.find((step) => step.id === 'repo')?.body).not.toMatch(
+      /Host the repo on Origin/,
+    )
+    expect(hackathonGuideSteps.find((step) => step.id === 'deploy')?.body.toLowerCase()).toMatch(
+      /public url|live/,
+    )
+    expect(hackathonGuideAgenda.map((item) => item.id)).toEqual([
+      'intro',
+      'hacking',
+      'demo',
+      'pizza',
+      'deadline',
+      'close',
+    ])
+    expect(hackathonGuideAgenda.find((item) => item.id === 'demo')?.time).toBe('18:00 – 19:00')
+    expect(hackathonGuideAgenda.find((item) => item.id === 'pizza')?.time).toBe('19:00')
+    expect(hackathonGuideAgenda.find((item) => item.id === 'hacking')?.body.toLowerCase()).toMatch(
+      /workshop/,
+    )
   })
 
   it('recipes only reference known sponsors', () => {

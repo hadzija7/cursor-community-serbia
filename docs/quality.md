@@ -39,6 +39,7 @@ Living scorecard for Cursor Community Serbia. Update after each phase.
 
 | Date       | Change                          |
 |------------|----------------------------------|
+| 2026-09-09 | Hackathon Guide: Guidelines allow GitHub/Origin/other for repo hosting + deploy live URL step; agenda showcase 18–19, pizza 19:00, optional workshops during hacking |
 | 2026-09-09 | Hackathon Guide: Team → Rules (1–3 people, open source, what counts, live URL, video demo); Judging expands with innovation-first criteria under 19 Sep winners |
 | 2026-09-09 | Hackathon Stack: Render promo credits claimable via `CREDIT_CODE_RENDER` after check-in; redeem at dashboard.render.com Billing → Credit Balance (code never in repo) |
 | 2026-09-08 | Hackathon mentors: added Alexandra Borisova (SRE & Infra Leader; Typeable; AWS/K8s/observability; photo `public/images/hackathon/alexandra-borisova.jpg`, center crop; LinkedIn `princessfruittt`) |

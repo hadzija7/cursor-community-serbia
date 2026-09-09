@@ -158,9 +158,14 @@ export const hackathonGuideSteps: HackathonGuideStep[] = [
     body: 'Wire the tools in Grok Bot (or Cursor). Do not rebuild what tech partners already give you.',
   },
   {
-    id: 'origin',
-    title: 'Host the repo on Origin',
-    body: 'Put the project on Origin so the team and judges can find it.',
+    id: 'repo',
+    title: 'Host the repo publicly',
+    body: 'Put the project somewhere public — GitHub, Origin, or another platform — so the team and judges can find it.',
+  },
+  {
+    id: 'deploy',
+    title: 'Deploy a live demo',
+    body: 'Ship a deployed app with a public URL. Judges need a live link, not localhost.',
   },
   {
     id: 'demo',
@@ -188,19 +193,25 @@ export const hackathonGuideAgenda: HackathonGuideAgendaItem[] = [
     id: 'hacking',
     time: 'All day',
     title: 'Hacking',
-    body: 'Network, build, and exchange ideas. Relaxed atmosphere — no pressure, just ship.',
+    body: 'Network, build, and exchange ideas. Optional workshops run during the day — drop in if you want. Relaxed atmosphere — no pressure, just ship.',
   },
   {
     id: 'demo',
-    time: '18:00 – 20:00',
+    time: '18:00 – 19:00',
     title: 'Demo showcase',
     body: 'Optional. Share what you are building with others if you want — not mandatory.',
+  },
+  {
+    id: 'pizza',
+    time: '19:00',
+    title: 'Pizza party',
+    body: 'Food, drinks, and wind-down time while you finish polishing your submission.',
   },
   {
     id: 'deadline',
     time: '20:00',
     title: 'Submission deadline',
-    body: 'Submit your project through the form by 8 PM.',
+    body: 'Hacking ends. Submit your project through the form by 8 PM.',
   },
   {
     id: 'close',

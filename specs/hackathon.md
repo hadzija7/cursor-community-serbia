@@ -148,9 +148,9 @@ Edit `content/hackathon.ts` for:
 - Route: `/hackathon/guide` (Guide tab)
 - Briefing: why, rules (eligibility list), day agenda, judging & winners (19 Sep + criteria), numbered guidelines timeline, optional idea sparks
 - Rules: team size 1–3; public/open-source repo; only work built during the hackathon is judged; public live demo URL required; short video demo required
-- Agenda: 11:00 intro & welcome → hacking all day (relaxed network/build) → 18:00–20:00 optional demo showcase → 20:00 submission deadline → 21:00 event ends
+- Agenda: 11:00 intro & welcome → hacking all day (optional workshops; relaxed network/build) → 18:00–19:00 optional demo showcase → 19:00 pizza party → 20:00 submission deadline (hacking ends) → 21:00 event ends
 - Judging: winners announced 19 September (≈ one week later); criteria are innovation (primary), working product, problem & solution clarity, execution, impact potential
-- Timeline: Stack → mentors → Grok Bot → partner MCPs → Origin → 3-minute demo → submit form by 8 PM (submit step links to `/hackathon/submit`)
+- Timeline: Stack → mentors → Grok Bot → partner MCPs → public repo (GitHub, Origin, or another platform) → deploy live demo URL → 3-minute demo → submit form by 8 PM (submit step links to `/hackathon/submit`)
 - Topics are **optional suggestions**, not required tracks — hackers may build anything. Three published verticals: FinTech agents (payments on blockchain or traditional rails), Gaming / visual & art, Personal assistant (flights + voice UX)
 - Types: `HackathonGuideCopy` / `HackathonGuideListItem` / `HackathonGuideStep` / `HackathonGuideTopic` / `HackathonGuideAgendaItem` in `lib/types.ts`
 
