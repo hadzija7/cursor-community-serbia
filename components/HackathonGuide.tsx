@@ -5,9 +5,11 @@ import { motion } from 'framer-motion'
 import {
   hackathonGuideAgenda,
   hackathonGuideJudging,
+  hackathonGuideJudgingCriteria,
   hackathonGuidePurpose,
+  hackathonGuideRules,
+  hackathonGuideRulesIntro,
   hackathonGuideSteps,
-  hackathonGuideTeam,
   hackathonGuideTopics,
   hackathonGuideTopicsIntro,
 } from '@/content/hackathon'
@@ -36,18 +38,30 @@ export default function HackathonGuide() {
       </motion.section>
 
       <motion.section
-        id="team"
+        id="rules"
         initial={{ opacity: 0, y: 12 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, margin: '-50px' }}
         transition={{ duration: 0.45 }}
-        className="space-y-3"
-        aria-labelledby="hackathon-guide-team"
+        className="space-y-6"
+        aria-labelledby="hackathon-guide-rules"
       >
-        <h2 id="hackathon-guide-team" className="text-2xl font-semibold tracking-tight md:text-3xl">
-          {hackathonGuideTeam.title}
-        </h2>
-        <p className="max-w-2xl text-cursor-text-secondary md:text-lg">{hackathonGuideTeam.body}</p>
+        <div className="space-y-3">
+          <h2 id="hackathon-guide-rules" className="text-2xl font-semibold tracking-tight md:text-3xl">
+            {hackathonGuideRulesIntro.title}
+          </h2>
+          <p className="max-w-2xl text-cursor-text-secondary md:text-lg">{hackathonGuideRulesIntro.body}</p>
+        </div>
+        <ul className="grid gap-4 sm:grid-cols-2">
+          {hackathonGuideRules.map((rule) => (
+            <li key={rule.id}>
+              <article className="h-full rounded-2xl border border-cursor-border-emphasis bg-cursor-surface/60 p-6">
+                <h3 className="text-lg font-semibold tracking-tight">{rule.title}</h3>
+                <p className="mt-2 text-sm leading-relaxed text-cursor-text-secondary">{rule.body}</p>
+              </article>
+            </li>
+          ))}
+        </ul>
       </motion.section>
 
       <motion.section
@@ -100,13 +114,42 @@ export default function HackathonGuide() {
             )
           })}
         </ol>
+      </motion.section>
 
-        <div className="max-w-2xl space-y-2 border-t border-cursor-border pt-8">
-          <h3 className="text-lg font-semibold tracking-tight">{hackathonGuideJudging.title}</h3>
-          <p className="text-sm leading-relaxed text-cursor-text-secondary md:text-base">
-            {hackathonGuideJudging.body}
-          </p>
+      <motion.section
+        id="judging"
+        initial={{ opacity: 0, y: 12 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, margin: '-50px' }}
+        transition={{ duration: 0.45 }}
+        className="space-y-6"
+        aria-labelledby="hackathon-guide-judging"
+      >
+        <div className="space-y-3">
+          <h2 id="hackathon-guide-judging" className="text-2xl font-semibold tracking-tight md:text-3xl">
+            {hackathonGuideJudging.title}
+          </h2>
+          <p className="max-w-2xl text-cursor-text-secondary md:text-lg">{hackathonGuideJudging.body}</p>
         </div>
+        <ol className="space-y-4">
+          {hackathonGuideJudgingCriteria.map((criterion, index) => {
+            const number = String(index + 1).padStart(2, '0')
+
+            return (
+              <li key={criterion.id} className="flex gap-4">
+                <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-cursor-accent-orange/50 bg-cursor-accent-orange-bg font-mono text-xs font-semibold text-cursor-accent-orange">
+                  {number}
+                </span>
+                <div className="min-w-0 pt-1.5">
+                  <h3 className="text-lg font-semibold tracking-tight">{criterion.title}</h3>
+                  <p className="mt-1 max-w-xl text-sm leading-relaxed text-cursor-text-secondary md:text-base">
+                    {criterion.body}
+                  </p>
+                </div>
+              </li>
+            )
+          })}
+        </ol>
       </motion.section>
 
       <motion.section

@@ -1,9 +1,12 @@
 import { describe, expect, it } from 'vitest'
 import {
   getSponsorProfile,
+  hackathonGuideJudging,
+  hackathonGuideJudgingCriteria,
   hackathonGuidePurpose,
+  hackathonGuideRules,
+  hackathonGuideRulesIntro,
   hackathonGuideSteps,
-  hackathonGuideTeam,
   hackathonHosts,
   hackathonJudges,
   hackathonMentors,
@@ -232,9 +235,26 @@ describe('hackathon sponsor stack content', () => {
     expect(hackathonJudges[3]?.links?.website).toBeUndefined()
   })
 
-  it('keeps a minimal hacker guide with a seven-step timeline', () => {
+  it('keeps a minimal hacker guide with rules, judging, and a seven-step timeline', () => {
     expect(hackathonGuidePurpose.title).toBe('Why we run this')
-    expect(hackathonGuideTeam.body.toLowerCase()).toContain('solo')
+    expect(hackathonGuideRulesIntro.title).toBe('Rules')
+    expect(hackathonGuideRules.map((rule) => rule.id)).toEqual([
+      'team-size',
+      'open-source',
+      'what-counts',
+      'live-demo',
+      'video-demo',
+    ])
+    expect(hackathonGuideRules[0]?.body).toMatch(/1–3/)
+    expect(hackathonGuideJudging.body).toMatch(/19 September/)
+    expect(hackathonGuideJudgingCriteria.map((item) => item.id)).toEqual([
+      'innovation',
+      'working-product',
+      'clarity',
+      'execution',
+      'impact',
+    ])
+    expect(hackathonGuideJudgingCriteria[0]?.title.toLowerCase()).toContain('innovation')
     expect(hackathonGuideSteps.map((step) => step.id)).toEqual([
       'stack',
       'mentors',
