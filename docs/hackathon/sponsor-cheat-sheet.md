@@ -194,10 +194,10 @@ flowchart LR
 - [render.com](https://render.com)  
 - New service from GitHub; free TLS and a public URL  
 
-**What you get**
+**What you get (confirmed)**
 
-- Hackathon event credits or prize track: **TBD**.  
-- Start today: Render’s **public free tier** (web/static/Postgres options — check current limits on their site). Not a confirmed event credit pack.
+- **Every checked-in participant:** promo credits via coupon (`CREDIT_CODE_RENDER`). Claim on the Stack page after check-in, then redeem: [dashboard.render.com/billing](https://dashboard.render.com/billing) → Credit Balance → Enter promo code → Apply.  
+- Start today: Render’s **public free tier** (web/static/Postgres options — check current limits on their site). Not a substitute for the event credit pack.
 
 ---
 

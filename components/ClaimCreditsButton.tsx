@@ -104,6 +104,7 @@ export default function ClaimCreditsButton({
     const showCursor20Tip = sponsorId === CURSOR_POOL_ID && link
     const showCursor50Tip = sponsorId === CURSOR_50_POOL_ID && link
     const showDaytonaTip = sponsorId === 'daytona' && !link
+    const showRenderTip = sponsorId === 'render' && !link
     const showXaiTip = sponsorId === 'xai' && !link
     const xaiRedeemHref = showXaiTip
       ? `https://console.x.ai/team/default/billing?coupon=${encodeURIComponent(code)}`
@@ -149,6 +150,16 @@ export default function ClaimCreditsButton({
               {t('hackathon.creditsDaytonaOpenApp')} →
             </a>
           ) : null}
+          {showRenderTip ? (
+            <a
+              href="https://dashboard.render.com/billing"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-xs font-medium text-cursor-accent-green hover:underline"
+            >
+              {t('hackathon.creditsRenderOpenBilling')} →
+            </a>
+          ) : null}
           {showXaiTip ? (
             <a
               href="https://console.x.ai"
@@ -189,6 +200,14 @@ export default function ClaimCreditsButton({
               {t('hackathon.creditsDaytonaRedeemTip')}
             </p>
             <p>{t('hackathon.creditsDaytonaRedeemProTip')}</p>
+          </div>
+        ) : null}
+        {showRenderTip ? (
+          <div className="mt-3 space-y-1.5 text-xs leading-relaxed text-cursor-text-secondary">
+            <p>
+              <span className="font-semibold text-cursor-text">{t('hackathon.creditsRenderRedeemTipLabel')}: </span>
+              {t('hackathon.creditsRenderRedeemTip')}
+            </p>
           </div>
         ) : null}
         {showXaiTip ? (

@@ -70,6 +70,7 @@
   - [x] Hackathon Overview hero mascot is animated ink orb SVG (`/bloub-cercle-neutre-encre-anime.svg`)
   - [x] Hackathon credits: dual Cursor pools ($20 + $50) in separate tables; Stack modal claims both (`cursor` + `cursor-50`; seed via `pnpm db:seed:grok-bot-referrals`)
   - [x] Hackathon tech partners + Stack: SpaceXAI / x.ai API credits (`CREDIT_CODE_XAI`; claim after check-in; redeem at console.x.ai Billing)
+  - [x] Hackathon Stack: Render promo credits (`CREDIT_CODE_RENDER`; claim after check-in; redeem at dashboard.render.com Billing → Credit Balance)
   - [ ] Review and update content (events, ambassadors, partners) for Serbia
 
 - [ ] Ensure education resources are complete and linked correctly

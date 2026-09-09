@@ -736,7 +736,12 @@ export const hackathonSponsorProfiles: HackathonSponsorProfile[] = [
       'Static landing plus a separate API, both from GitHub',
     ],
     perks: [
-      { kind: 'tbd', label: 'Event credits or prize track', detail: 'Not confirmed yet.' },
+      {
+        kind: 'confirmed',
+        label: 'Promo credits for every checked-in participant',
+        detail:
+          'Claim on the Stack page after check-in. Redeem at dashboard.render.com → Billing → Credit Balance → Enter promo code → Apply.',
+      },
       {
         kind: 'public',
         label: 'Start here: public free tier',
