@@ -10,7 +10,7 @@ Hackathon mini-site with tabs (Overview, Guide, Mentors, Prizes, Stack). Served 
 |-------|-------|
 | Status | Implemented |
 | Verified | Partial |
-| Last updated | 2026-09-08 |
+| Last updated | 2026-09-09 |
 
 ## Page layout
 
@@ -23,7 +23,7 @@ Inspired by conference landing patterns (e.g. TUM Blockchain Conference): full-w
 | Route | Purpose |
 |-------|---------|
 | `/hackathon` | Overview tab (hero, highlights, tech partners marquee, community partners, become-a-sponsor form) |
-| `/hackathon/guide` | Guide tab: purpose, team size, day agenda, hacker guidelines, optional idea sparks (build anything allowed) |
+| `/hackathon/guide` | Guide tab: purpose, rules, day agenda, judging criteria, hacker guidelines, optional idea sparks (build anything allowed) |
 | `/hackathon/mentors` | Mentors and judges tab; published judges appear in the Judges section |
 | `/hackathon/stack` | Stack tab: expertise group panels + card modal |
 | `/hackathon/prizes` | Prizes tab |
@@ -56,7 +56,7 @@ When `NEXT_PUBLIC_HACKATHON_SITE_URL` is set, `/hackathon` on the main domain re
 - `app/hackathon/sponsor/page.tsx` — Redirect to Overview `#become-a-sponsor`
 - `app/hackathon/layout.tsx` — Route metadata + `HackathonSiteHeader`; OG/Twitter share image is `hackathonConfig.ogImage` (`/images/og-grok-bot-hackathon.jpg`)
 - `components/HackathonSiteHeader.tsx` — Hackathon-only chrome and tabs (Overview / Guide / Mentors / Prizes / Stack / Submit / Projects); brand is full-circle `/grokbot.svg` mark + “Grok Bot Serbia Hackathon”
-- `components/HackathonGuide.tsx` — Purpose, team, agenda (with judging note), guidelines, and optional idea sparks
+- `components/HackathonGuide.tsx` — Purpose, rules, agenda, judging & criteria, guidelines, and optional idea sparks
 - `components/HackathonProjectSubmitForm.tsx` — Project submission form (login / check-in gates + fields)
 - `components/HackathonProjectsGallery.tsx` — Gallery list, favorite/score actions, empty + preview states
 - `components/HackathonProjectCard.tsx` — Project card (embed, live/GitHub links, aggregates, controls)
@@ -126,7 +126,7 @@ Edit `content/hackathon.ts` for:
 - Static fallback `date` / `displayDate` / `location` (Belgrade, September 12, 2026 — used when Luma is unreachable)
 - Highlights grid (`hackathonStats`)
 - Prize tracks (`hackathonPrizes`: Convex cash 100.000 / 50.000 RSD; Kosmonaut coworking — 15 / 10 / 5 entries per teammate on the top 3 teams, use within 3 months, claimed on their platform; Daytona credits $3,000 / $2,000 / $1,000 plus $100 for every participant; ABC BootCamps — 50% / 40% / 30% scholarships to ABC Silicon Valley 2027)
-- Hacker guide (`hackathonGuidePurpose`, `hackathonGuideTeam`, `hackathonGuideAgenda`, `hackathonGuideJudging`, `hackathonGuideSteps`, `hackathonGuideTopicsIntro`, `hackathonGuideTopics`) — source for `/hackathon/guide`
+- Hacker guide (`hackathonGuidePurpose`, `hackathonGuideRulesIntro`, `hackathonGuideRules`, `hackathonGuideAgenda`, `hackathonGuideJudging`, `hackathonGuideJudgingCriteria`, `hackathonGuideSteps`, `hackathonGuideTopicsIntro`, `hackathonGuideTopics`) — source for `/hackathon/guide`
 - Mentors, hosts, and judges (`hackathonMentors`, `hackathonHosts`, `hackathonJudges`) — source for `/hackathon/mentors`
 - Tech partner logos (`hackathonSponsors`: Firecrawl, Render, Convex, Daytona, Wispr Flow, Exa, Netlify, Fal.ai, Wonder, x.ai) — Overview heading is **Tech partners**
 - Community partners (`hackathonCommunityPartners`: Startit, Superteam Balkan, ABC BootCamps, JigJoy, Kosmonaut) — Overview, below tech partners
@@ -146,11 +146,13 @@ Edit `content/hackathon.ts` for:
 ### Guide tab
 
 - Route: `/hackathon/guide` (Guide tab)
-- Briefing: why, team (solo or up to 3 people), day agenda, numbered guidelines timeline, optional idea sparks
-- Agenda: 11:00 intro & welcome → hacking all day (relaxed network/build) → 18:00–20:00 optional demo showcase → 20:00 submission deadline → 21:00 event ends; winners announced 19 September (≈ one week later)
+- Briefing: why, rules (eligibility list), day agenda, judging & winners (19 Sep + criteria), numbered guidelines timeline, optional idea sparks
+- Rules: team size 1–3; public/open-source repo; only work built during the hackathon is judged; public live demo URL required; short video demo required
+- Agenda: 11:00 intro & welcome → hacking all day (relaxed network/build) → 18:00–20:00 optional demo showcase → 20:00 submission deadline → 21:00 event ends
+- Judging: winners announced 19 September (≈ one week later); criteria are innovation (primary), working product, problem & solution clarity, execution, impact potential
 - Timeline: Stack → mentors → Grok Bot → partner MCPs → Origin → 3-minute demo → submit form by 8 PM (submit step links to `/hackathon/submit`)
 - Topics are **optional suggestions**, not required tracks — hackers may build anything. Three published verticals: FinTech agents (payments on blockchain or traditional rails), Gaming / visual & art, Personal assistant (flights + voice UX)
-- Types: `HackathonGuideCopy` / `HackathonGuideStep` / `HackathonGuideTopic` / `HackathonGuideAgendaItem` in `lib/types.ts`
+- Types: `HackathonGuideCopy` / `HackathonGuideListItem` / `HackathonGuideStep` / `HackathonGuideTopic` / `HackathonGuideAgendaItem` in `lib/types.ts`
 
 ### Mentors and judges tab
 
@@ -287,7 +289,7 @@ The app is ready for `hackathon.cursorserbia.com`. Creating the hostname is a da
 - [ ] Hero "Sponsor event" always scrolls to `#become-a-sponsor` (Overview with or without hash; from Prizes/Stack)
 - [ ] Tabs switch to Guide, Mentors, Prizes, Stack, Submit, and Projects (no Sponsor tab)
 - [ ] `/hackathon/mentors` shows Hosts (Aleksandar, Goran, Vladimir Hristov; 2-col from `md`), then Mentors (Nick, Miodrag Vilotijević, Miodrag Todorović, Alexandra Borisova), then Judges (Ben Kim, Milan Lazarević)
-- [ ] `/hackathon/guide` shows purpose, team, agenda (incl. 19 Sep winners), guidelines, and three optional idea sparks
+- [ ] `/hackathon/guide` shows purpose, rules, agenda, judging (19 Sep winners + criteria), guidelines, and three optional idea sparks
 - [ ] Guide submit step links to `/hackathon/submit`
 - [ ] `/hackathon/submit` shows login CTA when signed out; check-in message when registered; form when checked in
 - [ ] `POST /api/hackathon/submit` rejects unauthenticated and not-checked-in callers; upserts one row per email

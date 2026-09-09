@@ -65,6 +65,13 @@ export interface HackathonGuideCopy {
   body: string
 }
 
+/** Titled list row for Guide sections (rules, judging criteria). */
+export interface HackathonGuideListItem {
+  id: string
+  title: string
+  body: string
+}
+
 export interface HackathonGuideStep {
   id: string
   title: string

@@ -1,6 +1,7 @@
 import {
   HackathonGuideAgendaItem,
   HackathonGuideCopy,
+  HackathonGuideListItem,
   HackathonGuideStep,
   HackathonGuideTopic,
   HackathonPerson,
@@ -100,10 +101,39 @@ export const hackathonGuidePurpose: HackathonGuideCopy = {
   body: 'A one-day sprint to ship something real with Grok Bot and the tech partner tools. Cursor works too — not a polished startup, a working demo the same day.',
 }
 
-export const hackathonGuideTeam: HackathonGuideCopy = {
-  title: 'Team',
-  body: 'Solo or up to 3 people. Keep it small enough to ship in a day.',
+/** Eligibility rules for `/hackathon/guide` — replaces the old Team one-liner. */
+export const hackathonGuideRulesIntro: HackathonGuideCopy = {
+  title: 'Rules',
+  body: 'Eligibility for the day. Keep the team small, ship in the open, and show a live demo plus a short video.',
 }
+
+export const hackathonGuideRules: HackathonGuideListItem[] = [
+  {
+    id: 'team-size',
+    title: 'Team size',
+    body: '1–3 people per project — solo or a small team, small enough to ship in a day.',
+  },
+  {
+    id: 'open-source',
+    title: 'Open source',
+    body: 'The repository must be public / open source.',
+  },
+  {
+    id: 'what-counts',
+    title: 'What counts',
+    body: 'You may start from a pre-existing project, but only what you build during the hackathon is judged — demo the new work.',
+  },
+  {
+    id: 'live-demo',
+    title: 'Live demo',
+    body: 'A deployed version of the app is required — a public live URL.',
+  },
+  {
+    id: 'video-demo',
+    title: 'Video demo',
+    body: 'A short video demo showing the product is required.',
+  },
+]
 
 /** Day-of path — order is the visual timeline on `/hackathon/guide`. */
 export const hackathonGuideSteps: HackathonGuideStep[] = [
@@ -183,8 +213,37 @@ export const hackathonGuideAgenda: HackathonGuideAgendaItem[] = [
 /** Judging window — results after the live day. */
 export const hackathonGuideJudging: HackathonGuideCopy = {
   title: 'Judging & winners',
-  body: 'Judging happens after the event. Winners are announced on 19 September — about one week later.',
+  body: 'Judging happens after the event. Winners are announced on 19 September — about one week later. Innovation comes first.',
 }
+
+/** Judging criteria — innovation-first, listed under the winners announcement. */
+export const hackathonGuideJudgingCriteria: HackathonGuideListItem[] = [
+  {
+    id: 'innovation',
+    title: 'Innovation (primary)',
+    body: 'Originality of the idea and creative use of agents / partner tools.',
+  },
+  {
+    id: 'working-product',
+    title: 'Working product',
+    body: 'Live URL + video that clearly show what was built.',
+  },
+  {
+    id: 'clarity',
+    title: 'Problem & solution clarity',
+    body: 'Judges understand the story quickly.',
+  },
+  {
+    id: 'execution',
+    title: 'Execution',
+    body: 'Quality of the happy path shipped during the event.',
+  },
+  {
+    id: 'impact',
+    title: 'Impact potential',
+    body: 'Useful beyond the weekend.',
+  },
+]
 
 /**
  * Optional idea verticals. Build anything is allowed — these are sparks if you need them.
