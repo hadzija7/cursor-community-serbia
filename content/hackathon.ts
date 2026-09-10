@@ -175,7 +175,7 @@ export const hackathonGuideSteps: HackathonGuideStep[] = [
   {
     id: 'submit',
     title: 'Submit through the form',
-    body: 'Open the submission form when you are checked in. Deadline is 8 PM — you can update your entry earlier the same day.',
+    body: 'Open the submission form when you are checked in. Deadline is 7 PM — you can update your entry earlier the same day.',
     href: '/hackathon/submit',
     cta: 'Open submit form',
   },
@@ -197,27 +197,27 @@ export const hackathonGuideAgenda: HackathonGuideAgendaItem[] = [
   },
   {
     id: 'demo',
-    time: '18:00 – 19:00',
+    time: '17:00 – 19:00',
     title: 'Demo showcase',
     body: 'Optional. Share what you are building with others if you want — not mandatory.',
   },
   {
-    id: 'pizza',
-    time: '19:00',
-    title: 'Pizza party',
-    body: 'Food, drinks, and wind-down time while you finish polishing your submission.',
-  },
-  {
     id: 'deadline',
-    time: '20:00',
+    time: '19:00',
     title: 'Submission deadline',
-    body: 'Hacking ends. Submit your project through the form by 8 PM.',
+    body: 'Hacking ends. Submit your project through the form by 7 PM.',
   },
   {
-    id: 'close',
-    time: '21:00',
-    title: 'Event ends',
-    body: 'Doors close at 9 PM.',
+    id: 'voting',
+    time: '19:00 – 19:30',
+    title: 'Community voting',
+    body: 'Cast your vote for favorite projects while demos wrap and pizza gets ready.',
+  },
+  {
+    id: 'pizza',
+    time: '19:30 – 21:00',
+    title: 'Pizza party',
+    body: 'Food, drinks, and wind-down through the end of the night. Doors close at 9 PM.',
   },
 ]
 

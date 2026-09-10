@@ -266,9 +266,9 @@ describe('hackathon sponsor stack content', () => {
       'intro',
       'hacking',
       'demo',
-      'pizza',
       'deadline',
-      'close',
+      'voting',
+      'pizza',
     ])
     expect(hackathonGuideAgenda[0]).toMatchObject({
       time: '10:30',
@@ -280,8 +280,10 @@ describe('hackathon sponsor stack content', () => {
     })
     expect(hackathonGuideAgenda[1]?.body).toMatch(/starts at 11:00/)
     expect(hackathonGuideAgenda[1]?.body.toLowerCase()).toMatch(/workshop/)
-    expect(hackathonGuideAgenda.find((item) => item.id === 'demo')?.time).toBe('18:00 – 19:00')
-    expect(hackathonGuideAgenda.find((item) => item.id === 'pizza')?.time).toBe('19:00')
+    expect(hackathonGuideAgenda.find((item) => item.id === 'demo')?.time).toBe('17:00 – 19:00')
+    expect(hackathonGuideAgenda.find((item) => item.id === 'deadline')?.time).toBe('19:00')
+    expect(hackathonGuideAgenda.find((item) => item.id === 'voting')?.time).toBe('19:00 – 19:30')
+    expect(hackathonGuideAgenda.find((item) => item.id === 'pizza')?.time).toBe('19:30 – 21:00')
     expect(hackathonGuideJudging.body).toMatch(/19 September/)
     expect(hackathonGuideJudgingCriteria.map((item) => item.id)).toEqual([
       'innovation',
