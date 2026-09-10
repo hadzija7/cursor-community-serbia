@@ -73,8 +73,8 @@ export const hackathonPrizes: HackathonPrizeTrack[] = [
     sponsorUrl: 'https://www.daytona.io',
     logoBg: '#14120b',
     logoHeight: 'h-7',
-    category: 'Best app that uses Daytona',
-    note: 'You must actually use Daytona. Every participant also receives $100 platform credits.',
+    category: 'Best app that uses Daytona (Judge panel)',
+    note: 'Awarded by the judge panel. You must actually use Daytona. Every participant also receives $100 platform credits.',
     places: [
       { place: '1st place', amount: '$3,000 credits', accent: 'green' },
       { place: '2nd place', amount: '$2,000 credits', accent: 'yellow' },
@@ -87,8 +87,8 @@ export const hackathonPrizes: HackathonPrizeTrack[] = [
     sponsorUrl: 'https://abcbootcamps.com/',
     logoBg: '#ffffff',
     logoHeight: 'h-10',
-    category: 'Scholarships to ABC Silicon Valley 2027',
-    note: 'Percentages apply to ABC Silicon Valley 2027 tuition. Winners claim through ABC BootCamps after the event.',
+    category: 'Scholarships to ABC Silicon Valley 2027 (Judge panel)',
+    note: 'Awarded by the judge panel. Percentages apply to ABC Silicon Valley 2027 tuition. Winners claim through ABC BootCamps after the event.',
     places: [
       { place: '1st place', amount: '50% scholarship', accent: 'orange' },
       { place: '2nd place', amount: '40% scholarship', accent: 'yellow' },

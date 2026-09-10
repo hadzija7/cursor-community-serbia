@@ -136,11 +136,15 @@ describe('hackathon sponsor stack content', () => {
     ])
     expect(hackathonPrizes[1]?.note).toMatch(/3 months/)
     expect(hackathonPrizes[1]?.note).toMatch(/Kosmonaut platform/)
+    expect(hackathonPrizes[2]?.category).toBe('Best app that uses Daytona (Judge panel)')
     expect(hackathonPrizes[2]?.places.map((place) => place.amount)).toEqual([
       '$3,000 credits',
       '$2,000 credits',
       '$1,000 credits',
     ])
+    expect(hackathonPrizes[3]?.category).toBe(
+      'Scholarships to ABC Silicon Valley 2027 (Judge panel)',
+    )
     expect(hackathonPrizes[3]?.places.map((place) => place.amount)).toEqual([
       '50% scholarship',
       '40% scholarship',
