@@ -39,6 +39,7 @@
   - [x] Hackathon sponsor stack preview (`/hackathon/stack`): grouped cards, path, read-more
   - [x] Hackathon tabbed mini-site (Overview / Guide / Mentors / Prizes / Stack) + `hackathon.*` host rewrite
   - [x] Hackathon Mentors tab (`/hackathon/mentors`): Hosts first (Aleksandar, Goran, Vladimir Hristov), then Mentors (Nick, Miodrag Vilotijević, Miodrag Todorović, Alexandra Borisova, Dušan Radivojević — LinkedIn; X where listed), then Judges (Ben Kim, Milan Lazarević, Agrim Singh, Marija Mladenović); 2-col cards from `md`
+  - [x] Dušan Radivojević mentor photo: replaced distant mountain shot with close-up portrait (`public/images/hackathon/dusan-radivojevic.jpg`, 800×800, `photoPosition: center`)
   - [x] Miodrag Vilotijević mentor bio: CEO/Mozaik open-source runtime; ask about code quality, startup insights, product positioning
   - [x] Hackathon Guide agenda: intro & welcome at 10:30; Hacking Starts at 11:00
   - [x] Hackathon Guide agenda: 12:00 Mozaik (Miodrag Vilotijević), 12:30 Wonder (Dušan Radivojević), 16:00 ABC Bootcamp Experience (Vladimir Hristov)
