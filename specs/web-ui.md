@@ -23,12 +23,12 @@ The Cursor Community Serbia site is a Next.js 16 App Router application presenti
 | `/api/hackathon/event` | Live hackathon date/location from Luma event page (static fallback) |
 | `/subscribe` | Mailing list subscription |
 | `/education` | Educational resources (presentations, PDFs) |
-| `/hackathon` | Hackathon Overview tab (hero, highlights, marquee, become-a-sponsor form; also `hackathon.*` host `/`) |
+| `/hackathon` | Hackathon Overview tab (hero, highlights, marquee, special thanks; also `hackathon.*` host `/`) |
 | `/hackathon/guide` | Guide tab (why, rules, judging, guidelines timeline, topics) |
 | `/hackathon/mentors` | Mentors and judges tab |
 | `/hackathon/stack` | Stack tab (expertise groups + card modal) |
 | `/hackathon/prizes` | Prizes tab |
-| `/hackathon/sponsor` | Redirects to Overview `#become-a-sponsor` |
+| `/hackathon/sponsor` | Redirects to Overview `#special-thanks` |
 | `/recaps/[slug]` | Event recap pages (`EventRecap`: summary; **Video Recap** section for main `videoUrl` and optional `extraVideoRecaps` (Drive embeds); optional **Presentation** grid for `extraPresentations`; YouTube posters from `lib/youtube-metadata.ts`; Open Graph + JSON-LD `image` use first gallery photo; optional `interviews[]` (YouTube or Drive), gallery) |
 | `/slides/[id]` | Optional workshop slides |
 | `/education/coworking-day/[id]` | Coworking day kickoff deck (8 slides) |
@@ -51,16 +51,17 @@ The Cursor Community Serbia site is a Next.js 16 App Router application presenti
 - `components/HackathonHighlights.tsx` — Hackathon stat-style highlight grid
 - `components/HackathonPrizes.tsx` — Hackathon prize tracks (place cards above sponsors)
 - `components/SponsorMarquee.tsx` — Hackathon tech partner and community partner marquees
-- `components/HackathonSponsorshipForm.tsx` — Hackathon sponsorship application form
+- `components/HackathonSpecialThanks.tsx` — Overview special thanks (Startit, Superteam Balkan)
+- `components/HackathonSponsorshipForm.tsx` — Hackathon sponsorship application form (not on Overview)
 - `components/SubscribeForm.tsx` — Mailing list form
 - `components/PhotoGallery.tsx` — Recap image grid; fullscreen lightbox with prev/next controls and **ArrowLeft / ArrowRight** keyboard navigation when multiple photos
 - `app/education/page.tsx` — Education landing page
-- `app/hackathon/page.tsx` — Hackathon Overview tab (includes become-a-sponsor form)
+- `app/hackathon/page.tsx` — Hackathon Overview tab (includes special thanks)
 - `app/hackathon/guide/page.tsx` — Guide tab
 - `app/hackathon/mentors/page.tsx` — Mentors and judges tab
 - `app/hackathon/stack/page.tsx` — Stack tab
 - `app/hackathon/prizes/page.tsx` — Prizes tab
-- `app/hackathon/sponsor/page.tsx` — Redirect to Overview `#become-a-sponsor`
+- `app/hackathon/sponsor/page.tsx` — Redirect to Overview `#special-thanks`
 - `components/HackathonSiteHeader.tsx` — Hackathon tabs (Overview / Guide / Mentors / Prizes / Stack)
 - `components/HackathonGuide.tsx` — Hacker briefing sections + extensible topics
 - `components/HackathonPeople.tsx` — Mentor and judge cards
@@ -90,7 +91,7 @@ The Cursor Community Serbia site is a Next.js 16 App Router application presenti
 - [ ] Subscribe form submits
 - [ ] Education resources open correctly
 - [ ] Favicon displays Cursor logo
-- [ ] `/hackathon` shows the become-a-sponsor form; header tabs are Overview / Guide / Mentors / Prizes / Stack
+- [ ] `/hackathon` shows special thanks (Startit, Superteam Balkan); header tabs are Overview / Guide / Mentors / Prizes / Stack
 - [ ] `/hackathon/guide` loads purpose, rules, judging, shipping, and guidelines
 - [ ] `/hackathon/mentors` shows Hosts (Aleksandar, Goran, Vladimir Hristov), mentors (Nick Tomić, Miodrag Vilotijević, Miodrag Todorović, Alexandra Borisova, Dušan Radivojević), and published judges (Ben Kim, Milan Lazarević, Agrim Singh, Marija Mladenović)
 - [ ] `/hackathon/stack` loads sponsor cards labeled by area

@@ -15,6 +15,7 @@ import {
   hackathonSdlcStages,
   hackathonSponsorProfiles,
   hackathonCommunityPartners,
+  hackathonSpecialThanks,
   hackathonSponsors,
   hackathonStackRecipes,
 } from '@/content/hackathon'
@@ -44,6 +45,13 @@ describe('hackathon sponsor stack content', () => {
       'JigJoy',
       'Kosmonaut',
     ])
+  })
+
+  it('lists Startit and Superteam Balkan in Overview special thanks with credits', () => {
+    expect(hackathonSpecialThanks.map((thanks) => thanks.name)).toEqual(['Startit', 'Superteam Balkan'])
+    expect(hackathonSpecialThanks[0]?.credit).toMatch(/hosting/i)
+    expect(hackathonSpecialThanks[1]?.credit).toMatch(/community support/i)
+    expect(hackathonSpecialThanks.every((thanks) => thanks.logo.startsWith('/images/partners/'))).toBe(true)
   })
 
   it('gives every MCP-capable sponsor a Cursor install config', () => {

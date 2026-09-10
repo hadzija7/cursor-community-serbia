@@ -3,69 +3,16 @@
 import { motion } from 'framer-motion'
 import { Calendar, Clock, MapPin } from 'lucide-react'
 import Image from 'next/image'
-import { usePathname } from 'next/navigation'
-import { useEffect, type MouseEvent } from 'react'
 import HackerAuthButton from '@/components/HackerAuthButton'
 import { hackathonConfig } from '@/content/hackathon'
 import { useI18n } from '@/lib/i18n'
 import { useHackerStatus } from '@/lib/use-hacker-status'
-import { useHackathonHref } from '@/lib/use-hackathon-base-path'
 import { useHackathonDetails } from '@/lib/use-hackathon-details'
-
-const SPONSOR_SECTION_ID = 'become-a-sponsor'
-const SPONSOR_SECTION_HASH = `#${SPONSOR_SECTION_ID}`
-
-function isOverviewPath(pathname: string): boolean {
-  return pathname === '/hackathon' || pathname === '/'
-}
-
-function scrollToSponsorSection(): boolean {
-  const section = document.getElementById(SPONSOR_SECTION_ID)
-  if (!section) {
-    return false
-  }
-
-  section.scrollIntoView({ behavior: 'smooth' })
-  return true
-}
 
 export default function HackathonHero() {
   const { t } = useI18n()
-  const pathname = usePathname()
   const hackathon = useHackathonDetails()
   const { lumaStatus } = useHackerStatus()
-  const overviewHref = useHackathonHref('overview')
-  const sponsorHref = isOverviewPath(pathname)
-    ? SPONSOR_SECTION_HASH
-    : `${overviewHref}${SPONSOR_SECTION_HASH}`
-
-  useEffect(() => {
-    if (window.location.hash !== SPONSOR_SECTION_HASH) {
-      return
-    }
-
-    const frame = window.requestAnimationFrame(() => {
-      scrollToSponsorSection()
-    })
-
-    return () => window.cancelAnimationFrame(frame)
-  }, [])
-
-  function handleSponsorClick(event: MouseEvent<HTMLAnchorElement>) {
-    if (!scrollToSponsorSection()) {
-      return
-    }
-
-    event.preventDefault()
-
-    if (window.location.hash !== SPONSOR_SECTION_HASH) {
-      window.history.pushState(
-        null,
-        '',
-        `${window.location.pathname}${window.location.search}${SPONSOR_SECTION_HASH}`
-      )
-    }
-  }
 
   const facts = [
     {
@@ -163,13 +110,6 @@ export default function HackathonHero() {
                 {t('hackathon.viewOnLuma')}
               </a>
             ) : null}
-            <a
-              href={sponsorHref}
-              onClick={handleSponsorClick}
-              className="inline-flex items-center justify-center rounded-lg border border-cursor-border-emphasis px-6 py-3 text-sm font-semibold text-cursor-text-secondary transition-colors hover:border-cursor-text-muted hover:text-cursor-text md:text-base"
-            >
-              {t('hackathon.viewSponsorsCta')}
-            </a>
           </div>
         </motion.div>
       </div>

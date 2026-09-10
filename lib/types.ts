@@ -42,6 +42,18 @@ export interface Partner {
   logoWidth?: string
 }
 
+/** Named thanks on the hackathon Overview (host / community support). */
+export interface HackathonSpecialThanks {
+  name: string
+  logo: string
+  url: string
+  /** Short credit line, e.g. "for hosting the event". */
+  credit: string
+  logoBg?: string
+  logoHeight?: string
+  logoWidth?: string
+}
+
 export interface HackathonPrizePlace {
   place: string
   amount: string

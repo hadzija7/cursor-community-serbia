@@ -10,7 +10,7 @@ Hackathon mini-site with tabs (Overview, Guide, Mentors, Prizes, Stack). Served 
 |-------|-------|
 | Status | Implemented |
 | Verified | Partial |
-| Last updated | 2026-09-09 |
+| Last updated | 2026-09-10 |
 
 ## Page layout
 
@@ -22,14 +22,14 @@ Inspired by conference landing patterns (e.g. TUM Blockchain Conference): full-w
 
 | Route | Purpose |
 |-------|---------|
-| `/hackathon` | Overview tab (hero, highlights, tech partners marquee, community partners, become-a-sponsor form) |
+| `/hackathon` | Overview tab (hero, highlights, tech partners marquee, community partners, special thanks) |
 | `/hackathon/guide` | Guide tab: purpose, rules, day agenda, judging criteria, hacker guidelines, optional idea sparks (build anything allowed) |
 | `/hackathon/mentors` | Mentors and judges tab; published judges appear in the Judges section |
 | `/hackathon/stack` | Stack tab: expertise group panels + card modal |
 | `/hackathon/prizes` | Prizes tab |
 | `/hackathon/submit` | Project submission form (checked-in Google-auth hackers only) |
 | `/hackathon/projects` | Public projects gallery — cards, judge scores, community favorites |
-| `/hackathon/sponsor` | Redirects to Overview `#become-a-sponsor` (bookmarks / `hackathon.*` `/sponsor` rewrite) |
+| `/hackathon/sponsor` | Redirects to Overview `#special-thanks` (bookmarks / `hackathon.*` `/sponsor` rewrite) |
 | `/api/hackathon/event` | GET live date/location from Luma (static fallback) |
 | `/api/hackathon/sponsor` | POST sponsorship applications |
 | `/api/hackathon/submit` | POST project submission (auth + Luma `checked_in` required; upserts one row per email) |
@@ -46,14 +46,14 @@ When `NEXT_PUBLIC_HACKATHON_SITE_URL` is set, `/hackathon` on the main domain re
 
 ### Key Components
 
-- `app/hackathon/page.tsx` — Overview tab (hero, highlights, marquee, become-a-sponsor form)
+- `app/hackathon/page.tsx` — Overview tab (hero, highlights, marquee, special thanks)
 - `app/hackathon/guide/page.tsx` — Guide tab
 - `app/hackathon/mentors/page.tsx` — Mentors and judges tab
 - `app/hackathon/stack/page.tsx` — Stack tab
 - `app/hackathon/prizes/page.tsx` — Prizes tab
 - `app/hackathon/submit/page.tsx` — Project submission tab
 - `app/hackathon/projects/page.tsx` — Public projects gallery tab
-- `app/hackathon/sponsor/page.tsx` — Redirect to Overview `#become-a-sponsor`
+- `app/hackathon/sponsor/page.tsx` — Redirect to Overview `#special-thanks`
 - `app/hackathon/layout.tsx` — Route metadata + `HackathonSiteHeader`; OG/Twitter share image is `hackathonConfig.ogImage` (`/images/og-grok-bot-hackathon.jpg`)
 - `components/HackathonSiteHeader.tsx` — Hackathon-only chrome and tabs (Overview / Guide / Mentors / Prizes / Stack / Submit / Projects); brand is full-circle `/grokbot.svg` mark + “Grok Bot Serbia Hackathon”
 - `components/HackathonGuide.tsx` — Purpose, rules, agenda, judging & criteria, guidelines, and optional idea sparks
@@ -73,7 +73,8 @@ When `NEXT_PUBLIC_HACKATHON_SITE_URL` is set, `/hackathon` on the main domain re
 - `components/HackathonHighlights.tsx` — Stat-style highlight grid (TUM-inspired)
 - `components/HackathonPrizes.tsx` — Prize tracks with per-place cards (above sponsors)
 - `components/SponsorMarquee.tsx` — Tech partner and community partner marquees (Startit, Superteam Balkan, ABC BootCamps, JigJoy, Kosmonaut)
-- `components/HackathonSponsorshipForm.tsx` — Sponsorship application form
+- `components/HackathonSpecialThanks.tsx` — Overview special thanks (Startit hosting, Superteam Balkan community support)
+- `components/HackathonSponsorshipForm.tsx` — Sponsorship application form (API still available; not shown on Overview)
 - `components/HackathonSponsorStack.tsx` — Expertise group panels + compact card modal (`/hackathon/stack`)
 - `content/hackathon.ts` — Static fallback copy, Luma URL, prize tracks, sponsor logos, stack profiles, stat cards
 - `lib/hackathon-details.ts` — Resolve date/location from Luma slug with static fallback
@@ -180,7 +181,7 @@ Edit `content/hackathon.ts` for:
 - Homepage promo card (`HackathonPromoCard`) can show `hackathonConfig.mascotImage` next to the title (same full-circle `/grokbot.svg` as the header)
 - Overview hero shows `hackathonConfig.mascotPeekImage` (animated ink orb `/bloub-cercle-neutre-encre-anime.svg`) under the tagline on mobile (compact, in flow) and beside the title from `sm` up; header mark + Stack Grok Bot card keep static full-circle `/grokbot.svg`
 
-Hero CTAs: Register on Luma (external Luma event link), View on Luma (when already registered/checked in), and Sponsor event (`hackathon.viewSponsorsCta`). Google login is navbar-only. Sponsor event always scrolls to Overview `#become-a-sponsor` — including a second click while already on Overview with that hash. Off Overview (Guide / Mentors / Prizes / Stack) it navigates to the Overview form. The form section uses `scroll-mt-24` so header chrome does not cover the heading. Guide, Mentors, and Stack are header tabs only.
+Hero CTAs: Register on Luma (external Luma event link) and View on Luma (when already registered/checked in). Google login is navbar-only. Overview ends with **Special thanks** (`#special-thanks`) for Startit (hosting) and Superteam Balkan (long-term community support) — logo treatment matches community partners. Legacy `/hackathon/sponsor` redirects to that section. Guide, Mentors, and Stack are header tabs only.
 
 ## Hacker Auth (Google OAuth)
 
@@ -285,8 +286,7 @@ The app is ready for `hackathon.cursorserbia.com`. Creating the hostname is a da
 
 ## Verification
 
-- [ ] `/hackathon` loads the Overview tab (hero, highlights, marquee, become-a-sponsor form)
-- [ ] Hero "Sponsor event" always scrolls to `#become-a-sponsor` (Overview with or without hash; from Prizes/Stack)
+- [ ] `/hackathon` loads the Overview tab (hero, highlights, marquee, special thanks)
 - [ ] Tabs switch to Guide, Mentors, Prizes, Stack, Submit, and Projects (no Sponsor tab)
 - [ ] `/hackathon/mentors` shows Hosts (Aleksandar, Goran, Vladimir Hristov; 2-col from `md`), then Mentors (Nick, Miodrag Vilotijević, Miodrag Todorović, Alexandra Borisova, Dušan Radivojević), then Judges (Ben Kim, Milan Lazarević)
 - [ ] `/hackathon/guide` shows purpose, rules, agenda, judging (19 Sep winners + criteria), guidelines, and three optional idea sparks
@@ -297,13 +297,14 @@ The app is ready for `hackathon.cursorserbia.com`. Creating the hostname is a da
 - [ ] `/hackathon/projects` lists submission cards (or empty state); embeds YouTube/Loom when possible
 - [ ] Judge score controls only for emails in `HACKATHON_JUDGE_EMAILS`; upsert 1–10; average shown publicly
 - [ ] Signed-in users can favorite up to 3 projects; 4th returns clear cap error
-- [ ] `/hackathon/sponsor` redirects to Overview `#become-a-sponsor`
+- [ ] `/hackathon/sponsor` redirects to Overview `#special-thanks`
+- [ ] Overview `#special-thanks` shows Startit (hosting) and Superteam Balkan (community support) with logos
 - [ ] `http://hackathon.localhost:<port>/` rewrites to the Overview tab
 - [ ] `http://hackathon.localhost:<port>/submit` rewrites to the Submit tab
 - [ ] `http://hackathon.localhost:<port>/projects` rewrites to the Projects tab
 - [ ] Date/location update when Luma event changes (or fall back to static)
 - [ ] Marquee animates smoothly and pauses on hover
-- [ ] Sponsorship form validates required fields
+- [ ] `POST /api/hackathon/sponsor` still accepts applications (form not on Overview)
 - [ ] Postgres path stores applications
 - [ ] Webhook path forwards payload
 - [ ] Google Sheets Apps Script receives a test row when `HACKATHON_SPONSOR_WEBHOOK_URL` is set

@@ -39,6 +39,7 @@ Living scorecard for Cursor Community Serbia. Update after each phase.
 
 | Date       | Change                          |
 |------------|----------------------------------|
+| 2026-09-10 | Hackathon Overview: removed become-a-sponsor form; added Special thanks (Startit hosting, Superteam Balkan community support); `/hackathon/sponsor` → `#special-thanks` |
 | 2026-09-10 | Hackathon: removed Netlify from tech partners, Stack cards/MCP, credit claim map, and sponsor cheat sheet |
 | 2026-09-10 | Hackathon Guide agenda: demo showcase 17:00–19:00; submission deadline 19:00; community voting 19:00–19:30; pizza party 19:30–21:00 (event close folded into pizza) |
 | 2026-09-09 | Hackathon Guide: Guidelines allow GitHub/Origin/other for repo hosting + deploy live URL step; optional workshops during hacking |

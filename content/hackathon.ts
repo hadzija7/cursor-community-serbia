@@ -4,6 +4,7 @@ import {
   HackathonGuideListItem,
   HackathonGuideStep,
   HackathonGuideTopic,
+  HackathonSpecialThanks,
   HackathonPerson,
   HackathonPrizeTrack,
   HackathonSdlcStage,
@@ -551,6 +552,26 @@ export const hackathonCommunityPartners: Partner[] = [
     url: 'https://www.kosmonaut.rs/',
     logoBg: '#14120b',
     logoHeight: 'h-8',
+  },
+]
+
+/** Overview “Special thanks” — host + long-term community support (not the full partner marquee). */
+export const hackathonSpecialThanks: HackathonSpecialThanks[] = [
+  {
+    name: 'Startit',
+    logo: '/images/partners/startit-white.png',
+    url: 'https://startit.rs',
+    credit: 'for hosting the event',
+    logoBg: '#14120b',
+    logoHeight: 'h-8',
+  },
+  {
+    name: 'Superteam Balkan',
+    logo: '/images/partners/superteam-balkan.png',
+    url: 'https://blkn.superteam.fun/',
+    credit: 'for long term community support',
+    logoBg: '#0f0d06',
+    logoHeight: 'h-10',
   },
 ]
 
