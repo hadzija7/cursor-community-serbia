@@ -272,6 +272,7 @@ Public gallery at `/hackathon/projects` (header **Projects** tab). Anyone can br
 - One review per judge per project (upsert on `UNIQUE(judge_email, submission_id)`)
 - Score must be an integer 1–10 (`CHECK` + API validation)
 - Progress: “rated X of Y projects” in the judge panel
+- Saving a score updates the card and progress in place (no full gallery reload); aggregates refresh in the background
 
 **Community favorites:**
 

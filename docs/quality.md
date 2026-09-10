@@ -39,7 +39,9 @@ Living scorecard for Cursor Community Serbia. Update after each phase.
 
 | Date       | Change                          |
 |------------|----------------------------------|
+| 2026-09-10 | Hackathon judge scores: save updates the card in place (no full gallery reload); aggregates refresh silently |
 | 2026-09-10 | Hackathon: `pnpm db:setup` now creates `hackathon_judge_final_top3` (gallery GET was warning that the relation did not exist) |
+| 2026-09-10 | Hackathon submit: teammate display names on gallery (emails private); one project per team (membership uniqueness + unique GitHub); listed teammates update the same row |
 | 2026-09-10 | Hackathon submit: GET prefill for existing row; removed live GitHub public-repo API check (shape only) |
 | 2026-09-10 | Hackathon Overview: removed become-a-sponsor form; added Special thanks (Startit hosting, Superteam Balkan community support); `/hackathon/sponsor` → `#special-thanks` |
 | 2026-09-10 | Hackathon: removed Netlify from tech partners, Stack cards/MCP, credit claim map, and sponsor cheat sheet |

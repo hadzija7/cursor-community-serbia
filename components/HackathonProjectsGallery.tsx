@@ -125,7 +125,8 @@ export default function HackathonProjectsGallery() {
   const [busyId, setBusyId] = useState<string | null>(null)
   const [banner, setBanner] = useState('')
 
-  const load = useCallback(async () => {
+  const load = useCallback(async (options?: { silent?: boolean }) => {
+    const silent = Boolean(options?.silent)
     if (previewMode) {
       const v = previewViewer(previewJudge)
       const nextProjects = PREVIEW_PROJECTS.map((p) => ({
@@ -144,8 +145,10 @@ export default function HackathonProjectsGallery() {
       return
     }
 
-    setLoading(true)
-    setError('')
+    if (!silent) {
+      setLoading(true)
+      setError('')
+    }
     try {
       const res = await fetch('/api/hackathon/projects', { cache: 'no-store' })
       const data = (await res.json()) as ApiResponse
@@ -163,11 +166,14 @@ export default function HackathonProjectsGallery() {
       )
       setJudgePanel(data.judgePanel ?? emptyJudgePanel())
     } catch (err) {
+      if (silent) {
+        return
+      }
       setError(err instanceof Error ? err.message : t('hackathon.projectsLoadError'))
       setProjects([])
       setJudgePanel(emptyJudgePanel())
     } finally {
-      setLoading(false)
+      if (!silent) setLoading(false)
     }
   }, [previewMode, previewJudge, t])
 
@@ -314,7 +320,17 @@ export default function HackathonProjectsGallery() {
       if (!res.ok || !data.ok) {
         throw new Error(data.message || t('hackathon.projectsGenericError'))
       }
-      await load()
+      const savedScore = typeof data.score === 'number' ? data.score : score
+      const wasScored =
+        projects.find((project) => project.id === projectId)?.myScore != null
+      setProjects((prev) =>
+        prev.map((p) => (p.id === projectId ? { ...p, myScore: savedScore } : p)),
+      )
+      setJudgePanel((panel) => ({
+        ...panel,
+        myRatedCount: wasScored ? panel.myRatedCount : panel.myRatedCount + 1,
+      }))
+      void load({ silent: true })
     } finally {
       setBusyId(null)
     }
