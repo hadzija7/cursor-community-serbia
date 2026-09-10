@@ -39,6 +39,7 @@ function PersonCard({ person, index }: { person: HackathonPerson; index: number 
             fill
             className={`object-cover ${person.photoPosition === 'top' ? 'object-top' : 'object-center'}`}
             sizes="96px"
+            unoptimized
           />
         </div>
         {links.length > 0 ? (

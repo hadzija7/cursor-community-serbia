@@ -40,6 +40,7 @@
   - [x] Hackathon tabbed mini-site (Overview / Guide / Mentors / Prizes / Stack) + `hackathon.*` host rewrite
   - [x] Hackathon Mentors tab (`/hackathon/mentors`): Hosts first (Aleksandar, Goran, Vladimir Hristov), then Mentors (Nick, Miodrag Vilotijević, Miodrag Todorović, Alexandra Borisova, Dušan Radivojević — LinkedIn; X where listed), then Judges (Ben Kim, Milan Lazarević, Agrim Singh, Marija Mladenović); 2-col cards from `md`
   - [x] Dušan Radivojević mentor photo: replaced distant mountain shot with close-up portrait (`public/images/hackathon/dusan-radivojevic.jpg`, 800×800, `photoPosition: center`)
+  - [x] Mentor/host/judge cards serve local photos `unoptimized` so new files skip Vercel Image Optimization (Hobby 402 on uncached transforms)
   - [x] Miodrag Vilotijević mentor bio: CEO/Mozaik open-source runtime; ask about code quality, startup insights, product positioning
   - [x] Hackathon Guide agenda: intro & welcome at 10:30; Hacking Starts at 11:00
   - [x] Hackathon Guide agenda: 12:00 Mozaik (Miodrag Vilotijević), 12:30 Wonder (Dušan Radivojević), 16:00 ABC Bootcamp Experience (Vladimir Hristov)
@@ -55,6 +56,7 @@
   - [x] Hackathon Stack: Add to Cursor uses `cursor://` deeplink (not the auto-closing install-mcp tab)
   - [x] Hacker Google auth + Luma check-in status; claim shared env codes + unique Cursor referral pool
   - [x] Hackathon project submissions (`/hackathon/submit`) for checked-in Google users
+  - [x] Submit form: `noValidate` so missing demo recording (and other required fields) use the in-page error, not the native black-text tooltip; `color-scheme: dark` on `html`/`body`
   - [x] Hackathon projects gallery + judge scores + community favorites (`/hackathon/projects`)
   - [x] Hackathon Projects: community leaderboard (top 3 by favorite count); favorites require Luma check-in; max 3 enforced UI + API
   - [x] Hackathon Projects: private per-judge 1–10 scores; save updates in place (no gallery reload); all-rated aggregate top 3; tie → needs decision + final top 3 override; Convex 80k/50k/20k awards

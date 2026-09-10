@@ -402,7 +402,7 @@ export default function HackathonProjectSubmitForm() {
   return (
     <div className="space-y-4">
       {adminPanel}
-    <form onSubmit={handleSubmit} className="w-full space-y-4">
+    <form onSubmit={handleSubmit} noValidate className="w-full space-y-4">
       <p className="text-sm text-cursor-text-muted">
         {t('hackathon.submitSignedInAs')}{' '}
         <span className="text-cursor-text">{session.user.email}</span>
