@@ -10,6 +10,8 @@ type Props = {
   project: ProjectGalleryItem
   isJudge: boolean
   isSignedIn: boolean
+  /** When false, favorite clicks show check-in / login guidance instead of voting. */
+  canFavorite?: boolean
   busy?: boolean
   onFavorite: (projectId: string, favorited: boolean) => Promise<void>
   onScore: (projectId: string, score: number) => Promise<void>
@@ -26,6 +28,7 @@ export default function HackathonProjectCard({
   project,
   isJudge,
   isSignedIn,
+  canFavorite = isSignedIn,
   busy = false,
   onFavorite,
   onScore,
@@ -39,6 +42,10 @@ export default function HackathonProjectCard({
   const handleFavorite = async () => {
     if (!isSignedIn) {
       onLogin()
+      return
+    }
+    if (!canFavorite) {
+      setLocalError(t('hackathon.projectsNeedCheckIn'))
       return
     }
     setLocalError('')
@@ -157,13 +164,18 @@ export default function HackathonProjectCard({
 
           <button
             type="button"
-            disabled={busy}
+            disabled={busy || (isSignedIn && !canFavorite)}
             onClick={() => void handleFavorite()}
             aria-pressed={project.favoritedByMe}
+            title={
+              isSignedIn && !canFavorite
+                ? t('hackathon.projectsNeedCheckIn')
+                : undefined
+            }
             className={`inline-flex items-center gap-1.5 rounded-md px-3 py-1.5 text-sm transition-colors ${
               project.favoritedByMe
                 ? 'bg-cursor-accent-orange/15 text-cursor-accent-orange'
-                : 'bg-cursor-overlay text-cursor-text-muted hover:text-cursor-text'
+                : 'bg-cursor-overlay text-cursor-text-muted hover:text-cursor-text disabled:cursor-not-allowed disabled:opacity-60'
             }`}
           >
             <Heart
@@ -184,6 +196,10 @@ export default function HackathonProjectCard({
             >
               {t('hackathon.projectsLoginToVote')}
             </button>
+          ) : !canFavorite ? (
+            <span className="text-sm text-cursor-text-faint">
+              {t('hackathon.projectsCheckInToVote')}
+            </span>
           ) : null}
         </div>
 

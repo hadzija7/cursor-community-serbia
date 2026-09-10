@@ -111,7 +111,7 @@ CREATE INDEX IF NOT EXISTS idx_hackathon_project_reviews_submission
 CREATE INDEX IF NOT EXISTS idx_hackathon_project_reviews_judge
   ON hackathon_project_reviews (judge_email);
 
--- Community favorites — max 3 per user enforced in API; one row per user+submission.
+-- Community favorites — max 3 per checked-in user enforced in API; one row per user+submission.
 CREATE TABLE IF NOT EXISTS hackathon_project_favorites (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   submission_id UUID NOT NULL REFERENCES hackathon_project_submissions (id) ON DELETE CASCADE,

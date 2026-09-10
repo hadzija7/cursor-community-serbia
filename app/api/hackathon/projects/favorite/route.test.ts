@@ -1,10 +1,16 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
+import { NextResponse } from 'next/server'
 
 vi.mock('@/lib/auth', () => ({
   auth: vi.fn(),
 }))
 
+vi.mock('@/lib/hackathon-checkin', () => ({
+  assertCheckedIn: vi.fn(),
+}))
+
 import { auth } from '@/lib/auth'
+import { assertCheckedIn } from '@/lib/hackathon-checkin'
 import { POST } from '@/app/api/hackathon/projects/favorite/route'
 import * as db from '@/lib/db'
 
@@ -24,6 +30,7 @@ describe('POST /api/hackathon/projects/favorite', () => {
     process.env = { ...ORIGINAL_ENV }
     vi.clearAllMocks()
     vi.mocked(auth).mockResolvedValue(null)
+    vi.mocked(assertCheckedIn).mockResolvedValue(null)
   })
 
   afterEach(() => {
@@ -33,6 +40,37 @@ describe('POST /api/hackathon/projects/favorite', () => {
   it('returns 401 when not authenticated', async () => {
     const response = await POST(buildRequest({ submissionId: SUBMISSION_ID }))
     expect(response.status).toBe(401)
+    expect(assertCheckedIn).not.toHaveBeenCalled()
+  })
+
+  it('returns 403 when signed in but not checked in', async () => {
+    vi.mocked(auth).mockResolvedValue({
+      user: { email: 'voter@example.com' },
+      expires: '2099-01-01',
+    })
+    vi.mocked(assertCheckedIn).mockResolvedValue(
+      NextResponse.json(
+        {
+          error: 'Check in at the event first before favoriting projects',
+          lumaStatus: 'registered',
+        },
+        { status: 403 },
+      ),
+    )
+
+    const response = await POST(
+      buildRequest({ submissionId: SUBMISSION_ID, favorited: true }),
+    )
+    const body = (await response.json()) as {
+      message: string
+      code?: string
+      lumaStatus?: string
+    }
+
+    expect(response.status).toBe(403)
+    expect(body.code).toBe('NOT_CHECKED_IN')
+    expect(body.lumaStatus).toBe('registered')
+    expect(body.message).toMatch(/check in/i)
   })
 
   it('rejects a 4th favorite with a clear cap error', async () => {
@@ -94,6 +132,10 @@ describe('POST /api/hackathon/projects/favorite', () => {
     expect(body.ok).toBe(true)
     expect(body.favorited).toBe(true)
     expect(body.favoriteCount).toBe(3)
+    expect(assertCheckedIn).toHaveBeenCalledWith(
+      'voter@example.com',
+      expect.stringMatching(/check in/i),
+    )
   })
 
   it('removes an existing favorite', async () => {

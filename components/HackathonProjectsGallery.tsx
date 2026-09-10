@@ -1,15 +1,18 @@
 'use client'
 
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { signIn, useSession } from 'next-auth/react'
 import { useSearchParams } from 'next/navigation'
+import HackathonCommunityLeaderboard from '@/components/HackathonCommunityLeaderboard'
 import HackathonProjectCard from '@/components/HackathonProjectCard'
 import type { ProjectGalleryItem } from '@/app/api/hackathon/projects/route'
 import {
   MAX_FAVORITES_PER_USER,
   averageJudgeScore,
   favoriteCapMessage,
+  rankCommunityLeaderboard,
 } from '@/lib/project-gallery'
+import { useHackerStatus } from '@/lib/use-hacker-status'
 import { useI18n } from '@/lib/i18n'
 
 type ViewerState = {
@@ -55,9 +58,17 @@ function previewViewer(asJudge: boolean): ViewerState {
   }
 }
 
+function apiErrorMessage(
+  data: { message?: string; error?: string },
+  fallback: string,
+): string {
+  return data.message || data.error || fallback
+}
+
 export default function HackathonProjectsGallery() {
   const { t } = useI18n()
   const { data: session, status: sessionStatus } = useSession()
+  const hackerStatus = useHackerStatus()
   const searchParams = useSearchParams()
   const previewMode =
     process.env.NODE_ENV === 'development' && searchParams.get('preview') === '1'
@@ -120,6 +131,13 @@ export default function HackathonProjectsGallery() {
     ? true
     : sessionStatus === 'authenticated' && Boolean(session?.user?.email)
   const isJudge = previewMode ? previewJudge : Boolean(viewer?.isJudge)
+  const isCheckedIn = previewMode ? true : hackerStatus.lumaStatus === 'checked_in'
+  const canFavorite = isSignedIn && isCheckedIn
+
+  const leaderboard = useMemo(
+    () => rankCommunityLeaderboard(projects),
+    [projects],
+  )
 
   const onLogin = () => {
     void signIn('google')
@@ -127,16 +145,33 @@ export default function HackathonProjectsGallery() {
 
   const onFavorite = async (projectId: string, favorited: boolean) => {
     setBanner('')
-    if (previewMode) {
-      const current = projects.find((p) => p.id === projectId)
-      if (!current) return
-      if (favorited && !current.favoritedByMe) {
-        const mine = projects.filter((p) => p.favoritedByMe).length
-        if (mine >= MAX_FAVORITES_PER_USER) {
-          setBanner(favoriteCapMessage())
-          throw new Error(favoriteCapMessage())
-        }
+
+    if (!previewMode && !isSignedIn) {
+      onLogin()
+      return
+    }
+
+    if (!previewMode && !isCheckedIn) {
+      const message = t('hackathon.projectsNeedCheckIn')
+      setBanner(message)
+      throw new Error(message)
+    }
+
+    const current = projects.find((p) => p.id === projectId)
+    if (!current) return
+
+    // Client-side cap: block a 4th favorite before hitting the API.
+    if (favorited && !current.favoritedByMe) {
+      const used =
+        viewer?.favoriteCount ?? projects.filter((p) => p.favoritedByMe).length
+      if (used >= MAX_FAVORITES_PER_USER) {
+        const message = favoriteCapMessage()
+        setBanner(message)
+        throw new Error(message)
       }
+    }
+
+    if (previewMode) {
       setProjects((prev) =>
         prev.map((p) => {
           if (p.id !== projectId) return p
@@ -155,7 +190,7 @@ export default function HackathonProjectsGallery() {
               ...v,
               favoriteCount: Math.max(
                 0,
-                v.favoriteCount + (favorited ? 1 : -1),
+                v.favoriteCount + (favorited ? (current.favoritedByMe ? 0 : 1) : -1),
               ),
             }
           : v,
@@ -173,12 +208,14 @@ export default function HackathonProjectsGallery() {
       const data = (await res.json()) as {
         ok: boolean
         message?: string
+        error?: string
         favorited?: boolean
         favoriteCount?: number
       }
       if (!res.ok || !data.ok) {
-        setBanner(data.message || t('hackathon.projectsGenericError'))
-        throw new Error(data.message || t('hackathon.projectsGenericError'))
+        const message = apiErrorMessage(data, t('hackathon.projectsGenericError'))
+        setBanner(message)
+        throw new Error(message)
       }
       setProjects((prev) =>
         prev.map((p) => {
@@ -247,7 +284,11 @@ export default function HackathonProjectsGallery() {
     }
   }
 
-  if (loading || (!previewMode && sessionStatus === 'loading')) {
+  if (
+    loading ||
+    (!previewMode && sessionStatus === 'loading') ||
+    (!previewMode && isSignedIn && hackerStatus.status === 'loading')
+  ) {
     return (
       <p className="text-sm text-cursor-text-muted" role="status">
         {t('hackathon.projectsLoading')}
@@ -292,6 +333,8 @@ export default function HackathonProjectsGallery() {
         </p>
       ) : null}
 
+      <HackathonCommunityLeaderboard entries={leaderboard} />
+
       {!isSignedIn ? (
         <div className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-cursor-border bg-cursor-surface/50 px-4 py-3">
           <p className="text-sm text-cursor-text-secondary">{t('hackathon.projectsVoteHint')}</p>
@@ -302,6 +345,26 @@ export default function HackathonProjectsGallery() {
           >
             {t('hackathon.loginCta')}
           </button>
+        </div>
+      ) : hackerStatus.status === 'error' ? (
+        <div className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-cursor-border bg-cursor-surface/50 px-4 py-3">
+          <p className="text-sm text-cursor-accent-red">{t('hackathon.submitStatusError')}</p>
+          <button
+            type="button"
+            onClick={() => hackerStatus.refetch()}
+            className="text-sm text-cursor-text-muted underline hover:text-cursor-text"
+          >
+            {t('hackathon.submitRetryStatus')}
+          </button>
+        </div>
+      ) : !isCheckedIn ? (
+        <div className="space-y-1 rounded-xl border border-cursor-accent-yellow/30 bg-cursor-surface/50 px-4 py-3">
+          <p className="text-sm font-medium text-cursor-accent-yellow">
+            {t('hackathon.projectsNeedCheckIn')}
+          </p>
+          <p className="text-sm text-cursor-text-muted">
+            {t('hackathon.projectsNeedCheckInHint')}
+          </p>
         </div>
       ) : (
         <p className="text-sm text-cursor-text-muted">
@@ -319,6 +382,7 @@ export default function HackathonProjectsGallery() {
             project={project}
             isJudge={isJudge}
             isSignedIn={isSignedIn}
+            canFavorite={canFavorite}
             busy={busyId !== null}
             onFavorite={onFavorite}
             onScore={onScore}
