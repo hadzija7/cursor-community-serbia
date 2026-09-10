@@ -65,7 +65,7 @@ When `NEXT_PUBLIC_HACKATHON_SITE_URL` is set, `/hackathon` on the main domain re
 - `components/HackathonProjectsGallery.tsx` — Gallery list, community leaderboard, judge panel, favorite/score actions, empty + preview states
 - `components/HackathonProjectCard.tsx` — Project card (embed, live/GitHub links, private my-score / award labels, controls)
 - `components/HackathonCommunityLeaderboard.tsx` — Top 3 by community favorite counts
-- `components/HackathonJudgePanel.tsx` — Judge progress, aggregate top 3 / needs-decision, admin-only final top-3 confirm
+- `components/HackathonJudgePanel.tsx` — Judge progress, aggregate averages / needs-decision, admin-only final top-3 confirm
 - `components/HackathonPeople.tsx` — Mentor, host, and judge cards (`/hackathon/mentors`)
 - `middleware.ts` — Subdomain rewrite + optional main-host redirect
 - `lib/hackathon-site.ts` — Host detection and public hrefs
@@ -274,13 +274,13 @@ Public gallery at `/hackathon/projects` (header **Projects** tab). Anyone can br
 
 **Aggregate top 3:** arithmetic **mean** of all judge scores per project (1–10), rounded to one decimal for display. Ranking uses averages only.
 
-**Clear unique top 3:** `avg(1st) > avg(2nd) > avg(3rd)` and (no 4th project or `avg(3rd) > avg(4th)`). When clear after all-finished, judges see a provisional top 3. Title / submission time are **never** used to invent final placement.
+**Clear unique top 3:** `avg(1st) > avg(2nd) > avg(3rd)` and (no 4th project or `avg(3rd) > avg(4th)`). When clear after all-finished, judges see aggregate averages (no separate provisional top-3 cards). Title / submission time are **never** used to invent final placement.
 
 **Ties:** if averages do not yield a unique 1st/2nd/3rd, status is `needs_decision` — no auto tie-break. Only admins (`HACKATHON_ADMIN_EMAILS`) set final places via `POST /api/hackathon/projects/final-top3` into `hackathon_judge_final_top3` (only after all-finished). Judges see the needs-decision state but cannot confirm or override.
 
 **Publishing:** only `HACKATHON_ADMIN_EMAILS`. Requires all-finished and a unique top 3 (clear averages or a saved final). Until published, winning cards stay unmarked for the public. Unpublish hides badges again.
 
-**Convex cash awards (final top 3):** 1st **80.000 RSD**, 2nd **50.000 RSD**, 3rd **20.000 RSD** — cash prize split across overall winners by judge panel. Shown on Prizes (`Overall winners (judge panel)`) and on the admin confirm/override + judge-panel top 3 after all-finished. Public project cards show place only (1st / 2nd / 3rd), not the cash amount. Not claimable `CREDIT_CODE_*` promo codes. Separate from community favorites. Prizes card includes a small aside: keep building with Convex at the [online All Gas hackathon](https://luma.com/convex-allgas-hackathon?tk=122o36).
+**Convex cash awards (final top 3):** 1st **80.000 RSD**, 2nd **50.000 RSD**, 3rd **20.000 RSD** — cash prize split across overall winners by judge panel. Shown on Prizes (`Overall winners (judge panel)`) only. The admin confirm/override pickers and project cards show place only (1st / 2nd / 3rd), not the cash amount. Not claimable `CREDIT_CODE_*` promo codes. Separate from community favorites. Prizes card includes a small aside: keep building with Convex at the [online All Gas hackathon](https://luma.com/convex-allgas-hackathon?tk=122o36).
 
 **Judges (env-gated):**
 

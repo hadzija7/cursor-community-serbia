@@ -39,7 +39,7 @@ Living scorecard for Cursor Community Serbia. Update after each phase.
 
 | Date       | Change                          |
 |------------|----------------------------------|
-| 2026-09-10 | Hackathon final top 3: confirm/override is admin-only; cash awards on the admin pickers; public cards show place only |
+| 2026-09-10 | Hackathon final top 3: confirm/override is admin-only; no provisional top-3 cards; cash stays on Prizes only; published cards show place only |
 | 2026-09-10 | Hackathon submit: admin can close/reopen the form (`hackathon_submissions_gate`); POST returns 409 while closed |
 | 2026-09-10 | Judge scoring: explicit finish lock; peer votes/winners after all judges finish; public awards only after admin publish |
 | 2026-09-10 | Hackathon judges score without Luma check-in; gallery no longer waits on Luma; checked-in judges get scoring + community favorites |

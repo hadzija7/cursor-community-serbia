@@ -313,8 +313,6 @@
     "projectsPublished": "Results are public.",
     "projectsUnpublished": "Results are not public yet.",
     "projectsScoringLocked": "Scoring locked",
-    "projectsJudgeFinalHeading": "Final top 3 (confirmed)",
-    "projectsJudgeProvisionalHeading": "Provisional top 3 (clear averages)",
     "projectsJudgeSetTop3Hint": "Pick the final 1st, 2nd, and 3rd to resolve the tie.",
     "projectsJudgeConfirmTop3Hint": "Confirm or override the final top 3.",
     "projectsJudgePick1st": "1st place",
