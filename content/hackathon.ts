@@ -200,8 +200,26 @@ export const hackathonGuideAgenda: HackathonGuideAgendaItem[] = [
   {
     id: 'hacking',
     time: '11:00',
-    title: 'Hacking',
-    body: 'Hacking starts at 11:00. Network, build, and exchange ideas. Optional workshops run during the day — drop in if you want. Relaxed atmosphere — no pressure, just ship.',
+    title: 'Hacking Starts',
+    body: 'Hacking starts at 11:00. Network, build, and exchange ideas. Relaxed atmosphere — no pressure, just ship.',
+  },
+  {
+    id: 'workshop-mozaik',
+    time: '12:00',
+    title: 'Mozaik workshop',
+    body: 'Held by Miodrag Vilotijević.',
+  },
+  {
+    id: 'workshop-wonder',
+    time: '12:30',
+    title: 'Wonder workshop',
+    body: 'Held by Dušan Radivojević.',
+  },
+  {
+    id: 'workshop-abc',
+    time: '16:00',
+    title: 'ABC Bootcamp Experience',
+    body: 'Held by Vladimir Hristov.',
   },
   {
     id: 'demo',

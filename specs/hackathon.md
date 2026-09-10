@@ -158,7 +158,7 @@ Edit `content/hackathon.ts` for:
 - Route: `/hackathon/guide` (Guide tab)
 - Briefing: why, rules (eligibility list), day agenda, judging & winners (19 Sep + criteria), numbered guidelines timeline, optional idea sparks
 - Rules: team size 1–3; public/open-source repo; only work built during the hackathon is judged; public live demo URL required; short video demo required
-- Agenda: 10:30 intro & welcome → 11:00 hacking starts (optional workshops; relaxed network/build) → 17:00–19:00 optional demo showcase → 19:00 submission deadline (hacking ends) → 19:00–19:30 community voting → 19:30–21:00 pizza party (doors close at 9 PM)
+- Agenda: 10:30 intro & welcome → 11:00 Hacking Starts → 12:00 Mozaik workshop (Miodrag Vilotijević) → 12:30 Wonder workshop (Dušan Radivojević) → 16:00 ABC Bootcamp Experience (Vladimir Hristov) → 17:00–19:00 optional demo showcase → 19:00 submission deadline (hacking ends) → 19:00–19:30 community voting → 19:30–21:00 pizza party (doors close at 9 PM)
 - Judging: winners announced 19 September (≈ one week later); criteria are innovation (primary), working product, problem & solution clarity, execution, impact potential
 - Timeline: Stack → mentors → Grok Bot → partner MCPs → public repo (GitHub, Origin, or another platform) → deploy live demo URL → 3-minute demo → submit form by 7 PM (submit step links to `/hackathon/submit`)
 - Topics are **optional suggestions**, not required tracks — hackers may build anything. Three published verticals: FinTech agents (payments on blockchain or traditional rails), Gaming / visual & art, Personal assistant (flights + voice UX)

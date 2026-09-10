@@ -286,6 +286,9 @@ describe('hackathon sponsor stack content', () => {
     expect(hackathonGuideAgenda.map((item) => item.id)).toEqual([
       'intro',
       'hacking',
+      'workshop-mozaik',
+      'workshop-wonder',
+      'workshop-abc',
       'demo',
       'deadline',
       'voting',
@@ -297,10 +300,24 @@ describe('hackathon sponsor stack content', () => {
     })
     expect(hackathonGuideAgenda[1]).toMatchObject({
       time: '11:00',
-      title: 'Hacking',
+      title: 'Hacking Starts',
     })
     expect(hackathonGuideAgenda[1]?.body).toMatch(/starts at 11:00/)
-    expect(hackathonGuideAgenda[1]?.body.toLowerCase()).toMatch(/workshop/)
+    expect(hackathonGuideAgenda.find((item) => item.id === 'workshop-mozaik')).toMatchObject({
+      time: '12:00',
+      title: 'Mozaik workshop',
+      body: 'Held by Miodrag Vilotijević.',
+    })
+    expect(hackathonGuideAgenda.find((item) => item.id === 'workshop-wonder')).toMatchObject({
+      time: '12:30',
+      title: 'Wonder workshop',
+      body: 'Held by Dušan Radivojević.',
+    })
+    expect(hackathonGuideAgenda.find((item) => item.id === 'workshop-abc')).toMatchObject({
+      time: '16:00',
+      title: 'ABC Bootcamp Experience',
+      body: 'Held by Vladimir Hristov.',
+    })
     expect(hackathonGuideAgenda.find((item) => item.id === 'demo')?.time).toBe('17:00 – 19:00')
     expect(hackathonGuideAgenda.find((item) => item.id === 'deadline')?.time).toBe('19:00')
     expect(hackathonGuideAgenda.find((item) => item.id === 'voting')?.time).toBe('19:00 – 19:30')
