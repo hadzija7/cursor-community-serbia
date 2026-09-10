@@ -58,7 +58,8 @@
   - [x] Hackathon Overview: community partners use the same scrolling marquee as tech partners
   - [x] Hackathon community partners: added ABC BootCamps, JigJoy, Kosmonaut
   - [x] Superteam Balkan logo: transparent PNG (no black JPEG frame), sized a step above Startit (`h-10`)
-  - [x] Hackathon tech partners + Stack: Wispr Flow, Exa, Netlify, Fal.ai (confirmed credits)
+  - [x] Hackathon tech partners + Stack: Wispr Flow, Exa, Fal.ai (confirmed credits)
+  - [x] Hackathon: removed Netlify from tech partners, Stack, credits, and sponsor docs
   - [x] Wispr Flow 3 months Pro: claim via `CREDIT_CODE_WISPR` after check-in (referral URL not published in UI)
   - [x] Hackathon Stack: Convex prize-only (no Claim Credits; no participant coupon perk)
   - [x] Hackathon tech partners + Stack: Wonder (Design / UI; Pro for all participants)

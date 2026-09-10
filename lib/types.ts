@@ -120,7 +120,6 @@ export type HackathonSdlcStageId =
   | 'generate'
   | 'models'
   | 'deploy'
-  | 'ship'
 
 export interface HackathonSdlcStage {
   id: HackathonSdlcStageId
