@@ -73,7 +73,7 @@
   - [x] Hackathon Overview hero: Grok Bot peek is in-flow and compact on mobile (no text overlap)
   - [x] Hackathon sponsor form removed from Overview; `/hackathon/sponsor` redirects to `#special-thanks`; no Sponsor tab
   - [x] Hero no longer has “Sponsor event” CTA (form removed from Overview)
-  - [x] Hackathon project submit form (`/hackathon/submit`): Google auth + Luma `checked_in` gate; GitHub URL shape + demo/live URLs; upsert per email
+  - [x] Hackathon project submit form (`/hackathon/submit`): Google auth + Luma `checked_in` gate; GitHub URL shape + demo/live URLs; upsert per email; GET prefill for resubmit
   - [x] Hackathon submit: optional teammate emails (max 2; teams 1–3)
   - [x] Hackathon Overview hero + Stack use full-circle `/grokbot.svg` (same as header); hosts bio SpaceXAI ambassadors; Nick mentor bio shortened
   - [x] Hackathon Overview hero mascot is animated ink orb SVG (`/bloub-cercle-neutre-encre-anime.svg`)

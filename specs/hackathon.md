@@ -32,7 +32,7 @@ Inspired by conference landing patterns (e.g. TUM Blockchain Conference): full-w
 | `/hackathon/sponsor` | Redirects to Overview `#special-thanks` (bookmarks / `hackathon.*` `/sponsor` rewrite) |
 | `/api/hackathon/event` | GET live date/location from Luma (static fallback) |
 | `/api/hackathon/sponsor` | POST sponsorship applications |
-| `/api/hackathon/submit` | POST project submission (auth + Luma `checked_in` required; upserts one row per email) |
+| `/api/hackathon/submit` | GET existing submission for prefill; POST upsert (auth + Luma `checked_in`; GitHub URL shape only) |
 | `/api/hackathon/projects` | GET public gallery list with community favorites + viewer favorite/score state; judge aggregates gated |
 | `/api/hackathon/projects/review` | POST upsert judge score 1–10 (env-gated judge emails); response is the caller's score only |
 | `/api/hackathon/projects/favorite` | POST toggle community favorite (max 3 per signed-in user) |
@@ -233,10 +233,12 @@ Checked-in attendees submit one project for judging via `/hackathon/submit` (hea
 
 **Persistence:** table `hackathon_project_submissions` in `db/schema.sql` / `pnpm db:setup`. Columns include `teammate_emails TEXT[]` (default `{}`). One row per email (`UNIQUE(email)`); resubmit upserts (including teammates) and bumps `updated_at`.
 
+**Prefill:** `GET /api/hackathon/submit` (same auth + check-in gate) returns the caller's existing row or `null`. The Submit form loads it once and fills fields; CTA becomes **Update project** when a row exists.
+
 **Components / routes:**
 
 - `app/hackathon/submit/page.tsx` + `components/HackathonProjectSubmitForm.tsx`
-- `POST /api/hackathon/submit`
+- `GET` / `POST /api/hackathon/submit`
 - `lib/project-submission.ts`, `lib/github-repo.ts`
 
 ### Projects gallery, judging, and community votes
@@ -321,6 +323,7 @@ The app is ready for `hackathon.cursorserbia.com`. Creating the hostname is a da
 - [ ] `/hackathon/guide` shows purpose, rules, agenda, judging (19 Sep winners + criteria), guidelines, and three optional idea sparks
 - [ ] Guide submit step links to `/hackathon/submit`
 - [ ] `/hackathon/submit` shows login CTA when signed out; check-in message when registered; form when checked in
+- [ ] `/hackathon/submit` prefills from `GET /api/hackathon/submit` when a row exists; CTA says Update project
 - [ ] `POST /api/hackathon/submit` rejects unauthenticated and not-checked-in callers; upserts one row per email
 - [ ] GitHub URL must be a `github.com/owner/repo` link (shape only; no live public-repo API check)
 - [ ] `/hackathon/projects` lists submission cards (or empty state); embeds YouTube/Loom when possible
