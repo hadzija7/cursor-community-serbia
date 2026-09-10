@@ -28,7 +28,7 @@ Inspired by conference landing patterns (e.g. TUM Blockchain Conference): full-w
 | `/hackathon/stack` | Stack tab: expertise group panels + card modal |
 | `/hackathon/prizes` | Prizes tab |
 | `/hackathon/submit` | Project submission form (checked-in Google-auth hackers only) |
-| `/hackathon/projects` | Public projects gallery — cards, judge scores, community favorites |
+| `/hackathon/projects` | Public projects gallery — community leaderboard (top 3), cards, judge scores, community favorites |
 | `/hackathon/sponsor` | Redirects to Overview `#special-thanks` (bookmarks / `hackathon.*` `/sponsor` rewrite) |
 | `/api/hackathon/event` | GET live date/location from Luma (static fallback) |
 | `/api/hackathon/sponsor` | POST sponsorship applications |
@@ -58,16 +58,17 @@ When `NEXT_PUBLIC_HACKATHON_SITE_URL` is set, `/hackathon` on the main domain re
 - `components/HackathonSiteHeader.tsx` — Hackathon-only chrome and tabs (Overview / Guide / Mentors / Prizes / Stack / Submit / Projects); brand is full-circle `/grokbot.svg` mark + “Grok Bot Serbia Hackathon”
 - `components/HackathonGuide.tsx` — Purpose, rules, agenda, judging & criteria, guidelines, and optional idea sparks
 - `components/HackathonProjectSubmitForm.tsx` — Project submission form (login / check-in gates + fields)
-- `components/HackathonProjectsGallery.tsx` — Gallery list, favorite/score actions, empty + preview states
+- `components/HackathonProjectsGallery.tsx` — Gallery list, community leaderboard, favorite/score actions, empty + preview states
 - `components/HackathonProjectCard.tsx` — Project card (embed, live/GitHub links, aggregates, controls)
+- `components/HackathonCommunityLeaderboard.tsx` — Top 3 by community favorite counts
 - `components/HackathonPeople.tsx` — Mentor, host, and judge cards (`/hackathon/mentors`)
 - `middleware.ts` — Subdomain rewrite + optional main-host redirect
 - `lib/hackathon-site.ts` — Host detection and public hrefs
-- `lib/hackathon-checkin.ts` — Shared Luma `checked_in` gate (credit claims + project submit)
+- `lib/hackathon-checkin.ts` — Shared Luma `checked_in` gate (credit claims + project submit + community favorites)
 - `lib/hackathon-judges.ts` — Parse `HACKATHON_JUDGE_EMAILS` and gate judge scoring
 - `lib/github-repo.ts` — GitHub URL parse + public-repo check via unauthenticated API
 - `lib/project-submission.ts` — Field validation for project submissions
-- `lib/project-gallery.ts` — Score bounds, favorite cap, average aggregate
+- `lib/project-gallery.ts` — Score bounds, favorite cap, average aggregate, community leaderboard ranking
 - `lib/demo-embed.ts` — YouTube / Loom embed resolution for demo recordings
 - `components/HackathonHero.tsx` — Full-width hero with date/location/duration cards and CTAs; animated ink Grok Bot orb (`/bloub-cercle-neutre-encre-anime.svg` via `mascotPeekImage`) sits under the tagline on mobile and beside the title from `sm` up
 - `components/HackathonHighlights.tsx` — Stat-style highlight grid (TUM-inspired)
@@ -94,7 +95,7 @@ When `NEXT_PUBLIC_HACKATHON_SITE_URL` is set, `/hackathon` on the main domain re
 - Table: `hackathon_sponsor_applications` in `db/schema.sql`
 - Table: `hackathon_project_submissions` in `db/schema.sql` (one row per attendee email; upsert on resubmit)
 - Table: `hackathon_project_reviews` — one score (1–10) per judge email per submission (`UNIQUE(judge_email, submission_id)`)
-- Table: `hackathon_project_favorites` — community favorites (`UNIQUE(user_email, submission_id)`); API enforces max 3 per user
+- Table: `hackathon_project_favorites` — community favorites (`UNIQUE(user_email, submission_id)`); API enforces max 3 per checked-in user + Luma check-in gate
 - Env: `POSTGRES_URL` or `DATABASE_URL`
 
 ### Webhook
@@ -252,15 +253,23 @@ Public gallery at `/hackathon/projects` (header **Projects** tab). Anyone can br
 
 **Community favorites:**
 
-- Any signed-in user can favorite / unfavorite via `POST /api/hackathon/projects/favorite`
-- Hard cap: **3 favorites per user** across all projects; a 4th returns `409` with `code: FAVORITE_CAP` and a clear message
-- Unauthenticated visitors see the gallery plus a login CTA for voting
+- Checked-in, signed-in users can favorite / unfavorite via `POST /api/hackathon/projects/favorite`
+- Requires Google login **and** Luma `checked_in` (same gate as submit / credit claims via `assertCheckedIn`); otherwise `403` with `code: NOT_CHECKED_IN`
+- Hard cap: **3 favorites per user** across all projects; enforced in the UI (client pre-check) and atomically in Postgres (`pg_advisory_xact_lock` + conditional `INSERT`); a 4th returns `409` with `code: FAVORITE_CAP` and a clear message
+- Unauthenticated visitors see the gallery plus a login CTA for voting; signed-in but not checked-in users see a check-in message
+
+**Community leaderboard (Projects page):**
+
+- Shows the **top 3** projects by community favorite count (real aggregates from `hackathon_project_favorites`, not mock data)
+- Each slot shows project title + vote count
+- Tie-break when counts are equal: **earlier `submitted_at`**, then **title A–Z** (fills exactly 3 slots; documented in UI copy)
+- Helper: `rankCommunityLeaderboard` in `lib/project-gallery.ts`; UI: `components/HackathonCommunityLeaderboard.tsx`
 
 **Local UI preview (dev only):** `/hackathon/projects?preview=1` loads a single official fixture card (Cursor Serbia Community) without Postgres; add `&judge=1` to mock judge score controls. Prefer live DB data when available — do not add mock submissions to the fixture list.
 
 **Components / routes:**
 
-- `app/hackathon/projects/page.tsx` + `components/HackathonProjectsGallery.tsx` + `components/HackathonProjectCard.tsx`
+- `app/hackathon/projects/page.tsx` + `components/HackathonProjectsGallery.tsx` + `components/HackathonProjectCard.tsx` + `components/HackathonCommunityLeaderboard.tsx`
 - `GET /api/hackathon/projects`, `POST /api/hackathon/projects/review`, `POST /api/hackathon/projects/favorite`
 - `lib/hackathon-judges.ts`, `lib/project-gallery.ts`, `lib/demo-embed.ts`
 
@@ -295,8 +304,10 @@ The app is ready for `hackathon.cursorserbia.com`. Creating the hostname is a da
 - [ ] `POST /api/hackathon/submit` rejects unauthenticated and not-checked-in callers; upserts one row per email
 - [ ] GitHub URL must be a public repo (shape + API check)
 - [ ] `/hackathon/projects` lists submission cards (or empty state); embeds YouTube/Loom when possible
+- [ ] `/hackathon/projects` shows community leaderboard top 3 by favorite count (ties: earlier submit, then title)
 - [ ] Judge score controls only for emails in `HACKATHON_JUDGE_EMAILS`; upsert 1–10; average shown publicly
-- [ ] Signed-in users can favorite up to 3 projects; 4th returns clear cap error
+- [ ] Checked-in users can favorite up to 3 projects; 4th blocked in UI and returns clear API cap error
+- [ ] Favoriting requires Luma check-in (403 when registered / not found)
 - [ ] `/hackathon/sponsor` redirects to Overview `#special-thanks`
 - [ ] Overview `#special-thanks` shows Startit (hosting) and Superteam Balkan (community support) with logos
 - [ ] `http://hackathon.localhost:<port>/` rewrites to the Overview tab

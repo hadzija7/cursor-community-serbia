@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server'
 import { auth } from '@/lib/auth'
 import { getDb } from '@/lib/db'
 import { isHackathonJudge } from '@/lib/hackathon-judges'
-import { averageJudgeScore } from '@/lib/project-gallery'
+import { averageJudgeScore, MAX_FAVORITES_PER_USER } from '@/lib/project-gallery'
 
 export const dynamic = 'force-dynamic'
 
@@ -86,7 +86,7 @@ export async function GET() {
           email: viewerEmail,
           isJudge: viewerIsJudge,
           favoriteCount: 0,
-          maxFavorites: 3,
+          maxFavorites: MAX_FAVORITES_PER_USER,
         },
       })
     }
@@ -170,7 +170,7 @@ export async function GET() {
         email: viewerEmail,
         isJudge: viewerIsJudge,
         favoriteCount: myFavoriteCount,
-        maxFavorites: 3,
+        maxFavorites: MAX_FAVORITES_PER_USER,
       },
     })
   } catch (err) {

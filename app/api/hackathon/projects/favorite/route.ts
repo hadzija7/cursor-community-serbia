@@ -1,6 +1,7 @@
 import { NextResponse, type NextRequest } from 'next/server'
 import { auth } from '@/lib/auth'
 import { getDb } from '@/lib/db'
+import { assertCheckedIn } from '@/lib/hackathon-checkin'
 import {
   MAX_FAVORITES_PER_USER,
   favoriteCapMessage,
@@ -16,7 +17,8 @@ function toError(message: string, status: number, extra?: Record<string, unknown
  * Toggle a community favorite on a submission.
  * Body: { submissionId: string, favorited?: boolean }
  * When `favorited` is omitted, toggles the current state.
- * Hard cap: MAX_FAVORITES_PER_USER (3) per signed-in user.
+ * Requires Google sign-in + Luma check-in.
+ * Hard cap: MAX_FAVORITES_PER_USER (3) per checked-in user.
  */
 export async function POST(request: NextRequest) {
   const session = await auth()
@@ -42,6 +44,26 @@ export async function POST(request: NextRequest) {
 
   if (!submissionId) {
     return toError('submissionId is required.', 400)
+  }
+
+  const denied = await assertCheckedIn(
+    email,
+    'Check in at the event first before favoriting projects',
+  )
+  if (denied) {
+    // Normalize assertCheckedIn payload to gallery `{ ok, message, error }` shape.
+    const deniedBody = (await denied.json()) as {
+      error?: string
+      lumaStatus?: string
+    }
+    return toError(
+      deniedBody.error ?? 'Check in at the event first before favoriting projects',
+      denied.status,
+      {
+        code: denied.status === 503 ? 'CHECKIN_UNAVAILABLE' : 'NOT_CHECKED_IN',
+        lumaStatus: deniedBody.lumaStatus,
+      },
+    )
   }
 
   const db = getDb()
@@ -113,6 +135,8 @@ export async function POST(request: NextRequest) {
 
     // Atomic cap enforcement: advisory lock + conditional INSERT in one statement
     // so concurrent requests cannot race past MAX_FAVORITES_PER_USER.
+    // Outer table COUNT shares the statement snapshot and omits the new row;
+    // add COUNT(ins) so favorite_count includes the just-inserted favorite.
     const insertRows = await db`
       WITH lock AS (
         SELECT pg_advisory_xact_lock(hashtext(${email}))

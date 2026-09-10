@@ -53,6 +53,7 @@
   - [x] Hacker Google auth + Luma check-in status; claim shared env codes + unique Cursor referral pool
   - [x] Hackathon project submissions (`/hackathon/submit`) for checked-in Google users
   - [x] Hackathon projects gallery + judge scores + community favorites (`/hackathon/projects`)
+  - [x] Hackathon Projects: community leaderboard (top 3 by favorite count); favorites require Luma check-in; max 3 enforced UI + API
   - [x] Hackathon Overview: community partners band (Startit, Superteam Balkan) below sponsors
   - [x] Hackathon: tech companies labeled Tech partners (vs Community partners); Become a sponsor removed from Overview
   - [x] Hackathon Overview: Special thanks section (Startit hosting, Superteam Balkan community support) replaces become-a-sponsor form

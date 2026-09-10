@@ -47,6 +47,7 @@ Living scorecard for Cursor Community Serbia. Update after each phase.
 | 2026-09-09 | Hackathon Stack: Render promo credits claimable via `CREDIT_CODE_RENDER` after check-in; redeem at dashboard.render.com Billing → Credit Balance (code never in repo) |
 | 2026-09-08 | Hackathon mentors: added Alexandra Borisova (SRE & Infra Leader; Typeable; AWS/K8s/observability; photo `public/images/hackathon/alexandra-borisova.jpg`, center crop; LinkedIn `princessfruittt`) |
 | 2026-09-09 | Hackathon mentors: added Dušan Radivojević (Head of AI & Platform, Wonder; AI-native design platform bio; ask about design and AI; photo `dusan-radivojevic.jpg`; X `radivojevic_1`, LinkedIn `dusan-g-radivojevic`) |
+| 2026-09-10 | Hackathon Projects: community leaderboard top 3 by real favorite counts (tie-break: earlier submit, then title); favorites require Luma check-in; fixed favoriteCount double-count after insert; client + API max-3 cap |
 | 2026-09-09 | Hackathon Guide agenda: intro & welcome moved to 10:30; hacking starts at 11:00 |
 | 2026-09-09 | Hackathon mentors: Miodrag Vilotijević bio → CEO/Mozaik open-source runtime; ask about code quality, startup insights, product positioning |
 | 2026-09-08 | Hackathon Judges: published Marija Mladenović on `/hackathon/mentors` (lead product designer & angel investor; Solflare; photo `public/images/hackathon/marija-mladenovic.jpg`; X `MarijaHolt`, LinkedIn `marijamladenovic`) |
