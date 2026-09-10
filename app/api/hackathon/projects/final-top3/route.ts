@@ -89,15 +89,21 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // Replace the singleton final ranking in one transaction-ish sequence.
-    await db`DELETE FROM hackathon_judge_final_top3`
-
-    for (const place of check.places) {
-      await db`
-        INSERT INTO hackathon_judge_final_top3 (place, submission_id, set_by_email)
-        VALUES (${place.place}, ${place.submissionId}::uuid, ${email})
-      `
-    }
+    // Replace the singleton final ranking in one statement so Neon HTTP
+    // cannot leave a partial ranking after DELETE (or interleave concurrent saves).
+    const first = check.places[0]!
+    const second = check.places[1]!
+    const third = check.places[2]!
+    await db`
+      WITH deleted AS (
+        DELETE FROM hackathon_judge_final_top3
+      )
+      INSERT INTO hackathon_judge_final_top3 (place, submission_id, set_by_email)
+      VALUES
+        (${first.place}, ${first.submissionId}::uuid, ${email}),
+        (${second.place}, ${second.submissionId}::uuid, ${email}),
+        (${third.place}, ${third.submissionId}::uuid, ${email})
+    `
 
     const top3 = check.places.map((place) => ({
       place: place.place as JudgeAwardPlace,

@@ -311,9 +311,11 @@ export async function GET() {
     const projects: ProjectGalleryItem[] = submissions.map((row) => {
       const scores = scoresById.get(row.id) ?? []
       const awardPlace = effectiveAwards.get(row.id) ?? null
-      // Public may see award badges once there is a clear or confirmed top 3.
+      // Confirmed final top 3 stays visible even if judging later reopens
+      // (late submission / new judge). Clear auto ranking still needs allRated.
       const publicMaySeeAward =
-        awardPlace != null && (finalConfirmed || aggregate.status === 'clear') && allRated
+        awardPlace != null &&
+        (finalConfirmed || (aggregate.status === 'clear' && allRated))
 
       return {
         id: row.id,

@@ -98,10 +98,7 @@ describe('POST /api/hackathon/projects/final-top3', () => {
       .fn()
       .mockResolvedValueOnce([{ id: P1 }, { id: P2 }, { id: P3 }])
       .mockResolvedValueOnce(reviews)
-      .mockResolvedValueOnce([]) // DELETE
-      .mockResolvedValueOnce([]) // INSERT 1
-      .mockResolvedValueOnce([]) // INSERT 2
-      .mockResolvedValueOnce([]) // INSERT 3
+      .mockResolvedValueOnce([]) // atomic DELETE + INSERT CTE
     vi.spyOn(db, 'getDb').mockReturnValue(sql as unknown as ReturnType<typeof db.getDb>)
 
     const response = await POST(buildRequest({ firstId: P1, secondId: P2, thirdId: P3 }))
@@ -114,6 +111,9 @@ describe('POST /api/hackathon/projects/final-top3', () => {
     expect(body.ok).toBe(true)
     expect(body.top3.map((t) => t.place)).toEqual([1, 2, 3])
     expect(body.top3[0]?.awardLabel).toMatch(/80\.000|80,000/)
-    expect(sql).toHaveBeenCalledTimes(6)
+    expect(sql).toHaveBeenCalledTimes(3)
+    const writeSql = String(sql.mock.calls[2]?.[0]?.join?.('') ?? sql.mock.calls[2]?.[0] ?? '')
+    expect(writeSql).toMatch(/DELETE FROM hackathon_judge_final_top3/i)
+    expect(writeSql).toMatch(/INSERT INTO hackathon_judge_final_top3/i)
   })
 })

@@ -423,8 +423,10 @@ export default function HackathonProjectsGallery() {
     )
   }
 
+  // Judges/admins only — finalConfirmed must not open this panel to the public
+  // (award badges on cards already surface winners).
   const showJudgePanel =
-    isJudge || Boolean(viewer?.isAdmin) || judgePanel.canSetFinalTop3 || judgePanel.finalConfirmed
+    isJudge || Boolean(viewer?.isAdmin) || judgePanel.canSetFinalTop3
 
   return (
     <div className="space-y-6">
