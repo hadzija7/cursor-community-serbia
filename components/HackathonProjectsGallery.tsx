@@ -271,6 +271,10 @@ export default function HackathonProjectsGallery() {
       return
     }
 
+    if (lumaLoading) {
+      return
+    }
+
     if (!isCheckedIn) {
       const message = isJudge
         ? t('hackathon.projectsJudgeAlsoFavorite')
@@ -642,6 +646,10 @@ export default function HackathonProjectsGallery() {
             )
           ) : null}
         </div>
+      ) : lumaLoading ? (
+        <p className="text-sm text-cursor-text-faint">
+          {t('hackathon.projectsJudgeCheckingCheckIn')}
+        </p>
       ) : hackerStatus.status === 'error' ? (
         <div className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-cursor-border bg-cursor-surface/50 px-4 py-3">
           <p className="text-sm text-cursor-accent-red">{t('hackathon.submitStatusError')}</p>
@@ -678,6 +686,7 @@ export default function HackathonProjectsGallery() {
             isJudge={isJudge}
             isSignedIn={isSignedIn}
             canFavorite={canFavorite}
+            checkInPending={lumaLoading}
             busy={busyId !== null}
             onFavorite={onFavorite}
             onScore={onScore}

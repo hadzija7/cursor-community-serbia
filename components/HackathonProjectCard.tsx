@@ -12,6 +12,8 @@ type Props = {
   isSignedIn: boolean
   /** When false, favorite clicks show check-in / login guidance instead of voting. */
   canFavorite?: boolean
+  /** True while Luma check-in status is still loading — disable favorites without a false check-in warning. */
+  checkInPending?: boolean
   busy?: boolean
   onFavorite: (projectId: string, favorited: boolean) => Promise<void>
   onScore: (projectId: string, score: number) => Promise<void>
@@ -29,6 +31,7 @@ export default function HackathonProjectCard({
   isJudge,
   isSignedIn,
   canFavorite = isSignedIn,
+  checkInPending = false,
   busy = false,
   onFavorite,
   onScore,
@@ -45,6 +48,7 @@ export default function HackathonProjectCard({
       return
     }
     if (!canFavorite) {
+      if (checkInPending) return
       setLocalError(
         isJudge
           ? t('hackathon.projectsJudgeAlsoFavorite')
@@ -182,11 +186,11 @@ export default function HackathonProjectCard({
 
           <button
             type="button"
-            disabled={busy || (isSignedIn && !canFavorite)}
+            disabled={busy || checkInPending || (isSignedIn && !canFavorite)}
             onClick={() => void handleFavorite()}
             aria-pressed={project.favoritedByMe}
             title={
-              isSignedIn && !canFavorite
+              isSignedIn && !canFavorite && !checkInPending
                 ? isJudge
                   ? t('hackathon.projectsJudgeAlsoFavorite')
                   : t('hackathon.projectsNeedCheckIn')
@@ -216,7 +220,7 @@ export default function HackathonProjectCard({
             >
               {t('hackathon.projectsLoginToVote')}
             </button>
-          ) : !canFavorite && !isJudge ? (
+          ) : !canFavorite && !isJudge && !checkInPending ? (
             <span className="text-sm text-cursor-text-faint">
               {t('hackathon.projectsCheckInToVote')}
             </span>

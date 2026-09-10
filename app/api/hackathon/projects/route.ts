@@ -351,13 +351,20 @@ export async function GET() {
     const finalConfirmed = finalByPlace.size === 3
 
     // Effective awards: manual final wins; else clear auto top-3 once all finished.
+    // If results are published and judging later reopens (e.g. late submission),
+    // keep the clear auto ranking for public badges until an admin unpublishes.
+    const awardsAggregate =
+      resultsPublished && aggregate.status === 'incomplete'
+        ? analyzeJudgeAggregate(scoredProjects, { judgingComplete: true })
+        : aggregate
+
     const effectiveAwards = new Map<string, JudgeAwardPlace>()
     if (finalConfirmed) {
       for (const [id, place] of finalBySubmission) {
         effectiveAwards.set(id, place)
       }
-    } else if (aggregate.status === 'clear') {
-      aggregate.top3.forEach((entry, index) => {
+    } else if (awardsAggregate.status === 'clear') {
+      awardsAggregate.top3.forEach((entry, index) => {
         effectiveAwards.set(entry.id, (index + 1) as JudgeAwardPlace)
       })
     }
