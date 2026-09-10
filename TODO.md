@@ -54,7 +54,8 @@
   - [x] Hackathon project submissions (`/hackathon/submit`) for checked-in Google users
   - [x] Hackathon projects gallery + judge scores + community favorites (`/hackathon/projects`)
   - [x] Hackathon Overview: community partners band (Startit, Superteam Balkan) below sponsors
-  - [x] Hackathon: tech companies labeled Tech partners (vs Community partners); Become a sponsor unchanged
+  - [x] Hackathon: tech companies labeled Tech partners (vs Community partners); Become a sponsor removed from Overview
+  - [x] Hackathon Overview: Special thanks section (Startit hosting, Superteam Balkan community support) replaces become-a-sponsor form
   - [x] Hackathon Overview: community partners use the same scrolling marquee as tech partners
   - [x] Hackathon community partners: added ABC BootCamps, JigJoy, Kosmonaut
   - [x] Superteam Balkan logo: transparent PNG (no black JPEG frame), sized a step above Startit (`h-10`)
@@ -68,8 +69,8 @@
   - [x] ABC BootCamps logo: official overlapping ABC + BOOTCAMP mark on white pad (`h-10`)
   - [x] Hackathon header brand is Grok Bot Serbia Hackathon (mascot + title); marketing copy prioritizes Grok Bot
   - [x] Hackathon Overview hero: Grok Bot peek is in-flow and compact on mobile (no text overlap)
-  - [x] Hackathon sponsor form lives on Overview (`#become-a-sponsor`); `/hackathon/sponsor` redirects there; no Sponsor tab
-  - [x] Hero "Sponsor event" always scrolls to Overview `#become-a-sponsor` (same-page hash + `scroll-mt-24`)
+  - [x] Hackathon sponsor form removed from Overview; `/hackathon/sponsor` redirects to `#special-thanks`; no Sponsor tab
+  - [x] Hero no longer has “Sponsor event” CTA (form removed from Overview)
   - [x] Hackathon project submit form (`/hackathon/submit`): Google auth + Luma `checked_in` gate; public GitHub + demo/live URLs; upsert per email
   - [x] Hackathon submit: optional teammate emails (max 2; teams 1–3)
   - [x] Hackathon Overview hero + Stack use full-circle `/grokbot.svg` (same as header); hosts bio SpaceXAI ambassadors; Nick mentor bio shortened
