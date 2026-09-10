@@ -52,7 +52,7 @@ export type ProjectGalleryItem = {
   canEditScore: boolean
   /** Final confirmed place 1–3, or clear auto top-3 once judging complete. */
   awardPlace: JudgeAwardPlace | null
-  /** Convex credit label for awardPlace when set. */
+  /** Convex cash label for awardPlace when set. Used by the judge panel, not project cards. */
   awardLabel: string | null
 }
 

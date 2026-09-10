@@ -57,6 +57,7 @@
   - [x] Hackathon Projects: community leaderboard (top 3 by favorite count); favorites require Luma check-in; max 3 enforced UI + API
   - [x] Hackathon Projects: private per-judge 1–10 scores; save updates in place (no gallery reload); all-rated aggregate top 3; tie → needs decision + final top 3 override; Convex 80k/50k/20k awards
   - [x] Hackathon judges: mark scoring finished to freeze ballots; after every judge finishes, panel sees winners + peer votes; public awards only after admin publish
+  - [x] Hackathon final top 3: confirm/override is admin-only (cash shown on the admin pickers); public cards show 1st / 2nd / 3rd place only
   - [x] Hackathon judges: score all projects without Luma check-in; checked-in judges also get community favorites (max 3)
   - [x] Hackathon Overview: community partners band (Startit, Superteam Balkan) below sponsors
   - [x] Hackathon: tech companies labeled Tech partners (vs Community partners); Become a sponsor removed from Overview

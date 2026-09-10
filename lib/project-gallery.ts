@@ -332,7 +332,7 @@ export function analyzeJudgeAggregate(
     status: 'needs_decision',
     ranked,
     reason:
-      'Average scores are tied in a way that blocks a unique 1st / 2nd / 3rd. Judges must set the final top 3.',
+      'Average scores are tied in a way that blocks a unique 1st / 2nd / 3rd. An admin must set the final top 3.',
   }
 }
 

@@ -51,9 +51,18 @@ describe('POST /api/hackathon/projects/final-top3', () => {
     expect(response.status).toBe(403)
   })
 
-  it('rejects duplicate place ids', async () => {
+  it('returns 403 for a judge who is not an admin', async () => {
     vi.mocked(auth).mockResolvedValue({
       user: { email: 'judge@example.com' },
+      expires: '2099-01-01',
+    })
+    const response = await POST(buildRequest({ firstId: P1, secondId: P2, thirdId: P3 }))
+    expect(response.status).toBe(403)
+  })
+
+  it('rejects duplicate place ids', async () => {
+    vi.mocked(auth).mockResolvedValue({
+      user: { email: 'admin@example.com' },
       expires: '2099-01-01',
     })
     const response = await POST(buildRequest({ firstId: P1, secondId: P1, thirdId: P3 }))
@@ -86,7 +95,7 @@ describe('POST /api/hackathon/projects/final-top3', () => {
 
   it('saves final top 3 when all judges have rated', async () => {
     vi.mocked(auth).mockResolvedValue({
-      user: { email: 'Judge@Example.com' },
+      user: { email: 'Admin@Example.com' },
       expires: '2099-01-01',
     })
 

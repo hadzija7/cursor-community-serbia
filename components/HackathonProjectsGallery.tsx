@@ -145,7 +145,7 @@ function previewJudgePanel(
           ]
         : null,
     needsDecision: false,
-    canSetFinalTop3: allFinished,
+    canSetFinalTop3: asAdmin && allFinished,
     finalConfirmed: false,
   }
 }

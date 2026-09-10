@@ -67,7 +67,7 @@ describe('parseJudgeEmails / isHackathonJudge', () => {
     expect(isHackathonAdmin('admin@example.com')).toBe(true)
     expect(isHackathonAdmin('judge@example.com')).toBe(false)
     expect(canManageJudgeFinalTop3('admin@example.com')).toBe(true)
-    expect(canManageJudgeFinalTop3('judge@example.com')).toBe(true)
+    expect(canManageJudgeFinalTop3('judge@example.com')).toBe(false)
     expect(canManageJudgeFinalTop3('hacker@example.com')).toBe(false)
   })
 })

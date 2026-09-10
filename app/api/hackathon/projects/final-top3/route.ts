@@ -20,8 +20,8 @@ type LockRow = { judge_email: string }
 
 /**
  * Confirm or override the final judge-panel top 3.
- * Allowed for HACKATHON_JUDGE_EMAILS or HACKATHON_ADMIN_EMAILS only after
- * every configured judge has marked scoring finished.
+ * Allowed for HACKATHON_ADMIN_EMAILS only after every configured judge
+ * has marked scoring finished.
  */
 export async function POST(request: NextRequest) {
   const session = await auth()
@@ -31,7 +31,7 @@ export async function POST(request: NextRequest) {
 
   const email = session.user.email.trim().toLowerCase()
   if (!canManageJudgeFinalTop3(email)) {
-    return toError('Only judges or admins can set the final top 3.', 403)
+    return toError('Only admins can set the final top 3.', 403)
   }
 
   let payload: unknown

@@ -39,7 +39,7 @@ Inspired by conference landing patterns (e.g. TUM Blockchain Conference): full-w
 | `/api/hackathon/projects/finish-scoring` | POST judge marks own scoring finished; admin can reopen `{ finished: false, judgeEmail }` |
 | `/api/hackathon/projects/publish-results` | POST admin publishes/unpublishes judge winners on the public gallery |
 | `/api/hackathon/projects/favorite` | POST toggle community favorite (max 3 per signed-in user) |
-| `/api/hackathon/projects/final-top3` | POST confirm/override final judge top 3 (judges/admins; only after all judges finish) |
+| `/api/hackathon/projects/final-top3` | POST confirm/override final judge top 3 (admins only; only after all judges finish) |
 | `/api/auth/[...nextauth]` | Google OAuth sign-in/sign-out (NextAuth.js v5) |
 | `/api/hackathon/attendee-status` | GET Luma guest status for authenticated user |
 | `/api/hackathon/claim-credits` | POST claim sponsor credit code (requires check-in) |
@@ -65,12 +65,12 @@ When `NEXT_PUBLIC_HACKATHON_SITE_URL` is set, `/hackathon` on the main domain re
 - `components/HackathonProjectsGallery.tsx` — Gallery list, community leaderboard, judge panel, favorite/score actions, empty + preview states
 - `components/HackathonProjectCard.tsx` — Project card (embed, live/GitHub links, private my-score / award labels, controls)
 - `components/HackathonCommunityLeaderboard.tsx` — Top 3 by community favorite counts
-- `components/HackathonJudgePanel.tsx` — Judge progress, aggregate top 3 / needs-decision, final top-3 confirm
+- `components/HackathonJudgePanel.tsx` — Judge progress, aggregate top 3 / needs-decision, admin-only final top-3 confirm
 - `components/HackathonPeople.tsx` — Mentor, host, and judge cards (`/hackathon/mentors`)
 - `middleware.ts` — Subdomain rewrite + optional main-host redirect
 - `lib/hackathon-site.ts` — Host detection and public hrefs
 - `lib/hackathon-checkin.ts` — Shared Luma `checked_in` gate (credit claims + project submit + community favorites)
-- `lib/hackathon-judges.ts` — Parse `HACKATHON_JUDGE_EMAILS` / `HACKATHON_ADMIN_EMAILS` and gate scoring + final top 3
+- `lib/hackathon-judges.ts` — Parse `HACKATHON_JUDGE_EMAILS` / `HACKATHON_ADMIN_EMAILS` and gate scoring + admin-only final top 3
 - `lib/github-repo.ts` — GitHub URL parse (`github.com/owner/repo` shape); optional public-repo helper unused by submit
 - `lib/project-submission.ts` — Field validation for project submissions
 - `lib/project-gallery.ts` — Score bounds, favorite cap, average aggregate, community leaderboard, judge all-rated / top-3 / Convex awards
@@ -268,7 +268,7 @@ Public gallery at `/hackathon/projects` (header **Projects** tab). Anyone can br
 
 - While any judge is still scoring, each judge only receives **their own** `myScore` — never peer scores or averages
 - After **every** configured judge has marked scoring finished, judges and admins see winners (averages / top 3) **and** a per-judge vote table
-- Public gallery JSON omits peer votes, averages, and award badges until an admin publishes (`POST /api/hackathon/projects/publish-results`). The judge panel stays empty for non-judges. After publish, public cards show winner badges only — not how each judge voted.
+- Public gallery JSON omits peer votes, averages, and place badges until an admin publishes (`POST /api/hackathon/projects/publish-results`). The judge panel stays empty for non-judges. After publish, public cards show **1st / 2nd / 3rd place** only — not cash amounts or how each judge voted.
 
 **All-rated vs all-finished:** all-rated = every judge scored every project. All-finished = all-rated **and** every judge has a lock row. Revealing votes and setting final top 3 require all-finished.
 
@@ -276,11 +276,11 @@ Public gallery at `/hackathon/projects` (header **Projects** tab). Anyone can br
 
 **Clear unique top 3:** `avg(1st) > avg(2nd) > avg(3rd)` and (no 4th project or `avg(3rd) > avg(4th)`). When clear after all-finished, judges see a provisional top 3. Title / submission time are **never** used to invent final placement.
 
-**Ties:** if averages do not yield a unique 1st/2nd/3rd, status is `needs_decision` — no auto tie-break. Judges (`HACKATHON_JUDGE_EMAILS`) or admins (`HACKATHON_ADMIN_EMAILS`) set final places via `POST /api/hackathon/projects/final-top3` into `hackathon_judge_final_top3` (only after all-finished).
+**Ties:** if averages do not yield a unique 1st/2nd/3rd, status is `needs_decision` — no auto tie-break. Only admins (`HACKATHON_ADMIN_EMAILS`) set final places via `POST /api/hackathon/projects/final-top3` into `hackathon_judge_final_top3` (only after all-finished). Judges see the needs-decision state but cannot confirm or override.
 
 **Publishing:** only `HACKATHON_ADMIN_EMAILS`. Requires all-finished and a unique top 3 (clear averages or a saved final). Until published, winning cards stay unmarked for the public. Unpublish hides badges again.
 
-**Convex cash awards (final top 3):** 1st **80.000 RSD**, 2nd **50.000 RSD**, 3rd **20.000 RSD** — cash prize split across overall winners by judge panel. Shown on Prizes (`Overall winners (judge panel)`), the judge panel after all-finished, and on public cards only after publish. Not claimable `CREDIT_CODE_*` promo codes. Separate from community favorites. Prizes card includes a small aside: keep building with Convex at the [online All Gas hackathon](https://luma.com/convex-allgas-hackathon?tk=122o36).
+**Convex cash awards (final top 3):** 1st **80.000 RSD**, 2nd **50.000 RSD**, 3rd **20.000 RSD** — cash prize split across overall winners by judge panel. Shown on Prizes (`Overall winners (judge panel)`) and on the admin confirm/override + judge-panel top 3 after all-finished. Public project cards show place only (1st / 2nd / 3rd), not the cash amount. Not claimable `CREDIT_CODE_*` promo codes. Separate from community favorites. Prizes card includes a small aside: keep building with Convex at the [online All Gas hackathon](https://luma.com/convex-allgas-hackathon?tk=122o36).
 
 **Judges (env-gated):**
 
@@ -357,7 +357,7 @@ The app is ready for `hackathon.cursorserbia.com`. Creating the hostname is a da
 - [ ] Judge score controls only for emails in `HACKATHON_JUDGE_EMAILS`; upsert 1–10; peers never see each other’s scores until every judge marks scoring finished; Luma check-in is **not** required to score
 - [ ] After scoring every project, a judge can mark scoring finished; further score changes return 409
 - [ ] When every judge has finished, judges/admins see winners and a per-judge vote table; the public gallery does not
-- [ ] Admin publish shows Convex award badges on public cards; unpublish hides them again
+- [ ] Admin publish shows 1st / 2nd / 3rd place badges on public cards (no cash amounts); unpublish hides them again
 - [ ] A checked-in judge can both score (judge) and favorite (community, max 3)
 - [ ] `/hackathon/prizes` Convex track shows cash 80 / 50 / 20 RSD plus a small All Gas hackathon link
 - [ ] Checked-in users can favorite up to 3 projects; 4th blocked in UI and returns clear API cap error

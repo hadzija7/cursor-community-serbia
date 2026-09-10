@@ -4,6 +4,7 @@ import { useMemo, useState } from 'react'
 import type { JudgePanelSummary } from '@/app/api/hackathon/projects/route'
 import type { ProjectGalleryItem } from '@/app/api/hackathon/projects/route'
 import { useI18n } from '@/lib/i18n'
+import { formatConvexTop3Cash } from '@/lib/project-gallery'
 
 type Props = {
   panel: JudgePanelSummary
@@ -229,7 +230,7 @@ export default function HackathonJudgePanel({
         </div>
       ) : null}
 
-      {panel.canSetFinalTop3 ? (
+      {isAdmin && panel.canSetFinalTop3 ? (
         <div className="space-y-3 border-t border-cursor-border pt-4">
           <p className="text-sm text-cursor-text-secondary">
             {panel.needsDecision
@@ -246,6 +247,9 @@ export default function HackathonJudgePanel({
             ).map(([place, value, setter, label]) => (
               <label key={place} className="flex flex-col gap-1 text-xs text-cursor-text-muted">
                 {label}
+                <span className="text-sm font-medium text-cursor-accent-orange">
+                  {formatConvexTop3Cash(place)}
+                </span>
                 <select
                   value={value}
                   onChange={(e) => setter(e.target.value)}

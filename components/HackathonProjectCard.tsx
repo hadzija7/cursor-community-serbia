@@ -5,6 +5,25 @@ import { ExternalLink, Github, Heart, Star } from 'lucide-react'
 import { resolveDemoEmbed } from '@/lib/demo-embed'
 import type { ProjectGalleryItem } from '@/app/api/hackathon/projects/route'
 import { useI18n } from '@/lib/i18n'
+import type { JudgeAwardPlace } from '@/lib/project-gallery'
+
+function awardPlaceLabel(
+  place: JudgeAwardPlace,
+  t: (key: string) => string,
+): string {
+  switch (place) {
+    case 1:
+      return t('hackathon.projectsJudgePick1st')
+    case 2:
+      return t('hackathon.projectsJudgePick2nd')
+    case 3:
+      return t('hackathon.projectsJudgePick3rd')
+    default: {
+      const _exhaustive: never = place
+      return _exhaustive
+    }
+  }
+}
 
 type Props = {
   project: ProjectGalleryItem
@@ -154,12 +173,9 @@ export default function HackathonProjectCard({
         </div>
 
         <div className="mt-auto flex flex-wrap items-center gap-3 border-t border-cursor-border pt-4">
-          {project.awardPlace != null && project.awardLabel ? (
-            <div className="w-full rounded-lg border border-cursor-accent-orange/40 bg-cursor-accent-orange/10 px-3 py-2 text-sm text-cursor-accent-orange">
-              <span className="font-semibold">
-                {t('hackathon.projectsAwardPlace').replace('{place}', String(project.awardPlace))}
-              </span>
-              <span className="text-cursor-text-secondary"> · {project.awardLabel}</span>
+          {project.awardPlace != null ? (
+            <div className="w-full rounded-lg border border-cursor-accent-orange/40 bg-cursor-accent-orange/10 px-3 py-2 text-sm font-semibold text-cursor-accent-orange">
+              {awardPlaceLabel(project.awardPlace, t)}
             </div>
           ) : null}
 

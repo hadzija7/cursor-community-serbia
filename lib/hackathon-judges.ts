@@ -38,7 +38,7 @@ export function isHackathonAdmin(email: string | null | undefined): boolean {
   return getAdminEmails().has(email.trim().toLowerCase())
 }
 
-/** Judges and admins may manage final top-3 after voting is complete. */
+/** Only admins may confirm or override the final top 3 after voting is complete. */
 export function canManageJudgeFinalTop3(email: string | null | undefined): boolean {
-  return isHackathonJudge(email) || isHackathonAdmin(email)
+  return isHackathonAdmin(email)
 }
