@@ -1,7 +1,7 @@
 import { NextResponse, type NextRequest } from 'next/server'
 import { auth } from '@/lib/auth'
 import { getDb } from '@/lib/db'
-import { assertPublicGitHubRepo } from '@/lib/github-repo'
+import { parseGitHubRepoUrl } from '@/lib/github-repo'
 import { assertCheckedIn } from '@/lib/hackathon-checkin'
 import {
   type ProjectSubmissionInput,
@@ -43,34 +43,12 @@ export async function POST(request: NextRequest) {
   )
   if (denied) return denied
 
-  const githubCheck = await assertPublicGitHubRepo(validated.data.githubUrl)
-  if (!githubCheck.ok) {
-    switch (githubCheck.reason) {
-      case 'invalid_url':
-        return toError(
-          'GitHub URL must be a public repository (https://github.com/owner/repo).',
-          400,
-        )
-      case 'not_found':
-        return toError(
-          'GitHub repository not found. Make sure the repo exists and is public.',
-          400,
-        )
-      case 'private':
-        return toError(
-          'GitHub repository must be public / open-source for judging.',
-          400,
-        )
-      case 'api_error':
-        return toError(
-          'Could not verify the GitHub repository right now. Try again in a moment.',
-          502,
-        )
-      default: {
-        const _exhaustive: never = githubCheck.reason
-        return toError(`Unexpected GitHub check failure: ${_exhaustive}`, 500)
-      }
-    }
+  const parsedGithub = parseGitHubRepoUrl(validated.data.githubUrl)
+  if (!parsedGithub) {
+    return toError(
+      'GitHub URL must be a repository link (https://github.com/owner/repo).',
+      400,
+    )
   }
 
   const db = getDb()
@@ -95,7 +73,7 @@ export async function POST(request: NextRequest) {
         ${name},
         ${validated.data.projectTitle},
         ${validated.data.projectDescription},
-        ${githubCheck.canonicalUrl},
+        ${parsedGithub.canonicalUrl},
         ${validated.data.demoRecordingUrl},
         ${validated.data.liveDemoUrl},
         ${validated.data.teammateEmails}

@@ -9,19 +9,10 @@ vi.mock('@/lib/hackathon-checkin', () => ({
   assertCheckedIn: vi.fn(),
 }))
 
-vi.mock('@/lib/github-repo', async () => {
-  const actual = await vi.importActual<typeof import('@/lib/github-repo')>('@/lib/github-repo')
-  return {
-    ...actual,
-    assertPublicGitHubRepo: vi.fn(),
-  }
-})
-
 import { auth } from '@/lib/auth'
 import { POST } from '@/app/api/hackathon/submit/route'
 import * as db from '@/lib/db'
 import { assertCheckedIn } from '@/lib/hackathon-checkin'
-import { assertPublicGitHubRepo } from '@/lib/github-repo'
 
 const ORIGINAL_ENV = process.env
 
@@ -47,10 +38,6 @@ describe('POST /api/hackathon/submit', () => {
     vi.clearAllMocks()
     vi.mocked(auth).mockResolvedValue(null)
     vi.mocked(assertCheckedIn).mockResolvedValue(null)
-    vi.mocked(assertPublicGitHubRepo).mockResolvedValue({
-      ok: true,
-      canonicalUrl: 'https://github.com/octocat/Hello-World',
-    })
   })
 
   afterEach(() => {
@@ -112,21 +99,22 @@ describe('POST /api/hackathon/submit', () => {
     expect(body.ok).toBe(false)
   })
 
-  it('rejects when GitHub repo is not public', async () => {
+  it('rejects non-GitHub repository URLs', async () => {
     vi.mocked(auth).mockResolvedValue({
       user: { email: 'hacker@example.com' },
       expires: '2099-01-01',
     })
-    vi.mocked(assertPublicGitHubRepo).mockResolvedValue({
-      ok: false,
-      reason: 'not_found',
-    })
 
-    const response = await POST(buildRequest(validBody))
+    const response = await POST(
+      buildRequest({
+        ...validBody,
+        githubUrl: 'https://gitlab.com/octocat/Hello-World',
+      }),
+    )
     const body = (await response.json()) as { ok: boolean; message: string }
 
     expect(response.status).toBe(400)
-    expect(body.message).toMatch(/not found|public/i)
+    expect(body.message).toMatch(/github\.com\/owner\/repo/i)
   })
 
   it('upserts a valid submission for a checked-in user', async () => {

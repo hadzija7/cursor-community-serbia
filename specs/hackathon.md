@@ -68,7 +68,7 @@ When `NEXT_PUBLIC_HACKATHON_SITE_URL` is set, `/hackathon` on the main domain re
 - `lib/hackathon-site.ts` — Host detection and public hrefs
 - `lib/hackathon-checkin.ts` — Shared Luma `checked_in` gate (credit claims + project submit + community favorites)
 - `lib/hackathon-judges.ts` — Parse `HACKATHON_JUDGE_EMAILS` / `HACKATHON_ADMIN_EMAILS` and gate scoring + final top 3
-- `lib/github-repo.ts` — GitHub URL parse + public-repo check via unauthenticated API
+- `lib/github-repo.ts` — GitHub URL parse (`github.com/owner/repo` shape); optional public-repo helper unused by submit
 - `lib/project-submission.ts` — Field validation for project submissions
 - `lib/project-gallery.ts` — Score bounds, favorite cap, average aggregate, community leaderboard, judge all-rated / top-3 / Convex awards
 - `lib/demo-embed.ts` — YouTube / Loom embed resolution for demo recordings
@@ -229,7 +229,7 @@ Checked-in attendees submit one project for judging via `/hackathon/submit` (hea
 
 **Fields:** project title (short), project description (multi-line), public GitHub repo URL, demo recording URL (3–5 min helper text), live demo http(s) URL — all required. Optional **teammate emails** (max **2**; teams are 1–3 including the submitter). Empty slots allowed for solo. Server rejects more than 2, invalid emails, duplicates, and the submitter’s own email.
 
-**GitHub validation:** URL must parse as `github.com/owner/repo`; server verifies the repo is public via unauthenticated `GET https://api.github.com/repos/{owner}/{repo}` (404 / private rejected).
+**GitHub validation:** URL must parse as `github.com/owner/repo` (shape only via `parseGitHubRepoUrl`). No live GitHub API public-repo check on submit.
 
 **Persistence:** table `hackathon_project_submissions` in `db/schema.sql` / `pnpm db:setup`. Columns include `teammate_emails TEXT[]` (default `{}`). One row per email (`UNIQUE(email)`); resubmit upserts (including teammates) and bumps `updated_at`.
 
@@ -322,7 +322,7 @@ The app is ready for `hackathon.cursorserbia.com`. Creating the hostname is a da
 - [ ] Guide submit step links to `/hackathon/submit`
 - [ ] `/hackathon/submit` shows login CTA when signed out; check-in message when registered; form when checked in
 - [ ] `POST /api/hackathon/submit` rejects unauthenticated and not-checked-in callers; upserts one row per email
-- [ ] GitHub URL must be a public repo (shape + API check)
+- [ ] GitHub URL must be a `github.com/owner/repo` link (shape only; no live public-repo API check)
 - [ ] `/hackathon/projects` lists submission cards (or empty state); embeds YouTube/Loom when possible
 - [ ] `/hackathon/projects` shows community leaderboard top 3 by favorite count (ties: earlier submit, then title)
 - [ ] Judge score controls only for emails in `HACKATHON_JUDGE_EMAILS`; upsert 1–10; peers never see each other’s scores

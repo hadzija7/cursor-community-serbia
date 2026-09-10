@@ -246,7 +246,7 @@
     "submitDescriptionPlaceholder": "What you built, who it is for, and what judges should notice.",
     "submitGithubLabel": "GitHub repository",
     "submitGithubPlaceholder": "https://github.com/owner/repo",
-    "submitGithubHint": "Must be a public GitHub repository.",
+    "submitGithubHint": "Link to the project repo on GitHub (github.com/owner/repo).",
     "submitRecordingLabel": "Demo recording URL",
     "submitRecordingPlaceholder": "https://youtube.com/… or https://loom.com/…",
     "submitRecordingHint": "Link to a 3–5 minute demo (YouTube, Loom, or similar — public or unlisted).",
