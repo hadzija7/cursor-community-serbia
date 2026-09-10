@@ -13,7 +13,7 @@ import type {
 import {
   MAX_FAVORITES_PER_USER,
   favoriteCapMessage,
-  formatConvexTop3Credits,
+  formatConvexTop3Cash,
   rankCommunityLeaderboard,
 } from '@/lib/project-gallery'
 import { useHackerStatus } from '@/lib/use-hacker-status'
@@ -335,7 +335,7 @@ export default function HackathonProjectsGallery() {
           return {
             ...p,
             awardPlace,
-            awardLabel: awardPlace ? formatConvexTop3Credits(awardPlace) : null,
+            awardLabel: awardPlace ? formatConvexTop3Cash(awardPlace) : null,
           }
         }),
       )
@@ -350,7 +350,7 @@ export default function HackathonProjectsGallery() {
             title: projects.find((p) => p.id === ids.firstId)?.title ?? ids.firstId,
             averageScore: null,
             source: 'manual',
-            awardLabel: formatConvexTop3Credits(1),
+            awardLabel: formatConvexTop3Cash(1),
           },
           {
             place: 2,
@@ -358,7 +358,7 @@ export default function HackathonProjectsGallery() {
             title: projects.find((p) => p.id === ids.secondId)?.title ?? ids.secondId,
             averageScore: null,
             source: 'manual',
-            awardLabel: formatConvexTop3Credits(2),
+            awardLabel: formatConvexTop3Cash(2),
           },
           {
             place: 3,
@@ -366,7 +366,7 @@ export default function HackathonProjectsGallery() {
             title: projects.find((p) => p.id === ids.thirdId)?.title ?? ids.thirdId,
             averageScore: null,
             source: 'manual',
-            awardLabel: formatConvexTop3Credits(3),
+            awardLabel: formatConvexTop3Cash(3),
           },
         ],
       }))

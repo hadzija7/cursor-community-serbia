@@ -3,7 +3,7 @@ import { auth } from '@/lib/auth'
 import { getDb } from '@/lib/db'
 import { canManageJudgeFinalTop3, getJudgeEmails } from '@/lib/hackathon-judges'
 import {
-  formatConvexTop3Credits,
+  formatConvexTop3Cash,
   isJudgingComplete,
   validateFinalTop3Ids,
   type JudgeAwardPlace,
@@ -108,7 +108,7 @@ export async function POST(request: NextRequest) {
     const top3 = check.places.map((place) => ({
       place: place.place as JudgeAwardPlace,
       id: place.submissionId,
-      awardLabel: formatConvexTop3Credits(place.place),
+      awardLabel: formatConvexTop3Cash(place.place),
     }))
 
     return NextResponse.json({

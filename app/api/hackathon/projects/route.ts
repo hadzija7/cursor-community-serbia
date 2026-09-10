@@ -10,7 +10,7 @@ import {
 import {
   analyzeJudgeAggregate,
   averageJudgeScore,
-  formatConvexTop3Credits,
+  formatConvexTop3Cash,
   isJudgingComplete,
   MAX_FAVORITES_PER_USER,
   type JudgeAwardPlace,
@@ -290,7 +290,7 @@ export async function GET() {
             title: titleById.get(id) ?? id,
             averageScore: canSeeAggregates ? (averageById.get(id) ?? null) : null,
             source: 'manual' as const,
-            awardLabel: formatConvexTop3Credits(place),
+            awardLabel: formatConvexTop3Cash(place),
           }
         })
       } else if (aggregate.status === 'clear' && canSeeAggregates) {
@@ -302,7 +302,7 @@ export async function GET() {
             title: entry.title,
             averageScore: entry.averageScore,
             source: 'clear' as const,
-            awardLabel: formatConvexTop3Credits(place),
+            awardLabel: formatConvexTop3Cash(place),
           }
         })
       }
@@ -338,7 +338,7 @@ export async function GET() {
         awardPlace: publicMaySeeAward || canSeeAggregates ? awardPlace : null,
         awardLabel:
           (publicMaySeeAward || canSeeAggregates) && awardPlace
-            ? formatConvexTop3Credits(awardPlace)
+            ? formatConvexTop3Cash(awardPlace)
             : null,
       }
     })

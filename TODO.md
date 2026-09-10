@@ -32,7 +32,7 @@
 - [x] Hackathon date/location synced from Luma event page (`/api/hackathon/event`, static fallback)
   - [x] Hackathon sponsorship → Google Sheets via Apps Script webhook template (`scripts/hackathon-sponsor-google-sheet.gs`)
   - [x] Hackathon sponsors: added Convex to marquee
-  - [x] Hackathon prizes section above sponsors (Convex: Best app that uses Convex — 1st/2nd RSD)
+  - [x] Hackathon prizes section above sponsors (Convex: overall judge top 3 cash — 80 / 50 / 20 RSD)
   - [x] Hackathon prizes: Kosmonaut coworking for top 3 teams (15 / 10 / 5 entries, use within 3 months, claim on kosmonaut.rs)
   - [x] Hackathon sponsors: added Daytona; removed Cursor (host, not sponsor)
   - [x] Hackathon sponsor stack preview (`/hackathon/stack`): grouped cards, path, read-more

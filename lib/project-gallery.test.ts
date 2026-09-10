@@ -9,13 +9,13 @@ import {
   analyzeJudgeAggregate,
   averageJudgeScore,
   favoriteCapMessage,
-  formatConvexTop3Credits,
+  formatConvexTop3Cash,
   isJudgingComplete,
   rankCommunityLeaderboard,
   validateFinalTop3Ids,
   validateJudgeScore,
   COMMUNITY_LEADERBOARD_SIZE,
-  CONVEX_TOP3_CREDITS,
+  CONVEX_TOP3_CASH_RSD,
   MAX_FAVORITES_PER_USER,
 } from '@/lib/project-gallery'
 import { resolveDemoEmbed, toLoomEmbedUrl } from '@/lib/demo-embed'
@@ -204,13 +204,14 @@ describe('analyzeJudgeAggregate', () => {
   })
 })
 
-describe('Convex top-3 awards', () => {
-  it('uses 80k / 50k / 20k credit amounts', () => {
-    expect(CONVEX_TOP3_CREDITS[1]).toBe(80_000)
-    expect(CONVEX_TOP3_CREDITS[2]).toBe(50_000)
-    expect(CONVEX_TOP3_CREDITS[3]).toBe(20_000)
-    expect(formatConvexTop3Credits(1)).toMatch(/80/)
-    expect(formatConvexTop3Credits(1)).toMatch(/Convex credits/i)
+describe('Convex top-3 cash awards', () => {
+  it('uses 80k / 50k / 20k RSD amounts', () => {
+    expect(CONVEX_TOP3_CASH_RSD[1]).toBe(80_000)
+    expect(CONVEX_TOP3_CASH_RSD[2]).toBe(50_000)
+    expect(CONVEX_TOP3_CASH_RSD[3]).toBe(20_000)
+    expect(formatConvexTop3Cash(1)).toBe('80.000 RSD')
+    expect(formatConvexTop3Cash(2)).toBe('50.000 RSD')
+    expect(formatConvexTop3Cash(3)).toBe('20.000 RSD')
   })
 })
 

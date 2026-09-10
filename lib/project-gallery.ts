@@ -99,10 +99,10 @@ export function rankCommunityLeaderboard(
 export const JUDGE_TOP3_SIZE = 3
 
 /**
- * Convex credits for the final judge-panel top 3 (1st / 2nd / 3rd).
- * Display amounts; optional claim codes live in CREDIT_CODE_CONVEX_{1ST,2ND,3RD}.
+ * Convex cash prize for the final judge-panel top 3 (1st / 2nd / 3rd), in RSD.
+ * Display only — not claimable CREDIT_CODE_* promo codes.
  */
-export const CONVEX_TOP3_CREDITS = {
+export const CONVEX_TOP3_CASH_RSD = {
   1: 80_000,
   2: 50_000,
   3: 20_000,
@@ -110,20 +110,9 @@ export const CONVEX_TOP3_CREDITS = {
 
 export type JudgeAwardPlace = 1 | 2 | 3
 
-export const CONVEX_TOP3_CREDIT_ENV: Record<JudgeAwardPlace, string> = {
-  1: 'CREDIT_CODE_CONVEX_1ST',
-  2: 'CREDIT_CODE_CONVEX_2ND',
-  3: 'CREDIT_CODE_CONVEX_3RD',
-}
-
-export function formatConvexTop3Credits(place: JudgeAwardPlace): string {
-  const amount = CONVEX_TOP3_CREDITS[place]
-  return `${amount.toLocaleString('de-DE')} Convex credits`
-}
-
-export function getConvexTop3CreditCode(place: JudgeAwardPlace): string | null {
-  const envKey = CONVEX_TOP3_CREDIT_ENV[place]
-  return process.env[envKey]?.trim() || null
+export function formatConvexTop3Cash(place: JudgeAwardPlace): string {
+  const amount = CONVEX_TOP3_CASH_RSD[place]
+  return `${amount.toLocaleString('de-DE')} RSD`
 }
 
 export type JudgeScoredProject = {

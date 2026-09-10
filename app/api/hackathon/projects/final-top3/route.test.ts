@@ -110,10 +110,15 @@ describe('POST /api/hackathon/projects/final-top3', () => {
     expect(response.status).toBe(200)
     expect(body.ok).toBe(true)
     expect(body.top3.map((t) => t.place)).toEqual([1, 2, 3])
+<<<<<<< HEAD
     expect(body.top3[0]?.awardLabel).toMatch(/80\.000|80,000/)
     expect(sql).toHaveBeenCalledTimes(3)
     const writeSql = String(sql.mock.calls[2]?.[0]?.join?.('') ?? sql.mock.calls[2]?.[0] ?? '')
     expect(writeSql).toMatch(/DELETE FROM hackathon_judge_final_top3/i)
     expect(writeSql).toMatch(/INSERT INTO hackathon_judge_final_top3/i)
+=======
+    expect(body.top3[0]?.awardLabel).toBe('80.000 RSD')
+    expect(sql).toHaveBeenCalledTimes(6)
+>>>>>>> 13881cc (Use Convex cash RSD for judge top 3, not credits)
   })
 })
