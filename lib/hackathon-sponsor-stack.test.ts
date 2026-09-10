@@ -128,7 +128,7 @@ describe('hackathon sponsor stack content', () => {
       '20.000 RSD',
     ])
     expect(hackathonPrizes[0]?.note).toMatch(/Cash prize split/i)
-    expect(hackathonPrizes[1]?.category).toBe('Free coworking for top 3 teams')
+    expect(hackathonPrizes[1]?.category).toBe('Free coworking for top 3 teams (Community voting)')
     expect(hackathonPrizes[1]?.places.map((place) => place.amount)).toEqual([
       '15 coworking entries',
       '10 coworking entries',

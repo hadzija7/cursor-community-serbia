@@ -130,7 +130,7 @@ Edit `content/hackathon.ts` for:
 - Event title (`Grok Bot Serbia Hackathon`), tagline, `mascotImage` / `headerMark` (full-circle `/grokbot.svg`), `mascotPeekImage` (animated ink orb `/bloub-cercle-neutre-encre-anime.svg`), duration, and **Luma URL** (source of truth for live sync)
 - Static fallback `date` / `displayDate` / `location` (Belgrade, September 12, 2026 — used when Luma is unreachable)
 - Highlights grid (`hackathonStats`)
-- Prize tracks (`hackathonPrizes`: Convex cash for overall judge top 3 — 80.000 / 50.000 / 20.000 RSD; Kosmonaut coworking — 15 / 10 / 5 entries per teammate on the top 3 teams, use within 3 months, claimed on their platform; Daytona credits $3,000 / $2,000 / $1,000 plus $100 for every participant; ABC BootCamps — 50% / 40% / 30% scholarships to ABC Silicon Valley 2027)
+- Prize tracks (`hackathonPrizes`: Convex cash for overall judge top 3 — 80.000 / 50.000 / 20.000 RSD; Kosmonaut coworking (community voting) — 15 / 10 / 5 entries per teammate on the top 3 teams, use within 3 months, claimed on their platform; Daytona credits $3,000 / $2,000 / $1,000 plus $100 for every participant; ABC BootCamps — 50% / 40% / 30% scholarships to ABC Silicon Valley 2027)
 - Hacker guide (`hackathonGuidePurpose`, `hackathonGuideRulesIntro`, `hackathonGuideRules`, `hackathonGuideAgenda`, `hackathonGuideJudging`, `hackathonGuideJudgingCriteria`, `hackathonGuideSteps`, `hackathonGuideTopicsIntro`, `hackathonGuideTopics`) — source for `/hackathon/guide`
 - Mentors, hosts, and judges (`hackathonMentors`, `hackathonHosts`, `hackathonJudges`) — source for `/hackathon/mentors`
 - Tech partner logos (`hackathonSponsors`: Firecrawl, Render, Convex, Daytona, Wispr Flow, Exa, Fal.ai, Wonder, x.ai) — Overview heading is **Tech partners**
