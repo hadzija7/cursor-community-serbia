@@ -353,9 +353,17 @@ export async function GET() {
     // Effective awards: manual final wins; else clear auto top-3 once all finished.
     // If results are published and judging later reopens (e.g. late submission),
     // keep the clear auto ranking for public badges until an admin unpublishes.
+    // Only projects scored by every judge participate — a late partial average
+    // must not reshuffle or wipe published cash-prize badges.
     const awardsAggregate =
       resultsPublished && aggregate.status === 'incomplete'
-        ? analyzeJudgeAggregate(scoredProjects, { judgingComplete: true })
+        ? analyzeJudgeAggregate(
+            scoredProjects.filter(
+              (project) =>
+                (scoresById.get(project.id)?.length ?? 0) === configuredJudges.size,
+            ),
+            { judgingComplete: true },
+          )
         : aggregate
 
     const effectiveAwards = new Map<string, JudgeAwardPlace>()
