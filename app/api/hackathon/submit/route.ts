@@ -7,6 +7,18 @@ import {
   type ProjectSubmissionInput,
   validateProjectSubmissionFields,
 } from '@/lib/project-submission'
+import {
+  describeTeamConflict,
+  pickMembershipRow,
+  teamMemberEmails,
+  teamRole,
+  teammateEmailsOf,
+  teammateNamesOf,
+  teammatesForSave,
+  zipTeammateColumns,
+  type Teammate,
+  type TeamRow,
+} from '@/lib/project-team'
 
 export const dynamic = 'force-dynamic'
 
@@ -17,7 +29,9 @@ export type ExistingProjectSubmission = {
   githubUrl: string
   demoRecordingUrl: string
   liveDemoUrl: string
-  teammateEmails: string[]
+  teammates: Teammate[]
+  role: 'submitter' | 'teammate'
+  submitterName: string | null
   submittedAt: string
   updatedAt: string
 }
@@ -28,17 +42,31 @@ function toError(message: string, status: number, extra?: Record<string, unknown
 
 type SubmissionRow = {
   id: string
+  email: string
+  name: string | null
   project_title: string
   project_description: string
   github_url: string
   demo_recording_url: string
   live_demo_url: string
   teammate_emails: string[] | null
+  teammate_names: string[] | null
   submitted_at: string
   updated_at: string
 }
 
-function mapSubmission(row: SubmissionRow): ExistingProjectSubmission {
+function toTeamRow(row: SubmissionRow): TeamRow {
+  return {
+    id: row.id,
+    email: row.email,
+    name: row.name,
+    projectTitle: row.project_title,
+    githubUrl: row.github_url,
+    teammateEmails: Array.isArray(row.teammate_emails) ? row.teammate_emails : [],
+  }
+}
+
+function mapSubmission(row: SubmissionRow, viewerEmail: string): ExistingProjectSubmission {
   return {
     id: row.id,
     projectTitle: row.project_title,
@@ -46,7 +74,9 @@ function mapSubmission(row: SubmissionRow): ExistingProjectSubmission {
     githubUrl: row.github_url,
     demoRecordingUrl: row.demo_recording_url,
     liveDemoUrl: row.live_demo_url,
-    teammateEmails: Array.isArray(row.teammate_emails) ? row.teammate_emails : [],
+    teammates: zipTeammateColumns(row.teammate_emails, row.teammate_names),
+    role: teamRole(viewerEmail, row.email),
+    submitterName: row.name,
     submittedAt:
       typeof row.submitted_at === 'string'
         ? row.submitted_at
@@ -58,7 +88,18 @@ function mapSubmission(row: SubmissionRow): ExistingProjectSubmission {
   }
 }
 
-/** Prefill helper: return the caller's existing submission, or null. */
+function postgresErrorCode(err: unknown): string | null {
+  if (typeof err !== 'object' || err === null) return null
+  if ('code' in err && typeof (err as { code: unknown }).code === 'string') {
+    return (err as { code: string }).code
+  }
+  if ('cause' in err) {
+    return postgresErrorCode((err as { cause: unknown }).cause)
+  }
+  return null
+}
+
+/** Prefill helper: return the caller's team row (submitter or listed teammate), or null. */
 export async function GET() {
   const session = await auth()
   if (!session?.user?.email) {
@@ -81,23 +122,29 @@ export async function GET() {
     const rows = (await db`
       SELECT
         id,
+        email,
+        name,
         project_title,
         project_description,
         github_url,
         demo_recording_url,
         live_demo_url,
         teammate_emails,
+        teammate_names,
         submitted_at,
         updated_at
       FROM hackathon_project_submissions
       WHERE email = ${email}
-      LIMIT 1
+         OR ${email} = ANY(teammate_emails)
+      ORDER BY CASE WHEN email = ${email} THEN 0 ELSE 1 END, submitted_at ASC
+      LIMIT 2
     `) as SubmissionRow[]
 
-    const row = rows[0]
+    const row = pickMembershipRow(email, rows.map(toTeamRow))
+    const full = row ? rows.find((candidate) => candidate.id === row.id) : null
     return NextResponse.json({
       ok: true,
-      submission: row ? mapSubmission(row) : null,
+      submission: full ? mapSubmission(full, email) : null,
     })
   } catch (err) {
     console.error('Failed to load project submission:', err)
@@ -148,6 +195,141 @@ export async function POST(request: NextRequest) {
   }
 
   try {
+    const membershipRows = (await db`
+      SELECT
+        id,
+        email,
+        name,
+        project_title,
+        project_description,
+        github_url,
+        demo_recording_url,
+        live_demo_url,
+        teammate_emails,
+        teammate_names,
+        submitted_at,
+        updated_at
+      FROM hackathon_project_submissions
+      WHERE email = ${email}
+         OR ${email} = ANY(teammate_emails)
+      ORDER BY CASE WHEN email = ${email} THEN 0 ELSE 1 END, submitted_at ASC
+      LIMIT 2
+    `) as SubmissionRow[]
+
+    const myRow = pickMembershipRow(email, membershipRows.map(toTeamRow))
+    const myFull = myRow
+      ? membershipRows.find((row) => row.id === myRow.id)
+      : undefined
+    const ownerEmail = myRow?.email ?? email
+    const storedCallerName = zipTeammateColumns(
+      myFull?.teammate_emails,
+      myFull?.teammate_names,
+    ).find((teammate) => teammate.email === email)?.name
+    const saved = teammatesForSave({
+      callerEmail: email,
+      callerName: name || storedCallerName || null,
+      ownerEmail,
+      formTeammates: validated.data.teammates,
+    })
+    if (!saved.ok) {
+      return toError(saved.message, 400)
+    }
+
+    const memberEmails = teamMemberEmails(ownerEmail, teammateEmailsOf(saved.teammates))
+    const githubUrl = parsedGithub.canonicalUrl
+
+    const conflictRows = (myRow
+      ? await db`
+          SELECT
+            id,
+            email,
+            name,
+            project_title,
+            github_url,
+            teammate_emails
+          FROM hackathon_project_submissions
+          WHERE id IS DISTINCT FROM ${myRow.id}::uuid
+            AND (
+              email = ANY(${memberEmails})
+              OR teammate_emails && ${memberEmails}
+              OR lower(github_url) = lower(${githubUrl})
+            )
+          LIMIT 5
+        `
+      : await db`
+          SELECT
+            id,
+            email,
+            name,
+            project_title,
+            github_url,
+            teammate_emails
+          FROM hackathon_project_submissions
+          WHERE
+            email = ANY(${memberEmails})
+            OR teammate_emails && ${memberEmails}
+            OR lower(github_url) = lower(${githubUrl})
+          LIMIT 5
+        `) as Array<{
+      id: string
+      email: string
+      name: string | null
+      project_title: string
+      github_url: string
+      teammate_emails: string[] | null
+    }>
+
+    const conflict = conflictRows[0]
+    if (conflict) {
+      const described = describeTeamConflict({
+        callerEmail: email,
+        proposedGithubUrl: githubUrl,
+        proposedMemberEmails: memberEmails,
+        conflict: {
+          id: conflict.id,
+          email: conflict.email,
+          name: conflict.name,
+          projectTitle: conflict.project_title,
+          githubUrl: conflict.github_url,
+          teammateEmails: Array.isArray(conflict.teammate_emails)
+            ? conflict.teammate_emails
+            : [],
+        },
+      })
+      return toError(described.message, 409, { code: described.code })
+    }
+
+    const teammateEmails = teammateEmailsOf(saved.teammates)
+    const teammateNames = teammateNamesOf(saved.teammates)
+
+    if (myRow) {
+      const keepOwnerName = myRow.email === email ? name : myRow.name
+      const rows = await db`
+        UPDATE hackathon_project_submissions SET
+          name = ${keepOwnerName},
+          project_title = ${validated.data.projectTitle},
+          project_description = ${validated.data.projectDescription},
+          github_url = ${githubUrl},
+          demo_recording_url = ${validated.data.demoRecordingUrl},
+          live_demo_url = ${validated.data.liveDemoUrl},
+          teammate_emails = ${teammateEmails},
+          teammate_names = ${teammateNames},
+          updated_at = now()
+        WHERE id = ${myRow.id}::uuid
+        RETURNING id, submitted_at, updated_at
+      `
+      const row = rows[0] as
+        | { id: string; submitted_at: string; updated_at: string }
+        | undefined
+      return NextResponse.json({
+        ok: true,
+        message: 'Project updated successfully.',
+        id: row?.id,
+        submittedAt: row?.submitted_at,
+        updatedAt: row?.updated_at,
+      })
+    }
+
     const rows = await db`
       INSERT INTO hackathon_project_submissions (
         email,
@@ -157,27 +339,20 @@ export async function POST(request: NextRequest) {
         github_url,
         demo_recording_url,
         live_demo_url,
-        teammate_emails
+        teammate_emails,
+        teammate_names
       )
       VALUES (
         ${email},
         ${name},
         ${validated.data.projectTitle},
         ${validated.data.projectDescription},
-        ${parsedGithub.canonicalUrl},
+        ${githubUrl},
         ${validated.data.demoRecordingUrl},
         ${validated.data.liveDemoUrl},
-        ${validated.data.teammateEmails}
+        ${teammateEmails},
+        ${teammateNames}
       )
-      ON CONFLICT (email) DO UPDATE SET
-        name = EXCLUDED.name,
-        project_title = EXCLUDED.project_title,
-        project_description = EXCLUDED.project_description,
-        github_url = EXCLUDED.github_url,
-        demo_recording_url = EXCLUDED.demo_recording_url,
-        live_demo_url = EXCLUDED.live_demo_url,
-        teammate_emails = EXCLUDED.teammate_emails,
-        updated_at = now()
       RETURNING id, submitted_at, updated_at
     `
 
@@ -193,6 +368,13 @@ export async function POST(request: NextRequest) {
       updatedAt: row?.updated_at,
     })
   } catch (err) {
+    if (postgresErrorCode(err) === '23505') {
+      return toError(
+        'This project conflicts with an existing submission (same person or the same GitHub repo).',
+        409,
+        { code: 'conflict' },
+      )
+    }
     console.error('Failed to save project submission:', err)
     return toError('Could not save project submission.', 500)
   }

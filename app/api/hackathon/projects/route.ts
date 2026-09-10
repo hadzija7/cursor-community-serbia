@@ -16,6 +16,7 @@ import {
   type JudgeAwardPlace,
   type JudgeScoredProject,
 } from '@/lib/project-gallery'
+import { galleryTeamPresentation, zipTeammateColumns } from '@/lib/project-team'
 
 export const dynamic = 'force-dynamic'
 
@@ -27,7 +28,10 @@ export type ProjectGalleryItem = {
   demoRecordingUrl: string
   liveDemoUrl: string
   submitterName: string | null
-  teammateEmails: string[]
+  /** Display names only — never emails. */
+  teammateNames: string[]
+  /** Judge/admin only; omitted for the public gallery. */
+  teammateEmails?: string[]
   submittedAt: string
   /**
    * Mean of all judge scores — only populated for judges/admins after all-rated,
@@ -86,6 +90,7 @@ type SubmissionRow = {
   demo_recording_url: string
   live_demo_url: string
   teammate_emails: string[] | null
+  teammate_names: string[] | null
   submitted_at: string
 }
 
@@ -156,6 +161,7 @@ export async function GET() {
         demo_recording_url,
         live_demo_url,
         teammate_emails,
+        teammate_names,
         submitted_at
       FROM hackathon_project_submissions
       ORDER BY submitted_at DESC
@@ -308,6 +314,8 @@ export async function GET() {
       }
     }
 
+    const canSeeTeamEmails = viewerIsJudge || viewerIsAdmin
+
     const projects: ProjectGalleryItem[] = submissions.map((row) => {
       const scores = scoresById.get(row.id) ?? []
       const awardPlace = effectiveAwards.get(row.id) ?? null
@@ -316,6 +324,11 @@ export async function GET() {
       const publicMaySeeAward =
         awardPlace != null &&
         (finalConfirmed || (aggregate.status === 'clear' && allRated))
+      const team = galleryTeamPresentation(
+        row.name,
+        zipTeammateColumns(row.teammate_emails, row.teammate_names),
+        canSeeTeamEmails,
+      )
 
       return {
         id: row.id,
@@ -324,8 +337,9 @@ export async function GET() {
         githubUrl: row.github_url,
         demoRecordingUrl: row.demo_recording_url,
         liveDemoUrl: row.live_demo_url,
-        submitterName: row.name,
-        teammateEmails: Array.isArray(row.teammate_emails) ? row.teammate_emails : [],
+        submitterName: team.submitterName,
+        teammateNames: team.teammateNames,
+        ...(canSeeTeamEmails ? { teammateEmails: team.teammateEmails } : {}),
         submittedAt:
           typeof row.submitted_at === 'string'
             ? row.submitted_at

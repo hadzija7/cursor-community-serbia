@@ -6,13 +6,22 @@ const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 /** Submitter + teammates; form allows at most this many teammate emails. */
 export const MAX_TEAMMATE_EMAILS = 2
 
+const TEAMMATE_NAME_MAX = 80
+
+export type TeammateFields = {
+  email: string
+  name: string
+}
+
 export type ProjectSubmissionInput = {
   projectTitle?: string
   projectDescription?: string
   githubUrl?: string
   demoRecordingUrl?: string
   liveDemoUrl?: string
-  /** Optional teammate emails (max {@link MAX_TEAMMATE_EMAILS}). */
+  /** Optional teammates (max {@link MAX_TEAMMATE_EMAILS}). */
+  teammates?: unknown
+  /** @deprecated Prefer {@link teammates}. Emails-only payload; names required. */
   teammateEmails?: unknown
 }
 
@@ -22,7 +31,7 @@ export type ValidatedProjectSubmission = {
   githubUrl: string
   demoRecordingUrl: string
   liveDemoUrl: string
-  teammateEmails: string[]
+  teammates: TeammateFields[]
 }
 
 export type ValidationFailure = { ok: false; message: string }
@@ -45,37 +54,73 @@ export function isEmailAddress(value: string): boolean {
   return EMAIL_PATTERN.test(value)
 }
 
-/**
- * Normalize optional teammate emails: trim, lowercase, drop blanks.
- * Rejects more than {@link MAX_TEAMMATE_EMAILS}, invalid addresses, duplicates,
- * and the submitter's own email.
- */
-export function validateTeammateEmails(
-  raw: unknown,
-  submitterEmail: string,
-): { ok: true; emails: string[] } | ValidationFailure {
-  const submitter = submitterEmail.trim().toLowerCase()
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === 'object' && value !== null && !Array.isArray(value)
+}
 
-  let candidates: string[] = []
+function parseTeammatePayload(
+  raw: unknown,
+): { email: string; name: string }[] | ValidationFailure {
   if (raw === undefined || raw === null || raw === '') {
-    candidates = []
-  } else if (Array.isArray(raw)) {
-    candidates = raw.map((value) => (typeof value === 'string' ? value : String(value)))
-  } else if (typeof raw === 'string') {
-    candidates = raw.split(/[,;\n]+/)
-  } else {
-    return { ok: false, message: 'Teammate emails must be a list of email addresses.' }
+    return []
+  }
+  if (!Array.isArray(raw)) {
+    return { ok: false, message: 'Teammates must be a list of name and email pairs.' }
   }
 
-  const emails: string[] = []
+  const items: { email: string; name: string }[] = []
+  for (const entry of raw) {
+    if (typeof entry === 'string') {
+      items.push({ email: entry, name: '' })
+      continue
+    }
+    if (!isRecord(entry)) {
+      return { ok: false, message: 'Each teammate must include a name and an email.' }
+    }
+    const email = typeof entry.email === 'string' ? entry.email : String(entry.email ?? '')
+    const name = typeof entry.name === 'string' ? entry.name : String(entry.name ?? '')
+    items.push({ email, name })
+  }
+  return items
+}
+
+/**
+ * Normalize optional teammates: display name + email.
+ * Rejects more than {@link MAX_TEAMMATE_EMAILS}, invalid addresses, duplicates,
+ * missing names, and the submitter's own email.
+ */
+export function validateTeammates(
+  raw: unknown,
+  submitterEmail: string,
+): { ok: true; teammates: TeammateFields[] } | ValidationFailure {
+  const submitter = submitterEmail.trim().toLowerCase()
+  const parsed = parseTeammatePayload(raw)
+  if (!Array.isArray(parsed)) {
+    return parsed
+  }
+
+  const teammates: TeammateFields[] = []
   const seen = new Set<string>()
 
-  for (const candidate of candidates) {
-    const email = candidate.trim().toLowerCase()
-    if (!email) continue
+  for (const candidate of parsed) {
+    const email = candidate.email.trim().toLowerCase()
+    const name = candidate.name.trim()
+    if (!email && !name) continue
 
+    if (!email || !name) {
+      return {
+        ok: false,
+        message: 'Each teammate needs a display name (shown on the gallery) and an email.',
+      }
+    }
+    if (name.length > TEAMMATE_NAME_MAX) {
+      return {
+        ok: false,
+        message: `Teammate names must be ${TEAMMATE_NAME_MAX} characters or fewer.`,
+      }
+    }
     if (!isEmailAddress(email)) {
-      return { ok: false, message: `Invalid teammate email: ${candidate.trim()}` }
+      return { ok: false, message: `Invalid teammate email: ${candidate.email.trim()}` }
     }
     if (submitter && email === submitter) {
       return {
@@ -87,17 +132,17 @@ export function validateTeammateEmails(
       return { ok: false, message: 'Teammate emails must be unique.' }
     }
     seen.add(email)
-    emails.push(email)
+    teammates.push({ email, name })
   }
 
-  if (emails.length > MAX_TEAMMATE_EMAILS) {
+  if (teammates.length > MAX_TEAMMATE_EMAILS) {
     return {
       ok: false,
       message: `Teams are 1–3 people — add at most ${MAX_TEAMMATE_EMAILS} teammates.`,
     }
   }
 
-  return { ok: true, emails }
+  return { ok: true, teammates }
 }
 
 export function validateProjectSubmissionFields(
@@ -144,8 +189,8 @@ export function validateProjectSubmissionFields(
     return { ok: false, message: 'Live demo must be a valid http(s) URL.' }
   }
 
-  const teammates = validateTeammateEmails(
-    payload.teammateEmails,
+  const teammates = validateTeammates(
+    payload.teammates ?? payload.teammateEmails,
     options?.submitterEmail ?? '',
   )
   if (!teammates.ok) {
@@ -160,7 +205,7 @@ export function validateProjectSubmissionFields(
       githubUrl,
       demoRecordingUrl,
       liveDemoUrl,
-      teammateEmails: teammates.emails,
+      teammates: teammates.teammates,
     },
   }
 }

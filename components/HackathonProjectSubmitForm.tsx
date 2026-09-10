@@ -7,20 +7,31 @@ import { useHackerStatus } from '@/lib/use-hacker-status'
 import { useHackathonDetails } from '@/lib/use-hackathon-details'
 import { MAX_TEAMMATE_EMAILS } from '@/lib/project-submission'
 import type { ExistingProjectSubmission } from '@/app/api/hackathon/submit/route'
+import { normalizeEmail } from '@/lib/project-team'
 
 type FormState = 'idle' | 'submitting' | 'success' | 'error'
+
+type TeammateFields = {
+  name: string
+  email: string
+}
 
 const inputClassName =
   'w-full rounded-md border border-cursor-border bg-cursor-surface px-4 py-3 text-cursor-text placeholder:text-cursor-text-faint focus:outline-none focus:ring-2 focus:ring-cursor-text-faint'
 
-function emptyTeammates(): string[] {
-  return Array.from({ length: MAX_TEAMMATE_EMAILS }, () => '')
+function emptyTeammates(): TeammateFields[] {
+  return Array.from({ length: MAX_TEAMMATE_EMAILS }, () => ({ name: '', email: '' }))
 }
 
-function padTeammates(emails: string[]): string[] {
+function padTeammates(teammates: TeammateFields[], excludeEmail?: string): TeammateFields[] {
   const next = emptyTeammates()
-  emails.slice(0, MAX_TEAMMATE_EMAILS).forEach((email, index) => {
-    next[index] = email
+  const exclude = excludeEmail ? normalizeEmail(excludeEmail) : ''
+  const filtered = teammates.filter((teammate) => {
+    if (!exclude) return true
+    return normalizeEmail(teammate.email) !== exclude
+  })
+  filtered.slice(0, MAX_TEAMMATE_EMAILS).forEach((teammate, index) => {
+    next[index] = { name: teammate.name, email: teammate.email }
   })
   return next
 }
@@ -36,8 +47,10 @@ export default function HackathonProjectSubmitForm() {
   const [githubUrl, setGithubUrl] = useState('')
   const [demoRecordingUrl, setDemoRecordingUrl] = useState('')
   const [liveDemoUrl, setLiveDemoUrl] = useState('')
-  const [teammateEmails, setTeammateEmails] = useState<string[]>(emptyTeammates)
+  const [teammates, setTeammates] = useState<TeammateFields[]>(emptyTeammates)
   const [hasExisting, setHasExisting] = useState(false)
+  const [existingRole, setExistingRole] = useState<'submitter' | 'teammate' | null>(null)
+  const [existingSubmitterName, setExistingSubmitterName] = useState('')
   const [prefillLoading, setPrefillLoading] = useState(false)
   const [prefillError, setPrefillError] = useState('')
   const [formState, setFormState] = useState<FormState>('idle')
@@ -73,10 +86,19 @@ export default function HackathonProjectSubmitForm() {
           setGithubUrl(existing.githubUrl)
           setDemoRecordingUrl(existing.demoRecordingUrl)
           setLiveDemoUrl(existing.liveDemoUrl)
-          setTeammateEmails(padTeammates(existing.teammateEmails))
+          setTeammates(
+            padTeammates(
+              existing.teammates,
+              existing.role === 'teammate' ? session?.user?.email ?? undefined : undefined,
+            ),
+          )
           setHasExisting(true)
+          setExistingRole(existing.role)
+          setExistingSubmitterName(existing.submitterName ?? '')
         } else {
           setHasExisting(false)
+          setExistingRole(null)
+          setExistingSubmitterName('')
         }
       } catch (err) {
         if (!cancelled) {
@@ -92,7 +114,7 @@ export default function HackathonProjectSubmitForm() {
     return () => {
       cancelled = true
     }
-  }, [sessionStatus, isCheckedIn, t])
+  }, [sessionStatus, isCheckedIn, session?.user?.email, t])
 
   if (sessionStatus === 'loading' || (session?.user && hackerStatus.status === 'loading')) {
     return (
@@ -175,7 +197,18 @@ export default function HackathonProjectSubmitForm() {
     const trimmedGithub = githubUrl.trim()
     const trimmedRecording = demoRecordingUrl.trim()
     const trimmedLive = liveDemoUrl.trim()
-    const trimmedTeammates = teammateEmails.map((email) => email.trim()).filter(Boolean)
+    const trimmedTeammates = teammates
+      .map((teammate) => ({
+        name: teammate.name.trim(),
+        email: teammate.email.trim(),
+      }))
+      .filter((teammate) => teammate.name || teammate.email)
+
+    if (trimmedTeammates.some((teammate) => !teammate.name || !teammate.email)) {
+      setFormState('error')
+      setStatusMessage(t('hackathon.submitTeammateNeedsBoth'))
+      return
+    }
 
     if (
       !trimmedTitle ||
@@ -202,7 +235,7 @@ export default function HackathonProjectSubmitForm() {
           githubUrl: trimmedGithub,
           demoRecordingUrl: trimmedRecording,
           liveDemoUrl: trimmedLive,
-          teammateEmails: trimmedTeammates,
+          teammates: trimmedTeammates,
         }),
       })
 
@@ -238,7 +271,14 @@ export default function HackathonProjectSubmitForm() {
 
       {hasExisting ? (
         <p className="rounded-lg border border-cursor-border bg-cursor-surface/50 px-4 py-3 text-sm text-cursor-text-secondary">
-          {t('hackathon.submitPrefillBanner')}
+          {existingRole === 'teammate'
+            ? t('hackathon.submitTeammatePrefillBanner')
+                .replace('{title}', projectTitle)
+                .replace(
+                  '{name}',
+                  existingSubmitterName || t('hackathon.submitTeammateSubmitterFallback'),
+                )
+            : t('hackathon.submitPrefillBanner')}
         </p>
       ) : null}
 
@@ -251,27 +291,55 @@ export default function HackathonProjectSubmitForm() {
       <fieldset className="space-y-3">
         <legend className="text-sm text-cursor-text-muted">{t('hackathon.submitTeammatesLabel')}</legend>
         <p className="text-xs text-cursor-text-faint">{t('hackathon.submitTeammatesHint')}</p>
-        {teammateEmails.map((email, index) => (
-          <div key={`teammate-${index}`} className="space-y-2">
-            <label
-              htmlFor={`teammateEmail${index + 1}`}
-              className="block text-sm text-cursor-text-muted"
-            >
-              {t('hackathon.submitTeammateEmailLabel').replace('{n}', String(index + 1))}
-            </label>
-            <input
-              id={`teammateEmail${index + 1}`}
-              type="email"
-              autoComplete="email"
-              value={email}
-              onChange={(event) => {
-                const next = [...teammateEmails]
-                next[index] = event.target.value
-                setTeammateEmails(next)
-              }}
-              placeholder={t('hackathon.submitTeammateEmailPlaceholder')}
-              className={inputClassName}
-            />
+        {teammates.map((teammate, index) => (
+          <div key={`teammate-${index}`} className="grid gap-3 sm:grid-cols-2">
+            <div className="space-y-2">
+              <label
+                htmlFor={`teammateName${index + 1}`}
+                className="block text-sm text-cursor-text-muted"
+              >
+                {t('hackathon.submitTeammateNameLabel').replace('{n}', String(index + 1))}
+              </label>
+              <input
+                id={`teammateName${index + 1}`}
+                type="text"
+                autoComplete="name"
+                maxLength={80}
+                value={teammate.name}
+                onChange={(event) => {
+                  const next = [...teammates]
+                  const current = next[index]
+                  if (!current) return
+                  next[index] = { ...current, name: event.target.value }
+                  setTeammates(next)
+                }}
+                placeholder={t('hackathon.submitTeammateNamePlaceholder')}
+                className={inputClassName}
+              />
+            </div>
+            <div className="space-y-2">
+              <label
+                htmlFor={`teammateEmail${index + 1}`}
+                className="block text-sm text-cursor-text-muted"
+              >
+                {t('hackathon.submitTeammateEmailLabel').replace('{n}', String(index + 1))}
+              </label>
+              <input
+                id={`teammateEmail${index + 1}`}
+                type="email"
+                autoComplete="email"
+                value={teammate.email}
+                onChange={(event) => {
+                  const next = [...teammates]
+                  const current = next[index]
+                  if (!current) return
+                  next[index] = { ...current, email: event.target.value }
+                  setTeammates(next)
+                }}
+                placeholder={t('hackathon.submitTeammateEmailPlaceholder')}
+                className={inputClassName}
+              />
+            </div>
           </div>
         ))}
       </fieldset>

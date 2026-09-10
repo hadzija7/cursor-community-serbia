@@ -123,19 +123,22 @@ describe('POST /api/hackathon/submit', () => {
       expires: '2099-01-01',
     })
 
-    const insert = vi.fn().mockResolvedValue([
-      {
-        id: '11111111-1111-1111-1111-111111111111',
-        submitted_at: '2026-09-04T12:00:00.000Z',
-        updated_at: '2026-09-04T12:00:00.000Z',
-      },
-    ])
-    vi.spyOn(db, 'getDb').mockReturnValue(insert as unknown as ReturnType<typeof db.getDb>)
+    const sql = vi.fn()
+      .mockResolvedValueOnce([])
+      .mockResolvedValueOnce([])
+      .mockResolvedValueOnce([
+        {
+          id: '11111111-1111-1111-1111-111111111111',
+          submitted_at: '2026-09-04T12:00:00.000Z',
+          updated_at: '2026-09-04T12:00:00.000Z',
+        },
+      ])
+    vi.spyOn(db, 'getDb').mockReturnValue(sql as unknown as ReturnType<typeof db.getDb>)
 
     const response = await POST(
       buildRequest({
         ...validBody,
-        teammateEmails: ['mate@example.com'],
+        teammates: [{ email: 'mate@example.com', name: 'Mate' }],
       }),
     )
     const body = (await response.json()) as { ok: boolean; id: string }
@@ -147,7 +150,116 @@ describe('POST /api/hackathon/submit', () => {
       'hacker@example.com',
       expect.stringMatching(/check in/i),
     )
-    expect(insert).toHaveBeenCalled()
+    expect(sql).toHaveBeenCalledTimes(3)
+  })
+
+  it('updates the existing team row when a listed teammate submits', async () => {
+    vi.mocked(auth).mockResolvedValue({
+      user: { email: 'mate@example.com', name: 'Mate' },
+      expires: '2099-01-01',
+    })
+
+    const existing = {
+      id: '11111111-1111-1111-1111-111111111111',
+      email: 'hacker@example.com',
+      name: 'Ada',
+      project_title: 'Demo Bot',
+      project_description: 'A short demo',
+      github_url: 'https://github.com/octocat/Hello-World',
+      demo_recording_url: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
+      live_demo_url: 'https://demo.example.com',
+      teammate_emails: ['mate@example.com'],
+      teammate_names: ['Mate'],
+      submitted_at: '2026-09-04T12:00:00.000Z',
+      updated_at: '2026-09-04T12:00:00.000Z',
+    }
+    const sql = vi.fn()
+      .mockResolvedValueOnce([existing])
+      .mockResolvedValueOnce([])
+      .mockResolvedValueOnce([
+        {
+          id: existing.id,
+          submitted_at: existing.submitted_at,
+          updated_at: '2026-09-04T13:00:00.000Z',
+        },
+      ])
+    vi.spyOn(db, 'getDb').mockReturnValue(sql as unknown as ReturnType<typeof db.getDb>)
+
+    const response = await POST(buildRequest(validBody))
+    const body = (await response.json()) as { ok: boolean; message: string }
+
+    expect(response.status).toBe(200)
+    expect(body.ok).toBe(true)
+    expect(body.message).toMatch(/updated/i)
+    expect(sql).toHaveBeenCalledTimes(3)
+  })
+
+  it('rejects listing a teammate who is already on another project', async () => {
+    vi.mocked(auth).mockResolvedValue({
+      user: { email: 'mate@example.com', name: 'Mate' },
+      expires: '2099-01-01',
+    })
+
+    const existing = {
+      id: '11111111-1111-1111-1111-111111111111',
+      email: 'hacker@example.com',
+      name: 'Ada',
+      project_title: 'Demo Bot',
+      github_url: 'https://github.com/octocat/Hello-World',
+      teammate_emails: ['mate@example.com'],
+    }
+    const sql = vi.fn()
+      .mockResolvedValueOnce([existing])
+      .mockResolvedValueOnce([
+        {
+          ...existing,
+          project_title: 'Other Bot',
+          github_url: 'https://github.com/other/repo',
+          teammate_emails: [],
+          email: 'cara@example.com',
+        },
+      ])
+    vi.spyOn(db, 'getDb').mockReturnValue(sql as unknown as ReturnType<typeof db.getDb>)
+
+    const response = await POST(
+      buildRequest({
+        ...validBody,
+        githubUrl: 'https://github.com/mate/new-project',
+        teammates: [{ email: 'cara@example.com', name: 'Cara' }],
+      }),
+    )
+    const body = (await response.json()) as { ok: boolean; message: string }
+
+    expect(response.status).toBe(409)
+    expect(body.message).toMatch(/already on/i)
+    expect(sql).toHaveBeenCalledTimes(2)
+  })
+
+  it('rejects a GitHub repo that already belongs to another team', async () => {
+    vi.mocked(auth).mockResolvedValue({
+      user: { email: 'new@example.com', name: 'Cara' },
+      expires: '2099-01-01',
+    })
+    const sql = vi.fn()
+      .mockResolvedValueOnce([])
+      .mockResolvedValueOnce([
+        {
+          id: '11111111-1111-1111-1111-111111111111',
+          email: 'hacker@example.com',
+          name: 'Ada',
+          project_title: 'Demo Bot',
+          github_url: 'https://github.com/octocat/Hello-World',
+          teammate_emails: [],
+        },
+      ])
+    vi.spyOn(db, 'getDb').mockReturnValue(sql as unknown as ReturnType<typeof db.getDb>)
+
+    const response = await POST(buildRequest(validBody))
+    const body = (await response.json()) as { ok: boolean; message: string }
+
+    expect(response.status).toBe(409)
+    expect(body.message).toMatch(/GitHub repo/i)
+    expect(sql).toHaveBeenCalledTimes(2)
   })
 
   it('rejects more than two teammate emails', async () => {
@@ -159,7 +271,11 @@ describe('POST /api/hackathon/submit', () => {
     const response = await POST(
       buildRequest({
         ...validBody,
-        teammateEmails: ['a@x.com', 'b@x.com', 'c@x.com'],
+        teammates: [
+          { email: 'a@x.com', name: 'A' },
+          { email: 'b@x.com', name: 'B' },
+          { email: 'c@x.com', name: 'C' },
+        ],
       }),
     )
     const body = (await response.json()) as { ok: boolean; message: string }
@@ -224,12 +340,15 @@ describe('GET /api/hackathon/submit', () => {
     const sql = vi.fn().mockResolvedValueOnce([
       {
         id: '11111111-1111-1111-1111-111111111111',
+        email: 'hacker@example.com',
+        name: 'Ada',
         project_title: 'Demo Bot',
         project_description: 'A short demo',
         github_url: 'https://github.com/octocat/Hello-World',
         demo_recording_url: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
         live_demo_url: 'https://demo.example.com',
         teammate_emails: ['mate@example.com'],
+        teammate_names: ['Mate'],
         submitted_at: '2026-09-04T12:00:00.000Z',
         updated_at: '2026-09-04T13:00:00.000Z',
       },
@@ -241,7 +360,8 @@ describe('GET /api/hackathon/submit', () => {
       ok: boolean
       submission: {
         projectTitle: string
-        teammateEmails: string[]
+        teammates: Array<{ email: string; name: string }>
+        role: string
         githubUrl: string
       }
     }
@@ -250,7 +370,42 @@ describe('GET /api/hackathon/submit', () => {
     expect(body.ok).toBe(true)
     expect(body.submission.projectTitle).toBe('Demo Bot')
     expect(body.submission.githubUrl).toBe('https://github.com/octocat/Hello-World')
-    expect(body.submission.teammateEmails).toEqual(['mate@example.com'])
+    expect(body.submission.teammates).toEqual([{ email: 'mate@example.com', name: 'Mate' }])
+    expect(body.submission.role).toBe('submitter')
     expect(assertCheckedIn).toHaveBeenCalled()
+  })
+
+  it('returns the team row when the caller is a listed teammate', async () => {
+    vi.mocked(auth).mockResolvedValue({
+      user: { email: 'mate@example.com' },
+      expires: '2099-01-01',
+    })
+    const sql = vi.fn().mockResolvedValueOnce([
+      {
+        id: '11111111-1111-1111-1111-111111111111',
+        email: 'hacker@example.com',
+        name: 'Ada',
+        project_title: 'Demo Bot',
+        project_description: 'A short demo',
+        github_url: 'https://github.com/octocat/Hello-World',
+        demo_recording_url: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
+        live_demo_url: 'https://demo.example.com',
+        teammate_emails: ['mate@example.com'],
+        teammate_names: ['Mate'],
+        submitted_at: '2026-09-04T12:00:00.000Z',
+        updated_at: '2026-09-04T13:00:00.000Z',
+      },
+    ])
+    vi.spyOn(db, 'getDb').mockReturnValue(sql as unknown as ReturnType<typeof db.getDb>)
+
+    const response = await GET()
+    const body = (await response.json()) as {
+      ok: boolean
+      submission: { role: string; submitterName: string | null }
+    }
+
+    expect(response.status).toBe(200)
+    expect(body.submission.role).toBe('teammate')
+    expect(body.submission.submitterName).toBe('Ada')
   })
 })

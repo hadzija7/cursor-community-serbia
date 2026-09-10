@@ -98,7 +98,7 @@ When `NEXT_PUBLIC_HACKATHON_SITE_URL` is set, `/hackathon` on the main domain re
 - Table: `hackathon_project_submissions` in `db/schema.sql` (one row per attendee email; upsert on resubmit)
 - Table: `hackathon_project_reviews` — one score (1–10) per judge email per submission (`UNIQUE(judge_email, submission_id)`); peer scores never returned to other judges
 - Table: `hackathon_project_favorites` — community favorites (`UNIQUE(user_email, submission_id)`); API enforces max 3 per checked-in user + Luma check-in gate
-- Table: `hackathon_judge_final_top3` — confirmed final places 1–3 (`PRIMARY KEY(place)`, `UNIQUE(submission_id)`)
+- Table: `hackathon_judge_final_top3` — confirmed final places 1–3 (`PRIMARY KEY(place)`, `UNIQUE(submission_id)`). Created by `pnpm db:setup` (was previously only in `db/schema.sql`).
 - Env: `POSTGRES_URL` or `DATABASE_URL`
 
 ### Webhook
@@ -227,25 +227,27 @@ Checked-in attendees submit one project for judging via `/hackathon/submit` (hea
 | Signed in, Luma `not_found` | Register on Luma CTA | `403` |
 | Signed in, Luma `checked_in` | Form | Accepts POST |
 
-**Fields:** project title (short), project description (multi-line), public GitHub repo URL, demo recording URL (3–5 min helper text), live demo http(s) URL — all required. Optional **teammate emails** (max **2**; teams are 1–3 including the submitter). Empty slots allowed for solo. Server rejects more than 2, invalid emails, duplicates, and the submitter’s own email.
+**Fields:** project title (short), project description (multi-line), public GitHub repo URL, demo recording URL (3–5 min helper text), live demo http(s) URL — all required. Optional **teammates** (max **2**; teams are 1–3 including the submitter): each slot is a **display name** + **email**. Empty slots allowed for solo. Server rejects more than 2, invalid emails, missing names, duplicates, and the submitter’s own email. Names are shown on the public gallery; emails stay private (judge/admin API only).
 
-**GitHub validation:** URL must parse as `github.com/owner/repo` (shape only via `parseGitHubRepoUrl`). No live GitHub API public-repo check on submit.
+**GitHub validation:** URL must parse as `github.com/owner/repo` (shape only via `parseGitHubRepoUrl`). No live GitHub API public-repo check on submit. Canonical `owner/repo` is unique across teams.
 
-**Persistence:** table `hackathon_project_submissions` in `db/schema.sql` / `pnpm db:setup`. Columns include `teammate_emails TEXT[]` (default `{}`). One row per email (`UNIQUE(email)`); resubmit upserts (including teammates) and bumps `updated_at`.
+**Persistence:** table `hackathon_project_submissions` in `db/schema.sql` / `pnpm db:setup`. Columns include `teammate_emails TEXT[]` and `teammate_names TEXT[]` (parallel arrays, default `{}`). One row per **team** (submitter `UNIQUE(email)`); an email may appear on at most one row as submitter **or** listed teammate. Listed teammates who open Submit load and **update the same row** (owner email does not change). Resubmit upserts fields (including teammates) and bumps `updated_at`. Unique index on `lower(github_url)`.
 
-**Prefill:** `GET /api/hackathon/submit` (same auth + check-in gate) returns the caller's existing row or `null`. The Submit form loads it once and fills fields; CTA becomes **Update project** when a row exists.
+**Prefill:** `GET /api/hackathon/submit` (same auth + check-in gate) returns the caller's team row (as submitter **or** listed teammate) or `null`. The Submit form loads it once and fills fields; CTA becomes **Update project** when a row exists. Teammate viewers see a banner naming the original submitter.
+
+**One project per team:** `POST` rejects (409) if any proposed member is already on another submission, or if the GitHub repo is already used by another team.
 
 **Components / routes:**
 
 - `app/hackathon/submit/page.tsx` + `components/HackathonProjectSubmitForm.tsx`
 - `GET` / `POST /api/hackathon/submit`
-- `lib/project-submission.ts`, `lib/github-repo.ts`
+- `lib/project-submission.ts`, `lib/project-team.ts`, `lib/github-repo.ts`
 
 ### Projects gallery, judging, and community votes
 
 Public gallery at `/hackathon/projects` (header **Projects** tab). Anyone can browse cards; check-in is **not** required to view. Builds on existing `hackathon_project_submissions` (does not reimplement submit).
 
-**Card contents:** title, short description, submitter name (when present), optional teammate emails, embedded YouTube/Loom demo when `demo_recording_url` resolves (else external link), prominent live demo link, optional GitHub link, favorite count (highlighted when the viewer favorited it). Judge averages are **not** shown to the public while scoring. After judging completes with a clear or confirmed top 3, winning cards show Convex cash award labels (80.000 / 50.000 / 20.000 RSD).
+**Card contents:** title, short description, submitter name (when present), optional teammate **display names** (never emails), embedded YouTube/Loom demo when `demo_recording_url` resolves (else external link), prominent live demo link, optional GitHub link, favorite count (highlighted when the viewer favorited it). Judge averages are **not** shown to the public while scoring. After judging completes with a clear or confirmed top 3, winning cards show Convex cash award labels (80.000 / 50.000 / 20.000 RSD). Teammate emails are included in the gallery API only for judges/admins.
 
 **Judge score privacy:**
 
@@ -323,8 +325,9 @@ The app is ready for `hackathon.cursorserbia.com`. Creating the hostname is a da
 - [ ] `/hackathon/guide` shows purpose, rules, agenda, judging (19 Sep winners + criteria), guidelines, and three optional idea sparks
 - [ ] Guide submit step links to `/hackathon/submit`
 - [ ] `/hackathon/submit` shows login CTA when signed out; check-in message when registered; form when checked in
-- [ ] `/hackathon/submit` prefills from `GET /api/hackathon/submit` when a row exists; CTA says Update project
-- [ ] `POST /api/hackathon/submit` rejects unauthenticated and not-checked-in callers; upserts one row per email
+- [ ] `/hackathon/submit` prefills from `GET /api/hackathon/submit` when a row exists (submitter or listed teammate); CTA says Update project
+- [ ] `POST /api/hackathon/submit` rejects unauthenticated and not-checked-in callers; one project per team (membership + unique GitHub); listed teammates update the same row
+- [ ] `/hackathon/projects` cards show teammate **names**, never emails
 - [ ] GitHub URL must be a `github.com/owner/repo` link (shape only; no live public-repo API check)
 - [ ] `/hackathon/projects` lists submission cards (or empty state); embeds YouTube/Loom when possible
 - [ ] `/hackathon/projects` shows community leaderboard top 3 by favorite count (ties: earlier submit, then title)

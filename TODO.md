@@ -74,7 +74,7 @@
   - [x] Hackathon sponsor form removed from Overview; `/hackathon/sponsor` redirects to `#special-thanks`; no Sponsor tab
   - [x] Hero no longer has “Sponsor event” CTA (form removed from Overview)
   - [x] Hackathon project submit form (`/hackathon/submit`): Google auth + Luma `checked_in` gate; GitHub URL shape + demo/live URLs; upsert per email; GET prefill for resubmit
-  - [x] Hackathon submit: optional teammate emails (max 2; teams 1–3)
+  - [x] Hackathon submit: optional teammates (name + email, max 2; teams 1–3); emails private on gallery; one project per team (membership + unique GitHub)
   - [x] Hackathon Overview hero + Stack use full-circle `/grokbot.svg` (same as header); hosts bio SpaceXAI ambassadors; Nick mentor bio shortened
   - [x] Hackathon Overview hero mascot is animated ink orb SVG (`/bloub-cercle-neutre-encre-anime.svg`)
   - [x] Hackathon credits: dual Cursor pools ($20 + $50) in separate tables; Stack modal claims both (`cursor` + `cursor-50`; seed via `pnpm db:seed:grok-bot-referrals`)

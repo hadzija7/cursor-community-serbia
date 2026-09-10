@@ -76,7 +76,8 @@ CREATE INDEX IF NOT EXISTS idx_hackathon_grok_bot_referral_codes_unclaimed
   ON hackathon_grok_bot_referral_codes (created_at)
   WHERE claimed_by IS NULL;
 
--- Hackathon project submissions — one row per checked-in attendee email (upsert on resubmit).
+-- Hackathon project submissions — one row per team (submitter email unique).
+-- Each person may appear on at most one row (submitter or teammate_emails).
 CREATE TABLE IF NOT EXISTS hackathon_project_submissions (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   email TEXT NOT NULL UNIQUE,
@@ -87,12 +88,16 @@ CREATE TABLE IF NOT EXISTS hackathon_project_submissions (
   demo_recording_url TEXT NOT NULL,
   live_demo_url TEXT NOT NULL,
   teammate_emails TEXT[] NOT NULL DEFAULT '{}',
+  teammate_names TEXT[] NOT NULL DEFAULT '{}',
   submitted_at TIMESTAMPTZ NOT NULL DEFAULT now(),
   updated_at TIMESTAMPTZ NOT NULL DEFAULT now()
 );
 
 CREATE INDEX IF NOT EXISTS idx_hackathon_project_submissions_submitted_at
   ON hackathon_project_submissions (submitted_at DESC);
+
+CREATE UNIQUE INDEX IF NOT EXISTS idx_hackathon_project_submissions_github_url_lower
+  ON hackathon_project_submissions (lower(github_url));
 
 -- Judge reviews — one score (1–10) per judge email per submission (upsert).
 CREATE TABLE IF NOT EXISTS hackathon_project_reviews (

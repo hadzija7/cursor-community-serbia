@@ -109,19 +109,33 @@ try {
       demo_recording_url TEXT NOT NULL,
       live_demo_url TEXT NOT NULL,
       teammate_emails TEXT[] NOT NULL DEFAULT '{}',
+      teammate_names TEXT[] NOT NULL DEFAULT '{}',
       submitted_at TIMESTAMPTZ NOT NULL DEFAULT now(),
       updated_at TIMESTAMPTZ NOT NULL DEFAULT now()
     )
   `
-  // Existing DBs created before teammate emails — add column idempotently.
+  // Existing DBs created before teammate emails / names — add columns idempotently.
   await sql`
     ALTER TABLE hackathon_project_submissions
     ADD COLUMN IF NOT EXISTS teammate_emails TEXT[] NOT NULL DEFAULT '{}'
   `
   await sql`
+    ALTER TABLE hackathon_project_submissions
+    ADD COLUMN IF NOT EXISTS teammate_names TEXT[] NOT NULL DEFAULT '{}'
+  `
+  await sql`
     CREATE INDEX IF NOT EXISTS idx_hackathon_project_submissions_submitted_at
     ON hackathon_project_submissions (submitted_at DESC)
   `
+  try {
+    await sql`
+      CREATE UNIQUE INDEX IF NOT EXISTS idx_hackathon_project_submissions_github_url_lower
+      ON hackathon_project_submissions (lower(github_url))
+    `
+  } catch (err) {
+    const message = err instanceof Error ? err.message : String(err)
+    console.warn('Could not add unique GitHub URL index (duplicate repos?):', message)
+  }
 
   await sql`
     CREATE TABLE IF NOT EXISTS hackathon_project_reviews (
@@ -159,6 +173,17 @@ try {
   await sql`
     CREATE INDEX IF NOT EXISTS idx_hackathon_project_favorites_user
     ON hackathon_project_favorites (user_email)
+  `
+
+  await sql`
+    CREATE TABLE IF NOT EXISTS hackathon_judge_final_top3 (
+      place INTEGER NOT NULL CHECK (place IN (1, 2, 3)),
+      submission_id UUID NOT NULL REFERENCES hackathon_project_submissions (id) ON DELETE CASCADE,
+      set_by_email TEXT NOT NULL,
+      set_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+      PRIMARY KEY (place),
+      UNIQUE (submission_id)
+    )
   `
 
   console.log('✓ Schema created successfully')
