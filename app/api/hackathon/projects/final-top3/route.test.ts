@@ -116,4 +116,4 @@ describe('POST /api/hackathon/projects/final-top3', () => {
     expect(writeSql).toMatch(/DELETE FROM hackathon_judge_final_top3/i)
     expect(writeSql).toMatch(/INSERT INTO hackathon_judge_final_top3/i)
   })
-}))
+}
