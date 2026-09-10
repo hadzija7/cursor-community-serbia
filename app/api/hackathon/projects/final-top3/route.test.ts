@@ -115,5 +115,4 @@ describe('POST /api/hackathon/projects/final-top3', () => {
     const writeSql = String(sql.mock.calls[2]?.[0]?.join?.('') ?? sql.mock.calls[2]?.[0] ?? '')
     expect(writeSql).toMatch(/DELETE FROM hackathon_judge_final_top3/i)
     expect(writeSql).toMatch(/INSERT INTO hackathon_judge_final_top3/i)
-  })
-}
+  })})
