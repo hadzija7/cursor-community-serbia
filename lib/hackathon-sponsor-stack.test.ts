@@ -28,10 +28,12 @@ describe('hackathon sponsor stack content', () => {
     const stackOnlyNames = ['Grok Bot']
 
     expect(profileIds).toEqual(stageIds)
-    expect(hackathonSponsorProfiles).toHaveLength(11)
+    expect(hackathonSponsorProfiles).toHaveLength(10)
     expect(profileNames.filter((name) => !stackOnlyNames.includes(name)).sort()).toEqual(marqueeNames)
     expect(getSponsorProfile('cursor')?.name).toBe('Grok Bot')
     expect(getSponsorProfile('xai')?.name).toBe('x.ai')
+    expect(getSponsorProfile('netlify')).toBeUndefined()
+    expect(hackathonSponsors.some((sponsor) => /netlify/i.test(sponsor.name))).toBe(false)
   })
 
   it('lists Startit, Superteam, ABC BootCamps, JigJoy, and Kosmonaut as community partners', () => {
@@ -60,7 +62,6 @@ describe('hackathon sponsor stack content', () => {
     expect(getSponsorProfile('convex')?.mcp?.name).toBe('convex')
     expect(getSponsorProfile('exa')?.mcp?.config).toEqual({ url: 'https://mcp.exa.ai/mcp' })
     expect(getSponsorProfile('fal')?.mcp?.config).toEqual({ url: 'https://mcp.fal.ai/mcp' })
-    expect(getSponsorProfile('netlify')?.mcp?.config).toEqual({ command: 'npx -y @netlify/mcp' })
     expect(getSponsorProfile('wonder')?.mcp?.config).toEqual({ url: 'https://mcp.wonder.so/mcp' })
   })
 
@@ -77,7 +78,7 @@ describe('hackathon sponsor stack content', () => {
     }
   })
 
-  it('keeps confirmed Daytona, Convex, Wispr, Exa, Netlify, Fal, Wonder, Firecrawl, Render, Cursor, and x.ai perks', () => {
+  it('keeps confirmed Daytona, Convex, Wispr, Exa, Fal, Wonder, Firecrawl, Render, Cursor, and x.ai perks', () => {
     const daytona = getSponsorProfile('daytona')
     const convex = getSponsorProfile('convex')
     const render = getSponsorProfile('render')
@@ -91,7 +92,6 @@ describe('hackathon sponsor stack content', () => {
     expect(JSON.stringify(getSponsorProfile('wispr')?.perks)).not.toMatch(/wisprflow/i)
     expect(getSponsorProfile('exa')?.perks.some((perk) => perk.kind === 'confirmed' && perk.label.includes('$50'))).toBe(true)
     expect(getSponsorProfile('fal')?.perks.some((perk) => perk.kind === 'confirmed' && perk.label.includes('$50'))).toBe(true)
-    expect(getSponsorProfile('netlify')?.perks.some((perk) => perk.kind === 'confirmed' && perk.label.includes('3,000'))).toBe(true)
     expect(getSponsorProfile('wonder')?.perks.some((perk) => perk.kind === 'confirmed' && perk.label.includes('Pro'))).toBe(true)
     expect(getSponsorProfile('firecrawl')?.perks.some((perk) => perk.kind === 'confirmed' && perk.label.includes('10,000'))).toBe(true)
     expect(render?.perks.some((perk) => perk.kind === 'confirmed' && perk.label.includes('Promo credits'))).toBe(true)
@@ -266,9 +266,9 @@ describe('hackathon sponsor stack content', () => {
       'intro',
       'hacking',
       'demo',
-      'pizza',
       'deadline',
-      'close',
+      'voting',
+      'pizza',
     ])
     expect(hackathonGuideAgenda[0]).toMatchObject({
       time: '10:30',
@@ -280,8 +280,10 @@ describe('hackathon sponsor stack content', () => {
     })
     expect(hackathonGuideAgenda[1]?.body).toMatch(/starts at 11:00/)
     expect(hackathonGuideAgenda[1]?.body.toLowerCase()).toMatch(/workshop/)
-    expect(hackathonGuideAgenda.find((item) => item.id === 'demo')?.time).toBe('18:00 – 19:00')
-    expect(hackathonGuideAgenda.find((item) => item.id === 'pizza')?.time).toBe('19:00')
+    expect(hackathonGuideAgenda.find((item) => item.id === 'demo')?.time).toBe('17:00 – 19:00')
+    expect(hackathonGuideAgenda.find((item) => item.id === 'deadline')?.time).toBe('19:00')
+    expect(hackathonGuideAgenda.find((item) => item.id === 'voting')?.time).toBe('19:00 – 19:30')
+    expect(hackathonGuideAgenda.find((item) => item.id === 'pizza')?.time).toBe('19:30 – 21:00')
     expect(hackathonGuideJudging.body).toMatch(/19 September/)
     expect(hackathonGuideJudgingCriteria.map((item) => item.id)).toEqual([
       'innovation',

@@ -175,7 +175,7 @@ export const hackathonGuideSteps: HackathonGuideStep[] = [
   {
     id: 'submit',
     title: 'Submit through the form',
-    body: 'Open the submission form when you are checked in. Deadline is 8 PM — you can update your entry earlier the same day.',
+    body: 'Open the submission form when you are checked in. Deadline is 7 PM — you can update your entry earlier the same day.',
     href: '/hackathon/submit',
     cta: 'Open submit form',
   },
@@ -197,27 +197,27 @@ export const hackathonGuideAgenda: HackathonGuideAgendaItem[] = [
   },
   {
     id: 'demo',
-    time: '18:00 – 19:00',
+    time: '17:00 – 19:00',
     title: 'Demo showcase',
     body: 'Optional. Share what you are building with others if you want — not mandatory.',
   },
   {
-    id: 'pizza',
-    time: '19:00',
-    title: 'Pizza party',
-    body: 'Food, drinks, and wind-down time while you finish polishing your submission.',
-  },
-  {
     id: 'deadline',
-    time: '20:00',
+    time: '19:00',
     title: 'Submission deadline',
-    body: 'Hacking ends. Submit your project through the form by 8 PM.',
+    body: 'Hacking ends. Submit your project through the form by 7 PM.',
   },
   {
-    id: 'close',
-    time: '21:00',
-    title: 'Event ends',
-    body: 'Doors close at 9 PM.',
+    id: 'voting',
+    time: '19:00 – 19:30',
+    title: 'Community voting',
+    body: 'Cast your vote for favorite projects while demos wrap and pizza gets ready.',
+  },
+  {
+    id: 'pizza',
+    time: '19:30 – 21:00',
+    title: 'Pizza party',
+    body: 'Food, drinks, and wind-down through the end of the night. Doors close at 9 PM.',
   },
 ]
 
@@ -491,13 +491,6 @@ export const hackathonSponsors: Partner[] = [
     logoHeight: 'h-8',
   },
   {
-    name: 'Netlify',
-    logo: '/images/partners/netlify.svg',
-    url: 'https://www.netlify.com/',
-    logoBg: '#ffffff',
-    logoHeight: 'h-8',
-  },
-  {
     name: 'Fal.ai',
     logo: '/images/partners/fal.svg',
     url: 'https://fal.ai/',
@@ -631,13 +624,6 @@ export const hackathonSdlcStages: HackathonSdlcStage[] = [
     label: 'Host / infra',
     job: 'Public demo URL from Git',
     sponsorId: 'render',
-    accent: 'blue',
-  },
-  {
-    id: 'ship',
-    label: 'Host / frontend',
-    job: 'Public site, previews, and a demo URL',
-    sponsorId: 'netlify',
     accent: 'blue',
   },
 ]
@@ -929,37 +915,6 @@ export const hackathonSponsorProfiles: HackathonSponsorProfile[] = [
     },
   },
   {
-    id: 'netlify',
-    name: 'Netlify',
-    logo: '/images/partners/netlify.svg',
-    url: 'https://www.netlify.com/',
-    docsUrl: 'https://docs.netlify.com/welcome/build-with-ai/netlify-mcp-server/',
-    logoBg: '#ffffff',
-    logoHeight: 'h-8',
-    sdlcStage: 'ship',
-    oneLiner: 'Deploy a public site from Git — previews, forms, and a URL judges can open.',
-    technologies: [
-      'Sites from Git — Next, static, and serverless functions',
-      'Deploy previews on every pull request',
-      'Forms, redirects, and edge functions',
-      'MCP — npx @netlify/mcp after netlify login',
-    ],
-    useCases: [
-      'Put the frontend on a public HTTPS URL so judges skip localhost',
-      'Preview each teammate’s branch without a shared server',
-      'Static landing plus functions next to Convex or Daytona',
-      'Ask Cursor to create and deploy the Netlify site',
-    ],
-    perks: [
-      { kind: 'confirmed', label: '3,000 credits for every participant' },
-    ],
-    mcp: {
-      name: 'netlify',
-      config: { command: 'npx -y @netlify/mcp' },
-      note: 'Install Node 22+ and run netlify login first.',
-    },
-  },
-  {
     id: 'wonder',
     name: 'Wonder',
     logo: '/images/partners/wonder.png',
@@ -1047,8 +1002,8 @@ export const hackathonStackRecipes: HackathonStackRecipe[] = [
   },
   {
     title: 'Designed UI, live app',
-    summary: 'Design the screen in Wonder, keep state in Convex, put the site on Netlify.',
-    sponsorIds: ['wonder', 'convex', 'netlify'],
+    summary: 'Design the screen in Wonder, keep state in Convex, host the public URL on Render.',
+    sponsorIds: ['wonder', 'convex', 'render'],
   },
 ]
 
@@ -1063,11 +1018,10 @@ export const hackathonStackPicks: HackathonStackPick[] = [
   { need: 'x.ai Voice / Chat / Imagine / Grok Build via API key', use: 'x.ai' },
   { need: 'A designed UI that is already React + Tailwind', use: 'Wonder' },
   { need: 'A public HTTPS URL or extra Postgres', use: 'Render' },
-  { need: 'A public frontend with deploy previews', use: 'Netlify' },
 ]
 
 export const hackathonStackOverlap = [
-  'Convex can be the whole backend. Render and Netlify are public demo URLs and conventional hosting.',
+  'Convex can be the whole backend. Render is a public demo URL and conventional hosting.',
   'Daytona is not production hosting — it is an isolated runtime for agent or untrusted code.',
   'Firecrawl scrapes a URL you already have. Exa searches the web for sources you do not.',
   'Wispr Flow is how you dictate into Grok Bot (or Cursor) — voice input for building, not TTS in the product.',

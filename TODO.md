@@ -40,11 +40,12 @@
   - [x] Hackathon Mentors tab (`/hackathon/mentors`): Hosts first (Aleksandar, Goran, Vladimir Hristov), then Mentors (Nick, Miodrag Vilotijević, Miodrag Todorović, Alexandra Borisova, Dušan Radivojević — LinkedIn; X where listed), then Judges (Ben Kim, Milan Lazarević, Agrim Singh, Marija Mladenović); 2-col cards from `md`
   - [x] Miodrag Vilotijević mentor bio: CEO/Mozaik open-source runtime; ask about code quality, startup insights, product positioning
   - [x] Hackathon Guide agenda: intro & welcome at 10:30; hacking starts at 11:00
+  - [x] Hackathon Guide agenda: demo showcase 17:00–19:00; submit by 19:00; community voting 19:00–19:30; pizza 19:30–21:00
   - [x] Hackathon prizes: added Daytona credit track ($3,000 / $2,000 / $1,000 + $100 each)
   - [x] Hackathon prizes: ABC BootCamps scholarships (50% / 40% / 30% to ABC Silicon Valley 2027)
   - [x] Daytona participant coupon: `CREDIT_CODE_DAYTONA` + claim UI redeem tip (Billing Dashboard)
   - [x] Hackathon Guide tab (`/hackathon/guide`): why, rules, agenda, judging criteria, numbered timeline, optional idea sparks
-  - [x] Hackathon Guide: Guidelines allow GitHub/Origin/other repo hosting + deploy live URL; agenda showcase 18–19, pizza 19:00, optional workshops during hacking
+  - [x] Hackathon Guide: Guidelines allow GitHub/Origin/other repo hosting + deploy live URL; optional workshops during hacking
   - [x] Hackathon Guide: Rules (team size / open source / what counts / live + video demo); Judging & winners 19 Sep with innovation-first criteria
   - [x] Hackathon Guide: three optional verticals (FinTech agents, Gaming/visual & art, Personal assistant) + build-anything framing; day agenda + 19 Sep winners
   - [x] Hackathon Stack: Add to Cursor MCP install on each sponsor modal
@@ -57,7 +58,8 @@
   - [x] Hackathon Overview: community partners use the same scrolling marquee as tech partners
   - [x] Hackathon community partners: added ABC BootCamps, JigJoy, Kosmonaut
   - [x] Superteam Balkan logo: transparent PNG (no black JPEG frame), sized a step above Startit (`h-10`)
-  - [x] Hackathon tech partners + Stack: Wispr Flow, Exa, Netlify, Fal.ai (confirmed credits)
+  - [x] Hackathon tech partners + Stack: Wispr Flow, Exa, Fal.ai (confirmed credits)
+  - [x] Hackathon: removed Netlify from tech partners, Stack, credits, and sponsor docs
   - [x] Wispr Flow 3 months Pro: claim via `CREDIT_CODE_WISPR` after check-in (referral URL not published in UI)
   - [x] Hackathon Stack: Convex prize-only (no Claim Credits; no participant coupon perk)
   - [x] Hackathon tech partners + Stack: Wonder (Design / UI; Pro for all participants)

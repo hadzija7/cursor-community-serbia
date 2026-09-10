@@ -39,7 +39,9 @@ Living scorecard for Cursor Community Serbia. Update after each phase.
 
 | Date       | Change                          |
 |------------|----------------------------------|
-| 2026-09-09 | Hackathon Guide: Guidelines allow GitHub/Origin/other for repo hosting + deploy live URL step; agenda showcase 18–19, pizza 19:00, optional workshops during hacking |
+| 2026-09-10 | Hackathon: removed Netlify from tech partners, Stack cards/MCP, credit claim map, and sponsor cheat sheet |
+| 2026-09-10 | Hackathon Guide agenda: demo showcase 17:00–19:00; submission deadline 19:00; community voting 19:00–19:30; pizza party 19:30–21:00 (event close folded into pizza) |
+| 2026-09-09 | Hackathon Guide: Guidelines allow GitHub/Origin/other for repo hosting + deploy live URL step; optional workshops during hacking |
 | 2026-09-09 | Hackathon Guide: Team → Rules (1–3 people, open source, what counts, live URL, video demo); Judging expands with innovation-first criteria under 19 Sep winners |
 | 2026-09-09 | Hackathon Stack: Render promo credits claimable via `CREDIT_CODE_RENDER` after check-in; redeem at dashboard.render.com Billing → Credit Balance (code never in repo) |
 | 2026-09-08 | Hackathon mentors: added Alexandra Borisova (SRE & Infra Leader; Typeable; AWS/K8s/observability; photo `public/images/hackathon/alexandra-borisova.jpg`, center crop; LinkedIn `princessfruittt`) |
@@ -83,7 +85,7 @@ Living scorecard for Cursor Community Serbia. Update after each phase.
 | 2026-08-24 | Content: Cursor Meetup Novi Sad Aug 20, 2026 recap (`cursor-meetup-novisad-aug-2026`); Luma kd163iko; Drive recap video + 9 gallery photos from Creative Space 75 |
 | 2026-08-24 | Hackathon Stack: Add to Cursor uses `cursor://` MCP deeplink so the install tab no longer auto-closes |
 | 2026-08-24 | Exa tech-partner logo: official icon + “exa” wordmark on a white pad |
-| 2026-08-24 | Hackathon tech partners + Stack: Wispr Flow, Exa, Netlify, Fal.ai with confirmed participant credits |
+| 2026-08-24 | Hackathon tech partners + Stack: Wispr Flow, Exa, Fal.ai with confirmed participant credits |
 | 2026-08-24 | ABC BootCamps: official overlapping mark on white pad at `h-10` (same as Superteam) |
 | 2026-08-24 | Superteam Balkan community logo: transparent PNG, no black JPEG frame, sized like Startit |
 | 2026-08-24 | Hackathon community partners: added ABC BootCamps, JigJoy, Kosmonaut |
