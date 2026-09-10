@@ -125,3 +125,15 @@ CREATE INDEX IF NOT EXISTS idx_hackathon_project_favorites_submission
 
 CREATE INDEX IF NOT EXISTS idx_hackathon_project_favorites_user
   ON hackathon_project_favorites (user_email);
+
+-- Final judge-panel top 3 (manual confirm / tie break). One row per place.
+-- Written only after judging is complete (every judge scored every project),
+-- or when averages already yield a clear unique top 3 that judges lock in.
+CREATE TABLE IF NOT EXISTS hackathon_judge_final_top3 (
+  place INTEGER NOT NULL CHECK (place IN (1, 2, 3)),
+  submission_id UUID NOT NULL REFERENCES hackathon_project_submissions (id) ON DELETE CASCADE,
+  set_by_email TEXT NOT NULL,
+  set_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+  PRIMARY KEY (place),
+  UNIQUE (submission_id)
+);

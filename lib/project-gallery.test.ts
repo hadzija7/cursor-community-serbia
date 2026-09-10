@@ -1,23 +1,39 @@
 import { afterEach, describe, expect, it } from 'vitest'
-import { parseJudgeEmails, isHackathonJudge } from '@/lib/hackathon-judges'
 import {
+  parseJudgeEmails,
+  isHackathonJudge,
+  isHackathonAdmin,
+  canManageJudgeFinalTop3,
+} from '@/lib/hackathon-judges'
+import {
+  analyzeJudgeAggregate,
   averageJudgeScore,
   favoriteCapMessage,
+  formatConvexTop3Cash,
+  isJudgingComplete,
   rankCommunityLeaderboard,
+  validateFinalTop3Ids,
   validateJudgeScore,
   COMMUNITY_LEADERBOARD_SIZE,
+  CONVEX_TOP3_CASH_RSD,
   MAX_FAVORITES_PER_USER,
 } from '@/lib/project-gallery'
 import { resolveDemoEmbed, toLoomEmbedUrl } from '@/lib/demo-embed'
 
 describe('parseJudgeEmails / isHackathonJudge', () => {
   const ORIGINAL = process.env.HACKATHON_JUDGE_EMAILS
+  const ORIGINAL_ADMIN = process.env.HACKATHON_ADMIN_EMAILS
 
   afterEach(() => {
     if (ORIGINAL === undefined) {
       delete process.env.HACKATHON_JUDGE_EMAILS
     } else {
       process.env.HACKATHON_JUDGE_EMAILS = ORIGINAL
+    }
+    if (ORIGINAL_ADMIN === undefined) {
+      delete process.env.HACKATHON_ADMIN_EMAILS
+    } else {
+      process.env.HACKATHON_ADMIN_EMAILS = ORIGINAL_ADMIN
     }
   })
 
@@ -38,6 +54,16 @@ describe('parseJudgeEmails / isHackathonJudge', () => {
     expect(isHackathonJudge('Judge@CursorSerbia.com')).toBe(true)
     expect(isHackathonJudge('hacker@example.com')).toBe(false)
     expect(isHackathonJudge(null)).toBe(false)
+  })
+
+  it('gates admins and final-top3 managers via HACKATHON_ADMIN_EMAILS', () => {
+    process.env.HACKATHON_JUDGE_EMAILS = 'judge@example.com'
+    process.env.HACKATHON_ADMIN_EMAILS = 'Admin@Example.com'
+    expect(isHackathonAdmin('admin@example.com')).toBe(true)
+    expect(isHackathonAdmin('judge@example.com')).toBe(false)
+    expect(canManageJudgeFinalTop3('admin@example.com')).toBe(true)
+    expect(canManageJudgeFinalTop3('judge@example.com')).toBe(true)
+    expect(canManageJudgeFinalTop3('hacker@example.com')).toBe(false)
   })
 })
 
@@ -70,6 +96,130 @@ describe('favorite cap helpers', () => {
   it('documents the max of 3', () => {
     expect(MAX_FAVORITES_PER_USER).toBe(3)
     expect(favoriteCapMessage()).toMatch(/at most 3/i)
+  })
+})
+
+describe('isJudgingComplete', () => {
+  it('requires every judge × every project', () => {
+    expect(
+      isJudgingComplete({
+        judgeEmails: ['a@x.com', 'b@x.com'],
+        projectIds: ['p1', 'p2'],
+        reviews: [
+          { judgeEmail: 'a@x.com', submissionId: 'p1' },
+          { judgeEmail: 'a@x.com', submissionId: 'p2' },
+          { judgeEmail: 'b@x.com', submissionId: 'p1' },
+        ],
+      }),
+    ).toBe(false)
+
+    expect(
+      isJudgingComplete({
+        judgeEmails: ['a@x.com', 'b@x.com'],
+        projectIds: ['p1', 'p2'],
+        reviews: [
+          { judgeEmail: 'a@x.com', submissionId: 'p1' },
+          { judgeEmail: 'a@x.com', submissionId: 'p2' },
+          { judgeEmail: 'b@x.com', submissionId: 'p1' },
+          { judgeEmail: 'b@x.com', submissionId: 'p2' },
+        ],
+      }),
+    ).toBe(true)
+  })
+
+  it('is false when no judges or no projects', () => {
+    expect(
+      isJudgingComplete({ judgeEmails: [], projectIds: ['p1'], reviews: [] }),
+    ).toBe(false)
+    expect(
+      isJudgingComplete({ judgeEmails: ['a@x.com'], projectIds: [], reviews: [] }),
+    ).toBe(false)
+  })
+})
+
+describe('analyzeJudgeAggregate', () => {
+  it('marks incomplete when judging is not finished', () => {
+    const result = analyzeJudgeAggregate(
+      [
+        { id: 'a', title: 'A', averageScore: 10 },
+        { id: 'b', title: 'B', averageScore: 9 },
+        { id: 'c', title: 'C', averageScore: 8 },
+      ],
+      { judgingComplete: false },
+    )
+    expect(result.status).toBe('incomplete')
+  })
+
+  it('returns clear unique top 3 when averages strictly separate places', () => {
+    const result = analyzeJudgeAggregate(
+      [
+        { id: 'a', title: 'A', averageScore: 9.5 },
+        { id: 'b', title: 'B', averageScore: 8 },
+        { id: 'c', title: 'C', averageScore: 7 },
+        { id: 'd', title: 'D', averageScore: 6 },
+      ],
+      { judgingComplete: true },
+    )
+    expect(result.status).toBe('clear')
+    if (result.status === 'clear') {
+      expect(result.top3.map((e) => e.id)).toEqual(['a', 'b', 'c'])
+    }
+  })
+
+  it('needs decision when 3rd ties with 4th', () => {
+    const result = analyzeJudgeAggregate(
+      [
+        { id: 'a', title: 'A', averageScore: 10 },
+        { id: 'b', title: 'B', averageScore: 9 },
+        { id: 'c', title: 'C', averageScore: 8 },
+        { id: 'd', title: 'D', averageScore: 8 },
+      ],
+      { judgingComplete: true },
+    )
+    expect(result.status).toBe('needs_decision')
+  })
+
+  it('needs decision when 1st/2nd share an average', () => {
+    const result = analyzeJudgeAggregate(
+      [
+        { id: 'a', title: 'A', averageScore: 9 },
+        { id: 'b', title: 'B', averageScore: 9 },
+        { id: 'c', title: 'C', averageScore: 8 },
+      ],
+      { judgingComplete: true },
+    )
+    expect(result.status).toBe('needs_decision')
+  })
+
+  it('does not invent winners via title sort for final placement', () => {
+    const result = analyzeJudgeAggregate(
+      [
+        { id: 'z', title: 'Zebra', averageScore: 8 },
+        { id: 'a', title: 'Alpha', averageScore: 8 },
+        { id: 'm', title: 'Mango', averageScore: 8 },
+      ],
+      { judgingComplete: true },
+    )
+    expect(result.status).toBe('needs_decision')
+  })
+})
+
+describe('Convex top-3 cash awards', () => {
+  it('uses 80k / 50k / 20k RSD amounts', () => {
+    expect(CONVEX_TOP3_CASH_RSD[1]).toBe(80_000)
+    expect(CONVEX_TOP3_CASH_RSD[2]).toBe(50_000)
+    expect(CONVEX_TOP3_CASH_RSD[3]).toBe(20_000)
+    expect(formatConvexTop3Cash(1)).toBe('80.000 RSD')
+    expect(formatConvexTop3Cash(2)).toBe('50.000 RSD')
+    expect(formatConvexTop3Cash(3)).toBe('20.000 RSD')
+  })
+})
+
+describe('validateFinalTop3Ids', () => {
+  it('requires three distinct ids', () => {
+    expect(validateFinalTop3Ids('a', 'b', 'c').ok).toBe(true)
+    expect(validateFinalTop3Ids('a', 'a', 'c').ok).toBe(false)
+    expect(validateFinalTop3Ids('', 'b', 'c').ok).toBe(false)
   })
 })
 

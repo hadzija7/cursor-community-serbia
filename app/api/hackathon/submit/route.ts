@@ -1,7 +1,7 @@
 import { NextResponse, type NextRequest } from 'next/server'
 import { auth } from '@/lib/auth'
 import { getDb } from '@/lib/db'
-import { assertPublicGitHubRepo } from '@/lib/github-repo'
+import { parseGitHubRepoUrl } from '@/lib/github-repo'
 import { assertCheckedIn } from '@/lib/hackathon-checkin'
 import {
   type ProjectSubmissionInput,
@@ -10,8 +10,99 @@ import {
 
 export const dynamic = 'force-dynamic'
 
+export type ExistingProjectSubmission = {
+  id: string
+  projectTitle: string
+  projectDescription: string
+  githubUrl: string
+  demoRecordingUrl: string
+  liveDemoUrl: string
+  teammateEmails: string[]
+  submittedAt: string
+  updatedAt: string
+}
+
 function toError(message: string, status: number, extra?: Record<string, unknown>) {
   return NextResponse.json({ ok: false, message, error: message, ...extra }, { status })
+}
+
+type SubmissionRow = {
+  id: string
+  project_title: string
+  project_description: string
+  github_url: string
+  demo_recording_url: string
+  live_demo_url: string
+  teammate_emails: string[] | null
+  submitted_at: string
+  updated_at: string
+}
+
+function mapSubmission(row: SubmissionRow): ExistingProjectSubmission {
+  return {
+    id: row.id,
+    projectTitle: row.project_title,
+    projectDescription: row.project_description,
+    githubUrl: row.github_url,
+    demoRecordingUrl: row.demo_recording_url,
+    liveDemoUrl: row.live_demo_url,
+    teammateEmails: Array.isArray(row.teammate_emails) ? row.teammate_emails : [],
+    submittedAt:
+      typeof row.submitted_at === 'string'
+        ? row.submitted_at
+        : new Date(row.submitted_at).toISOString(),
+    updatedAt:
+      typeof row.updated_at === 'string'
+        ? row.updated_at
+        : new Date(row.updated_at).toISOString(),
+  }
+}
+
+/** Prefill helper: return the caller's existing submission, or null. */
+export async function GET() {
+  const session = await auth()
+  if (!session?.user?.email) {
+    return toError('Not authenticated', 401)
+  }
+
+  const email = session.user.email.trim().toLowerCase()
+  const denied = await assertCheckedIn(
+    email,
+    'Check in at the event first before submitting your project',
+  )
+  if (denied) return denied
+
+  const db = getDb()
+  if (!db) {
+    return toError('Project submissions are not configured.', 503)
+  }
+
+  try {
+    const rows = (await db`
+      SELECT
+        id,
+        project_title,
+        project_description,
+        github_url,
+        demo_recording_url,
+        live_demo_url,
+        teammate_emails,
+        submitted_at,
+        updated_at
+      FROM hackathon_project_submissions
+      WHERE email = ${email}
+      LIMIT 1
+    `) as SubmissionRow[]
+
+    const row = rows[0]
+    return NextResponse.json({
+      ok: true,
+      submission: row ? mapSubmission(row) : null,
+    })
+  } catch (err) {
+    console.error('Failed to load project submission:', err)
+    return toError('Could not load project submission.', 500)
+  }
 }
 
 export async function POST(request: NextRequest) {
@@ -43,34 +134,12 @@ export async function POST(request: NextRequest) {
   )
   if (denied) return denied
 
-  const githubCheck = await assertPublicGitHubRepo(validated.data.githubUrl)
-  if (!githubCheck.ok) {
-    switch (githubCheck.reason) {
-      case 'invalid_url':
-        return toError(
-          'GitHub URL must be a public repository (https://github.com/owner/repo).',
-          400,
-        )
-      case 'not_found':
-        return toError(
-          'GitHub repository not found. Make sure the repo exists and is public.',
-          400,
-        )
-      case 'private':
-        return toError(
-          'GitHub repository must be public / open-source for judging.',
-          400,
-        )
-      case 'api_error':
-        return toError(
-          'Could not verify the GitHub repository right now. Try again in a moment.',
-          502,
-        )
-      default: {
-        const _exhaustive: never = githubCheck.reason
-        return toError(`Unexpected GitHub check failure: ${_exhaustive}`, 500)
-      }
-    }
+  const parsedGithub = parseGitHubRepoUrl(validated.data.githubUrl)
+  if (!parsedGithub) {
+    return toError(
+      'GitHub URL must be a repository link (https://github.com/owner/repo).',
+      400,
+    )
   }
 
   const db = getDb()
@@ -95,7 +164,7 @@ export async function POST(request: NextRequest) {
         ${name},
         ${validated.data.projectTitle},
         ${validated.data.projectDescription},
-        ${githubCheck.canonicalUrl},
+        ${parsedGithub.canonicalUrl},
         ${validated.data.demoRecordingUrl},
         ${validated.data.liveDemoUrl},
         ${validated.data.teammateEmails}

@@ -32,7 +32,7 @@
 - [x] Hackathon date/location synced from Luma event page (`/api/hackathon/event`, static fallback)
   - [x] Hackathon sponsorship → Google Sheets via Apps Script webhook template (`scripts/hackathon-sponsor-google-sheet.gs`)
   - [x] Hackathon sponsors: added Convex to marquee
-  - [x] Hackathon prizes section above sponsors (Convex: Best app that uses Convex — 1st/2nd RSD)
+  - [x] Hackathon prizes section above sponsors (Convex: overall judge top 3 cash — 80 / 50 / 20 RSD)
   - [x] Hackathon prizes: Kosmonaut coworking for top 3 teams (15 / 10 / 5 entries, use within 3 months, claim on kosmonaut.rs)
   - [x] Hackathon sponsors: added Daytona; removed Cursor (host, not sponsor)
   - [x] Hackathon sponsor stack preview (`/hackathon/stack`): grouped cards, path, read-more
@@ -54,6 +54,7 @@
   - [x] Hackathon project submissions (`/hackathon/submit`) for checked-in Google users
   - [x] Hackathon projects gallery + judge scores + community favorites (`/hackathon/projects`)
   - [x] Hackathon Projects: community leaderboard (top 3 by favorite count); favorites require Luma check-in; max 3 enforced UI + API
+  - [x] Hackathon Projects: private per-judge 1–10 scores; all-rated aggregate top 3; tie → needs decision + final top 3 override; Convex 80k/50k/20k awards
   - [x] Hackathon Overview: community partners band (Startit, Superteam Balkan) below sponsors
   - [x] Hackathon: tech companies labeled Tech partners (vs Community partners); Become a sponsor removed from Overview
   - [x] Hackathon Overview: Special thanks section (Startit hosting, Superteam Balkan community support) replaces become-a-sponsor form
@@ -72,7 +73,7 @@
   - [x] Hackathon Overview hero: Grok Bot peek is in-flow and compact on mobile (no text overlap)
   - [x] Hackathon sponsor form removed from Overview; `/hackathon/sponsor` redirects to `#special-thanks`; no Sponsor tab
   - [x] Hero no longer has “Sponsor event” CTA (form removed from Overview)
-  - [x] Hackathon project submit form (`/hackathon/submit`): Google auth + Luma `checked_in` gate; public GitHub + demo/live URLs; upsert per email
+  - [x] Hackathon project submit form (`/hackathon/submit`): Google auth + Luma `checked_in` gate; GitHub URL shape + demo/live URLs; upsert per email; GET prefill for resubmit
   - [x] Hackathon submit: optional teammate emails (max 2; teams 1–3)
   - [x] Hackathon Overview hero + Stack use full-circle `/grokbot.svg` (same as header); hosts bio SpaceXAI ambassadors; Nick mentor bio shortened
   - [x] Hackathon Overview hero mascot is animated ink orb SVG (`/bloub-cercle-neutre-encre-anime.svg`)

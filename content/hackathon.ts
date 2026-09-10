@@ -45,11 +45,12 @@ export const hackathonPrizes: HackathonPrizeTrack[] = [
     sponsorUrl: 'https://convex.dev',
     logoBg: '#14120b',
     logoHeight: 'h-8',
-    category: 'Best app that uses Convex',
-    note: 'You must actually use Convex in the demo.',
+    category: 'Overall winners (judge panel)',
+    note: 'Cash prize split across the final top 3 by judge scores (average of 1–10). Separate from community favorites.',
     places: [
-      { place: '1st place', amount: '100.000 RSD', accent: 'orange' },
+      { place: '1st place', amount: '80.000 RSD', accent: 'orange' },
       { place: '2nd place', amount: '50.000 RSD', accent: 'yellow' },
+      { place: '3rd place', amount: '20.000 RSD', accent: 'purple' },
     ],
   },
   {
@@ -58,8 +59,8 @@ export const hackathonPrizes: HackathonPrizeTrack[] = [
     sponsorUrl: 'https://www.kosmonaut.rs/',
     logoBg: '#14120b',
     logoHeight: 'h-8',
-    category: 'Free coworking for top 3 teams',
-    note: 'Each teammate gets the entries for their place. Use them within 3 months. Register on the Kosmonaut platform to claim.',
+    category: 'Free coworking for top 3 teams (Community voting)',
+    note: 'Awarded to the community favorites top 3. Each teammate gets the entries for their place. Use them within 3 months. Register on the Kosmonaut platform to claim.',
     places: [
       { place: '1st place', amount: '15 coworking entries', accent: 'green' },
       { place: '2nd place', amount: '10 coworking entries', accent: 'yellow' },
@@ -72,8 +73,8 @@ export const hackathonPrizes: HackathonPrizeTrack[] = [
     sponsorUrl: 'https://www.daytona.io',
     logoBg: '#14120b',
     logoHeight: 'h-7',
-    category: 'Best app that uses Daytona',
-    note: 'You must actually use Daytona. Every participant also receives $100 platform credits.',
+    category: 'Best app that uses Daytona (Judge panel)',
+    note: 'Awarded by the judge panel. You must actually use Daytona. Every participant also receives $100 platform credits.',
     places: [
       { place: '1st place', amount: '$3,000 credits', accent: 'green' },
       { place: '2nd place', amount: '$2,000 credits', accent: 'yellow' },
@@ -86,8 +87,8 @@ export const hackathonPrizes: HackathonPrizeTrack[] = [
     sponsorUrl: 'https://abcbootcamps.com/',
     logoBg: '#ffffff',
     logoHeight: 'h-10',
-    category: 'Scholarships to ABC Silicon Valley 2027',
-    note: 'Percentages apply to ABC Silicon Valley 2027 tuition. Winners claim through ABC BootCamps after the event.',
+    category: 'Scholarships to ABC Silicon Valley 2027 (Judge panel)',
+    note: 'Awarded by the judge panel. Percentages apply to ABC Silicon Valley 2027 tuition. Winners claim through ABC BootCamps after the event.',
     places: [
       { place: '1st place', amount: '50% scholarship', accent: 'orange' },
       { place: '2nd place', amount: '40% scholarship', accent: 'yellow' },
@@ -791,8 +792,8 @@ export const hackathonSponsorProfiles: HackathonSponsorProfile[] = [
     perks: [
       {
         kind: 'confirmed',
-        label: 'Best app that uses Convex',
-        detail: '1st 100.000 RSD · 2nd 50.000 RSD. You must actually use Convex.',
+        label: 'Overall winners (judge panel)',
+        detail: 'Cash prize split on top 3: 1st 80.000 RSD · 2nd 50.000 RSD · 3rd 20.000 RSD.',
       },
       { kind: 'public', label: 'Start here: free for small teams', detail: 'Public Convex tier, not a published event credit.' },
     ],

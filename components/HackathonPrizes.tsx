@@ -53,7 +53,7 @@ export default function HackathonPrizes() {
       <div className="space-y-6">
         {hackathonPrizes.map((track) => (
           <div
-            key={track.sponsor}
+            key={`${track.sponsor}-${track.category}`}
             className="space-y-5 rounded-2xl border border-cursor-border-emphasis bg-cursor-surface/60 p-6 md:p-8"
           >
             <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">

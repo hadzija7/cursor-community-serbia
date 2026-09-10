@@ -32,10 +32,11 @@ Inspired by conference landing patterns (e.g. TUM Blockchain Conference): full-w
 | `/hackathon/sponsor` | Redirects to Overview `#special-thanks` (bookmarks / `hackathon.*` `/sponsor` rewrite) |
 | `/api/hackathon/event` | GET live date/location from Luma (static fallback) |
 | `/api/hackathon/sponsor` | POST sponsorship applications |
-| `/api/hackathon/submit` | POST project submission (auth + Luma `checked_in` required; upserts one row per email) |
-| `/api/hackathon/projects` | GET public gallery list with aggregates + viewer favorite/score state |
-| `/api/hackathon/projects/review` | POST upsert judge score 1–10 (env-gated judge emails) |
+| `/api/hackathon/submit` | GET existing submission for prefill; POST upsert (auth + Luma `checked_in`; GitHub URL shape only) |
+| `/api/hackathon/projects` | GET public gallery list with community favorites + viewer favorite/score state; judge aggregates gated |
+| `/api/hackathon/projects/review` | POST upsert judge score 1–10 (env-gated judge emails); response is the caller's score only |
 | `/api/hackathon/projects/favorite` | POST toggle community favorite (max 3 per signed-in user) |
+| `/api/hackathon/projects/final-top3` | POST confirm/override final judge top 3 (judges/admins; only after all-rated) |
 | `/api/auth/[...nextauth]` | Google OAuth sign-in/sign-out (NextAuth.js v5) |
 | `/api/hackathon/attendee-status` | GET Luma guest status for authenticated user |
 | `/api/hackathon/claim-credits` | POST claim sponsor credit code (requires check-in) |
@@ -58,17 +59,18 @@ When `NEXT_PUBLIC_HACKATHON_SITE_URL` is set, `/hackathon` on the main domain re
 - `components/HackathonSiteHeader.tsx` — Hackathon-only chrome and tabs (Overview / Guide / Mentors / Prizes / Stack / Submit / Projects); brand is full-circle `/grokbot.svg` mark + “Grok Bot Serbia Hackathon”
 - `components/HackathonGuide.tsx` — Purpose, rules, agenda, judging & criteria, guidelines, and optional idea sparks
 - `components/HackathonProjectSubmitForm.tsx` — Project submission form (login / check-in gates + fields)
-- `components/HackathonProjectsGallery.tsx` — Gallery list, community leaderboard, favorite/score actions, empty + preview states
-- `components/HackathonProjectCard.tsx` — Project card (embed, live/GitHub links, aggregates, controls)
+- `components/HackathonProjectsGallery.tsx` — Gallery list, community leaderboard, judge panel, favorite/score actions, empty + preview states
+- `components/HackathonProjectCard.tsx` — Project card (embed, live/GitHub links, private my-score / award labels, controls)
 - `components/HackathonCommunityLeaderboard.tsx` — Top 3 by community favorite counts
+- `components/HackathonJudgePanel.tsx` — Judge progress, aggregate top 3 / needs-decision, final top-3 confirm
 - `components/HackathonPeople.tsx` — Mentor, host, and judge cards (`/hackathon/mentors`)
 - `middleware.ts` — Subdomain rewrite + optional main-host redirect
 - `lib/hackathon-site.ts` — Host detection and public hrefs
 - `lib/hackathon-checkin.ts` — Shared Luma `checked_in` gate (credit claims + project submit + community favorites)
-- `lib/hackathon-judges.ts` — Parse `HACKATHON_JUDGE_EMAILS` and gate judge scoring
-- `lib/github-repo.ts` — GitHub URL parse + public-repo check via unauthenticated API
+- `lib/hackathon-judges.ts` — Parse `HACKATHON_JUDGE_EMAILS` / `HACKATHON_ADMIN_EMAILS` and gate scoring + final top 3
+- `lib/github-repo.ts` — GitHub URL parse (`github.com/owner/repo` shape); optional public-repo helper unused by submit
 - `lib/project-submission.ts` — Field validation for project submissions
-- `lib/project-gallery.ts` — Score bounds, favorite cap, average aggregate, community leaderboard ranking
+- `lib/project-gallery.ts` — Score bounds, favorite cap, average aggregate, community leaderboard, judge all-rated / top-3 / Convex awards
 - `lib/demo-embed.ts` — YouTube / Loom embed resolution for demo recordings
 - `components/HackathonHero.tsx` — Full-width hero with date/location/duration cards and CTAs; animated ink Grok Bot orb (`/bloub-cercle-neutre-encre-anime.svg` via `mascotPeekImage`) sits under the tagline on mobile and beside the title from `sm` up
 - `components/HackathonHighlights.tsx` — Stat-style highlight grid (TUM-inspired)
@@ -94,8 +96,9 @@ When `NEXT_PUBLIC_HACKATHON_SITE_URL` is set, `/hackathon` on the main domain re
 
 - Table: `hackathon_sponsor_applications` in `db/schema.sql`
 - Table: `hackathon_project_submissions` in `db/schema.sql` (one row per attendee email; upsert on resubmit)
-- Table: `hackathon_project_reviews` — one score (1–10) per judge email per submission (`UNIQUE(judge_email, submission_id)`)
+- Table: `hackathon_project_reviews` — one score (1–10) per judge email per submission (`UNIQUE(judge_email, submission_id)`); peer scores never returned to other judges
 - Table: `hackathon_project_favorites` — community favorites (`UNIQUE(user_email, submission_id)`); API enforces max 3 per checked-in user + Luma check-in gate
+- Table: `hackathon_judge_final_top3` — confirmed final places 1–3 (`PRIMARY KEY(place)`, `UNIQUE(submission_id)`)
 - Env: `POSTGRES_URL` or `DATABASE_URL`
 
 ### Webhook
@@ -127,7 +130,7 @@ Edit `content/hackathon.ts` for:
 - Event title (`Grok Bot Serbia Hackathon`), tagline, `mascotImage` / `headerMark` (full-circle `/grokbot.svg`), `mascotPeekImage` (animated ink orb `/bloub-cercle-neutre-encre-anime.svg`), duration, and **Luma URL** (source of truth for live sync)
 - Static fallback `date` / `displayDate` / `location` (Belgrade, September 12, 2026 — used when Luma is unreachable)
 - Highlights grid (`hackathonStats`)
-- Prize tracks (`hackathonPrizes`: Convex cash 100.000 / 50.000 RSD; Kosmonaut coworking — 15 / 10 / 5 entries per teammate on the top 3 teams, use within 3 months, claimed on their platform; Daytona credits $3,000 / $2,000 / $1,000 plus $100 for every participant; ABC BootCamps — 50% / 40% / 30% scholarships to ABC Silicon Valley 2027)
+- Prize tracks (`hackathonPrizes`: Convex cash for overall judge top 3 — 80.000 / 50.000 / 20.000 RSD; Kosmonaut coworking (community voting) — 15 / 10 / 5 entries per teammate on the top 3 teams, use within 3 months, claimed on their platform; Daytona credits $3,000 / $2,000 / $1,000 plus $100 for every participant (judge panel); ABC BootCamps — 50% / 40% / 30% scholarships to ABC Silicon Valley 2027 (judge panel))
 - Hacker guide (`hackathonGuidePurpose`, `hackathonGuideRulesIntro`, `hackathonGuideRules`, `hackathonGuideAgenda`, `hackathonGuideJudging`, `hackathonGuideJudgingCriteria`, `hackathonGuideSteps`, `hackathonGuideTopicsIntro`, `hackathonGuideTopics`) — source for `/hackathon/guide`
 - Mentors, hosts, and judges (`hackathonMentors`, `hackathonHosts`, `hackathonJudges`) — source for `/hackathon/mentors`
 - Tech partner logos (`hackathonSponsors`: Firecrawl, Render, Convex, Daytona, Wispr Flow, Exa, Fal.ai, Wonder, x.ai) — Overview heading is **Tech partners**
@@ -141,7 +144,7 @@ Edit `content/hackathon.ts` for:
 - Flat 2-column grid of sponsor cards (not a linear pipeline). Area label lives on the card (e.g. Host / infra, Voice input); details open in a modal
 - Each modal has an **Add to Cursor** button (title row) that uses the official `cursor://anysphere.cursor-deeplink/mcp/install` deeplink (same tab — do not open `https://cursor.com/en/install-mcp`, which auto-closes). Configs live on `hackathonSponsorProfiles[].mcp` and are encoded by `lib/cursor-mcp-install.ts`
 - Cursor is host, not a sponsor. Wispr Flow is a tech partner (dictation into Cursor)
-- Confirmed perks only: Daytona $100 coupon (claim via `CREDIT_CODE_DAYTONA`, redeem in app.daytona.io Billing) + winner credits (Best app that uses Daytona); Convex 100.000 / 50.000 RSD; Kosmonaut coworking for top 3 teams (15 / 10 / 5 entries per teammate, use within 3 months, claim on kosmonaut.rs); ABC BootCamps scholarships for top 3 (50% / 40% / 30% to ABC Silicon Valley 2027); Wispr Flow 3 months Pro (claim via `CREDIT_CODE_WISPR` after check-in); Exa $50 credits each; Fal.ai $50 credits each (claim via `CREDIT_CODE_FAL`); Wonder Pro for all participants; Render promo credits for every checked-in participant (claim via `CREDIT_CODE_RENDER` after check-in; redeem at dashboard.render.com Billing → Credit Balance); SpaceXAI / x.ai ~$35 API credits per Console team (claim via `CREDIT_CODE_XAI` after check-in; redeem at console.x.ai Billing; does not work for Grok Bot)
+- Confirmed perks only: Daytona $100 coupon (claim via `CREDIT_CODE_DAYTONA`, redeem in app.daytona.io Billing) + winner credits (Best app that uses Daytona); Convex cash for overall judge top 3 (80.000 / 50.000 / 20.000 RSD); Kosmonaut coworking for top 3 teams (15 / 10 / 5 entries per teammate, use within 3 months, claim on kosmonaut.rs); ABC BootCamps scholarships for top 3 (50% / 40% / 30% to ABC Silicon Valley 2027); Wispr Flow 3 months Pro (claim via `CREDIT_CODE_WISPR` after check-in); Exa $50 credits each; Fal.ai $50 credits each (claim via `CREDIT_CODE_FAL`); Wonder Pro for all participants; Render promo credits for every checked-in participant (claim via `CREDIT_CODE_RENDER` after check-in; redeem at dashboard.render.com Billing → Credit Balance); SpaceXAI / x.ai ~$35 API credits per Console team (claim via `CREDIT_CODE_XAI` after check-in; redeem at console.x.ai Billing; does not work for Grok Bot)
 - Stack path starts with **Grok Bot** (Editor / host; Cursor works too), then Firecrawl, Exa, Wonder, Daytona, Convex, Wispr, Fal.ai, x.ai, Render
 - Marketing copy prioritizes Grok Bot; Cursor remains supported and named where the product action is Cursor-specific (MCP install deeplink, Cursor Pro referral, Origin)
 - Stack area cards also cover Exa (Search / web), Wonder (Design / UI), Wispr Flow (Voice input), Fal.ai (Generate / media), x.ai (API / models), and Render (Host / infra). Wispr has no public MCP install URL — desktop app only. x.ai is Console API key only (no MCP install). Wonder MCP is `https://mcp.wonder.so/mcp` (OAuth after install)
@@ -226,23 +229,39 @@ Checked-in attendees submit one project for judging via `/hackathon/submit` (hea
 
 **Fields:** project title (short), project description (multi-line), public GitHub repo URL, demo recording URL (3–5 min helper text), live demo http(s) URL — all required. Optional **teammate emails** (max **2**; teams are 1–3 including the submitter). Empty slots allowed for solo. Server rejects more than 2, invalid emails, duplicates, and the submitter’s own email.
 
-**GitHub validation:** URL must parse as `github.com/owner/repo`; server verifies the repo is public via unauthenticated `GET https://api.github.com/repos/{owner}/{repo}` (404 / private rejected).
+**GitHub validation:** URL must parse as `github.com/owner/repo` (shape only via `parseGitHubRepoUrl`). No live GitHub API public-repo check on submit.
 
 **Persistence:** table `hackathon_project_submissions` in `db/schema.sql` / `pnpm db:setup`. Columns include `teammate_emails TEXT[]` (default `{}`). One row per email (`UNIQUE(email)`); resubmit upserts (including teammates) and bumps `updated_at`.
+
+**Prefill:** `GET /api/hackathon/submit` (same auth + check-in gate) returns the caller's existing row or `null`. The Submit form loads it once and fills fields; CTA becomes **Update project** when a row exists.
 
 **Components / routes:**
 
 - `app/hackathon/submit/page.tsx` + `components/HackathonProjectSubmitForm.tsx`
-- `POST /api/hackathon/submit`
+- `GET` / `POST /api/hackathon/submit`
 - `lib/project-submission.ts`, `lib/github-repo.ts`
 
 ### Projects gallery, judging, and community votes
 
 Public gallery at `/hackathon/projects` (header **Projects** tab). Anyone can browse cards; check-in is **not** required to view. Builds on existing `hackathon_project_submissions` (does not reimplement submit).
 
-**Card contents:** title, short description, submitter name (when present), optional teammate emails, embedded YouTube/Loom demo when `demo_recording_url` resolves (else external link), prominent live demo link, optional GitHub link, public aggregate judge score, favorite count (highlighted when the viewer favorited it).
+**Card contents:** title, short description, submitter name (when present), optional teammate emails, embedded YouTube/Loom demo when `demo_recording_url` resolves (else external link), prominent live demo link, optional GitHub link, favorite count (highlighted when the viewer favorited it). Judge averages are **not** shown to the public while scoring. After judging completes with a clear or confirmed top 3, winning cards show Convex cash award labels (80.000 / 50.000 / 20.000 RSD).
 
-**Aggregate score:** arithmetic **mean** of all judge scores for that project (1–10), rounded to one decimal. Shown to everyone. `null` / “No judge scores yet” when there are no reviews. Review count is shown beside the average.
+**Judge score privacy:**
+
+- Each judge only ever receives **their own** `myScore` in API responses — never peer scores
+- `averageScore` / `reviewCount` are null / 0 for everyone until **all-rated**, and then only for judges/admins
+- Public gallery does not leak review counts or averages during voting
+
+**All-rated (strict):** every email in `HACKATHON_JUDGE_EMAILS` has a row in `hackathon_project_reviews` for **every** submission. Empty judge list or empty gallery → not complete.
+
+**Aggregate top 3:** arithmetic **mean** of all judge scores per project (1–10), rounded to one decimal for display. Ranking uses averages only.
+
+**Clear unique top 3:** `avg(1st) > avg(2nd) > avg(3rd)` and (no 4th project or `avg(3rd) > avg(4th)`). When clear after all-rated, provisional top 3 + Convex awards may surface. Title / submission time are **never** used to invent final placement.
+
+**Ties:** if averages do not yield a unique 1st/2nd/3rd, status is `needs_decision` — no auto tie-break. Judges (`HACKATHON_JUDGE_EMAILS`) or admins (`HACKATHON_ADMIN_EMAILS`) set final places via `POST /api/hackathon/projects/final-top3` into `hackathon_judge_final_top3`.
+
+**Convex cash awards (final top 3):** 1st **80.000 RSD**, 2nd **50.000 RSD**, 3rd **20.000 RSD** — cash prize split across overall winners by judge panel. Shown on Prizes (`Overall winners (judge panel)`), judge panel, and winning project cards. Not claimable `CREDIT_CODE_*` promo codes. Separate from community favorites.
 
 **Judges (env-gated):**
 
@@ -250,6 +269,7 @@ Public gallery at `/hackathon/projects` (header **Projects** tab). Anyone can br
 - Only signed-in users whose email is in that list see score controls and can `POST /api/hackathon/projects/review`
 - One review per judge per project (upsert on `UNIQUE(judge_email, submission_id)`)
 - Score must be an integer 1–10 (`CHECK` + API validation)
+- Progress: “rated X of Y projects” in the judge panel
 
 **Community favorites:**
 
@@ -264,13 +284,14 @@ Public gallery at `/hackathon/projects` (header **Projects** tab). Anyone can br
 - Each slot shows project title + vote count
 - Tie-break when counts are equal: **earlier `submitted_at`**, then **title A–Z** (fills exactly 3 slots; documented in UI copy)
 - Helper: `rankCommunityLeaderboard` in `lib/project-gallery.ts`; UI: `components/HackathonCommunityLeaderboard.tsx`
+- Stays separate from judge scoring
 
 **Local UI preview (dev only):** `/hackathon/projects?preview=1` loads a single official fixture card (Cursor Serbia Community) without Postgres; add `&judge=1` to mock judge score controls. Prefer live DB data when available — do not add mock submissions to the fixture list.
 
 **Components / routes:**
 
-- `app/hackathon/projects/page.tsx` + `components/HackathonProjectsGallery.tsx` + `components/HackathonProjectCard.tsx` + `components/HackathonCommunityLeaderboard.tsx`
-- `GET /api/hackathon/projects`, `POST /api/hackathon/projects/review`, `POST /api/hackathon/projects/favorite`
+- `app/hackathon/projects/page.tsx` + `components/HackathonProjectsGallery.tsx` + `components/HackathonProjectCard.tsx` + `components/HackathonCommunityLeaderboard.tsx` + `components/HackathonJudgePanel.tsx`
+- `GET /api/hackathon/projects`, `POST /api/hackathon/projects/review`, `POST /api/hackathon/projects/favorite`, `POST /api/hackathon/projects/final-top3`
 - `lib/hackathon-judges.ts`, `lib/project-gallery.ts`, `lib/demo-embed.ts`
 
 ### Env vars
@@ -282,6 +303,7 @@ Public gallery at `/hackathon/projects` (header **Projects** tab). Anyone can br
 | `AUTH_SECRET` | NextAuth JWT signing secret (`openssl rand -base64 32`) |
 | `CREDIT_CODE_*` | Shared per-sponsor promo codes (e.g. `CREDIT_CODE_DAYTONA`, `CREDIT_CODE_EXA`, `CREDIT_CODE_RENDER`, `CREDIT_CODE_XAI`) |
 | `HACKATHON_JUDGE_EMAILS` | Comma-separated judge emails allowed to score projects 1–10 |
+| `HACKATHON_ADMIN_EMAILS` | Optional admins who can set/confirm final judge top 3 |
 
 ## Subdomain (Vercel + DNS)
 
@@ -301,11 +323,14 @@ The app is ready for `hackathon.cursorserbia.com`. Creating the hostname is a da
 - [ ] `/hackathon/guide` shows purpose, rules, agenda, judging (19 Sep winners + criteria), guidelines, and three optional idea sparks
 - [ ] Guide submit step links to `/hackathon/submit`
 - [ ] `/hackathon/submit` shows login CTA when signed out; check-in message when registered; form when checked in
+- [ ] `/hackathon/submit` prefills from `GET /api/hackathon/submit` when a row exists; CTA says Update project
 - [ ] `POST /api/hackathon/submit` rejects unauthenticated and not-checked-in callers; upserts one row per email
-- [ ] GitHub URL must be a public repo (shape + API check)
+- [ ] GitHub URL must be a `github.com/owner/repo` link (shape only; no live public-repo API check)
 - [ ] `/hackathon/projects` lists submission cards (or empty state); embeds YouTube/Loom when possible
 - [ ] `/hackathon/projects` shows community leaderboard top 3 by favorite count (ties: earlier submit, then title)
-- [ ] Judge score controls only for emails in `HACKATHON_JUDGE_EMAILS`; upsert 1–10; average shown publicly
+- [ ] Judge score controls only for emails in `HACKATHON_JUDGE_EMAILS`; upsert 1–10; peers never see each other’s scores
+- [ ] After all-rated, clear averages yield provisional top 3; ties show needs-decision + final-top3 API
+- [ ] Final top 3 cards show Convex cash 80.000 / 50.000 / 20.000 RSD awards
 - [ ] Checked-in users can favorite up to 3 projects; 4th blocked in UI and returns clear API cap error
 - [ ] Favoriting requires Luma check-in (403 when registered / not found)
 - [ ] `/hackathon/sponsor` redirects to Overview `#special-thanks`

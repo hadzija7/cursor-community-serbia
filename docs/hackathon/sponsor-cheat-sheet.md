@@ -161,7 +161,7 @@ flowchart LR
 
 **What you get (confirmed)**
 
-- **Prize track — Best app that uses Convex:** 1st **100.000 RSD**, 2nd **50.000 RSD**. You must actually use Convex.  
+- **Prize track — Overall winners (judge panel):** cash split **80.000 / 50.000 / 20.000 RSD** (1st / 2nd / 3rd) by judge scores.  
 - Start today: Convex is free for small teams — that is their public tier, not a published event credit.
 
 ---
@@ -354,7 +354,7 @@ Design the screen in Wonder → Convex holds users and live state → Render hos
 | A designed UI that is already React + Tailwind | **Wonder** |
 | A public HTTPS URL / classic host / extra Postgres | **Render** |
 | To write the whole thing fast | **Grok Bot** (host editor; Cursor works too) |
-| Cash prize for a Convex app | **Convex track** — 100.000 / 50.000 RSD |
+| Cash prize for overall judge top 3 | **Convex track** — 80.000 / 50.000 / 20.000 RSD |
 | Coworking for top 3 teams | **Kosmonaut** — 15 / 10 / 5 entries per teammate, use within 3 months; claim on kosmonaut.rs |
 | Scholarship to ABC Silicon Valley 2027 | **ABC BootCamps** — 50% / 40% / 30% for 1st / 2nd / 3rd |
 | Confirmed platform credits on day one | **Daytona** $100 (redeem in Billing) · **Exa** $50 · **Fal.ai** $50 · **Wispr Flow** 3 months Pro · **Wonder** Pro · **x.ai** ~$35 Console API (redeem in Billing) |

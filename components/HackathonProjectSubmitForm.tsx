@@ -1,16 +1,29 @@
 'use client'
 
-import { FormEvent, useState } from 'react'
+import { FormEvent, useEffect, useState } from 'react'
 import { signIn, useSession } from 'next-auth/react'
 import { useI18n } from '@/lib/i18n'
 import { useHackerStatus } from '@/lib/use-hacker-status'
 import { useHackathonDetails } from '@/lib/use-hackathon-details'
 import { MAX_TEAMMATE_EMAILS } from '@/lib/project-submission'
+import type { ExistingProjectSubmission } from '@/app/api/hackathon/submit/route'
 
 type FormState = 'idle' | 'submitting' | 'success' | 'error'
 
 const inputClassName =
   'w-full rounded-md border border-cursor-border bg-cursor-surface px-4 py-3 text-cursor-text placeholder:text-cursor-text-faint focus:outline-none focus:ring-2 focus:ring-cursor-text-faint'
+
+function emptyTeammates(): string[] {
+  return Array.from({ length: MAX_TEAMMATE_EMAILS }, () => '')
+}
+
+function padTeammates(emails: string[]): string[] {
+  const next = emptyTeammates()
+  emails.slice(0, MAX_TEAMMATE_EMAILS).forEach((email, index) => {
+    next[index] = email
+  })
+  return next
+}
 
 export default function HackathonProjectSubmitForm() {
   const { t } = useI18n()
@@ -23,13 +36,63 @@ export default function HackathonProjectSubmitForm() {
   const [githubUrl, setGithubUrl] = useState('')
   const [demoRecordingUrl, setDemoRecordingUrl] = useState('')
   const [liveDemoUrl, setLiveDemoUrl] = useState('')
-  const [teammateEmails, setTeammateEmails] = useState<string[]>(
-    Array.from({ length: MAX_TEAMMATE_EMAILS }, () => ''),
-  )
+  const [teammateEmails, setTeammateEmails] = useState<string[]>(emptyTeammates)
+  const [hasExisting, setHasExisting] = useState(false)
+  const [prefillLoading, setPrefillLoading] = useState(false)
+  const [prefillError, setPrefillError] = useState('')
   const [formState, setFormState] = useState<FormState>('idle')
   const [statusMessage, setStatusMessage] = useState('')
 
   const isSubmitting = formState === 'submitting'
+  const isCheckedIn = hackerStatus.lumaStatus === 'checked_in'
+
+  useEffect(() => {
+    if (sessionStatus !== 'authenticated' || !isCheckedIn) return
+
+    let cancelled = false
+    setPrefillLoading(true)
+    setPrefillError('')
+
+    void (async () => {
+      try {
+        const res = await fetch('/api/hackathon/submit', { cache: 'no-store' })
+        const data = (await res.json()) as {
+          ok?: boolean
+          message?: string
+          submission?: ExistingProjectSubmission | null
+        }
+        if (!res.ok || !data.ok) {
+          throw new Error(data.message || t('hackathon.submitPrefillError'))
+        }
+        if (cancelled) return
+
+        const existing = data.submission
+        if (existing) {
+          setProjectTitle(existing.projectTitle)
+          setProjectDescription(existing.projectDescription)
+          setGithubUrl(existing.githubUrl)
+          setDemoRecordingUrl(existing.demoRecordingUrl)
+          setLiveDemoUrl(existing.liveDemoUrl)
+          setTeammateEmails(padTeammates(existing.teammateEmails))
+          setHasExisting(true)
+        } else {
+          setHasExisting(false)
+        }
+      } catch (err) {
+        if (!cancelled) {
+          setPrefillError(
+            err instanceof Error ? err.message : t('hackathon.submitPrefillError'),
+          )
+        }
+      } finally {
+        if (!cancelled) setPrefillLoading(false)
+      }
+    })()
+
+    return () => {
+      cancelled = true
+    }
+  }, [sessionStatus, isCheckedIn, t])
 
   if (sessionStatus === 'loading' || (session?.user && hackerStatus.status === 'loading')) {
     return (
@@ -96,6 +159,14 @@ export default function HackathonProjectSubmitForm() {
     )
   }
 
+  if (prefillLoading) {
+    return (
+      <p className="text-sm text-cursor-text-muted" role="status">
+        {t('hackathon.submitLoadingExisting')}
+      </p>
+    )
+  }
+
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
 
@@ -145,8 +216,11 @@ export default function HackathonProjectSubmitForm() {
         throw new Error(result.message || result.error || t('hackathon.genericError'))
       }
 
+      setHasExisting(true)
       setFormState('success')
-      setStatusMessage(t('hackathon.submitSuccess'))
+      setStatusMessage(
+        hasExisting ? t('hackathon.submitUpdateSuccess') : t('hackathon.submitSuccess'),
+      )
     } catch (error) {
       setFormState('error')
       setStatusMessage(
@@ -161,6 +235,18 @@ export default function HackathonProjectSubmitForm() {
         {t('hackathon.submitSignedInAs')}{' '}
         <span className="text-cursor-text">{session.user.email}</span>
       </p>
+
+      {hasExisting ? (
+        <p className="rounded-lg border border-cursor-border bg-cursor-surface/50 px-4 py-3 text-sm text-cursor-text-secondary">
+          {t('hackathon.submitPrefillBanner')}
+        </p>
+      ) : null}
+
+      {prefillError ? (
+        <p className="text-sm text-cursor-accent-red" role="alert">
+          {prefillError}
+        </p>
+      ) : null}
 
       <fieldset className="space-y-3">
         <legend className="text-sm text-cursor-text-muted">{t('hackathon.submitTeammatesLabel')}</legend>
@@ -274,7 +360,11 @@ export default function HackathonProjectSubmitForm() {
         disabled={isSubmitting}
         className="inline-flex items-center justify-center rounded-md bg-cursor-text px-5 py-2.5 text-sm font-medium text-cursor-bg transition-colors hover:bg-cursor-text-muted disabled:cursor-not-allowed disabled:opacity-70"
       >
-        {isSubmitting ? t('hackathon.submitSubmitting') : t('hackathon.submitProject')}
+        {isSubmitting
+          ? t('hackathon.submitSubmitting')
+          : hasExisting
+            ? t('hackathon.submitUpdateProject')
+            : t('hackathon.submitProject')}
       </button>
 
       {statusMessage ? (
