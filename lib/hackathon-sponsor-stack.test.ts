@@ -117,25 +117,32 @@ describe('hackathon sponsor stack content', () => {
     expect(JSON.stringify(xai?.perks)).not.toMatch(/CREDIT_CODE/)
   })
 
-  it('lists Convex cash, Kosmonaut coworking, Daytona credits, and ABC BootCamps scholarships', () => {
+  it('lists Convex overall + cash tracks, Kosmonaut coworking, Daytona credits, and ABC BootCamps scholarships', () => {
     const sponsors = hackathonPrizes.map((track) => track.sponsor)
 
-    expect(sponsors).toEqual(['Convex', 'Kosmonaut', 'Daytona', 'ABC BootCamps'])
-    expect(hackathonPrizes[0]?.places.map((place) => place.amount)).toEqual(['100.000 RSD', '50.000 RSD'])
-    expect(hackathonPrizes[1]?.category).toBe('Free coworking for top 3 teams')
-    expect(hackathonPrizes[1]?.places.map((place) => place.amount)).toEqual([
+    expect(sponsors).toEqual(['Convex', 'Convex', 'Kosmonaut', 'Daytona', 'ABC BootCamps'])
+    expect(hackathonPrizes[0]?.category).toBe('Overall winners (judge panel)')
+    expect(hackathonPrizes[0]?.places.map((place) => place.amount)).toEqual([
+      '80.000 Convex credits',
+      '50.000 Convex credits',
+      '20.000 Convex credits',
+    ])
+    expect(hackathonPrizes[1]?.category).toBe('Best app that uses Convex')
+    expect(hackathonPrizes[1]?.places.map((place) => place.amount)).toEqual(['100.000 RSD', '50.000 RSD'])
+    expect(hackathonPrizes[2]?.category).toBe('Free coworking for top 3 teams')
+    expect(hackathonPrizes[2]?.places.map((place) => place.amount)).toEqual([
       '15 coworking entries',
       '10 coworking entries',
       '5 coworking entries',
     ])
-    expect(hackathonPrizes[1]?.note).toMatch(/3 months/)
-    expect(hackathonPrizes[1]?.note).toMatch(/Kosmonaut platform/)
-    expect(hackathonPrizes[2]?.places.map((place) => place.amount)).toEqual([
+    expect(hackathonPrizes[2]?.note).toMatch(/3 months/)
+    expect(hackathonPrizes[2]?.note).toMatch(/Kosmonaut platform/)
+    expect(hackathonPrizes[3]?.places.map((place) => place.amount)).toEqual([
       '$3,000 credits',
       '$2,000 credits',
       '$1,000 credits',
     ])
-    expect(hackathonPrizes[3]?.places.map((place) => place.amount)).toEqual([
+    expect(hackathonPrizes[4]?.places.map((place) => place.amount)).toEqual([
       '50% scholarship',
       '40% scholarship',
       '30% scholarship',

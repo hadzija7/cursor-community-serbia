@@ -145,22 +145,35 @@ export default function HackathonProjectCard({
         </div>
 
         <div className="mt-auto flex flex-wrap items-center gap-3 border-t border-cursor-border pt-4">
-          <div className="flex items-center gap-1.5 text-sm text-cursor-text-secondary">
-            <Star className="h-4 w-4 text-cursor-accent-orange" aria-hidden />
-            <span>
-              {project.averageScore == null
-                ? t('hackathon.projectsNoScore')
-                : t('hackathon.projectsAvgScore').replace(
-                    '{score}',
-                    String(project.averageScore),
-                  )}
-            </span>
-            {project.reviewCount > 0 ? (
-              <span className="text-cursor-text-faint">
-                ({project.reviewCount})
+          {project.awardPlace != null && project.awardLabel ? (
+            <div className="w-full rounded-lg border border-cursor-accent-orange/40 bg-cursor-accent-orange/10 px-3 py-2 text-sm text-cursor-accent-orange">
+              <span className="font-semibold">
+                {t('hackathon.projectsAwardPlace').replace('{place}', String(project.awardPlace))}
               </span>
-            ) : null}
-          </div>
+              <span className="text-cursor-text-secondary"> · {project.awardLabel}</span>
+            </div>
+          ) : null}
+
+          {isJudge ? (
+            <div className="flex items-center gap-1.5 text-sm text-cursor-text-secondary">
+              <Star className="h-4 w-4 text-cursor-accent-orange" aria-hidden />
+              <span>
+                {project.myScore == null
+                  ? t('hackathon.projectsNoMyScore')
+                  : t('hackathon.projectsYourScore').replace('{score}', String(project.myScore))}
+              </span>
+            </div>
+          ) : project.averageScore != null ? (
+            <div className="flex items-center gap-1.5 text-sm text-cursor-text-secondary">
+              <Star className="h-4 w-4 text-cursor-accent-orange" aria-hidden />
+              <span>
+                {t('hackathon.projectsAvgScore').replace('{score}', String(project.averageScore))}
+              </span>
+              {project.reviewCount > 0 ? (
+                <span className="text-cursor-text-faint">({project.reviewCount})</span>
+              ) : null}
+            </div>
+          ) : null}
 
           <button
             type="button"

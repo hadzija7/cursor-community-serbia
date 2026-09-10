@@ -45,6 +45,20 @@ export const hackathonPrizes: HackathonPrizeTrack[] = [
     sponsorUrl: 'https://convex.dev',
     logoBg: '#14120b',
     logoHeight: 'h-8',
+    category: 'Overall winners (judge panel)',
+    note: 'Awarded to the final top 3 by judge scores (average of 1–10). Separate from community favorites and from the Best app that uses Convex cash track. Optional claim codes: CREDIT_CODE_CONVEX_1ST / _2ND / _3RD.',
+    places: [
+      { place: '1st place', amount: '80.000 Convex credits', accent: 'orange' },
+      { place: '2nd place', amount: '50.000 Convex credits', accent: 'yellow' },
+      { place: '3rd place', amount: '20.000 Convex credits', accent: 'purple' },
+    ],
+  },
+  {
+    sponsor: 'Convex',
+    sponsorLogo: '/images/partners/convex.png',
+    sponsorUrl: 'https://convex.dev',
+    logoBg: '#14120b',
+    logoHeight: 'h-8',
     category: 'Best app that uses Convex',
     note: 'You must actually use Convex in the demo.',
     places: [
@@ -792,7 +806,7 @@ export const hackathonSponsorProfiles: HackathonSponsorProfile[] = [
       {
         kind: 'confirmed',
         label: 'Best app that uses Convex',
-        detail: '1st 100.000 RSD · 2nd 50.000 RSD. You must actually use Convex.',
+        detail: 'Overall judge top 3: 80.000 / 50.000 / 20.000 Convex credits. Best Convex app: 1st 100.000 RSD · 2nd 50.000 RSD.',
       },
       { kind: 'public', label: 'Start here: free for small teams', detail: 'Public Convex tier, not a published event credit.' },
     ],

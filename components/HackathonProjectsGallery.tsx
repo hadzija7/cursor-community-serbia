@@ -4,12 +4,16 @@ import { useCallback, useEffect, useMemo, useState } from 'react'
 import { signIn, useSession } from 'next-auth/react'
 import { useSearchParams } from 'next/navigation'
 import HackathonCommunityLeaderboard from '@/components/HackathonCommunityLeaderboard'
+import HackathonJudgePanel from '@/components/HackathonJudgePanel'
 import HackathonProjectCard from '@/components/HackathonProjectCard'
-import type { ProjectGalleryItem } from '@/app/api/hackathon/projects/route'
+import type {
+  JudgePanelSummary,
+  ProjectGalleryItem,
+} from '@/app/api/hackathon/projects/route'
 import {
   MAX_FAVORITES_PER_USER,
-  averageJudgeScore,
   favoriteCapMessage,
+  formatConvexTop3Credits,
   rankCommunityLeaderboard,
 } from '@/lib/project-gallery'
 import { useHackerStatus } from '@/lib/use-hacker-status'
@@ -18,6 +22,7 @@ import { useI18n } from '@/lib/i18n'
 type ViewerState = {
   email: string | null
   isJudge: boolean
+  isAdmin?: boolean
   favoriteCount: number
   maxFavorites: number
 }
@@ -27,6 +32,23 @@ type ApiResponse = {
   message?: string
   projects: ProjectGalleryItem[]
   viewer?: ViewerState
+  judgePanel?: JudgePanelSummary
+}
+
+function emptyJudgePanel(): JudgePanelSummary {
+  return {
+    allRated: false,
+    judgeCount: 0,
+    projectCount: 0,
+    myRatedCount: 0,
+    aggregateStatus: 'hidden',
+    aggregateReason: null,
+    ranked: [],
+    top3: null,
+    needsDecision: false,
+    canSetFinalTop3: false,
+    finalConfirmed: false,
+  }
 }
 
 /** Dev-only preview fixture — official submission only (no mock projects). */
@@ -46,6 +68,8 @@ const PREVIEW_PROJECTS: ProjectGalleryItem[] = [
     favoriteCount: 0,
     favoritedByMe: false,
     myScore: null,
+    awardPlace: null,
+    awardLabel: null,
   },
 ]
 
@@ -53,8 +77,27 @@ function previewViewer(asJudge: boolean): ViewerState {
   return {
     email: asJudge ? 'judge@preview.local' : 'voter@preview.local',
     isJudge: asJudge,
+    isAdmin: false,
     favoriteCount: 0,
     maxFavorites: MAX_FAVORITES_PER_USER,
+  }
+}
+
+function previewJudgePanel(asJudge: boolean, projects: ProjectGalleryItem[]): JudgePanelSummary {
+  if (!asJudge) return emptyJudgePanel()
+  const rated = projects.filter((p) => p.myScore != null).length
+  return {
+    allRated: false,
+    judgeCount: 1,
+    projectCount: projects.length,
+    myRatedCount: rated,
+    aggregateStatus: 'hidden',
+    aggregateReason: null,
+    ranked: [],
+    top3: null,
+    needsDecision: false,
+    canSetFinalTop3: false,
+    finalConfirmed: false,
   }
 }
 
@@ -76,6 +119,7 @@ export default function HackathonProjectsGallery() {
 
   const [projects, setProjects] = useState<ProjectGalleryItem[]>([])
   const [viewer, setViewer] = useState<ViewerState | null>(null)
+  const [judgePanel, setJudgePanel] = useState<JudgePanelSummary>(emptyJudgePanel)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
   const [busyId, setBusyId] = useState<string | null>(null)
@@ -84,14 +128,16 @@ export default function HackathonProjectsGallery() {
   const load = useCallback(async () => {
     if (previewMode) {
       const v = previewViewer(previewJudge)
-      setProjects(
-        PREVIEW_PROJECTS.map((p) => ({
-          ...p,
-          favoritedByMe: p.favoritedByMe,
-          myScore: previewJudge ? p.myScore : null,
-        })),
-      )
+      const nextProjects = PREVIEW_PROJECTS.map((p) => ({
+        ...p,
+        favoritedByMe: p.favoritedByMe,
+        myScore: previewJudge ? p.myScore : null,
+        averageScore: null,
+        reviewCount: 0,
+      }))
+      setProjects(nextProjects)
       setViewer(v)
+      setJudgePanel(previewJudgePanel(previewJudge, nextProjects))
       setLoading(false)
       setError('')
       setBanner(t('hackathon.projectsPreviewBanner'))
@@ -115,9 +161,11 @@ export default function HackathonProjectsGallery() {
           maxFavorites: MAX_FAVORITES_PER_USER,
         },
       )
+      setJudgePanel(data.judgePanel ?? emptyJudgePanel())
     } catch (err) {
       setError(err instanceof Error ? err.message : t('hackathon.projectsLoadError'))
       setProjects([])
+      setJudgePanel(emptyJudgePanel())
     } finally {
       setLoading(false)
     }
@@ -160,7 +208,6 @@ export default function HackathonProjectsGallery() {
     const current = projects.find((p) => p.id === projectId)
     if (!current) return
 
-    // Client-side cap: block a 4th favorite before hitting the API.
     if (favorited && !current.favoritedByMe) {
       const used =
         viewer?.favoriteCount ?? projects.filter((p) => p.favoritedByMe).length
@@ -243,25 +290,14 @@ export default function HackathonProjectsGallery() {
       setProjects((prev) => {
         const next = prev.map((p) => {
           if (p.id !== projectId) return p
-          const hadScore = p.myScore != null
-          const reviewCount = hadScore ? p.reviewCount : p.reviewCount + 1
-          // Rebuild average from previous average + new/old myScore approximation for preview UX.
-          const priorScores =
-            p.reviewCount > 0 && p.averageScore != null
-              ? Array.from({ length: p.reviewCount }, () => p.averageScore as number)
-              : []
-          if (hadScore && priorScores.length > 0) {
-            priorScores[priorScores.length - 1] = score
-          } else {
-            priorScores.push(score)
-          }
           return {
             ...p,
             myScore: score,
-            reviewCount,
-            averageScore: averageJudgeScore(priorScores),
+            averageScore: null,
+            reviewCount: 0,
           }
         })
+        setJudgePanel(previewJudgePanel(true, next))
         return next
       })
       return
@@ -282,6 +318,71 @@ export default function HackathonProjectsGallery() {
     } finally {
       setBusyId(null)
     }
+  }
+
+  const onConfirmTop3 = async (ids: {
+    firstId: string
+    secondId: string
+    thirdId: string
+  }) => {
+    if (previewMode) {
+      setProjects((prev) =>
+        prev.map((p) => {
+          let awardPlace: 1 | 2 | 3 | null = null
+          if (p.id === ids.firstId) awardPlace = 1
+          else if (p.id === ids.secondId) awardPlace = 2
+          else if (p.id === ids.thirdId) awardPlace = 3
+          return {
+            ...p,
+            awardPlace,
+            awardLabel: awardPlace ? formatConvexTop3Credits(awardPlace) : null,
+          }
+        }),
+      )
+      setJudgePanel((panel) => ({
+        ...panel,
+        finalConfirmed: true,
+        needsDecision: false,
+        top3: [
+          {
+            place: 1,
+            id: ids.firstId,
+            title: projects.find((p) => p.id === ids.firstId)?.title ?? ids.firstId,
+            averageScore: null,
+            source: 'manual',
+            awardLabel: formatConvexTop3Credits(1),
+          },
+          {
+            place: 2,
+            id: ids.secondId,
+            title: projects.find((p) => p.id === ids.secondId)?.title ?? ids.secondId,
+            averageScore: null,
+            source: 'manual',
+            awardLabel: formatConvexTop3Credits(2),
+          },
+          {
+            place: 3,
+            id: ids.thirdId,
+            title: projects.find((p) => p.id === ids.thirdId)?.title ?? ids.thirdId,
+            averageScore: null,
+            source: 'manual',
+            awardLabel: formatConvexTop3Credits(3),
+          },
+        ],
+      }))
+      return
+    }
+
+    const res = await fetch('/api/hackathon/projects/final-top3', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(ids),
+    })
+    const data = (await res.json()) as { ok: boolean; message?: string }
+    if (!res.ok || !data.ok) {
+      throw new Error(data.message || t('hackathon.projectsGenericError'))
+    }
+    await load()
   }
 
   if (
@@ -322,6 +423,9 @@ export default function HackathonProjectsGallery() {
     )
   }
 
+  const showJudgePanel =
+    isJudge || Boolean(viewer?.isAdmin) || judgePanel.canSetFinalTop3 || judgePanel.finalConfirmed
+
   return (
     <div className="space-y-6">
       {banner ? (
@@ -334,6 +438,15 @@ export default function HackathonProjectsGallery() {
       ) : null}
 
       <HackathonCommunityLeaderboard entries={leaderboard} />
+
+      {showJudgePanel ? (
+        <HackathonJudgePanel
+          panel={judgePanel}
+          projects={projects}
+          busy={busyId !== null}
+          onConfirmTop3={onConfirmTop3}
+        />
+      ) : null}
 
       {!isSignedIn ? (
         <div className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-cursor-border bg-cursor-surface/50 px-4 py-3">

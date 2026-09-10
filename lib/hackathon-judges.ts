@@ -1,10 +1,10 @@
-/** Judge gate for hackathon project reviews. */
+/** Judge / admin gates for hackathon project reviews. */
 
 /**
- * Parse `HACKATHON_JUDGE_EMAILS` (comma-separated, case-insensitive).
- * Empty / unset → no judges can score.
+ * Parse a comma-separated email allowlist (case-insensitive).
+ * Empty / unset → empty set.
  */
-export function parseJudgeEmails(raw: string | undefined | null): Set<string> {
+export function parseEmailAllowlist(raw: string | undefined | null): Set<string> {
   if (!raw?.trim()) return new Set()
 
   const emails = raw
@@ -15,11 +15,30 @@ export function parseJudgeEmails(raw: string | undefined | null): Set<string> {
   return new Set(emails)
 }
 
+/** @deprecated Prefer parseEmailAllowlist — kept for existing call sites. */
+export function parseJudgeEmails(raw: string | undefined | null): Set<string> {
+  return parseEmailAllowlist(raw)
+}
+
 export function getJudgeEmails(): Set<string> {
-  return parseJudgeEmails(process.env.HACKATHON_JUDGE_EMAILS)
+  return parseEmailAllowlist(process.env.HACKATHON_JUDGE_EMAILS)
+}
+
+export function getAdminEmails(): Set<string> {
+  return parseEmailAllowlist(process.env.HACKATHON_ADMIN_EMAILS)
 }
 
 export function isHackathonJudge(email: string | null | undefined): boolean {
   if (!email?.trim()) return false
   return getJudgeEmails().has(email.trim().toLowerCase())
+}
+
+export function isHackathonAdmin(email: string | null | undefined): boolean {
+  if (!email?.trim()) return false
+  return getAdminEmails().has(email.trim().toLowerCase())
+}
+
+/** Judges and admins may manage final top-3 after voting is complete. */
+export function canManageJudgeFinalTop3(email: string | null | undefined): boolean {
+  return isHackathonJudge(email) || isHackathonAdmin(email)
 }
