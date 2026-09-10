@@ -12,6 +12,8 @@ type Props = {
   isSignedIn: boolean
   /** When false, favorite clicks show check-in / login guidance instead of voting. */
   canFavorite?: boolean
+  /** True while Luma check-in status is still loading — disable favorites without a false check-in warning. */
+  checkInPending?: boolean
   busy?: boolean
   onFavorite: (projectId: string, favorited: boolean) => Promise<void>
   onScore: (projectId: string, score: number) => Promise<void>
@@ -29,6 +31,7 @@ export default function HackathonProjectCard({
   isJudge,
   isSignedIn,
   canFavorite = isSignedIn,
+  checkInPending = false,
   busy = false,
   onFavorite,
   onScore,
@@ -45,7 +48,12 @@ export default function HackathonProjectCard({
       return
     }
     if (!canFavorite) {
-      setLocalError(t('hackathon.projectsNeedCheckIn'))
+      if (checkInPending) return
+      setLocalError(
+        isJudge
+          ? t('hackathon.projectsJudgeAlsoFavorite')
+          : t('hackathon.projectsNeedCheckIn'),
+      )
       return
     }
     setLocalError('')
@@ -57,6 +65,7 @@ export default function HackathonProjectCard({
   }
 
   const handleScore = async () => {
+    if (!project.canEditScore) return
     setLocalError('')
     try {
       await onScore(project.id, draftScore)
@@ -177,12 +186,14 @@ export default function HackathonProjectCard({
 
           <button
             type="button"
-            disabled={busy || (isSignedIn && !canFavorite)}
+            disabled={busy || checkInPending || (isSignedIn && !canFavorite)}
             onClick={() => void handleFavorite()}
             aria-pressed={project.favoritedByMe}
             title={
-              isSignedIn && !canFavorite
-                ? t('hackathon.projectsNeedCheckIn')
+              isSignedIn && !canFavorite && !checkInPending
+                ? isJudge
+                  ? t('hackathon.projectsJudgeAlsoFavorite')
+                  : t('hackathon.projectsNeedCheckIn')
                 : undefined
             }
             className={`inline-flex items-center gap-1.5 rounded-md px-3 py-1.5 text-sm transition-colors ${
@@ -209,7 +220,7 @@ export default function HackathonProjectCard({
             >
               {t('hackathon.projectsLoginToVote')}
             </button>
-          ) : !canFavorite ? (
+          ) : !canFavorite && !isJudge && !checkInPending ? (
             <span className="text-sm text-cursor-text-faint">
               {t('hackathon.projectsCheckInToVote')}
             </span>
@@ -223,7 +234,7 @@ export default function HackathonProjectCard({
               <select
                 value={draftScore}
                 onChange={(e) => setDraftScore(Number(e.target.value))}
-                disabled={busy}
+                disabled={busy || !project.canEditScore}
                 className="rounded-md border border-cursor-border bg-cursor-surface px-3 py-2 text-sm text-cursor-text"
               >
                 {Array.from({ length: 10 }, (_, i) => i + 1).map((n) => (
@@ -235,13 +246,15 @@ export default function HackathonProjectCard({
             </label>
             <button
               type="button"
-              disabled={busy}
+              disabled={busy || !project.canEditScore}
               onClick={() => void handleScore()}
               className="rounded-md bg-cursor-text px-4 py-2 text-sm font-medium text-cursor-bg transition-colors hover:bg-cursor-text-muted disabled:opacity-60"
             >
-              {project.myScore != null
-                ? t('hackathon.projectsUpdateScore')
-                : t('hackathon.projectsSaveScore')}
+              {!project.canEditScore
+                ? t('hackathon.projectsScoringLocked')
+                : project.myScore != null
+                  ? t('hackathon.projectsUpdateScore')
+                  : t('hackathon.projectsSaveScore')}
             </button>
             {project.myScore != null ? (
               <span className="pb-2 text-xs text-cursor-text-muted">

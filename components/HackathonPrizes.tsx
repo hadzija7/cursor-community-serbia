@@ -109,6 +109,20 @@ export default function HackathonPrizes() {
             {track.note ? (
               <p className="text-sm leading-relaxed text-cursor-text-secondary">{track.note}</p>
             ) : null}
+            {track.aside ? (
+              <p className="text-xs leading-relaxed text-cursor-text-faint">
+                {track.aside.prefix}
+                <a
+                  href={track.aside.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="underline decoration-cursor-border underline-offset-2 hover:text-cursor-text"
+                >
+                  {track.aside.linkLabel}
+                </a>
+                {track.aside.suffix ?? ''}
+              </p>
+            ) : null}
           </div>
         ))}
       </div>

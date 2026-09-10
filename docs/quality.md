@@ -39,6 +39,9 @@ Living scorecard for Cursor Community Serbia. Update after each phase.
 
 | Date       | Change                          |
 |------------|----------------------------------|
+| 2026-09-10 | Hackathon submit: admin can close/reopen the form (`hackathon_submissions_gate`); POST returns 409 while closed |
+| 2026-09-10 | Judge scoring: explicit finish lock; peer votes/winners after all judges finish; public awards only after admin publish |
+| 2026-09-10 | Hackathon judges score without Luma check-in; gallery no longer waits on Luma; checked-in judges get scoring + community favorites |
 | 2026-09-10 | Hackathon judge scores: save updates the card in place (no full gallery reload); aggregates refresh silently |
 | 2026-09-10 | Hackathon: `pnpm db:setup` now creates `hackathon_judge_final_top3` (gallery GET was warning that the relation did not exist) |
 | 2026-09-10 | Hackathon submit: teammate display names on gallery (emails private); one project per team (membership uniqueness + unique GitHub); listed teammates update the same row |

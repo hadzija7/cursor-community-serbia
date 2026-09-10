@@ -2,7 +2,10 @@ import { NextResponse, type NextRequest } from 'next/server'
 import { auth } from '@/lib/auth'
 import { getDb } from '@/lib/db'
 import { isHackathonJudge } from '@/lib/hackathon-judges'
-import { validateJudgeScore } from '@/lib/project-gallery'
+import {
+  canEditJudgeScore,
+  validateJudgeScore,
+} from '@/lib/project-gallery'
 
 export const dynamic = 'force-dynamic'
 
@@ -10,7 +13,7 @@ function toError(message: string, status: number, extra?: Record<string, unknown
   return NextResponse.json({ ok: false, message, error: message, ...extra }, { status })
 }
 
-/** Upsert a judge score (1–10) for a submission. Judge emails gated by HACKATHON_JUDGE_EMAILS. */
+/** Upsert a judge score (1–10). Google login + HACKATHON_JUDGE_EMAILS only — no Luma check-in. */
 export async function POST(request: NextRequest) {
   const session = await auth()
   if (!session?.user?.email) {
@@ -53,6 +56,44 @@ export async function POST(request: NextRequest) {
     `
     if (!existing[0]) {
       return toError('Project not found.', 404)
+    }
+
+    const submissions = (await db`
+      SELECT id FROM hackathon_project_submissions
+    `) as { id: string }[]
+    const projectIds = submissions.map((row) => row.id)
+
+    const reviewRows = (await db`
+      SELECT submission_id, judge_email
+      FROM hackathon_project_reviews
+      WHERE judge_email = ${email}
+    `) as { submission_id: string; judge_email: string }[]
+
+    let lockRows: { judge_email: string }[] = []
+    try {
+      lockRows = (await db`
+        SELECT judge_email FROM hackathon_judge_locks WHERE judge_email = ${email}
+      `) as { judge_email: string }[]
+    } catch (err) {
+      console.warn('hackathon_judge_locks unavailable:', err)
+      lockRows = []
+    }
+
+    const allowed = canEditJudgeScore({
+      judgeEmail: email,
+      submissionId,
+      lockedEmails: lockRows.map((row) => row.judge_email),
+      projectIds,
+      reviews: reviewRows.map((row) => ({
+        judgeEmail: row.judge_email,
+        submissionId: row.submission_id,
+      })),
+    })
+
+    if (!allowed) {
+      return toError('Your scoring is final. You cannot change scores after marking finished.', 409, {
+        code: 'SCORING_FINISHED',
+      })
     }
 
     const rows = await db`

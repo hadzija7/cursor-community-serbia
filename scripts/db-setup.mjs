@@ -176,6 +176,31 @@ try {
   `
 
   await sql`
+    CREATE TABLE IF NOT EXISTS hackathon_judge_locks (
+      judge_email TEXT PRIMARY KEY,
+      finished_at TIMESTAMPTZ NOT NULL DEFAULT now()
+    )
+  `
+
+  await sql`
+    CREATE TABLE IF NOT EXISTS hackathon_judge_results_publish (
+      id SMALLINT PRIMARY KEY DEFAULT 1 CHECK (id = 1),
+      published BOOLEAN NOT NULL DEFAULT false,
+      published_by TEXT,
+      published_at TIMESTAMPTZ
+    )
+  `
+
+  await sql`
+    CREATE TABLE IF NOT EXISTS hackathon_submissions_gate (
+      id SMALLINT PRIMARY KEY DEFAULT 1 CHECK (id = 1),
+      closed BOOLEAN NOT NULL DEFAULT false,
+      updated_by TEXT,
+      updated_at TIMESTAMPTZ
+    )
+  `
+
+  await sql`
     CREATE TABLE IF NOT EXISTS hackathon_judge_final_top3 (
       place INTEGER NOT NULL CHECK (place IN (1, 2, 3)),
       submission_id UUID NOT NULL REFERENCES hackathon_project_submissions (id) ON DELETE CASCADE,

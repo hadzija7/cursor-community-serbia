@@ -3,8 +3,8 @@ import { auth } from '@/lib/auth'
 import { getDb } from '@/lib/db'
 import { canManageJudgeFinalTop3, getJudgeEmails } from '@/lib/hackathon-judges'
 import {
+  areAllJudgesFinished,
   formatConvexTop3Cash,
-  isJudgingComplete,
   validateFinalTop3Ids,
   type JudgeAwardPlace,
 } from '@/lib/project-gallery'
@@ -16,11 +16,12 @@ function toError(message: string, status: number, extra?: Record<string, unknown
 }
 
 type ReviewRow = { submission_id: string; judge_email: string }
+type LockRow = { judge_email: string }
 
 /**
  * Confirm or override the final judge-panel top 3.
  * Allowed for HACKATHON_JUDGE_EMAILS or HACKATHON_ADMIN_EMAILS only after
- * every configured judge has scored every project (strict all-rated).
+ * every configured judge has marked scoring finished.
  */
 export async function POST(request: NextRequest) {
   const session = await auth()
@@ -72,8 +73,19 @@ export async function POST(request: NextRequest) {
       SELECT submission_id, judge_email FROM hackathon_project_reviews
     `) as ReviewRow[]
 
-    const allRated = isJudgingComplete({
+    let lockRows: LockRow[] = []
+    try {
+      lockRows = ((await db`
+        SELECT judge_email FROM hackathon_judge_locks
+      `) as LockRow[] | undefined) ?? []
+    } catch (err) {
+      console.warn('hackathon_judge_locks unavailable:', err)
+      lockRows = []
+    }
+
+    const allFinished = areAllJudgesFinished({
       judgeEmails: getJudgeEmails(),
+      lockedEmails: lockRows.map((row) => row.judge_email),
       projectIds,
       reviews: reviewRows.map((r) => ({
         judgeEmail: r.judge_email,
@@ -81,9 +93,9 @@ export async function POST(request: NextRequest) {
       })),
     })
 
-    if (!allRated) {
+    if (!allFinished) {
       return toError(
-        'Final top 3 can only be set after every configured judge has scored every project.',
+        'Final top 3 can only be set after every configured judge has marked scoring finished.',
         409,
         { code: 'JUDGING_INCOMPLETE' },
       )

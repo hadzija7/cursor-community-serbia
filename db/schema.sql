@@ -131,9 +131,30 @@ CREATE INDEX IF NOT EXISTS idx_hackathon_project_favorites_submission
 CREATE INDEX IF NOT EXISTS idx_hackathon_project_favorites_user
   ON hackathon_project_favorites (user_email);
 
+-- Judge marks scoring finished (scores freeze). One row per judge email.
+CREATE TABLE IF NOT EXISTS hackathon_judge_locks (
+  judge_email TEXT PRIMARY KEY,
+  finished_at TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+
+-- Singleton: admin publishes judge winners to the public gallery.
+CREATE TABLE IF NOT EXISTS hackathon_judge_results_publish (
+  id SMALLINT PRIMARY KEY DEFAULT 1 CHECK (id = 1),
+  published BOOLEAN NOT NULL DEFAULT false,
+  published_by TEXT,
+  published_at TIMESTAMPTZ
+);
+
+-- Singleton: admin closes the public submit form (default open when no row).
+CREATE TABLE IF NOT EXISTS hackathon_submissions_gate (
+  id SMALLINT PRIMARY KEY DEFAULT 1 CHECK (id = 1),
+  closed BOOLEAN NOT NULL DEFAULT false,
+  updated_by TEXT,
+  updated_at TIMESTAMPTZ
+);
+
 -- Final judge-panel top 3 (manual confirm / tie break). One row per place.
--- Written only after judging is complete (every judge scored every project),
--- or when averages already yield a clear unique top 3 that judges lock in.
+-- Written only after every judge has marked scoring finished.
 CREATE TABLE IF NOT EXISTS hackathon_judge_final_top3 (
   place INTEGER NOT NULL CHECK (place IN (1, 2, 3)),
   submission_id UUID NOT NULL REFERENCES hackathon_project_submissions (id) ON DELETE CASCADE,

@@ -32,11 +32,14 @@ Inspired by conference landing patterns (e.g. TUM Blockchain Conference): full-w
 | `/hackathon/sponsor` | Redirects to Overview `#special-thanks` (bookmarks / `hackathon.*` `/sponsor` rewrite) |
 | `/api/hackathon/event` | GET live date/location from Luma (static fallback) |
 | `/api/hackathon/sponsor` | POST sponsorship applications |
-| `/api/hackathon/submit` | GET existing submission for prefill; POST upsert (auth + Luma `checked_in`; GitHub URL shape only) |
-| `/api/hackathon/projects` | GET public gallery list with community favorites + viewer favorite/score state; judge aggregates gated |
-| `/api/hackathon/projects/review` | POST upsert judge score 1–10 (env-gated judge emails); response is the caller's score only |
+| `/api/hackathon/submit` | GET existing submission for prefill; POST upsert (auth + Luma `checked_in`; GitHub URL shape only; blocked when admin closed submissions) |
+| `/api/hackathon/submit/gate` | GET open/closed + whether viewer is admin; POST admin closes/reopens the submit form |
+| `/api/hackathon/projects` | GET public gallery list with community favorites + viewer favorite/score state; judge votes/winners gated until all judges finish; public awards only after admin publish |
+| `/api/hackathon/projects/review` | POST upsert judge score 1–10 (env-gated judge emails); blocked after that judge marks finished |
+| `/api/hackathon/projects/finish-scoring` | POST judge marks own scoring finished; admin can reopen `{ finished: false, judgeEmail }` |
+| `/api/hackathon/projects/publish-results` | POST admin publishes/unpublishes judge winners on the public gallery |
 | `/api/hackathon/projects/favorite` | POST toggle community favorite (max 3 per signed-in user) |
-| `/api/hackathon/projects/final-top3` | POST confirm/override final judge top 3 (judges/admins; only after all-rated) |
+| `/api/hackathon/projects/final-top3` | POST confirm/override final judge top 3 (judges/admins; only after all judges finish) |
 | `/api/auth/[...nextauth]` | Google OAuth sign-in/sign-out (NextAuth.js v5) |
 | `/api/hackathon/attendee-status` | GET Luma guest status for authenticated user |
 | `/api/hackathon/claim-credits` | POST claim sponsor credit code (requires check-in) |
@@ -96,9 +99,11 @@ When `NEXT_PUBLIC_HACKATHON_SITE_URL` is set, `/hackathon` on the main domain re
 
 - Table: `hackathon_sponsor_applications` in `db/schema.sql`
 - Table: `hackathon_project_submissions` in `db/schema.sql` (one row per attendee email; upsert on resubmit)
-- Table: `hackathon_project_reviews` — one score (1–10) per judge email per submission (`UNIQUE(judge_email, submission_id)`); peer scores never returned to other judges
+- Table: `hackathon_project_reviews` — one score (1–10) per judge email per submission (`UNIQUE(judge_email, submission_id)`); peer scores stay private until every judge marks scoring finished
+- Table: `hackathon_judge_locks` — judge marked scoring finished (`PRIMARY KEY(judge_email)`)
+- Table: `hackathon_judge_results_publish` — singleton (`id = 1`) admin publish flag for public award badges
 - Table: `hackathon_project_favorites` — community favorites (`UNIQUE(user_email, submission_id)`); API enforces max 3 per checked-in user + Luma check-in gate
-- Table: `hackathon_judge_final_top3` — confirmed final places 1–3 (`PRIMARY KEY(place)`, `UNIQUE(submission_id)`). Created by `pnpm db:setup` (was previously only in `db/schema.sql`).
+- Table: `hackathon_judge_final_top3` — confirmed final places 1–3 (`PRIMARY KEY(place)`, `UNIQUE(submission_id)`). Created by `pnpm db:setup`.
 - Env: `POSTGRES_URL` or `DATABASE_URL`
 
 ### Webhook
@@ -130,7 +135,7 @@ Edit `content/hackathon.ts` for:
 - Event title (`Grok Bot Serbia Hackathon`), tagline, `mascotImage` / `headerMark` (full-circle `/grokbot.svg`), `mascotPeekImage` (animated ink orb `/bloub-cercle-neutre-encre-anime.svg`), duration, and **Luma URL** (source of truth for live sync)
 - Static fallback `date` / `displayDate` / `location` (Belgrade, September 12, 2026 — used when Luma is unreachable)
 - Highlights grid (`hackathonStats`)
-- Prize tracks (`hackathonPrizes`: Convex cash for overall judge top 3 — 80.000 / 50.000 / 20.000 RSD; Kosmonaut coworking (community voting) — 15 / 10 / 5 entries per teammate on the top 3 teams, use within 3 months, claimed on their platform; Daytona credits $3,000 / $2,000 / $1,000 plus $100 for every participant (judge panel); ABC BootCamps — 50% / 40% / 30% scholarships to ABC Silicon Valley 2027 (judge panel))
+- Prize tracks (`hackathonPrizes`: Convex cash for overall judge top 3 — 80.000 / 50.000 / 20.000 RSD, plus a small aside linking the online Convex All Gas hackathon; Kosmonaut coworking (community voting) — 15 / 10 / 5 entries per teammate on the top 3 teams, use within 3 months, claimed on their platform; Daytona credits $3,000 / $2,000 / $1,000 plus $100 for every participant (judge panel); ABC BootCamps — 50% / 40% / 30% scholarships to ABC Silicon Valley 2027 (judge panel))
 - Hacker guide (`hackathonGuidePurpose`, `hackathonGuideRulesIntro`, `hackathonGuideRules`, `hackathonGuideAgenda`, `hackathonGuideJudging`, `hackathonGuideJudgingCriteria`, `hackathonGuideSteps`, `hackathonGuideTopicsIntro`, `hackathonGuideTopics`) — source for `/hackathon/guide`
 - Mentors, hosts, and judges (`hackathonMentors`, `hackathonHosts`, `hackathonJudges`) — source for `/hackathon/mentors`
 - Tech partner logos (`hackathonSponsors`: Firecrawl, Render, Convex, Daytona, Wispr Flow, Exa, Fal.ai, Wonder, x.ai) — Overview heading is **Tech partners**
@@ -173,7 +178,7 @@ Edit `content/hackathon.ts` for:
 ### Prizes section
 
 - Rendered on the Prizes tab (`#prizes`)
-- One track group per sponsoring prize category; place cards show place + amount only (sponsor name lives on the track header logo); optional `note` for track rules or participation perks
+- One track group per sponsoring prize category; place cards show place + amount only (sponsor name lives on the track header logo); optional `note` for track rules or participation perks; optional `aside` for a small extra line with an outbound link (Convex All Gas hackathon)
 - Types: `HackathonPrizeTrack` / `HackathonPrizePlace` in `lib/types.ts`
 
 ### Live date & location from Luma
@@ -226,6 +231,7 @@ Checked-in attendees submit one project for judging via `/hackathon/submit` (hea
 | Signed in, Luma `registered` | Check-in-first message | `403` with clear check-in message |
 | Signed in, Luma `not_found` | Register on Luma CTA | `403` |
 | Signed in, Luma `checked_in` | Form | Accepts POST |
+| Submissions closed by admin | Closed message (admin still sees reopen) | `409 SUBMISSIONS_CLOSED` |
 
 **Fields:** project title (short), project description (multi-line), public GitHub repo URL, demo recording URL (3–5 min helper text), live demo http(s) URL — all required. Optional **teammates** (max **2**; teams are 1–3 including the submitter): each slot is a **display name** + **email**. Empty slots allowed for solo. Server rejects more than 2, invalid emails, missing names, duplicates, and the submitter’s own email. Names are shown on the public gallery; emails stay private (judge/admin API only).
 
@@ -237,49 +243,64 @@ Checked-in attendees submit one project for judging via `/hackathon/submit` (hea
 
 **One project per team:** `POST` rejects (409) if any proposed member is already on another submission, or if the GitHub repo is already used by another team.
 
+**Close submissions:** `HACKATHON_ADMIN_EMAILS` can close or reopen the form from `/hackathon/submit` (`POST /api/hackathon/submit/gate`). Default is open (missing row / `closed = false`). While closed, the submit page hides the form for everyone and `POST /api/hackathon/submit` returns `409 SUBMISSIONS_CLOSED` (new entries and updates). Admins do not need Luma check-in to toggle the gate. Local preview: `/hackathon/submit?preview=1&admin=1`.
+
 **Components / routes:**
 
 - `app/hackathon/submit/page.tsx` + `components/HackathonProjectSubmitForm.tsx`
 - `GET` / `POST /api/hackathon/submit`
-- `lib/project-submission.ts`, `lib/project-team.ts`, `lib/github-repo.ts`
+- `GET` / `POST /api/hackathon/submit/gate`
+- `lib/project-submission.ts`, `lib/project-team.ts`, `lib/github-repo.ts`, `lib/hackathon-submissions.ts`
 
 ### Projects gallery, judging, and community votes
 
 Public gallery at `/hackathon/projects` (header **Projects** tab). Anyone can browse cards; check-in is **not** required to view. Builds on existing `hackathon_project_submissions` (does not reimplement submit).
 
-**Card contents:** title, short description, submitter name (when present), optional teammate **display names** (never emails), embedded YouTube/Loom demo when `demo_recording_url` resolves (else external link), prominent live demo link, optional GitHub link, favorite count (highlighted when the viewer favorited it). Judge averages are **not** shown to the public while scoring. After judging completes with a clear or confirmed top 3, winning cards show Convex cash award labels (80.000 / 50.000 / 20.000 RSD). Teammate emails are included in the gallery API only for judges/admins.
+**Card contents:** title, short description, submitter name (when present), optional teammate **display names** (never emails), embedded YouTube/Loom demo when `demo_recording_url` resolves (else external link), prominent live demo link, optional GitHub link, favorite count (highlighted when the viewer favorited it). Judge averages, peer scores, and Convex award badges are **not** shown to the public until an admin publishes results. Teammate emails are included in the gallery API only for judges/admins.
+
+**Judge scoring finish:**
+
+- After a judge has scored every current project, they click **Mark scoring finished** (`POST /api/hackathon/projects/finish-scoring`). This writes `hackathon_judge_locks` and freezes their scores (`409 SCORING_FINISHED` on later review upserts)
+- A late new submission reopens scoring only for that new project; already-finished scores stay frozen
+- Admins can reopen a judge (`{ finished: false, judgeEmail }`)
 
 **Judge score privacy:**
 
-- Each judge only ever receives **their own** `myScore` in API responses — never peer scores
-- `averageScore` / `reviewCount` are null / 0 for everyone until **all-rated**, and then only for judges/admins
-- Public gallery does not leak review counts or averages during voting
+- While any judge is still scoring, each judge only receives **their own** `myScore` — never peer scores or averages
+- After **every** configured judge has marked scoring finished, judges and admins see winners (averages / top 3) **and** a per-judge vote table
+- Public gallery JSON omits peer votes, averages, and award badges until an admin publishes (`POST /api/hackathon/projects/publish-results`). The judge panel stays empty for non-judges. After publish, public cards show winner badges only — not how each judge voted.
 
-**All-rated (strict):** every email in `HACKATHON_JUDGE_EMAILS` has a row in `hackathon_project_reviews` for **every** submission. Empty judge list or empty gallery → not complete.
+**All-rated vs all-finished:** all-rated = every judge scored every project. All-finished = all-rated **and** every judge has a lock row. Revealing votes and setting final top 3 require all-finished.
 
 **Aggregate top 3:** arithmetic **mean** of all judge scores per project (1–10), rounded to one decimal for display. Ranking uses averages only.
 
-**Clear unique top 3:** `avg(1st) > avg(2nd) > avg(3rd)` and (no 4th project or `avg(3rd) > avg(4th)`). When clear after all-rated, provisional top 3 + Convex awards may surface. Title / submission time are **never** used to invent final placement.
+**Clear unique top 3:** `avg(1st) > avg(2nd) > avg(3rd)` and (no 4th project or `avg(3rd) > avg(4th)`). When clear after all-finished, judges see a provisional top 3. Title / submission time are **never** used to invent final placement.
 
-**Ties:** if averages do not yield a unique 1st/2nd/3rd, status is `needs_decision` — no auto tie-break. Judges (`HACKATHON_JUDGE_EMAILS`) or admins (`HACKATHON_ADMIN_EMAILS`) set final places via `POST /api/hackathon/projects/final-top3` into `hackathon_judge_final_top3`.
+**Ties:** if averages do not yield a unique 1st/2nd/3rd, status is `needs_decision` — no auto tie-break. Judges (`HACKATHON_JUDGE_EMAILS`) or admins (`HACKATHON_ADMIN_EMAILS`) set final places via `POST /api/hackathon/projects/final-top3` into `hackathon_judge_final_top3` (only after all-finished).
 
-**Convex cash awards (final top 3):** 1st **80.000 RSD**, 2nd **50.000 RSD**, 3rd **20.000 RSD** — cash prize split across overall winners by judge panel. Shown on Prizes (`Overall winners (judge panel)`), judge panel, and winning project cards. Not claimable `CREDIT_CODE_*` promo codes. Separate from community favorites.
+**Publishing:** only `HACKATHON_ADMIN_EMAILS`. Requires all-finished and a unique top 3 (clear averages or a saved final). Until published, winning cards stay unmarked for the public. Unpublish hides badges again.
+
+**Convex cash awards (final top 3):** 1st **80.000 RSD**, 2nd **50.000 RSD**, 3rd **20.000 RSD** — cash prize split across overall winners by judge panel. Shown on Prizes (`Overall winners (judge panel)`), the judge panel after all-finished, and on public cards only after publish. Not claimable `CREDIT_CODE_*` promo codes. Separate from community favorites. Prizes card includes a small aside: keep building with Convex at the [online All Gas hackathon](https://luma.com/convex-allgas-hackathon?tk=122o36).
 
 **Judges (env-gated):**
 
 - `HACKATHON_JUDGE_EMAILS` — comma-separated Google emails, case-insensitive
 - Only signed-in users whose email is in that list see score controls and can `POST /api/hackathon/projects/review`
+- **Luma check-in is not required to judge.** Scoring is gated only by Google login + judge allowlist.
+- If a judge is also Luma `checked_in`, they get **both** judge scoring and community favorites (max 3)
 - One review per judge per project (upsert on `UNIQUE(judge_email, submission_id)`)
 - Score must be an integer 1–10 (`CHECK` + API validation)
 - Progress: “rated X of Y projects” in the judge panel
 - Saving a score updates the card and progress in place (no full gallery reload); aggregates refresh in the background
+- After scoring every project, the judge must **Mark scoring finished** to freeze their ballot
+- Gallery does not wait on Luma before showing projects / score controls
 
 **Community favorites:**
 
 - Checked-in, signed-in users can favorite / unfavorite via `POST /api/hackathon/projects/favorite`
 - Requires Google login **and** Luma `checked_in` (same gate as submit / credit claims via `assertCheckedIn`); otherwise `403` with `code: NOT_CHECKED_IN`
 - Hard cap: **3 favorites per user** across all projects; enforced in the UI (client pre-check) and atomically in Postgres (`pg_advisory_xact_lock` + conditional `INSERT`); a 4th returns `409` with `code: FAVORITE_CAP` and a clear message
-- Unauthenticated visitors see the gallery plus a login CTA for voting; signed-in but not checked-in users see a check-in message
+- Unauthenticated visitors see the gallery plus a login CTA for voting; signed-in but not checked-in hackers see a check-in message. Judges who are not checked in still score; they only see a Luma hint if they also want to favorite.
 
 **Community leaderboard (Projects page):**
 
@@ -289,12 +310,12 @@ Public gallery at `/hackathon/projects` (header **Projects** tab). Anyone can br
 - Helper: `rankCommunityLeaderboard` in `lib/project-gallery.ts`; UI: `components/HackathonCommunityLeaderboard.tsx`
 - Stays separate from judge scoring
 
-**Local UI preview (dev only):** `/hackathon/projects?preview=1` loads a single official fixture card (Cursor Serbia Community) without Postgres; add `&judge=1` to mock judge score controls. Prefer live DB data when available — do not add mock submissions to the fixture list.
+**Local UI preview (dev only):** `/hackathon/projects?preview=1` loads a single official fixture card (Cursor Serbia Community) without Postgres; add `&judge=1` to mock judge score controls; add `&admin=1` to mock the publish control; add `&nocheckin=1` to simulate a judge who is not Luma-checked-in (scoring only, no community favorites). Prefer live DB data when available — do not add mock submissions to the fixture list.
 
 **Components / routes:**
 
 - `app/hackathon/projects/page.tsx` + `components/HackathonProjectsGallery.tsx` + `components/HackathonProjectCard.tsx` + `components/HackathonCommunityLeaderboard.tsx` + `components/HackathonJudgePanel.tsx`
-- `GET /api/hackathon/projects`, `POST /api/hackathon/projects/review`, `POST /api/hackathon/projects/favorite`, `POST /api/hackathon/projects/final-top3`
+- `GET /api/hackathon/projects`, `POST /api/hackathon/projects/review`, `POST /api/hackathon/projects/finish-scoring`, `POST /api/hackathon/projects/publish-results`, `POST /api/hackathon/projects/favorite`, `POST /api/hackathon/projects/final-top3`
 - `lib/hackathon-judges.ts`, `lib/project-gallery.ts`, `lib/demo-embed.ts`
 
 ### Env vars
@@ -306,7 +327,7 @@ Public gallery at `/hackathon/projects` (header **Projects** tab). Anyone can br
 | `AUTH_SECRET` | NextAuth JWT signing secret (`openssl rand -base64 32`) |
 | `CREDIT_CODE_*` | Shared per-sponsor promo codes (e.g. `CREDIT_CODE_DAYTONA`, `CREDIT_CODE_EXA`, `CREDIT_CODE_RENDER`, `CREDIT_CODE_XAI`) |
 | `HACKATHON_JUDGE_EMAILS` | Comma-separated judge emails allowed to score projects 1–10 |
-| `HACKATHON_ADMIN_EMAILS` | Optional admins who can set/confirm final judge top 3 |
+| `HACKATHON_ADMIN_EMAILS` | Admins who can close/reopen submissions, publish/unpublish judge results, reopen a judge lock, and set/confirm final top 3 |
 
 ## Subdomain (Vercel + DNS)
 
@@ -326,15 +347,19 @@ The app is ready for `hackathon.cursorserbia.com`. Creating the hostname is a da
 - [ ] `/hackathon/guide` shows purpose, rules, agenda, judging (19 Sep winners + criteria), guidelines, and three optional idea sparks
 - [ ] Guide submit step links to `/hackathon/submit`
 - [ ] `/hackathon/submit` shows login CTA when signed out; check-in message when registered; form when checked in
+- [ ] Admin (`HACKATHON_ADMIN_EMAILS`) can close/reopen submissions on `/hackathon/submit`; closed hides the form and blocks POST
 - [ ] `/hackathon/submit` prefills from `GET /api/hackathon/submit` when a row exists (submitter or listed teammate); CTA says Update project
 - [ ] `POST /api/hackathon/submit` rejects unauthenticated and not-checked-in callers; one project per team (membership + unique GitHub); listed teammates update the same row
 - [ ] `/hackathon/projects` cards show teammate **names**, never emails
 - [ ] GitHub URL must be a `github.com/owner/repo` link (shape only; no live public-repo API check)
 - [ ] `/hackathon/projects` lists submission cards (or empty state); embeds YouTube/Loom when possible
 - [ ] `/hackathon/projects` shows community leaderboard top 3 by favorite count (ties: earlier submit, then title)
-- [ ] Judge score controls only for emails in `HACKATHON_JUDGE_EMAILS`; upsert 1–10; peers never see each other’s scores
-- [ ] After all-rated, clear averages yield provisional top 3; ties show needs-decision + final-top3 API
-- [ ] Final top 3 cards show Convex cash 80.000 / 50.000 / 20.000 RSD awards
+- [ ] Judge score controls only for emails in `HACKATHON_JUDGE_EMAILS`; upsert 1–10; peers never see each other’s scores until every judge marks scoring finished; Luma check-in is **not** required to score
+- [ ] After scoring every project, a judge can mark scoring finished; further score changes return 409
+- [ ] When every judge has finished, judges/admins see winners and a per-judge vote table; the public gallery does not
+- [ ] Admin publish shows Convex award badges on public cards; unpublish hides them again
+- [ ] A checked-in judge can both score (judge) and favorite (community, max 3)
+- [ ] `/hackathon/prizes` Convex track shows cash 80 / 50 / 20 RSD plus a small All Gas hackathon link
 - [ ] Checked-in users can favorite up to 3 projects; 4th blocked in UI and returns clear API cap error
 - [ ] Favoriting requires Luma check-in (403 when registered / not found)
 - [ ] `/hackathon/sponsor` redirects to Overview `#special-thanks`

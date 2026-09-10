@@ -47,6 +47,12 @@ export const hackathonPrizes: HackathonPrizeTrack[] = [
     logoHeight: 'h-8',
     category: 'Overall winners (judge panel)',
     note: 'Cash prize split across the final top 3 by judge scores (average of 1–10). Separate from community favorites.',
+    aside: {
+      prefix: 'Keep building with Convex at the ',
+      href: 'https://luma.com/convex-allgas-hackathon?tk=122o36',
+      linkLabel: 'online All Gas hackathon',
+      suffix: '.',
+    },
     places: [
       { place: '1st place', amount: '80.000 RSD', accent: 'orange' },
       { place: '2nd place', amount: '50.000 RSD', accent: 'yellow' },
@@ -794,6 +800,12 @@ export const hackathonSponsorProfiles: HackathonSponsorProfile[] = [
         kind: 'confirmed',
         label: 'Overall winners (judge panel)',
         detail: 'Cash prize split on top 3: 1st 80.000 RSD · 2nd 50.000 RSD · 3rd 20.000 RSD.',
+      },
+      {
+        kind: 'public',
+        label: 'Keep building online',
+        detail:
+          'Continue with Convex at the online All Gas hackathon: https://luma.com/convex-allgas-hackathon?tk=122o36',
       },
       { kind: 'public', label: 'Start here: free for small teams', detail: 'Public Convex tier, not a published event credit.' },
     ],

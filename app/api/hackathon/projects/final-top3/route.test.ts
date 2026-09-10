@@ -75,6 +75,7 @@ describe('POST /api/hackathon/projects/final-top3', () => {
         { submission_id: P2, judge_email: 'judge@example.com' },
         { submission_id: P3, judge_email: 'judge@example.com' },
       ])
+      .mockResolvedValueOnce([])
     vi.spyOn(db, 'getDb').mockReturnValue(sql as unknown as ReturnType<typeof db.getDb>)
 
     const response = await POST(buildRequest({ firstId: P1, secondId: P2, thirdId: P3 }))
@@ -98,6 +99,10 @@ describe('POST /api/hackathon/projects/final-top3', () => {
       .fn()
       .mockResolvedValueOnce([{ id: P1 }, { id: P2 }, { id: P3 }])
       .mockResolvedValueOnce(reviews)
+      .mockResolvedValueOnce([
+        { judge_email: 'judge@example.com' },
+        { judge_email: 'other@example.com' },
+      ])
       .mockResolvedValueOnce([]) // atomic DELETE + INSERT CTE
     vi.spyOn(db, 'getDb').mockReturnValue(sql as unknown as ReturnType<typeof db.getDb>)
 
@@ -111,9 +116,33 @@ describe('POST /api/hackathon/projects/final-top3', () => {
     expect(body.ok).toBe(true)
     expect(body.top3.map((t) => t.place)).toEqual([1, 2, 3])
     expect(body.top3[0]?.awardLabel).toBe('80.000 RSD')
-    expect(sql).toHaveBeenCalledTimes(3)
-    const writeSql = String(sql.mock.calls[2]?.[0]?.join?.('') ?? sql.mock.calls[2]?.[0] ?? '')
+    expect(sql).toHaveBeenCalledTimes(4)
+    const writeSql = String(sql.mock.calls[3]?.[0]?.join?.('') ?? sql.mock.calls[3]?.[0] ?? '')
     expect(writeSql).toMatch(/DELETE FROM hackathon_judge_final_top3/i)
     expect(writeSql).toMatch(/INSERT INTO hackathon_judge_final_top3/i)
+  })
+
+  it('rejects when every judge scored but not all have marked finished', async () => {
+    vi.mocked(auth).mockResolvedValue({
+      user: { email: 'admin@example.com' },
+      expires: '2099-01-01',
+    })
+
+    const reviews = [P1, P2, P3].flatMap((id) => [
+      { submission_id: id, judge_email: 'judge@example.com' },
+      { submission_id: id, judge_email: 'other@example.com' },
+    ])
+
+    const sql = vi
+      .fn()
+      .mockResolvedValueOnce([{ id: P1 }, { id: P2 }, { id: P3 }])
+      .mockResolvedValueOnce(reviews)
+      .mockResolvedValueOnce([{ judge_email: 'judge@example.com' }])
+    vi.spyOn(db, 'getDb').mockReturnValue(sql as unknown as ReturnType<typeof db.getDb>)
+
+    const response = await POST(buildRequest({ firstId: P1, secondId: P2, thirdId: P3 }))
+    const body = (await response.json()) as { code?: string }
+    expect(response.status).toBe(409)
+    expect(body.code).toBe('JUDGING_INCOMPLETE')
   })
 })
