@@ -7,10 +7,15 @@ import {
 } from '@/lib/hackathon-judges'
 import {
   analyzeJudgeAggregate,
+  areAllJudgesFinished,
   averageJudgeScore,
+  canEditJudgeScore,
+  canPublishJudgeResults,
   favoriteCapMessage,
   formatConvexTop3Cash,
+  isJudgeScoringFinished,
   isJudgingComplete,
+  judgeHasScoredAll,
   rankCommunityLeaderboard,
   validateFinalTop3Ids,
   validateJudgeScore,
@@ -134,6 +139,123 @@ describe('isJudgingComplete', () => {
     expect(
       isJudgingComplete({ judgeEmails: ['a@x.com'], projectIds: [], reviews: [] }),
     ).toBe(false)
+  })
+})
+
+describe('judge scoring finish helpers', () => {
+  const reviews = [
+    { judgeEmail: 'a@x.com', submissionId: 'p1' },
+    { judgeEmail: 'a@x.com', submissionId: 'p2' },
+    { judgeEmail: 'b@x.com', submissionId: 'p1' },
+    { judgeEmail: 'b@x.com', submissionId: 'p2' },
+  ]
+
+  it('requires a lock plus a score on every project', () => {
+    expect(
+      judgeHasScoredAll({
+        judgeEmail: 'a@x.com',
+        projectIds: ['p1', 'p2'],
+        reviews,
+      }),
+    ).toBe(true)
+    expect(
+      isJudgeScoringFinished({
+        judgeEmail: 'a@x.com',
+        lockedEmails: [],
+        projectIds: ['p1', 'p2'],
+        reviews,
+      }),
+    ).toBe(false)
+    expect(
+      isJudgeScoringFinished({
+        judgeEmail: 'a@x.com',
+        lockedEmails: ['a@x.com'],
+        projectIds: ['p1', 'p2'],
+        reviews,
+      }),
+    ).toBe(true)
+  })
+
+  it('treats a late project as unfinished even if the judge previously locked', () => {
+    expect(
+      isJudgeScoringFinished({
+        judgeEmail: 'a@x.com',
+        lockedEmails: ['a@x.com'],
+        projectIds: ['p1', 'p2', 'p3'],
+        reviews,
+      }),
+    ).toBe(false)
+  })
+
+  it('requires every configured judge to lock before revealing', () => {
+    expect(
+      areAllJudgesFinished({
+        judgeEmails: ['a@x.com', 'b@x.com'],
+        lockedEmails: ['a@x.com'],
+        projectIds: ['p1', 'p2'],
+        reviews,
+      }),
+    ).toBe(false)
+    expect(
+      areAllJudgesFinished({
+        judgeEmails: ['a@x.com', 'b@x.com'],
+        lockedEmails: ['a@x.com', 'b@x.com'],
+        projectIds: ['p1', 'p2'],
+        reviews,
+      }),
+    ).toBe(true)
+  })
+
+  it('freezes existing scores after finish, but allows scoring a new project', () => {
+    expect(
+      canEditJudgeScore({
+        judgeEmail: 'a@x.com',
+        submissionId: 'p1',
+        lockedEmails: ['a@x.com'],
+        projectIds: ['p1', 'p2'],
+        reviews,
+      }),
+    ).toBe(false)
+    expect(
+      canEditJudgeScore({
+        judgeEmail: 'a@x.com',
+        submissionId: 'p3',
+        lockedEmails: ['a@x.com'],
+        projectIds: ['p1', 'p2', 'p3'],
+        reviews,
+      }),
+    ).toBe(true)
+  })
+
+  it('publishes only after all judges finish and a unique top 3 exists', () => {
+    expect(
+      canPublishJudgeResults({
+        allFinished: false,
+        finalConfirmed: true,
+        aggregateStatus: 'clear',
+      }),
+    ).toBe(false)
+    expect(
+      canPublishJudgeResults({
+        allFinished: true,
+        finalConfirmed: false,
+        aggregateStatus: 'needs_decision',
+      }),
+    ).toBe(false)
+    expect(
+      canPublishJudgeResults({
+        allFinished: true,
+        finalConfirmed: false,
+        aggregateStatus: 'clear',
+      }),
+    ).toBe(true)
+    expect(
+      canPublishJudgeResults({
+        allFinished: true,
+        finalConfirmed: true,
+        aggregateStatus: 'needs_decision',
+      }),
+    ).toBe(true)
   })
 })
 

@@ -126,6 +126,7 @@ describe('POST /api/hackathon/submit', () => {
     const sql = vi.fn()
       .mockResolvedValueOnce([])
       .mockResolvedValueOnce([])
+      .mockResolvedValueOnce([])
       .mockResolvedValueOnce([
         {
           id: '11111111-1111-1111-1111-111111111111',
@@ -150,7 +151,23 @@ describe('POST /api/hackathon/submit', () => {
       'hacker@example.com',
       expect.stringMatching(/check in/i),
     )
-    expect(sql).toHaveBeenCalledTimes(3)
+    expect(sql).toHaveBeenCalledTimes(4)
+  })
+
+  it('rejects submissions after an admin closes the form', async () => {
+    vi.mocked(auth).mockResolvedValue({
+      user: { email: 'hacker@example.com', name: 'Hacker' },
+      expires: '2099-01-01',
+    })
+    const sql = vi.fn().mockResolvedValueOnce([{ closed: true }])
+    vi.spyOn(db, 'getDb').mockReturnValue(sql as unknown as ReturnType<typeof db.getDb>)
+
+    const response = await POST(buildRequest(validBody))
+    const body = (await response.json()) as { code?: string }
+
+    expect(response.status).toBe(409)
+    expect(body.code).toBe('SUBMISSIONS_CLOSED')
+    expect(sql).toHaveBeenCalledTimes(1)
   })
 
   it('updates the existing team row when a listed teammate submits', async () => {
@@ -174,6 +191,7 @@ describe('POST /api/hackathon/submit', () => {
       updated_at: '2026-09-04T12:00:00.000Z',
     }
     const sql = vi.fn()
+      .mockResolvedValueOnce([])
       .mockResolvedValueOnce([existing])
       .mockResolvedValueOnce([])
       .mockResolvedValueOnce([
@@ -191,7 +209,7 @@ describe('POST /api/hackathon/submit', () => {
     expect(response.status).toBe(200)
     expect(body.ok).toBe(true)
     expect(body.message).toMatch(/updated/i)
-    expect(sql).toHaveBeenCalledTimes(3)
+    expect(sql).toHaveBeenCalledTimes(4)
   })
 
   it('rejects listing a teammate who is already on another project', async () => {
@@ -209,6 +227,7 @@ describe('POST /api/hackathon/submit', () => {
       teammate_emails: ['mate@example.com'],
     }
     const sql = vi.fn()
+      .mockResolvedValueOnce([])
       .mockResolvedValueOnce([existing])
       .mockResolvedValueOnce([
         {
@@ -232,7 +251,7 @@ describe('POST /api/hackathon/submit', () => {
 
     expect(response.status).toBe(409)
     expect(body.message).toMatch(/already on/i)
-    expect(sql).toHaveBeenCalledTimes(2)
+    expect(sql).toHaveBeenCalledTimes(3)
   })
 
   it('rejects a GitHub repo that already belongs to another team', async () => {
@@ -241,6 +260,7 @@ describe('POST /api/hackathon/submit', () => {
       expires: '2099-01-01',
     })
     const sql = vi.fn()
+      .mockResolvedValueOnce([])
       .mockResolvedValueOnce([])
       .mockResolvedValueOnce([
         {
@@ -259,7 +279,7 @@ describe('POST /api/hackathon/submit', () => {
 
     expect(response.status).toBe(409)
     expect(body.message).toMatch(/GitHub repo/i)
-    expect(sql).toHaveBeenCalledTimes(2)
+    expect(sql).toHaveBeenCalledTimes(3)
   })
 
   it('rejects more than two teammate emails', async () => {

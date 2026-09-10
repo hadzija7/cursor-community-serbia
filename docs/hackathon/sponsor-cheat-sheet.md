@@ -162,6 +162,7 @@ flowchart LR
 **What you get (confirmed)**
 
 - **Prize track — Overall winners (judge panel):** cash split **80.000 / 50.000 / 20.000 RSD** (1st / 2nd / 3rd) by judge scores.  
+- Keep building: [Convex All Gas hackathon](https://luma.com/convex-allgas-hackathon?tk=122o36) (online).  
 - Start today: Convex is free for small teams — that is their public tier, not a published event credit.
 
 ---

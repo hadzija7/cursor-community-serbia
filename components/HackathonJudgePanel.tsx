@@ -9,14 +9,20 @@ type Props = {
   panel: JudgePanelSummary
   projects: ProjectGalleryItem[]
   busy?: boolean
+  isAdmin?: boolean
   onConfirmTop3: (ids: { firstId: string; secondId: string; thirdId: string }) => Promise<void>
+  onFinishScoring?: () => Promise<void>
+  onPublishResults?: (published: boolean) => Promise<void>
 }
 
 export default function HackathonJudgePanel({
   panel,
   projects,
   busy = false,
+  isAdmin = false,
   onConfirmTop3,
+  onFinishScoring,
+  onPublishResults,
 }: Props) {
   const { t } = useI18n()
   const [firstId, setFirstId] = useState(panel.top3?.[0]?.id ?? '')
@@ -34,25 +40,36 @@ export default function HackathonJudgePanel({
     [projects],
   )
 
-  // Judges always see their scoring progress; aggregates only after allRated.
+  const judgeEmails = useMemo(() => {
+    const fromVotes = panel.peerVotes?.[0]?.scores.map((score) => score.judgeEmail) ?? []
+    return [...new Set(fromVotes)]
+  }, [panel.peerVotes])
+
   const showProgress = panel.projectCount > 0
   const showAggregates = panel.aggregateStatus !== 'hidden'
+  const blocked = busy || saving
 
-  if (!showProgress && !showAggregates && !panel.canSetFinalTop3) {
+  if (!showProgress && !showAggregates && !panel.canSetFinalTop3 && !isAdmin) {
     return null
   }
 
-  const handleConfirm = async () => {
+  const run = async (action: () => Promise<void>) => {
     setLocalError('')
     setSaving(true)
     try {
-      await onConfirmTop3({ firstId, secondId, thirdId })
+      await action()
     } catch (err) {
       setLocalError(err instanceof Error ? err.message : t('hackathon.projectsGenericError'))
     } finally {
       setSaving(false)
     }
   }
+
+  const waitingLabel = panel.allFinished
+    ? t('hackathon.projectsJudgeAllFinished')
+    : panel.allRated
+      ? t('hackathon.projectsJudgeAllRated')
+      : t('hackathon.projectsJudgeWaiting')
 
   return (
     <section
@@ -76,10 +93,36 @@ export default function HackathonJudgePanel({
           {t('hackathon.projectsJudgeProgress')
             .replace('{rated}', String(panel.myRatedCount))
             .replace('{total}', String(panel.projectCount))}
-          {panel.allRated
-            ? ` · ${t('hackathon.projectsJudgeAllRated')}`
-            : ` · ${t('hackathon.projectsJudgeWaiting')}`}
+          {` · ${waitingLabel}`}
         </p>
+      ) : null}
+
+      {panel.canFinishScoring && onFinishScoring ? (
+        <div className="space-y-2 rounded-xl border border-cursor-border bg-cursor-bg/40 p-3">
+          <p className="text-sm text-cursor-text-secondary">
+            {t('hackathon.projectsJudgeFinishHint')}
+          </p>
+          <button
+            type="button"
+            disabled={blocked}
+            onClick={() => void run(onFinishScoring)}
+            className="rounded-md bg-cursor-text px-4 py-2 text-sm font-medium text-cursor-bg transition-colors hover:bg-cursor-text-muted disabled:opacity-60"
+          >
+            {t('hackathon.projectsJudgeFinishCta')}
+          </button>
+        </div>
+      ) : null}
+
+      {panel.myFinished && !panel.allFinished ? (
+        <p className="text-sm text-cursor-text-muted">
+          {t('hackathon.projectsJudgeFinishedWaiting')
+            .replace('{finished}', String(panel.finishedCount))
+            .replace('{total}', String(panel.judgeCount))}
+        </p>
+      ) : null}
+
+      {panel.myFinished && panel.allFinished ? (
+        <p className="text-sm text-cursor-text-muted">{t('hackathon.projectsJudgeFinished')}</p>
       ) : null}
 
       {panel.needsDecision ? (
@@ -108,6 +151,56 @@ export default function HackathonJudgePanel({
               </li>
             ))}
           </ol>
+        </div>
+      ) : null}
+
+      {panel.peerVotes && panel.peerVotes.length > 0 ? (
+        <div className="space-y-2">
+          <p className="text-xs font-semibold uppercase tracking-[0.14em] text-cursor-text-muted">
+            {t('hackathon.projectsJudgePeerHeading')}
+          </p>
+          <div className="overflow-x-auto">
+            <table className="min-w-full border-collapse text-left text-sm">
+              <thead>
+                <tr className="text-xs uppercase tracking-wide text-cursor-text-faint">
+                  <th className="border-b border-cursor-border px-2 py-1.5 font-medium">
+                    {t('hackathon.projectsJudgePeerProject')}
+                  </th>
+                  {judgeEmails.map((email) => (
+                    <th key={email} className="border-b border-cursor-border px-2 py-1.5 font-medium">
+                      {email}
+                    </th>
+                  ))}
+                  <th className="border-b border-cursor-border px-2 py-1.5 font-medium">
+                    {t('hackathon.projectsJudgePeerAvg')}
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                {panel.peerVotes.map((row) => (
+                  <tr key={row.submissionId}>
+                    <td className="border-b border-cursor-border px-2 py-1.5 font-medium text-cursor-text">
+                      {row.title}
+                    </td>
+                    {judgeEmails.map((email) => {
+                      const score = row.scores.find((item) => item.judgeEmail === email)?.score
+                      return (
+                        <td
+                          key={`${row.submissionId}-${email}`}
+                          className="border-b border-cursor-border px-2 py-1.5 tabular-nums text-cursor-text-secondary"
+                        >
+                          {score == null ? '—' : score}
+                        </td>
+                      )
+                    })}
+                    <td className="border-b border-cursor-border px-2 py-1.5 tabular-nums text-cursor-text-secondary">
+                      {row.averageScore == null ? '—' : row.averageScore}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
           <p className="text-xs text-cursor-text-faint">{t('hackathon.projectsJudgePrivacyNote')}</p>
         </div>
       ) : null}
@@ -156,7 +249,7 @@ export default function HackathonJudgePanel({
                 <select
                   value={value}
                   onChange={(e) => setter(e.target.value)}
-                  disabled={busy || saving}
+                  disabled={blocked}
                   className="rounded-md border border-cursor-border bg-cursor-surface px-3 py-2 text-sm text-cursor-text"
                 >
                   <option value="">{t('hackathon.projectsJudgePickPlaceholder')}</option>
@@ -171,20 +264,44 @@ export default function HackathonJudgePanel({
           </div>
           <button
             type="button"
-            disabled={busy || saving || !firstId || !secondId || !thirdId}
-            onClick={() => void handleConfirm()}
+            disabled={blocked || !firstId || !secondId || !thirdId}
+            onClick={() => void run(() => onConfirmTop3({ firstId, secondId, thirdId }))}
             className="rounded-md bg-cursor-text px-4 py-2 text-sm font-medium text-cursor-bg transition-colors hover:bg-cursor-text-muted disabled:opacity-60"
           >
             {panel.finalConfirmed
               ? t('hackathon.projectsJudgeUpdateFinal')
               : t('hackathon.projectsJudgeSaveFinal')}
           </button>
-          {localError ? (
-            <p className="text-sm text-cursor-accent-red" role="alert">
-              {localError}
-            </p>
-          ) : null}
         </div>
+      ) : null}
+
+      {isAdmin && onPublishResults ? (
+        <div className="space-y-2 border-t border-cursor-border pt-4">
+          <p className="text-sm text-cursor-text-secondary">
+            {panel.resultsPublished
+              ? t('hackathon.projectsPublished')
+              : t('hackathon.projectsUnpublished')}
+            {panel.canPublishResults && !panel.resultsPublished
+              ? ` ${t('hackathon.projectsPublishHint')}`
+              : ''}
+          </p>
+          <button
+            type="button"
+            disabled={blocked || (!panel.resultsPublished && !panel.canPublishResults)}
+            onClick={() => void run(() => onPublishResults(!panel.resultsPublished))}
+            className="rounded-md border border-cursor-border px-4 py-2 text-sm font-medium text-cursor-text hover:bg-cursor-overlay disabled:opacity-60"
+          >
+            {panel.resultsPublished
+              ? t('hackathon.projectsUnpublishResults')
+              : t('hackathon.projectsPublishResults')}
+          </button>
+        </div>
+      ) : null}
+
+      {localError ? (
+        <p className="text-sm text-cursor-accent-red" role="alert">
+          {localError}
+        </p>
       ) : null}
     </section>
   )

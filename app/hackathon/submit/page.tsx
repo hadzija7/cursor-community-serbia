@@ -1,5 +1,6 @@
 'use client'
 
+import { Suspense } from 'react'
 import HackathonProjectSubmitForm from '@/components/HackathonProjectSubmitForm'
 import { useI18n } from '@/lib/i18n'
 
@@ -20,7 +21,15 @@ export default function HackathonSubmitPage() {
         </p>
       </div>
 
-      <HackathonProjectSubmitForm />
+      <Suspense
+        fallback={
+          <p className="text-sm text-cursor-text-muted" role="status">
+            {t('hackathon.submitLoading')}
+          </p>
+        }
+      >
+        <HackathonProjectSubmitForm />
+      </Suspense>
     </div>
   )
 }

@@ -1,7 +1,8 @@
 'use client'
 
-import { FormEvent, useEffect, useState } from 'react'
+import { FormEvent, useCallback, useEffect, useState } from 'react'
 import { signIn, useSession } from 'next-auth/react'
+import { useSearchParams } from 'next/navigation'
 import { useI18n } from '@/lib/i18n'
 import { useHackerStatus } from '@/lib/use-hacker-status'
 import { useHackathonDetails } from '@/lib/use-hackathon-details'
@@ -41,6 +42,10 @@ export default function HackathonProjectSubmitForm() {
   const { data: session, status: sessionStatus } = useSession()
   const hackerStatus = useHackerStatus()
   const hackathon = useHackathonDetails()
+  const searchParams = useSearchParams()
+  const previewMode =
+    process.env.NODE_ENV === 'development' && searchParams.get('preview') === '1'
+  const previewAdmin = searchParams.get('admin') === '1'
 
   const [projectTitle, setProjectTitle] = useState('')
   const [projectDescription, setProjectDescription] = useState('')
@@ -55,12 +60,76 @@ export default function HackathonProjectSubmitForm() {
   const [prefillError, setPrefillError] = useState('')
   const [formState, setFormState] = useState<FormState>('idle')
   const [statusMessage, setStatusMessage] = useState('')
+  const [gateLoading, setGateLoading] = useState(!previewMode)
+  const [submissionsOpen, setSubmissionsOpen] = useState(true)
+  const [isAdmin, setIsAdmin] = useState(previewMode && previewAdmin)
+  const [gateBusy, setGateBusy] = useState(false)
+  const [gateError, setGateError] = useState('')
 
   const isSubmitting = formState === 'submitting'
-  const isCheckedIn = hackerStatus.lumaStatus === 'checked_in'
+  const isCheckedIn = previewMode ? true : hackerStatus.lumaStatus === 'checked_in'
+
+  const loadGate = useCallback(async () => {
+    if (previewMode) {
+      setIsAdmin(previewAdmin)
+      setGateLoading(false)
+      return
+    }
+
+    try {
+      const res = await fetch('/api/hackathon/submit/gate', { cache: 'no-store' })
+      const data = (await res.json()) as {
+        ok?: boolean
+        submissionsOpen?: boolean
+        isAdmin?: boolean
+      }
+      if (res.ok && data.ok) {
+        setSubmissionsOpen(data.submissionsOpen !== false)
+        setIsAdmin(Boolean(data.isAdmin))
+      }
+    } catch {
+      setSubmissionsOpen(true)
+    } finally {
+      setGateLoading(false)
+    }
+  }, [previewMode, previewAdmin])
 
   useEffect(() => {
-    if (sessionStatus !== 'authenticated' || !isCheckedIn) return
+    void loadGate()
+  }, [loadGate, sessionStatus])
+
+  const onToggleGate = async (closed: boolean) => {
+    setGateError('')
+    if (previewMode) {
+      setSubmissionsOpen(!closed)
+      return
+    }
+
+    setGateBusy(true)
+    try {
+      const res = await fetch('/api/hackathon/submit/gate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ closed }),
+      })
+      const data = (await res.json()) as {
+        ok?: boolean
+        message?: string
+        submissionsOpen?: boolean
+      }
+      if (!res.ok || !data.ok) {
+        throw new Error(data.message || t('hackathon.submitGateError'))
+      }
+      setSubmissionsOpen(data.submissionsOpen !== false)
+    } catch (err) {
+      setGateError(err instanceof Error ? err.message : t('hackathon.submitGateError'))
+    } finally {
+      setGateBusy(false)
+    }
+  }
+
+  useEffect(() => {
+    if (previewMode || sessionStatus !== 'authenticated' || !isCheckedIn) return
 
     let cancelled = false
     setPrefillLoading(true)
@@ -114,9 +183,9 @@ export default function HackathonProjectSubmitForm() {
     return () => {
       cancelled = true
     }
-  }, [sessionStatus, isCheckedIn, session?.user?.email, t])
+  }, [previewMode, sessionStatus, isCheckedIn, session?.user?.email, t])
 
-  if (sessionStatus === 'loading' || (session?.user && hackerStatus.status === 'loading')) {
+  if (gateLoading || (!previewMode && sessionStatus === 'loading')) {
     return (
       <p className="text-sm text-cursor-text-muted" role="status">
         {t('hackathon.submitLoading')}
@@ -124,8 +193,66 @@ export default function HackathonProjectSubmitForm() {
     )
   }
 
+  const adminPanel = isAdmin ? (
+    <section className="space-y-2 rounded-2xl border border-cursor-border bg-cursor-surface/40 p-5">
+      <p className="text-sm text-cursor-text-secondary">
+        {submissionsOpen ? t('hackathon.submitAdminOpen') : t('hackathon.submitAdminClosed')}
+        {submissionsOpen ? ` ${t('hackathon.submitCloseHint')}` : ''}
+      </p>
+      <button
+        type="button"
+        disabled={gateBusy}
+        onClick={() => void onToggleGate(submissionsOpen)}
+        className="rounded-md border border-cursor-border px-4 py-2 text-sm font-medium text-cursor-text hover:bg-cursor-overlay disabled:opacity-60"
+      >
+        {submissionsOpen ? t('hackathon.submitCloseCta') : t('hackathon.submitReopenCta')}
+      </button>
+      {gateError ? (
+        <p className="text-sm text-cursor-accent-red" role="alert">
+          {gateError}
+        </p>
+      ) : null}
+    </section>
+  ) : null
+
+  if (!submissionsOpen) {
+    return (
+      <div className="space-y-4">
+        {adminPanel}
+        <div className="space-y-2 rounded-2xl border border-cursor-border bg-cursor-surface/60 p-6">
+          <p className="font-medium text-cursor-text">{t('hackathon.submitClosedTitle')}</p>
+          <p className="text-sm text-cursor-text-secondary">{t('hackathon.submitClosedBody')}</p>
+        </div>
+      </div>
+    )
+  }
+
+  if (previewMode) {
+    return (
+      <div className="space-y-4">
+        {adminPanel}
+        <p className="rounded-lg border border-cursor-accent-orange/40 bg-cursor-accent-orange/10 px-4 py-3 text-sm text-cursor-accent-orange">
+          {t('hackathon.projectsPreviewBanner')}
+        </p>
+      </div>
+    )
+  }
+
+  if (!previewMode && session?.user && hackerStatus.status === 'loading') {
+    return (
+      <div className="space-y-4">
+        {adminPanel}
+        <p className="text-sm text-cursor-text-muted" role="status">
+          {t('hackathon.submitLoading')}
+        </p>
+      </div>
+    )
+  }
+
   if (!session?.user) {
     return (
+      <div className="space-y-4">
+        {adminPanel}
       <div className="space-y-4 rounded-2xl border border-cursor-border bg-cursor-surface/60 p-6">
         <p className="text-cursor-text-secondary">{t('hackathon.submitNeedLogin')}</p>
         <button
@@ -136,11 +263,14 @@ export default function HackathonProjectSubmitForm() {
           {t('hackathon.loginCta')}
         </button>
       </div>
+      </div>
     )
   }
 
   if (hackerStatus.status === 'error') {
     return (
+      <div className="space-y-4">
+        {adminPanel}
       <div className="space-y-3 rounded-2xl border border-cursor-border bg-cursor-surface/60 p-6">
         <p className="text-cursor-accent-red">{t('hackathon.submitStatusError')}</p>
         <button
@@ -151,6 +281,7 @@ export default function HackathonProjectSubmitForm() {
           {t('hackathon.submitRetryStatus')}
         </button>
       </div>
+      </div>
     )
   }
 
@@ -158,15 +289,20 @@ export default function HackathonProjectSubmitForm() {
 
   if (lumaStatus === 'registered') {
     return (
+      <div className="space-y-4">
+        {adminPanel}
       <div className="space-y-3 rounded-2xl border border-cursor-accent-yellow/30 bg-cursor-surface/60 p-6">
         <p className="font-medium text-cursor-accent-yellow">{t('hackathon.submitNeedCheckIn')}</p>
         <p className="text-sm text-cursor-text-secondary">{t('hackathon.submitNeedCheckInHint')}</p>
+      </div>
       </div>
     )
   }
 
   if (lumaStatus === 'not_found' || lumaStatus === null) {
     return (
+      <div className="space-y-4">
+        {adminPanel}
       <div className="space-y-4 rounded-2xl border border-cursor-border bg-cursor-surface/60 p-6">
         <p className="text-cursor-text-secondary">{t('hackathon.submitNeedRegister')}</p>
         <a
@@ -177,6 +313,7 @@ export default function HackathonProjectSubmitForm() {
         >
           {t('hackathon.registerCta')}
         </a>
+      </div>
       </div>
     )
   }
@@ -263,6 +400,8 @@ export default function HackathonProjectSubmitForm() {
   }
 
   return (
+    <div className="space-y-4">
+      {adminPanel}
     <form onSubmit={handleSubmit} className="w-full space-y-4">
       <p className="text-sm text-cursor-text-muted">
         {t('hackathon.submitSignedInAs')}{' '}
@@ -449,5 +588,6 @@ export default function HackathonProjectSubmitForm() {
         <p className="text-xs text-cursor-text-faint">{t('hackathon.submitUpdateHint')}</p>
       ) : null}
     </form>
+    </div>
   )
 }

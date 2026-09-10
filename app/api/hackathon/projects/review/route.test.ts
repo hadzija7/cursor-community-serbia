@@ -4,8 +4,13 @@ vi.mock('@/lib/auth', () => ({
   auth: vi.fn(),
 }))
 
+vi.mock('@/lib/hackathon-checkin', () => ({
+  assertCheckedIn: vi.fn(),
+}))
+
 import { auth } from '@/lib/auth'
 import { POST } from '@/app/api/hackathon/projects/review/route'
+import { assertCheckedIn } from '@/lib/hackathon-checkin'
 import * as db from '@/lib/db'
 
 const ORIGINAL_ENV = process.env
@@ -79,6 +84,9 @@ describe('POST /api/hackathon/projects/review', () => {
     const sql = vi
       .fn()
       .mockResolvedValueOnce([{ id: '11111111-1111-1111-1111-111111111111' }])
+      .mockResolvedValueOnce([{ id: '11111111-1111-1111-1111-111111111111' }])
+      .mockResolvedValueOnce([])
+      .mockResolvedValueOnce([])
       .mockResolvedValueOnce([
         {
           id: 'review-1',
@@ -99,6 +107,38 @@ describe('POST /api/hackathon/projects/review', () => {
     expect(response.status).toBe(200)
     expect(body.ok).toBe(true)
     expect(body.score).toBe(9)
-    expect(sql).toHaveBeenCalledTimes(2)
+    expect(sql).toHaveBeenCalledTimes(5)
+    expect(assertCheckedIn).not.toHaveBeenCalled()
+  })
+
+  it('rejects score changes after the judge marked scoring finished', async () => {
+    vi.mocked(auth).mockResolvedValue({
+      user: { email: 'judge@example.com' },
+      expires: '2099-01-01',
+    })
+
+    const sql = vi
+      .fn()
+      .mockResolvedValueOnce([{ id: '11111111-1111-1111-1111-111111111111' }])
+      .mockResolvedValueOnce([{ id: '11111111-1111-1111-1111-111111111111' }])
+      .mockResolvedValueOnce([
+        {
+          submission_id: '11111111-1111-1111-1111-111111111111',
+          judge_email: 'judge@example.com',
+        },
+      ])
+      .mockResolvedValueOnce([{ judge_email: 'judge@example.com' }])
+    vi.spyOn(db, 'getDb').mockReturnValue(sql as unknown as ReturnType<typeof db.getDb>)
+
+    const response = await POST(
+      buildRequest({
+        submissionId: '11111111-1111-1111-1111-111111111111',
+        score: 9,
+      }),
+    )
+    const body = (await response.json()) as { code?: string }
+
+    expect(response.status).toBe(409)
+    expect(body.code).toBe('SCORING_FINISHED')
   })
 })

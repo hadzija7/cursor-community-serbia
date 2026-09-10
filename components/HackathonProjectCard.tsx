@@ -45,7 +45,11 @@ export default function HackathonProjectCard({
       return
     }
     if (!canFavorite) {
-      setLocalError(t('hackathon.projectsNeedCheckIn'))
+      setLocalError(
+        isJudge
+          ? t('hackathon.projectsJudgeAlsoFavorite')
+          : t('hackathon.projectsNeedCheckIn'),
+      )
       return
     }
     setLocalError('')
@@ -57,6 +61,7 @@ export default function HackathonProjectCard({
   }
 
   const handleScore = async () => {
+    if (!project.canEditScore) return
     setLocalError('')
     try {
       await onScore(project.id, draftScore)
@@ -182,7 +187,9 @@ export default function HackathonProjectCard({
             aria-pressed={project.favoritedByMe}
             title={
               isSignedIn && !canFavorite
-                ? t('hackathon.projectsNeedCheckIn')
+                ? isJudge
+                  ? t('hackathon.projectsJudgeAlsoFavorite')
+                  : t('hackathon.projectsNeedCheckIn')
                 : undefined
             }
             className={`inline-flex items-center gap-1.5 rounded-md px-3 py-1.5 text-sm transition-colors ${
@@ -209,7 +216,7 @@ export default function HackathonProjectCard({
             >
               {t('hackathon.projectsLoginToVote')}
             </button>
-          ) : !canFavorite ? (
+          ) : !canFavorite && !isJudge ? (
             <span className="text-sm text-cursor-text-faint">
               {t('hackathon.projectsCheckInToVote')}
             </span>
@@ -223,7 +230,7 @@ export default function HackathonProjectCard({
               <select
                 value={draftScore}
                 onChange={(e) => setDraftScore(Number(e.target.value))}
-                disabled={busy}
+                disabled={busy || !project.canEditScore}
                 className="rounded-md border border-cursor-border bg-cursor-surface px-3 py-2 text-sm text-cursor-text"
               >
                 {Array.from({ length: 10 }, (_, i) => i + 1).map((n) => (
@@ -235,13 +242,15 @@ export default function HackathonProjectCard({
             </label>
             <button
               type="button"
-              disabled={busy}
+              disabled={busy || !project.canEditScore}
               onClick={() => void handleScore()}
               className="rounded-md bg-cursor-text px-4 py-2 text-sm font-medium text-cursor-bg transition-colors hover:bg-cursor-text-muted disabled:opacity-60"
             >
-              {project.myScore != null
-                ? t('hackathon.projectsUpdateScore')
-                : t('hackathon.projectsSaveScore')}
+              {!project.canEditScore
+                ? t('hackathon.projectsScoringLocked')
+                : project.myScore != null
+                  ? t('hackathon.projectsUpdateScore')
+                  : t('hackathon.projectsSaveScore')}
             </button>
             {project.myScore != null ? (
               <span className="pb-2 text-xs text-cursor-text-muted">

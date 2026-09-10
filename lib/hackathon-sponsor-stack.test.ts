@@ -94,6 +94,7 @@ describe('hackathon sponsor stack content', () => {
 
     expect(daytona?.perks.some((perk) => perk.kind === 'confirmed' && perk.label.includes('$100'))).toBe(true)
     expect(convex?.perks.some((perk) => perk.kind === 'confirmed' && /overall winners|80\.000/i.test(perk.label + (perk.detail ?? '')))).toBe(true)
+    expect(convex?.perks.some((perk) => /All Gas/i.test(perk.label + (perk.detail ?? '')))).toBe(true)
     expect(convex?.perks.some((perk) => /coupon|pro code/i.test(perk.label))).toBe(false)
     expect(getSponsorProfile('wispr')?.perks.some((perk) => perk.kind === 'confirmed' && perk.label.includes('3 months'))).toBe(true)
     expect(getSponsorProfile('wispr')?.perks[0]?.detail).toMatch(/check-in/)
@@ -128,6 +129,8 @@ describe('hackathon sponsor stack content', () => {
       '20.000 RSD',
     ])
     expect(hackathonPrizes[0]?.note).toMatch(/Cash prize split/i)
+    expect(hackathonPrizes[0]?.aside?.href).toMatch(/luma\.com\/convex-allgas-hackathon/)
+    expect(hackathonPrizes[0]?.aside?.linkLabel).toMatch(/All Gas/i)
     expect(hackathonPrizes[1]?.category).toBe('Free coworking for top 3 teams (Community voting)')
     expect(hackathonPrizes[1]?.places.map((place) => place.amount)).toEqual([
       '15 coworking entries',

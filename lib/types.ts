@@ -69,6 +69,13 @@ export interface HackathonPrizeTrack {
   category: string
   /** Extra track rule or participation perk, shown under the place cards. */
   note?: string
+  /** Small extra line under the note, with an optional outbound link. */
+  aside?: {
+    prefix: string
+    href: string
+    linkLabel: string
+    suffix?: string
+  }
   places: HackathonPrizePlace[]
 }
 

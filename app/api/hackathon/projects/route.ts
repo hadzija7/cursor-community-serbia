@@ -9,8 +9,12 @@ import {
 } from '@/lib/hackathon-judges'
 import {
   analyzeJudgeAggregate,
+  areAllJudgesFinished,
   averageJudgeScore,
+  canEditJudgeScore,
+  canPublishJudgeResults,
   formatConvexTop3Cash,
+  isJudgeScoringFinished,
   isJudgingComplete,
   MAX_FAVORITES_PER_USER,
   type JudgeAwardPlace,
@@ -34,8 +38,8 @@ export type ProjectGalleryItem = {
   teammateEmails?: string[]
   submittedAt: string
   /**
-   * Mean of all judge scores — only populated for judges/admins after all-rated,
-   * or never for the public. Non-privileged clients always get null (privacy).
+   * Mean of all judge scores — only populated for judges/admins after all judges
+   * finish. Public clients always get null (even after results are published).
    */
   averageScore: number | null
   /** Review count — same privacy gate as averageScore (always 0 when gated). */
@@ -44,30 +48,50 @@ export type ProjectGalleryItem = {
   favoritedByMe: boolean
   /** Only the viewer's own judge score (never peers). */
   myScore: number | null
+  /** Judge-only: whether this viewer may still change their score on this card. */
+  canEditScore: boolean
   /** Final confirmed place 1–3, or clear auto top-3 once judging complete. */
   awardPlace: JudgeAwardPlace | null
   /** Convex credit label for awardPlace when set. */
   awardLabel: string | null
 }
 
+export type JudgePeerVote = {
+  submissionId: string
+  title: string
+  averageScore: number | null
+  scores: Array<{ judgeEmail: string; score: number | null }>
+}
+
 export type JudgePanelSummary = {
   /** Strict: every HACKATHON_JUDGE_EMAILS address scored every project. */
   allRated: boolean
+  /** Every configured judge scored every project and marked scoring finished. */
+  allFinished: boolean
+  /** This judge has marked scoring finished (and still covers every current project). */
+  myFinished: boolean
+  /** How many configured judges have marked scoring finished. */
+  finishedCount: number
+  canFinishScoring: boolean
+  resultsPublished: boolean
+  canPublishResults: boolean
   judgeCount: number
   projectCount: number
   /** Projects this judge has scored (viewer-only progress). */
   myRatedCount: number
-  /** Aggregates visible only to judges/admins when allRated. */
+  /** Aggregates visible only to judges/admins after all judges finish. */
   aggregateStatus: 'hidden' | 'incomplete' | 'clear' | 'needs_decision'
   aggregateReason: string | null
-  /** Ranked averages — only when canSeeAggregates. */
+  /** Ranked averages — only when canSeeJudgeOutcome. */
   ranked: Array<{
     id: string
     title: string
     averageScore: number
     competitionRank: number
   }>
-  /** Provisional or confirmed top 3 for judges/admins (or public confirmed awards via cards). */
+  /** Per-judge scores — only after all judges finish. */
+  peerVotes: JudgePeerVote[] | null
+  /** Provisional or confirmed top 3 for judges/admins. */
   top3: Array<{
     place: JudgeAwardPlace
     id: string
@@ -115,12 +139,19 @@ type FinalTop3Row = {
 function emptyJudgePanel(partial?: Partial<JudgePanelSummary>): JudgePanelSummary {
   return {
     allRated: false,
+    allFinished: false,
+    myFinished: false,
+    finishedCount: 0,
+    canFinishScoring: false,
+    resultsPublished: false,
+    canPublishResults: false,
     judgeCount: 0,
     projectCount: 0,
     myRatedCount: 0,
     aggregateStatus: 'hidden',
     aggregateReason: null,
     ranked: [],
+    peerVotes: null,
     top3: null,
     needsDecision: false,
     canSetFinalTop3: false,
@@ -218,14 +249,65 @@ export async function GET() {
     }
 
     const projectIds = submissions.map((s) => s.id)
+    const reviews = reviewRows.map((r) => ({
+      judgeEmail: r.judge_email,
+      submissionId: r.submission_id,
+    }))
+
     const allRated = isJudgingComplete({
       judgeEmails: configuredJudges,
       projectIds,
-      reviews: reviewRows.map((r) => ({
-        judgeEmail: r.judge_email,
-        submissionId: r.submission_id,
-      })),
+      reviews,
     })
+
+    let lockEmails: string[] = []
+    try {
+      const lockRows = (await db`
+        SELECT judge_email FROM hackathon_judge_locks
+      `) as { judge_email: string }[]
+      lockEmails = lockRows.map((row) => row.judge_email)
+    } catch (err) {
+      console.warn('hackathon_judge_locks unavailable:', err)
+      lockEmails = []
+    }
+
+    let resultsPublished = false
+    try {
+      const publishRows = (await db`
+        SELECT published FROM hackathon_judge_results_publish WHERE id = 1
+      `) as { published: boolean }[]
+      resultsPublished = Boolean(publishRows[0]?.published)
+    } catch (err) {
+      console.warn('hackathon_judge_results_publish unavailable:', err)
+      resultsPublished = false
+    }
+
+    const allFinished = areAllJudgesFinished({
+      judgeEmails: configuredJudges,
+      lockedEmails: lockEmails,
+      projectIds,
+      reviews,
+    })
+
+    const myFinished = Boolean(
+      viewerIsJudge &&
+        viewerEmail &&
+        isJudgeScoringFinished({
+          judgeEmail: viewerEmail,
+          lockedEmails: lockEmails,
+          projectIds,
+          reviews,
+        }),
+    )
+
+    const finishedCount = [...configuredJudges].filter((judge) =>
+      isJudgeScoringFinished({
+        judgeEmail: judge,
+        lockedEmails: lockEmails,
+        projectIds,
+        reviews,
+      }),
+    ).length
 
     const scoredProjects: JudgeScoredProject[] = submissions
       .map((row) => {
@@ -241,7 +323,7 @@ export async function GET() {
       .filter((p): p is JudgeScoredProject => p != null)
 
     const aggregate = analyzeJudgeAggregate(scoredProjects, {
-      judgingComplete: allRated,
+      judgingComplete: allFinished,
     })
 
     let finalRows: FinalTop3Row[] = []
@@ -268,7 +350,7 @@ export async function GET() {
     }
     const finalConfirmed = finalByPlace.size === 3
 
-    // Effective awards: manual final wins; else clear auto top-3 once all-rated.
+    // Effective awards: manual final wins; else clear auto top-3 once all finished.
     const effectiveAwards = new Map<string, JudgeAwardPlace>()
     if (finalConfirmed) {
       for (const [id, place] of finalBySubmission) {
@@ -280,13 +362,14 @@ export async function GET() {
       })
     }
 
-    const canSeeAggregates = (viewerIsJudge || viewerIsAdmin) && allRated
+    const privileged = viewerIsJudge || viewerIsAdmin
+    const canSeeJudgeOutcome = privileged && allFinished
 
     const titleById = new Map(submissions.map((s) => [s.id, s.project_title]))
     const averageById = new Map(scoredProjects.map((p) => [p.id, p.averageScore]))
 
     let judgeTop3: JudgePanelSummary['top3'] = null
-    if (canSeeAggregates || finalConfirmed) {
+    if (canSeeJudgeOutcome) {
       if (finalConfirmed) {
         judgeTop3 = ([1, 2, 3] as JudgeAwardPlace[]).map((place) => {
           const id = finalByPlace.get(place)!
@@ -294,12 +377,12 @@ export async function GET() {
             place,
             id,
             title: titleById.get(id) ?? id,
-            averageScore: canSeeAggregates ? (averageById.get(id) ?? null) : null,
+            averageScore: averageById.get(id) ?? null,
             source: 'manual' as const,
             awardLabel: formatConvexTop3Cash(place),
           }
         })
-      } else if (aggregate.status === 'clear' && canSeeAggregates) {
+      } else if (aggregate.status === 'clear') {
         judgeTop3 = aggregate.top3.map((entry, index) => {
           const place = (index + 1) as JudgeAwardPlace
           return {
@@ -314,21 +397,51 @@ export async function GET() {
       }
     }
 
-    const canSeeTeamEmails = viewerIsJudge || viewerIsAdmin
+    const sortedJudges = [...configuredJudges].sort()
+    const peerVotes: JudgePanelSummary['peerVotes'] = canSeeJudgeOutcome
+      ? submissions.map((row) => {
+          const scores = sortedJudges.map((judgeEmail) => {
+            const match = reviewRows.find(
+              (review) =>
+                review.submission_id === row.id &&
+                review.judge_email.trim().toLowerCase() === judgeEmail,
+            )
+            return { judgeEmail, score: match?.score ?? null }
+          })
+          return {
+            submissionId: row.id,
+            title: row.project_title,
+            averageScore: averageById.get(row.id) ?? null,
+            scores,
+          }
+        })
+      : null
+
+    const canSeeTeamEmails = privileged
+    const aggregateStatusForPublish =
+      aggregate.status === 'clear' || aggregate.status === 'needs_decision'
+        ? aggregate.status
+        : 'incomplete'
 
     const projects: ProjectGalleryItem[] = submissions.map((row) => {
       const scores = scoresById.get(row.id) ?? []
       const awardPlace = effectiveAwards.get(row.id) ?? null
-      // Confirmed final top 3 stays visible even if judging later reopens
-      // (late submission / new judge). Clear auto ranking still needs allRated.
-      const publicMaySeeAward =
-        awardPlace != null &&
-        (finalConfirmed || (aggregate.status === 'clear' && allRated))
+      const publicMaySeeAward = resultsPublished && awardPlace != null
       const team = galleryTeamPresentation(
         row.name,
         zipTeammateColumns(row.teammate_emails, row.teammate_names),
         canSeeTeamEmails,
       )
+      const canEditScore =
+        viewerIsJudge && viewerEmail
+          ? canEditJudgeScore({
+              judgeEmail: viewerEmail,
+              submissionId: row.id,
+              lockedEmails: lockEmails,
+              projectIds,
+              reviews,
+            })
+          : false
 
       return {
         id: row.id,
@@ -344,14 +457,15 @@ export async function GET() {
           typeof row.submitted_at === 'string'
             ? row.submitted_at
             : new Date(row.submitted_at).toISOString(),
-        averageScore: canSeeAggregates ? averageJudgeScore(scores) : null,
-        reviewCount: canSeeAggregates ? scores.length : 0,
+        averageScore: canSeeJudgeOutcome ? averageJudgeScore(scores) : null,
+        reviewCount: canSeeJudgeOutcome ? scores.length : 0,
         favoriteCount: favoritesById.get(row.id) ?? 0,
         favoritedByMe: myFavorites.has(row.id),
         myScore: myScores.get(row.id) ?? null,
-        awardPlace: publicMaySeeAward || canSeeAggregates ? awardPlace : null,
+        canEditScore,
+        awardPlace: publicMaySeeAward || canSeeJudgeOutcome ? awardPlace : null,
         awardLabel:
-          (publicMaySeeAward || canSeeAggregates) && awardPlace
+          (publicMaySeeAward || canSeeJudgeOutcome) && awardPlace
             ? formatConvexTop3Cash(awardPlace)
             : null,
       }
@@ -364,7 +478,7 @@ export async function GET() {
     let ranked: JudgePanelSummary['ranked'] = []
     let needsDecision = false
 
-    if (canSeeAggregates) {
+    if (canSeeJudgeOutcome) {
       if (aggregate.status === 'incomplete') {
         aggregateStatus = 'incomplete'
         aggregateReason = aggregate.reason
@@ -379,19 +493,39 @@ export async function GET() {
       }
     }
 
-    const judgePanel = emptyJudgePanel({
-      allRated,
-      judgeCount: configuredJudges.size,
-      projectCount: submissions.length,
-      myRatedCount,
-      aggregateStatus,
-      aggregateReason,
-      ranked: canSeeAggregates ? ranked : [],
-      top3: judgeTop3,
-      needsDecision,
-      canSetFinalTop3: canManageFinal && allRated,
-      finalConfirmed,
-    })
+    const judgePanel = privileged
+      ? emptyJudgePanel({
+          allRated,
+          allFinished,
+          myFinished,
+          finishedCount,
+          canFinishScoring:
+            viewerIsJudge &&
+            Boolean(viewerEmail) &&
+            !myFinished &&
+            myRatedCount === submissions.length &&
+            submissions.length > 0,
+          resultsPublished,
+          canPublishResults:
+            viewerIsAdmin &&
+            canPublishJudgeResults({
+              allFinished,
+              finalConfirmed,
+              aggregateStatus: aggregateStatusForPublish,
+            }),
+          judgeCount: configuredJudges.size,
+          projectCount: submissions.length,
+          myRatedCount,
+          aggregateStatus,
+          aggregateReason,
+          ranked: canSeeJudgeOutcome ? ranked : [],
+          peerVotes,
+          top3: judgeTop3,
+          needsDecision,
+          canSetFinalTop3: canManageFinal && allFinished,
+          finalConfirmed,
+        })
+      : emptyJudgePanel({ resultsPublished })
 
     return NextResponse.json({
       ok: true,

@@ -3,6 +3,7 @@ import { auth } from '@/lib/auth'
 import { getDb } from '@/lib/db'
 import { parseGitHubRepoUrl } from '@/lib/github-repo'
 import { assertCheckedIn } from '@/lib/hackathon-checkin'
+import { submissionsAreOpen } from '@/lib/hackathon-submissions'
 import {
   type ProjectSubmissionInput,
   validateProjectSubmissionFields,
@@ -195,6 +196,22 @@ export async function POST(request: NextRequest) {
   }
 
   try {
+    let submissionsOpen = true
+    try {
+      const gateRows = (await db`
+        SELECT closed FROM hackathon_submissions_gate WHERE id = 1
+      `) as { closed: boolean }[]
+      submissionsOpen = submissionsAreOpen(gateRows[0]?.closed)
+    } catch (err) {
+      console.warn('hackathon_submissions_gate unavailable:', err)
+    }
+
+    if (!submissionsOpen) {
+      return toError('Project submissions are closed.', 409, {
+        code: 'SUBMISSIONS_CLOSED',
+      })
+    }
+
     const membershipRows = (await db`
       SELECT
         id,

@@ -175,6 +175,92 @@ export function isJudgingComplete(args: {
   return true
 }
 
+function normalizeEmail(email: string): string {
+  return email.trim().toLowerCase()
+}
+
+function emailSet(emails: Iterable<string>): Set<string> {
+  return new Set([...emails].map(normalizeEmail).filter(Boolean))
+}
+
+function reviewKey(judgeEmail: string, submissionId: string): string {
+  return `${normalizeEmail(judgeEmail)}::${submissionId}`
+}
+
+export function judgeHasScoredAll(args: {
+  judgeEmail: string
+  projectIds: Iterable<string>
+  reviews: Iterable<{ judgeEmail: string; submissionId: string }>
+}): boolean {
+  return isJudgingComplete({
+    judgeEmails: [args.judgeEmail],
+    projectIds: args.projectIds,
+    reviews: args.reviews,
+  })
+}
+
+/** Locked and has a score for every current project. */
+export function isJudgeScoringFinished(args: {
+  judgeEmail: string
+  lockedEmails: Iterable<string>
+  projectIds: Iterable<string>
+  reviews: Iterable<{ judgeEmail: string; submissionId: string }>
+}): boolean {
+  const email = normalizeEmail(args.judgeEmail)
+  if (!email || !emailSet(args.lockedEmails).has(email)) return false
+  return judgeHasScoredAll(args)
+}
+
+/** Every configured judge has marked scoring finished (and scored every project). */
+export function areAllJudgesFinished(args: {
+  judgeEmails: Iterable<string>
+  lockedEmails: Iterable<string>
+  projectIds: Iterable<string>
+  reviews: Iterable<{ judgeEmail: string; submissionId: string }>
+}): boolean {
+  const judges = [...emailSet(args.judgeEmails)]
+  const projects = [...new Set([...args.projectIds])]
+  if (judges.length === 0 || projects.length === 0) return false
+  if (!isJudgingComplete(args)) return false
+  const locks = emailSet(args.lockedEmails)
+  return judges.every((judge) => locks.has(judge))
+}
+
+/**
+ * After a judge marks finished, existing scores freeze.
+ * A late new project can still be scored (lock no longer covers the full set).
+ */
+export function canEditJudgeScore(args: {
+  judgeEmail: string
+  submissionId: string
+  lockedEmails: Iterable<string>
+  projectIds: Iterable<string>
+  reviews: Iterable<{ judgeEmail: string; submissionId: string }>
+}): boolean {
+  const email = normalizeEmail(args.judgeEmail)
+  if (!email) return false
+  if (isJudgeScoringFinished(args)) return false
+
+  const locked = emailSet(args.lockedEmails).has(email)
+  if (!locked) return true
+
+  const scored = new Set(
+    [...args.reviews].map((r) => reviewKey(r.judgeEmail, r.submissionId)),
+  )
+  return !scored.has(reviewKey(email, args.submissionId))
+}
+
+/** Admin may publish only after every judge finished, and a unique top 3 exists. */
+export function canPublishJudgeResults(args: {
+  allFinished: boolean
+  finalConfirmed: boolean
+  aggregateStatus: 'clear' | 'needs_decision' | 'incomplete' | 'hidden'
+}): boolean {
+  if (!args.allFinished) return false
+  if (args.finalConfirmed) return true
+  return args.aggregateStatus === 'clear'
+}
+
 /** Competition ranks: equal averages share a rank; next rank skips (1,2,2,4…). */
 export function rankByJudgeAverage(projects: JudgeScoredProject[]): JudgeRankingEntry[] {
   const sorted = [...projects].sort((a, b) => {

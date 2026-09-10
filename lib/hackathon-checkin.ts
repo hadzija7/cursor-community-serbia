@@ -34,7 +34,8 @@ export async function resolveHackerLumaStatus(
 }
 
 /**
- * Gate for checked-in-only actions (credit claims, project submissions).
+ * Gate for checked-in-only actions (credit claims, project submissions, community favorites).
+ * Judge scoring is not gated here — see POST /api/hackathon/projects/review.
  * Returns a NextResponse error when the user is not checked in, or null when allowed.
  */
 export async function assertCheckedIn(
