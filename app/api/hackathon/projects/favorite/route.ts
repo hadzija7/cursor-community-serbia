@@ -135,8 +135,8 @@ export async function POST(request: NextRequest) {
 
     // Atomic cap enforcement: advisory lock + conditional INSERT in one statement
     // so concurrent requests cannot race past MAX_FAVORITES_PER_USER.
-    // favorite_count uses the table COUNT after INSERT (CTE effects are visible to
-    // the outer SELECT) — do not also add COUNT(ins) or the total double-counts.
+    // Outer table COUNT shares the statement snapshot and omits the new row;
+    // add COUNT(ins) so favorite_count includes the just-inserted favorite.
     const insertRows = await db`
       WITH lock AS (
         SELECT pg_advisory_xact_lock(hashtext(${email}))
@@ -154,8 +154,10 @@ export async function POST(request: NextRequest) {
       )
       SELECT
         (
-          SELECT COUNT(*)::int FROM hackathon_project_favorites
-          WHERE user_email = ${email}
+          (
+            SELECT COUNT(*)::int FROM hackathon_project_favorites
+            WHERE user_email = ${email}
+          ) + (SELECT COUNT(*)::int FROM ins)
         ) AS favorite_count,
         (
           EXISTS (SELECT 1 FROM ins)
