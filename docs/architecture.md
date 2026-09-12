@@ -87,5 +87,5 @@ cursor-community-serbia/
 | `CREDIT_CODE_*`             | Shared sponsor promo codes for checked-in attendees |
 | (DB) `hackathon_referral_codes` | Unique $20 Cursor Pro referral links issued one-by-one on claim |
 | (DB) `hackathon_grok_bot_referral_codes` | Unique $50 Cursor Pro referral links (separate pool; legacy table name) |
-| (DB) `hackathon_showcase_slots` | Demo showcase bookings: 12 ten-minute slots 17:00–19:00 |
+| (DB) `hackathon_showcase_slots` | Demo showcase bookings: 12 ten-minute slots 17:00–19:00; owner is `submitted_email` |
 | `.env.local`                | Local env (gitignored)               |

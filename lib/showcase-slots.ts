@@ -15,6 +15,7 @@ export type ShowcaseSlotDef = {
 export type ShowcaseBooking = {
   slotIndex: number
   teamName: string
+  submittedEmail?: string | null
 }
 
 export type ShowcaseAgendaRow = ShowcaseSlotDef & {
@@ -87,6 +88,21 @@ export function mergeShowcaseAgenda(bookings: ShowcaseBooking[]): ShowcaseAgenda
       open: teamName == null,
     }
   })
+}
+
+export function parseShowcaseSlotIndex(
+  raw: unknown,
+): { ok: true; index: number } | { ok: false; message: string } {
+  const value =
+    typeof raw === 'number' ? raw : typeof raw === 'string' && raw.trim() !== '' ? Number(raw) : NaN
+  if (!Number.isInteger(value) || value < 0 || value >= SHOWCASE_SLOT_COUNT) {
+    return { ok: false, message: 'Pick a free showcase slot.' }
+  }
+  return { ok: true, index: value }
+}
+
+export function isShowcaseSlotOpen(bookings: ShowcaseBooking[], slotIndex: number): boolean {
+  return !bookings.some((booking) => booking.slotIndex === slotIndex)
 }
 
 export function nextOpenSlotIndex(bookings: ShowcaseBooking[]): number | null {

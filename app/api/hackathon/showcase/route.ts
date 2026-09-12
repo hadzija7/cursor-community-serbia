@@ -1,16 +1,16 @@
+import { auth } from '@/lib/auth'
 import { getDb } from '@/lib/db'
+import { normalizeEmail } from '@/lib/project-team'
 import {
-  SHOWCASE_SLOT_COUNT,
   listShowcaseSlots,
   mergeShowcaseAgenda,
   normalizeShowcaseTeamName,
+  parseShowcaseSlotIndex,
   type ShowcaseAgendaRow,
   type ShowcaseBooking,
 } from '@/lib/showcase-slots'
 
 export const dynamic = 'force-dynamic'
-
-const LAST_SLOT_INDEX = SHOWCASE_SLOT_COUNT - 1
 
 export type ShowcaseSlotJson = ShowcaseAgendaRow
 
@@ -25,6 +25,7 @@ export type ShowcaseBookedSlot = {
 type ShowcaseRow = {
   slot_index: number
   team_name: string
+  submitted_email?: string | null
 }
 
 function toError(message: string, status: number) {
@@ -42,6 +43,13 @@ function postgresErrorCode(err: unknown): string | null {
   return null
 }
 
+async function viewerEmail(): Promise<string | null> {
+  const session = await auth()
+  const email = session?.user?.email
+  if (!email) return null
+  return normalizeEmail(email)
+}
+
 function bookedSlotFromBooking(booking: ShowcaseBooking): ShowcaseBookedSlot | null {
   const def = listShowcaseSlots()[booking.slotIndex]
   if (!def) return null
@@ -54,11 +62,24 @@ function bookedSlotFromBooking(booking: ShowcaseBooking): ShowcaseBookedSlot | n
   }
 }
 
-function agendaPayload(bookings: ShowcaseBooking[]) {
+function bookingFromRow(row: ShowcaseRow): ShowcaseBooking {
+  return {
+    slotIndex: row.slot_index,
+    teamName: row.team_name,
+    submittedEmail: row.submitted_email ? normalizeEmail(row.submitted_email) : null,
+  }
+}
+
+function agendaPayload(bookings: ShowcaseBooking[], email: string | null) {
   const slots = mergeShowcaseAgenda(bookings)
+  const mine = email
+    ? bookings.find((booking) => booking.submittedEmail === email) ?? null
+    : null
   return {
     slots,
     remaining: slots.filter((slot) => slot.open).length,
+    signedIn: Boolean(email),
+    myBooking: mine ? bookedSlotFromBooking(mine) : null,
   }
 }
 
@@ -68,22 +89,29 @@ async function ensureShowcaseTable(db: NonNullable<ReturnType<typeof getDb>>) {
       slot_index INTEGER PRIMARY KEY CHECK (slot_index >= 0 AND slot_index < 12),
       team_name TEXT NOT NULL,
       team_key TEXT NOT NULL UNIQUE,
+      submitted_email TEXT,
       created_at TIMESTAMPTZ NOT NULL DEFAULT now()
     )
+  `
+  await db`
+    ALTER TABLE hackathon_showcase_slots
+    ADD COLUMN IF NOT EXISTS submitted_email TEXT
+  `
+  await db`
+    CREATE UNIQUE INDEX IF NOT EXISTS idx_hackathon_showcase_submitted_email_lower
+    ON hackathon_showcase_slots (lower(submitted_email))
+    WHERE submitted_email IS NOT NULL
   `
 }
 
 async function loadBookings(db: NonNullable<ReturnType<typeof getDb>>): Promise<ShowcaseBooking[]> {
   const rows = (await db`
-    SELECT slot_index, team_name
+    SELECT slot_index, team_name, submitted_email
     FROM hackathon_showcase_slots
     ORDER BY slot_index ASC
   `) as ShowcaseRow[]
 
-  return rows.map((row) => ({
-    slotIndex: row.slot_index,
-    teamName: row.team_name,
-  }))
+  return rows.map(bookingFromRow)
 }
 
 async function findBookingByTeamKey(
@@ -91,37 +119,42 @@ async function findBookingByTeamKey(
   teamKey: string,
 ): Promise<ShowcaseBooking | null> {
   const rows = (await db`
-    SELECT slot_index, team_name
+    SELECT slot_index, team_name, submitted_email
     FROM hackathon_showcase_slots
     WHERE team_key = ${teamKey}
     LIMIT 1
   `) as ShowcaseRow[]
-
-  const row = rows[0]
-  if (!row) return null
-  return { slotIndex: row.slot_index, teamName: row.team_name }
+  return rows[0] ? bookingFromRow(rows[0]) : null
 }
 
-async function insertNextSlot(
+async function findBookingByEmail(
   db: NonNullable<ReturnType<typeof getDb>>,
-  teamName: string,
-  teamKey: string,
-): Promise<ShowcaseBooking | 'full'> {
+  email: string,
+): Promise<ShowcaseBooking | null> {
   const rows = (await db`
-    INSERT INTO hackathon_showcase_slots (slot_index, team_name, team_key)
-    SELECT n, ${teamName}, ${teamKey}
-    FROM generate_series(0, ${LAST_SLOT_INDEX}) AS n
-    WHERE NOT EXISTS (
-      SELECT 1 FROM hackathon_showcase_slots s WHERE s.slot_index = n
-    )
-    ORDER BY n
+    SELECT slot_index, team_name, submitted_email
+    FROM hackathon_showcase_slots
+    WHERE lower(submitted_email) = ${email}
     LIMIT 1
-    RETURNING slot_index, team_name
   `) as ShowcaseRow[]
+  return rows[0] ? bookingFromRow(rows[0]) : null
+}
 
-  const row = rows[0]
-  if (!row) return 'full'
-  return { slotIndex: row.slot_index, teamName: row.team_name }
+async function findBookingBySlot(
+  db: NonNullable<ReturnType<typeof getDb>>,
+  slotIndex: number,
+): Promise<ShowcaseBooking | null> {
+  const rows = (await db`
+    SELECT slot_index, team_name, submitted_email
+    FROM hackathon_showcase_slots
+    WHERE slot_index = ${slotIndex}
+    LIMIT 1
+  `) as ShowcaseRow[]
+  return rows[0] ? bookingFromRow(rows[0]) : null
+}
+
+function ownedBy(booking: ShowcaseBooking, email: string): boolean {
+  return booking.submittedEmail === email
 }
 
 export async function GET() {
@@ -132,8 +165,9 @@ export async function GET() {
 
   try {
     await ensureShowcaseTable(db)
+    const email = await viewerEmail()
     const bookings = await loadBookings(db)
-    return Response.json(agendaPayload(bookings))
+    return Response.json(agendaPayload(bookings, email))
   } catch (err) {
     console.error('hackathon showcase GET failed:', err)
     return toError('Could not load the showcase agenda.', 500)
@@ -141,10 +175,15 @@ export async function GET() {
 }
 
 export async function POST(request: Request) {
-  let payload: { teamName?: unknown }
+  const email = await viewerEmail()
+  if (!email) {
+    return toError('Sign in to book a showcase slot.', 401)
+  }
+
+  let payload: { teamName?: unknown; slotIndex?: unknown }
 
   try {
-    payload = (await request.json()) as { teamName?: unknown }
+    payload = (await request.json()) as { teamName?: unknown; slotIndex?: unknown }
   } catch {
     return toError('Invalid request body.', 400)
   }
@@ -152,6 +191,11 @@ export async function POST(request: Request) {
   const parsed = normalizeShowcaseTeamName(payload.teamName)
   if (!parsed.ok) {
     return toError(parsed.message, 400)
+  }
+
+  const slot = parseShowcaseSlotIndex(payload.slotIndex)
+  if (!slot.ok) {
+    return toError(slot.message, 400)
   }
 
   const db = getDb()
@@ -162,44 +206,110 @@ export async function POST(request: Request) {
   try {
     await ensureShowcaseTable(db)
 
-    const existing = await findBookingByTeamKey(db, parsed.key)
-    if (existing) {
-      const slot = bookedSlotFromBooking(existing)
-      if (!slot) {
-        return toError('Could not book a showcase slot.', 500)
-      }
-      return Response.json({ ok: true, alreadyBooked: true, slot })
+    const mine = await findBookingByEmail(db, email)
+    const atSlot = await findBookingBySlot(db, slot.index)
+    if (atSlot && !ownedBy(atSlot, email)) {
+      return toError('That slot is already taken.', 409)
     }
 
-    for (let attempt = 0; attempt < 3; attempt += 1) {
-      try {
-        const inserted = await insertNextSlot(db, parsed.name, parsed.key)
-        if (inserted === 'full') {
-          return toError('All showcase slots are taken.', 409)
-        }
-        const slot = bookedSlotFromBooking(inserted)
-        if (!slot) {
+    const byTeam = await findBookingByTeamKey(db, parsed.key)
+    if (byTeam && !ownedBy(byTeam, email)) {
+      return toError('That team name already has a slot.', 409)
+    }
+
+    if (mine) {
+      if (mine.slotIndex === slot.index && mine.teamName === parsed.name) {
+        const booked = bookedSlotFromBooking(mine)
+        if (!booked) {
           return toError('Could not book a showcase slot.', 500)
         }
-        return Response.json({ ok: true, alreadyBooked: false, slot })
+        return Response.json({ ok: true, alreadyBooked: true, moved: false, slot: booked })
+      }
+
+      try {
+        const updated = (await db`
+          UPDATE hackathon_showcase_slots
+          SET slot_index = ${slot.index},
+              team_name = ${parsed.name},
+              team_key = ${parsed.key}
+          WHERE lower(submitted_email) = ${email}
+          RETURNING slot_index, team_name, submitted_email
+        `) as ShowcaseRow[]
+        const row = updated[0]
+        if (!row) {
+          return toError('Could not update your showcase slot.', 500)
+        }
+        const booked = bookedSlotFromBooking(bookingFromRow(row))
+        if (!booked) {
+          return toError('Could not book a showcase slot.', 500)
+        }
+        return Response.json({
+          ok: true,
+          alreadyBooked: false,
+          moved: mine.slotIndex !== slot.index,
+          slot: booked,
+        })
       } catch (err) {
-        if (postgresErrorCode(err) !== '23505') {
-          throw err
+        if (postgresErrorCode(err) === '23505') {
+          return toError('That slot is already taken.', 409)
         }
-        const raced = await findBookingByTeamKey(db, parsed.key)
-        if (raced) {
-          const slot = bookedSlotFromBooking(raced)
-          if (!slot) {
-            return toError('Could not book a showcase slot.', 500)
-          }
-          return Response.json({ ok: true, alreadyBooked: true, slot })
-        }
+        throw err
       }
     }
 
-    return toError('Could not book a showcase slot. Please try again.', 409)
+    try {
+      const inserted = (await db`
+        INSERT INTO hackathon_showcase_slots (slot_index, team_name, team_key, submitted_email)
+        VALUES (${slot.index}, ${parsed.name}, ${parsed.key}, ${email})
+        RETURNING slot_index, team_name, submitted_email
+      `) as ShowcaseRow[]
+      const row = inserted[0]
+      if (!row) {
+        return toError('Could not book a showcase slot.', 500)
+      }
+      const booked = bookedSlotFromBooking(bookingFromRow(row))
+      if (!booked) {
+        return toError('Could not book a showcase slot.', 500)
+      }
+      return Response.json({ ok: true, alreadyBooked: false, moved: false, slot: booked })
+    } catch (err) {
+      if (postgresErrorCode(err) === '23505') {
+        return toError('That slot is already taken.', 409)
+      }
+      throw err
+    }
   } catch (err) {
     console.error('hackathon showcase POST failed:', err)
     return toError('Could not book a showcase slot.', 500)
+  }
+}
+
+export async function DELETE() {
+  const email = await viewerEmail()
+  if (!email) {
+    return toError('Sign in to cancel your showcase slot.', 401)
+  }
+
+  const db = getDb()
+  if (!db) {
+    return toError('Database unavailable.', 503)
+  }
+
+  try {
+    await ensureShowcaseTable(db)
+    const deleted = (await db`
+      DELETE FROM hackathon_showcase_slots
+      WHERE lower(submitted_email) = ${email}
+      RETURNING slot_index, team_name, submitted_email
+    `) as ShowcaseRow[]
+    const row = deleted[0]
+    if (!row) {
+      return toError('You do not have a showcase slot to cancel.', 404)
+    }
+    const slot = bookedSlotFromBooking(bookingFromRow(row))
+    return Response.json({ ok: true, cancelled: true, slot })
+  } catch (err) {
+    console.error('hackathon showcase DELETE failed:', err)
+    return toError('Could not cancel your showcase slot.', 500)
   }
 }

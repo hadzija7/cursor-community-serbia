@@ -44,7 +44,7 @@ Inspired by conference landing patterns (e.g. TUM Blockchain Conference): full-w
 | `/api/auth/[...nextauth]` | Google OAuth sign-in/sign-out (NextAuth.js v5) |
 | `/api/hackathon/attendee-status` | GET Luma guest status for authenticated user |
 | `/api/hackathon/claim-credits` | POST claim sponsor credit code (requires check-in) |
-| `/api/hackathon/showcase` | GET agenda + remaining slots; POST `{ teamName }` books the next empty 10-minute slot (idempotent by normalized team name) |
+| `/api/hackathon/showcase` | GET agenda + remaining slots + viewer booking; POST `{ teamName, slotIndex }` books or moves a chosen free slot (Google email); DELETE cancels that email’s booking |
 
 On host `hackathon.*` (e.g. `hackathon.cursorserbia.com` or `hackathon.localhost`), `middleware.ts` rewrites `/` → `/hackathon`, `/stack` → `/hackathon/stack`, `/submit` → `/hackathon/submit`, `/projects` → `/hackathon/projects`, `/showcase` → `/hackathon/showcase`, and so on. Community chrome is replaced by `HackathonSiteHeader` tabs.
 
@@ -172,9 +172,11 @@ Edit `content/hackathon.ts` for:
 
 - Route: `/hackathon/showcase` (Showcase tab)
 - Public agenda of **12 slots**, 10 minutes each, **17:00–19:00** (last slot 18:50–19:00)
-- Anyone can apply with a **team name** (2–80 characters). No login. Same normalized name returns the existing slot
-- `POST /api/hackathon/showcase` assigns the lowest unused `slot_index`. Returns 409 when all 12 are taken
-- Table: `hackathon_showcase_slots` (`slot_index` PK 0–11, `team_name`, unique `team_key`). Created by `pnpm db:setup` and on first API hit
+- Book / move / cancel requires Google sign-in. The signed-in email owns the reservation (`submitted_email`)
+- `POST /api/hackathon/showcase` `{ teamName, slotIndex }` books a **chosen** free slot, or moves the viewer’s existing booking. 409 if the slot or team name belongs to someone else
+- `DELETE /api/hackathon/showcase` cancels the viewer’s booking only
+- `GET` returns the agenda plus `myBooking` for the signed-in email (other emails are never exposed)
+- Table: `hackathon_showcase_slots` (`slot_index` PK 0–11, `team_name`, unique `team_key`, `submitted_email`). Created by `pnpm db:setup` and on first API hit
 - Helpers: `lib/showcase-slots.ts`
 
 ### Mentors and judges tab
@@ -381,8 +383,8 @@ The app is ready for `hackathon.cursorserbia.com`. Creating the hostname is a da
 - [ ] `http://hackathon.localhost:<port>/` rewrites to the Overview tab
 - [ ] `http://hackathon.localhost:<port>/submit` rewrites to the Submit tab
 - [ ] `http://hackathon.localhost:<port>/projects` rewrites to the Projects tab
-- [ ] `/hackathon/showcase` lists 12 slots from 17:00 to 19:00; booking a team name fills the next open slot
-- [ ] Same team name on Showcase returns the already-booked slot; a 13th team gets a full message
+- [ ] `/hackathon/showcase` lists 12 slots from 17:00 to 19:00; signed-in hackers pick a free slot
+- [ ] The signed-in email can move to another free slot or cancel; other people cannot cancel that booking
 - [ ] `http://hackathon.localhost:<port>/showcase` rewrites to the Showcase tab
 - [ ] Date/location update when Luma event changes (or fall back to static)
 - [ ] Marquee animates smoothly and pauses on hover

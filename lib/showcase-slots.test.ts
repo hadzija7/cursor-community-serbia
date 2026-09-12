@@ -3,8 +3,10 @@ import {
   SHOWCASE_SLOT_COUNT,
   listShowcaseSlots,
   mergeShowcaseAgenda,
+  isShowcaseSlotOpen,
   nextOpenSlotIndex,
   normalizeShowcaseTeamName,
+  parseShowcaseSlotIndex,
 } from '@/lib/showcase-slots'
 
 describe('showcase slots', () => {
@@ -54,6 +56,20 @@ describe('showcase slots', () => {
     })
     expect(rows[0]?.open).toBe(true)
     expect(rows.filter((row) => row.open)).toHaveLength(11)
+  })
+
+  it('parses a valid slot index and rejects out-of-range values', () => {
+    expect(parseShowcaseSlotIndex(3)).toEqual({ ok: true, index: 3 })
+    expect(parseShowcaseSlotIndex('11')).toEqual({ ok: true, index: 11 })
+    expect(parseShowcaseSlotIndex(-1)).toMatchObject({ ok: false })
+    expect(parseShowcaseSlotIndex(12)).toMatchObject({ ok: false })
+    expect(parseShowcaseSlotIndex('open')).toMatchObject({ ok: false })
+  })
+
+  it('knows whether a slot is still free', () => {
+    const bookings = [{ slotIndex: 2, teamName: 'baro' }]
+    expect(isShowcaseSlotOpen(bookings, 2)).toBe(false)
+    expect(isShowcaseSlotOpen(bookings, 3)).toBe(true)
   })
 
   it('normalizes team names and rejects empty or overlong values', () => {

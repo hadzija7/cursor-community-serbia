@@ -196,8 +196,18 @@ try {
       slot_index INTEGER PRIMARY KEY CHECK (slot_index >= 0 AND slot_index < 12),
       team_name TEXT NOT NULL,
       team_key TEXT NOT NULL UNIQUE,
+      submitted_email TEXT,
       created_at TIMESTAMPTZ NOT NULL DEFAULT now()
     )
+  `
+  await sql`
+    ALTER TABLE hackathon_showcase_slots
+    ADD COLUMN IF NOT EXISTS submitted_email TEXT
+  `
+  await sql`
+    CREATE UNIQUE INDEX IF NOT EXISTS idx_hackathon_showcase_submitted_email_lower
+    ON hackathon_showcase_slots (lower(submitted_email))
+    WHERE submitted_email IS NOT NULL
   `
 
   await sql`
