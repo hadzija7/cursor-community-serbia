@@ -23,6 +23,7 @@ yarn-error.log*
 
 # Secret one-time Cursor referral URLs (seed locally; never commit)
 db/data/cursor-referrals.txt
+db/data/unclaimed-cursor-referrals.csv
 
 # Secret one-time Grok Bot referral URLs (seed locally; never commit)
 db/data/grok-bot-referrals.csv

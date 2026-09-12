@@ -39,6 +39,7 @@ Living scorecard for Cursor Community Serbia. Update after each phase.
 
 | Date       | Change                          |
 |------------|----------------------------------|
+| 2026-09-12 | Hackathon Showcase tab: 12 ten-minute demo slots 17:00–19:00; team name books the next open slot (`hackathon_showcase_slots`) |
 | 2026-09-12 | Hackathon project card: TypeScript build failed on `embed.href` (union not narrowed); external watch link uses the recording URL |
 | 2026-09-12 | Hackathon Guide agenda: 13:00 Build with Solana (Nemanja Šćepanović); 14:00 lunch break |
 | 2026-09-12 | Hackathon project cards: full description scrolls in a short box; YouTube thumbnail posters fall back to the Grok Bot demo poster |

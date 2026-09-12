@@ -192,6 +192,15 @@ try {
   `
 
   await sql`
+    CREATE TABLE IF NOT EXISTS hackathon_showcase_slots (
+      slot_index INTEGER PRIMARY KEY CHECK (slot_index >= 0 AND slot_index < 12),
+      team_name TEXT NOT NULL,
+      team_key TEXT NOT NULL UNIQUE,
+      created_at TIMESTAMPTZ NOT NULL DEFAULT now()
+    )
+  `
+
+  await sql`
     CREATE TABLE IF NOT EXISTS hackathon_submissions_gate (
       id SMALLINT PRIMARY KEY DEFAULT 1 CHECK (id = 1),
       closed BOOLEAN NOT NULL DEFAULT false,

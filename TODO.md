@@ -91,6 +91,7 @@
   - [x] Hackathon Stack: Render promo credits (`CREDIT_CODE_RENDER`; claim after check-in; redeem at dashboard.render.com Billing → Credit Balance)
   - [x] Hackathon project cards: full description in a short in-card scroll; YouTube hqdefault poster with Grok Bot demo-poster fallback when the thumbnail cannot load
   - [x] Hackathon project card TypeScript: production `next build` no longer fails on `embed.href` (external watch uses the recording URL)
+  - [x] Hackathon Showcase tab (`/hackathon/showcase`): 12×10-min demo slots 17:00–19:00; team name books the next open slot
   - [ ] Review and update content (events, ambassadors, partners) for Serbia
 
 - [ ] Ensure education resources are complete and linked correctly

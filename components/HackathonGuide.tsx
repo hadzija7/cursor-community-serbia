@@ -19,6 +19,7 @@ import { useHackathonHref } from '@/lib/use-hackathon-base-path'
 export default function HackathonGuide() {
   const { t } = useI18n()
   const submitHref = useHackathonHref('submit')
+  const showcaseHref = useHackathonHref('showcase')
 
   return (
     <div className="space-y-16">
@@ -108,6 +109,17 @@ export default function HackathonGuide() {
                   <h3 className="text-lg font-semibold tracking-tight">{item.title}</h3>
                   <p className="mt-1 max-w-xl text-sm leading-relaxed text-cursor-text-secondary md:text-base">
                     {item.body}
+                    {item.id === 'demo' ? (
+                      <>
+                        {' '}
+                        <Link
+                          href={showcaseHref}
+                          className="font-medium text-cursor-accent-orange hover:underline"
+                        >
+                          {t('hackathon.showcaseTabLink')}
+                        </Link>
+                      </>
+                    ) : null}
                   </p>
                 </div>
               </motion.li>

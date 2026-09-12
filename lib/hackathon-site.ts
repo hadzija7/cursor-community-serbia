@@ -9,6 +9,7 @@ export type HackathonTab =
   | 'sponsor'
   | 'submit'
   | 'projects'
+  | 'showcase'
 
 export function hostnameFromHost(host: string | null | undefined): string {
   if (!host) {

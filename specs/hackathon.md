@@ -2,7 +2,7 @@
 
 ## Overview
 
-Hackathon mini-site with tabs (Overview, Guide, Mentors, Prizes, Stack). Served at `/hackathon` on the community host, and at the root of `hackathon.cursorserbia.com` when that subdomain is attached.
+Hackathon mini-site with tabs (Overview, Guide, Mentors, Prizes, Stack, Submit, Projects, Showcase). Served at `/hackathon` on the community host, and at the root of `hackathon.cursorserbia.com` when that subdomain is attached.
 
 ## Status
 
@@ -29,6 +29,7 @@ Inspired by conference landing patterns (e.g. TUM Blockchain Conference): full-w
 | `/hackathon/prizes` | Prizes tab |
 | `/hackathon/submit` | Project submission form (checked-in Google-auth hackers only) |
 | `/hackathon/projects` | Public projects gallery — community leaderboard (top 3), cards, judge scores, community favorites |
+| `/hackathon/showcase` | Demo showcase agenda (17:00–19:00, 10-minute slots) + team-name booking for the next open slot |
 | `/hackathon/sponsor` | Redirects to Overview `#special-thanks` (bookmarks / `hackathon.*` `/sponsor` rewrite) |
 | `/api/hackathon/event` | GET live date/location from Luma (static fallback) |
 | `/api/hackathon/sponsor` | POST sponsorship applications |
@@ -43,8 +44,9 @@ Inspired by conference landing patterns (e.g. TUM Blockchain Conference): full-w
 | `/api/auth/[...nextauth]` | Google OAuth sign-in/sign-out (NextAuth.js v5) |
 | `/api/hackathon/attendee-status` | GET Luma guest status for authenticated user |
 | `/api/hackathon/claim-credits` | POST claim sponsor credit code (requires check-in) |
+| `/api/hackathon/showcase` | GET agenda + remaining slots; POST `{ teamName }` books the next empty 10-minute slot (idempotent by normalized team name) |
 
-On host `hackathon.*` (e.g. `hackathon.cursorserbia.com` or `hackathon.localhost`), `middleware.ts` rewrites `/` → `/hackathon`, `/stack` → `/hackathon/stack`, `/submit` → `/hackathon/submit`, `/projects` → `/hackathon/projects`, and so on. Community chrome is replaced by `HackathonSiteHeader` tabs.
+On host `hackathon.*` (e.g. `hackathon.cursorserbia.com` or `hackathon.localhost`), `middleware.ts` rewrites `/` → `/hackathon`, `/stack` → `/hackathon/stack`, `/submit` → `/hackathon/submit`, `/projects` → `/hackathon/projects`, `/showcase` → `/hackathon/showcase`, and so on. Community chrome is replaced by `HackathonSiteHeader` tabs.
 
 When `NEXT_PUBLIC_HACKATHON_SITE_URL` is set, `/hackathon` on the main domain redirects to that host. Do not set the env until the Vercel domain is live.
 
@@ -57,9 +59,11 @@ When `NEXT_PUBLIC_HACKATHON_SITE_URL` is set, `/hackathon` on the main domain re
 - `app/hackathon/prizes/page.tsx` — Prizes tab
 - `app/hackathon/submit/page.tsx` — Project submission tab
 - `app/hackathon/projects/page.tsx` — Public projects gallery tab
+- `app/hackathon/showcase/page.tsx` — Demo showcase agenda and booking tab
 - `app/hackathon/sponsor/page.tsx` — Redirect to Overview `#special-thanks`
 - `app/hackathon/layout.tsx` — Route metadata + `HackathonSiteHeader`; OG/Twitter share image is `hackathonConfig.ogImage` (`/images/og-grok-bot-hackathon.jpg`)
-- `components/HackathonSiteHeader.tsx` — Hackathon-only chrome and tabs (Overview / Guide / Mentors / Prizes / Stack / Submit / Projects); brand is full-circle `/grokbot.svg` mark + “Grok Bot Serbia Hackathon”
+- `components/HackathonSiteHeader.tsx` — Hackathon-only chrome and tabs (Overview / Guide / Mentors / Prizes / Stack / Submit / Projects / Showcase); brand is full-circle `/grokbot.svg` mark + “Grok Bot Serbia Hackathon”
+- `components/HackathonShowcase.tsx` — Team-name form + live 12-slot agenda
 - `components/HackathonGuide.tsx` — Purpose, rules, agenda, judging & criteria, guidelines, and optional idea sparks
 - `components/HackathonProjectSubmitForm.tsx` — Project submission form (login / check-in gates + fields)
 - `components/HackathonProjectsGallery.tsx` — Gallery list, community leaderboard, judge panel, favorite/score actions, empty + preview states
@@ -158,11 +162,20 @@ Edit `content/hackathon.ts` for:
 - Route: `/hackathon/guide` (Guide tab)
 - Briefing: why, rules (eligibility list), day agenda, judging & winners (19 Sep + criteria), numbered guidelines timeline, optional idea sparks
 - Rules: team size 1–3; public/open-source repo; only work built during the hackathon is judged; public live demo URL required; short video demo required
-- Agenda: 10:30 intro & welcome → 11:00 Hacking Starts → 12:00 Mozaik workshop (Miodrag Vilotijević) → 12:30 Wonder workshop (Dušan Radivojević) → 13:00 Build with Solana (Nemanja Šćepanović) → 14:00 lunch break → 16:00 ABC Bootcamp Experience (Vladimir Hristov) → 17:00–19:00 optional demo showcase → 19:00 submission deadline (hacking ends) → 19:00–19:30 community voting → 19:30–21:00 pizza party (doors close at 9 PM)
+- Agenda: 10:30 intro & welcome → 11:00 Hacking Starts → 12:00 Mozaik workshop (Miodrag Vilotijević) → 12:30 Wonder workshop (Dušan Radivojević) → 13:00 Build with Solana (Nemanja Šćepanović) → 14:00 lunch break → 16:00 ABC Bootcamp Experience (Vladimir Hristov) → 17:00–19:00 optional demo showcase (book a 10-minute slot on the Showcase tab) → 19:00 submission deadline (hacking ends) → 19:00–19:30 community voting → 19:30–21:00 pizza party (doors close at 9 PM)
 - Judging: winners announced 19 September (≈ one week later); criteria are innovation (primary), working product, problem & solution clarity, execution, impact potential
 - Timeline: Stack → mentors → Grok Bot → partner MCPs → public repo (GitHub, Origin, or another platform) → deploy live demo URL → 3-minute demo → submit form by 7 PM (submit step links to `/hackathon/submit`)
 - Topics are **optional suggestions**, not required tracks — hackers may build anything. Three published verticals: FinTech agents (payments on blockchain or traditional rails), Gaming / visual & art, Personal assistant (flights + voice UX)
 - Types: `HackathonGuideCopy` / `HackathonGuideListItem` / `HackathonGuideStep` / `HackathonGuideTopic` / `HackathonGuideAgendaItem` in `lib/types.ts`
+
+### Showcase tab
+
+- Route: `/hackathon/showcase` (Showcase tab)
+- Public agenda of **12 slots**, 10 minutes each, **17:00–19:00** (last slot 18:50–19:00)
+- Anyone can apply with a **team name** (2–80 characters). No login. Same normalized name returns the existing slot
+- `POST /api/hackathon/showcase` assigns the lowest unused `slot_index`. Returns 409 when all 12 are taken
+- Table: `hackathon_showcase_slots` (`slot_index` PK 0–11, `team_name`, unique `team_key`). Created by `pnpm db:setup` and on first API hit
+- Helpers: `lib/showcase-slots.ts`
 
 ### Mentors and judges tab
 
@@ -343,7 +356,7 @@ The app is ready for `hackathon.cursorserbia.com`. Creating the hostname is a da
 ## Verification
 
 - [ ] `/hackathon` loads the Overview tab (hero, highlights, marquee, special thanks)
-- [ ] Tabs switch to Guide, Mentors, Prizes, Stack, Submit, and Projects (no Sponsor tab)
+- [ ] Tabs switch to Guide, Mentors, Prizes, Stack, Submit, Projects, and Showcase (no Sponsor tab)
 - [ ] `/hackathon/mentors` shows Hosts (Aleksandar, Goran, Vladimir Hristov; 2-col from `md`), then Mentors (Nick, Miodrag Vilotijević, Miodrag Todorović, Alexandra Borisova, Dušan Radivojević), then Judges (Ben Kim, Milan Lazarević)
 - [ ] `/hackathon/guide` shows purpose, rules, agenda, judging (19 Sep winners + criteria), guidelines, and three optional idea sparks
 - [ ] Guide submit step links to `/hackathon/submit`
@@ -368,6 +381,9 @@ The app is ready for `hackathon.cursorserbia.com`. Creating the hostname is a da
 - [ ] `http://hackathon.localhost:<port>/` rewrites to the Overview tab
 - [ ] `http://hackathon.localhost:<port>/submit` rewrites to the Submit tab
 - [ ] `http://hackathon.localhost:<port>/projects` rewrites to the Projects tab
+- [ ] `/hackathon/showcase` lists 12 slots from 17:00 to 19:00; booking a team name fills the next open slot
+- [ ] Same team name on Showcase returns the already-booked slot; a 13th team gets a full message
+- [ ] `http://hackathon.localhost:<port>/showcase` rewrites to the Showcase tab
 - [ ] Date/location update when Luma event changes (or fall back to static)
 - [ ] Marquee animates smoothly and pauses on hover
 - [ ] `POST /api/hackathon/sponsor` still accepts applications (form not on Overview)

@@ -237,7 +237,7 @@ export const hackathonGuideAgenda: HackathonGuideAgendaItem[] = [
     id: 'demo',
     time: '17:00 – 19:00',
     title: 'Demo showcase',
-    body: 'Optional. Share what you are building with others if you want — not mandatory.',
+    body: 'Optional. Share what you are building with others if you want — not mandatory. Book a 10-minute slot on the Showcase tab.',
   },
   {
     id: 'deadline',

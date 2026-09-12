@@ -330,6 +330,7 @@ describe('hackathon sponsor stack content', () => {
       body: 'Held by Vladimir Hristov.',
     })
     expect(hackathonGuideAgenda.find((item) => item.id === 'demo')?.time).toBe('17:00 – 19:00')
+    expect(hackathonGuideAgenda.find((item) => item.id === 'demo')?.body).toMatch(/Showcase tab/)
     expect(hackathonGuideAgenda.find((item) => item.id === 'deadline')?.time).toBe('19:00')
     expect(hackathonGuideAgenda.find((item) => item.id === 'voting')?.time).toBe('19:00 – 19:30')
     expect(hackathonGuideAgenda.find((item) => item.id === 'pizza')?.time).toBe('19:30 – 21:00')
