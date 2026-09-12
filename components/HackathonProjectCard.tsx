@@ -98,7 +98,7 @@ function ProjectDemoMedia({
         <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 px-6 text-center">
           <p className="text-sm text-white/80">{externalHint}</p>
           <a
-            href={embed.href}
+            href={demoRecordingUrl.trim()}
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex items-center gap-2 text-sm font-medium text-cursor-accent-orange hover:underline"

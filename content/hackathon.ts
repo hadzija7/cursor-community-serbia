@@ -216,6 +216,18 @@ export const hackathonGuideAgenda: HackathonGuideAgendaItem[] = [
     body: 'Held by Dušan Radivojević.',
   },
   {
+    id: 'workshop-solana',
+    time: '13:00',
+    title: 'Build with Solana',
+    body: 'Held by Nemanja Šćepanović.',
+  },
+  {
+    id: 'lunch',
+    time: '14:00',
+    title: 'Lunch break',
+    body: 'Break for lunch. Hacking continues afterward.',
+  },
+  {
     id: 'workshop-abc',
     time: '16:00',
     title: 'ABC Bootcamp Experience',

@@ -43,7 +43,7 @@
   - [x] Mentor/host/judge cards serve local photos `unoptimized` so new files skip Vercel Image Optimization (Hobby 402 on uncached transforms)
   - [x] Miodrag Vilotijević mentor bio: CEO/Mozaik open-source runtime; ask about code quality, startup insights, product positioning
   - [x] Hackathon Guide agenda: intro & welcome at 10:30; Hacking Starts at 11:00
-  - [x] Hackathon Guide agenda: 12:00 Mozaik (Miodrag Vilotijević), 12:30 Wonder (Dušan Radivojević), 16:00 ABC Bootcamp Experience (Vladimir Hristov)
+  - [x] Hackathon Guide agenda: 12:00 Mozaik (Miodrag Vilotijević), 12:30 Wonder (Dušan Radivojević), 13:00 Build with Solana (Nemanja Šćepanović), 14:00 lunch, 16:00 ABC Bootcamp Experience (Vladimir Hristov)
   - [x] Hackathon Guide agenda: demo showcase 17:00–19:00; submit by 19:00; community voting 19:00–19:30; pizza 19:30–21:00
   - [x] Hackathon prizes: added Daytona credit track ($3,000 / $2,000 / $1,000 + $100 each)
   - [x] Hackathon prizes: ABC BootCamps scholarships (50% / 40% / 30% to ABC Silicon Valley 2027)
@@ -90,6 +90,7 @@
   - [x] Hackathon tech partners + Stack: SpaceXAI / x.ai API credits (`CREDIT_CODE_XAI`; claim after check-in; redeem at console.x.ai Billing)
   - [x] Hackathon Stack: Render promo credits (`CREDIT_CODE_RENDER`; claim after check-in; redeem at dashboard.render.com Billing → Credit Balance)
   - [x] Hackathon project cards: full description in a short in-card scroll; YouTube hqdefault poster with Grok Bot demo-poster fallback when the thumbnail cannot load
+  - [x] Hackathon project card TypeScript: production `next build` no longer fails on `embed.href` (external watch uses the recording URL)
   - [ ] Review and update content (events, ambassadors, partners) for Serbia
 
 - [ ] Ensure education resources are complete and linked correctly

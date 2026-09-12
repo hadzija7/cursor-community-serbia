@@ -288,6 +288,8 @@ describe('hackathon sponsor stack content', () => {
       'hacking',
       'workshop-mozaik',
       'workshop-wonder',
+      'workshop-solana',
+      'lunch',
       'workshop-abc',
       'demo',
       'deadline',
@@ -312,6 +314,15 @@ describe('hackathon sponsor stack content', () => {
       time: '12:30',
       title: 'Wonder workshop',
       body: 'Held by Dušan Radivojević.',
+    })
+    expect(hackathonGuideAgenda.find((item) => item.id === 'workshop-solana')).toMatchObject({
+      time: '13:00',
+      title: 'Build with Solana',
+      body: 'Held by Nemanja Šćepanović.',
+    })
+    expect(hackathonGuideAgenda.find((item) => item.id === 'lunch')).toMatchObject({
+      time: '14:00',
+      title: 'Lunch break',
     })
     expect(hackathonGuideAgenda.find((item) => item.id === 'workshop-abc')).toMatchObject({
       time: '16:00',
