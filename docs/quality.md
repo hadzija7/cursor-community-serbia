@@ -39,6 +39,7 @@ Living scorecard for Cursor Community Serbia. Update after each phase.
 
 | Date       | Change                          |
 |------------|----------------------------------|
+| 2026-09-12 | Hackathon project cards: full description scrolls in a short box; YouTube thumbnail posters fall back to the Grok Bot demo poster |
 | 2026-09-10 | Hackathon Guide agenda: Hacking Starts at 11:00; workshops at 12:00 Mozaik, 12:30 Wonder, 16:00 ABC Bootcamp Experience |
 | 2026-09-10 | Hackathon final top 3: confirm/override is admin-only; no provisional top-3 cards; cash stays on Prizes only; published cards show place only |
 | 2026-09-10 | Hackathon submit: admin can close/reopen the form (`hackathon_submissions_gate`); POST returns 409 while closed |

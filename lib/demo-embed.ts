@@ -1,8 +1,21 @@
-import { toYouTubeEmbedUrl } from '@/lib/youtube-embed'
+import { parseYouTubeVideoId, toYouTubeEmbedUrl, youtubeThumbnailUrl } from '@/lib/youtube-embed'
 
 export type DemoEmbed =
   | { kind: 'youtube' | 'loom'; embedUrl: string }
   | { kind: 'external'; href: string }
+
+/** Default poster when a YouTube thumbnail is missing or fails to load. */
+export const DEFAULT_DEMO_POSTER = '/images/hackathon/grok-bot-demo-poster.jpg'
+
+/** YouTube hqdefault poster, or the Grok Bot image when the thumbnail cannot be used. */
+export function resolveDemoPosterSrc(
+  demoRecordingUrl: string,
+  thumbnailFailed = false,
+): string {
+  const videoId = parseYouTubeVideoId(demoRecordingUrl)
+  if (videoId && !thumbnailFailed) return youtubeThumbnailUrl(videoId)
+  return DEFAULT_DEMO_POSTER
+}
 
 /** Loom share / embed URLs → embed iframe src. */
 export function toLoomEmbedUrl(url: string): string | null {

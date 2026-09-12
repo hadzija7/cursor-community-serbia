@@ -23,7 +23,7 @@ import {
   CONVEX_TOP3_CASH_RSD,
   MAX_FAVORITES_PER_USER,
 } from '@/lib/project-gallery'
-import { resolveDemoEmbed, toLoomEmbedUrl } from '@/lib/demo-embed'
+import { DEFAULT_DEMO_POSTER, resolveDemoEmbed, resolveDemoPosterSrc, toLoomEmbedUrl } from '@/lib/demo-embed'
 
 describe('parseJudgeEmails / isHackathonJudge', () => {
   const ORIGINAL = process.env.HACKATHON_JUDGE_EMAILS
@@ -415,5 +415,24 @@ describe('demo embed resolution', () => {
       kind: 'youtube',
       embedUrl: 'https://www.youtube.com/embed/dQw4w9WgXcQ',
     })
+    expect(resolveDemoEmbed('https://www.youtube.com/shorts/dQw4w9WgXcQ')).toEqual({
+      kind: 'youtube',
+      embedUrl: 'https://www.youtube.com/embed/dQw4w9WgXcQ',
+    })
+  })
+})
+
+describe('demo poster', () => {
+  it('uses the YouTube hqdefault thumbnail when a video id is present', () => {
+    expect(resolveDemoPosterSrc('https://www.youtube.com/watch?v=dQw4w9WgXcQ')).toBe(
+      'https://i.ytimg.com/vi/dQw4w9WgXcQ/hqdefault.jpg',
+    )
+  })
+
+  it('falls back to the Grok Bot poster when the thumbnail cannot be used', () => {
+    expect(resolveDemoPosterSrc('https://www.youtube.com/watch?v=dQw4w9WgXcQ', true)).toBe(
+      DEFAULT_DEMO_POSTER,
+    )
+    expect(resolveDemoPosterSrc('https://vimeo.com/123')).toBe(DEFAULT_DEMO_POSTER)
   })
 })

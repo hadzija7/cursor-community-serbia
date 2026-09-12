@@ -10,7 +10,7 @@ Hackathon mini-site with tabs (Overview, Guide, Mentors, Prizes, Stack). Served 
 |-------|-------|
 | Status | Implemented |
 | Verified | Partial |
-| Last updated | 2026-09-10 |
+| Last updated | 2026-09-12 |
 
 ## Page layout
 
@@ -63,7 +63,7 @@ When `NEXT_PUBLIC_HACKATHON_SITE_URL` is set, `/hackathon` on the main domain re
 - `components/HackathonGuide.tsx` — Purpose, rules, agenda, judging & criteria, guidelines, and optional idea sparks
 - `components/HackathonProjectSubmitForm.tsx` — Project submission form (login / check-in gates + fields)
 - `components/HackathonProjectsGallery.tsx` — Gallery list, community leaderboard, judge panel, favorite/score actions, empty + preview states
-- `components/HackathonProjectCard.tsx` — Project card (embed, live/GitHub links, private my-score / award labels, controls)
+- `components/HackathonProjectCard.tsx` — Project card (YouTube poster + Grok Bot fallback, scrollable full description, live/GitHub links, private my-score / award labels, controls)
 - `components/HackathonCommunityLeaderboard.tsx` — Top 3 by community favorite counts
 - `components/HackathonJudgePanel.tsx` — Judge progress, aggregate averages / needs-decision, admin-only final top-3 confirm
 - `components/HackathonPeople.tsx` — Mentor, host, and judge cards (`/hackathon/mentors`)
@@ -74,7 +74,7 @@ When `NEXT_PUBLIC_HACKATHON_SITE_URL` is set, `/hackathon` on the main domain re
 - `lib/github-repo.ts` — GitHub URL parse (`github.com/owner/repo` shape); optional public-repo helper unused by submit
 - `lib/project-submission.ts` — Field validation for project submissions
 - `lib/project-gallery.ts` — Score bounds, favorite cap, average aggregate, community leaderboard, judge all-rated / top-3 / Convex awards
-- `lib/demo-embed.ts` — YouTube / Loom embed resolution for demo recordings
+- `lib/demo-embed.ts` — YouTube / Loom embed resolution plus YouTube thumbnail poster with Grok Bot OG fallback
 - `components/HackathonHero.tsx` — Full-width hero with date/location/duration cards and CTAs; animated ink Grok Bot orb (`/bloub-cercle-neutre-encre-anime.svg` via `mascotPeekImage`) sits under the tagline on mobile and beside the title from `sm` up
 - `components/HackathonHighlights.tsx` — Stat-style highlight grid (TUM-inspired)
 - `components/HackathonPrizes.tsx` — Prize tracks with per-place cards (above sponsors)
@@ -257,7 +257,7 @@ Checked-in attendees submit one project for judging via `/hackathon/submit` (hea
 
 Public gallery at `/hackathon/projects` (header **Projects** tab). Anyone can browse cards; check-in is **not** required to view. Builds on existing `hackathon_project_submissions` (does not reimplement submit).
 
-**Card contents:** title, short description, submitter name (when present), optional teammate **display names** (never emails), embedded YouTube/Loom demo when `demo_recording_url` resolves (else external link), prominent live demo link, optional GitHub link, favorite count (highlighted when the viewer favorited it). Judge averages, peer scores, and Convex award badges are **not** shown to the public until an admin publishes results. Teammate emails are included in the gallery API only for judges/admins.
+**Card contents:** title, **full** description in a short scroll (`max-h-24`), submitter name (when present), optional teammate **display names** (never emails), demo media, prominent live demo link, optional GitHub link, favorite count (highlighted when the viewer favorited it). YouTube demos show an `i.ytimg.com` hqdefault poster (click to play the embed); if that thumbnail fails — or the recording is not YouTube/Loom — the card uses the Grok Bot poster (`/images/hackathon/grok-bot-demo-poster.jpg`). Loom still embeds directly. Judge averages, peer scores, and Convex award badges are **not** shown to the public until an admin publishes results. Teammate emails are included in the gallery API only for judges/admins.
 
 **Judge scoring finish:**
 
@@ -353,7 +353,7 @@ The app is ready for `hackathon.cursorserbia.com`. Creating the hostname is a da
 - [ ] `POST /api/hackathon/submit` rejects unauthenticated and not-checked-in callers; one project per team (membership + unique GitHub); listed teammates update the same row
 - [ ] `/hackathon/projects` cards show teammate **names**, never emails
 - [ ] GitHub URL must be a `github.com/owner/repo` link (shape only; no live public-repo API check)
-- [ ] `/hackathon/projects` lists submission cards (or empty state); embeds YouTube/Loom when possible
+- [ ] `/hackathon/projects` lists submission cards (or empty state); YouTube posters fall back to the Grok Bot image; long descriptions scroll in-card
 - [ ] `/hackathon/projects` shows community leaderboard top 3 by favorite count (ties: earlier submit, then title)
 - [ ] Judge score controls only for emails in `HACKATHON_JUDGE_EMAILS`; upsert 1–10; peers never see each other’s scores until every judge marks scoring finished; Luma check-in is **not** required to score
 - [ ] After scoring every project, a judge can mark scoring finished; further score changes return 409

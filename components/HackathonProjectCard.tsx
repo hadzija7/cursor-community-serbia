@@ -1,8 +1,9 @@
 'use client'
 
 import { useState } from 'react'
-import { ExternalLink, Github, Heart, Star } from 'lucide-react'
-import { resolveDemoEmbed } from '@/lib/demo-embed'
+import Image from 'next/image'
+import { ExternalLink, Github, Heart, Play, Star } from 'lucide-react'
+import { resolveDemoEmbed, resolveDemoPosterSrc } from '@/lib/demo-embed'
 import type { ProjectGalleryItem } from '@/app/api/hackathon/projects/route'
 import { useI18n } from '@/lib/i18n'
 import type { JudgeAwardPlace } from '@/lib/project-gallery'
@@ -39,10 +40,76 @@ type Props = {
   onLogin: () => void
 }
 
-function shortDescription(text: string, max = 180): string {
-  const trimmed = text.trim()
-  if (trimmed.length <= max) return trimmed
-  return `${trimmed.slice(0, max).trimEnd()}…`
+function ProjectDemoMedia({
+  title,
+  demoRecordingUrl,
+  watchLabel,
+  externalHint,
+}: {
+  title: string
+  demoRecordingUrl: string
+  watchLabel: string
+  externalHint: string
+}) {
+  const embed = resolveDemoEmbed(demoRecordingUrl)
+  const [started, setStarted] = useState(false)
+  const [thumbFailed, setThumbFailed] = useState(false)
+  const posterSrc = resolveDemoPosterSrc(demoRecordingUrl, thumbFailed)
+
+  if (embed.kind === 'loom' || (embed.kind === 'youtube' && started)) {
+    return (
+      <iframe
+        src={embed.embedUrl}
+        title={`${title} demo`}
+        className="absolute inset-0 h-full w-full"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+        allowFullScreen
+      />
+    )
+  }
+
+  return (
+    <div className="absolute inset-0">
+      <Image
+        src={posterSrc}
+        alt=""
+        fill
+        className="object-cover object-center"
+        sizes="(min-width: 768px) 50vw, 100vw"
+        unoptimized
+        onError={() => {
+          if (!thumbFailed) setThumbFailed(true)
+        }}
+      />
+      <div className="absolute inset-0 bg-black/25" aria-hidden />
+      {embed.kind === 'youtube' ? (
+        <button
+          type="button"
+          onClick={() => setStarted(true)}
+          className="absolute inset-0 flex flex-col items-center justify-center gap-2 text-center focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-cursor-accent-orange"
+          aria-label={watchLabel}
+        >
+          <span className="flex h-14 w-14 items-center justify-center rounded-full bg-white/95 text-black shadow-lg transition-transform hover:scale-105">
+            <Play className="ml-0.5 h-7 w-7 fill-current" aria-hidden />
+          </span>
+          <span className="text-sm font-medium text-white">{watchLabel}</span>
+        </button>
+      ) : (
+        <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 px-6 text-center">
+          <p className="text-sm text-white/80">{externalHint}</p>
+          <a
+            href={embed.href}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-2 text-sm font-medium text-cursor-accent-orange hover:underline"
+          >
+            {watchLabel}
+            <ExternalLink className="h-3.5 w-3.5" aria-hidden />
+          </a>
+        </div>
+      )}
+    </div>
+  )
 }
 
 export default function HackathonProjectCard({
@@ -96,28 +163,12 @@ export default function HackathonProjectCard({
   return (
     <article className="flex flex-col overflow-hidden rounded-2xl border border-cursor-border bg-cursor-surface/50">
       <div className="relative aspect-video w-full bg-cursor-overlay">
-        {embed.kind === 'external' ? (
-          <div className="flex h-full flex-col items-center justify-center gap-3 px-6 text-center">
-            <p className="text-sm text-cursor-text-muted">{t('hackathon.projectsDemoExternal')}</p>
-            <a
-              href={embed.href}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 text-sm font-medium text-cursor-accent-orange hover:underline"
-            >
-              {t('hackathon.projectsWatchDemo')}
-              <ExternalLink className="h-3.5 w-3.5" aria-hidden />
-            </a>
-          </div>
-        ) : (
-          <iframe
-            src={embed.embedUrl}
-            title={`${project.title} demo`}
-            className="absolute inset-0 h-full w-full"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-            allowFullScreen
-          />
-        )}
+        <ProjectDemoMedia
+          title={project.title}
+          demoRecordingUrl={project.demoRecordingUrl}
+          watchLabel={t('hackathon.projectsWatchDemo')}
+          externalHint={t('hackathon.projectsDemoExternal')}
+        />
       </div>
 
       <div className="flex flex-1 flex-col gap-4 p-5 md:p-6">
@@ -135,9 +186,12 @@ export default function HackathonProjectCard({
               {t('hackathon.projectsWith')} {project.teammateNames.join(', ')}
             </p>
           ) : null}
-          <p className="text-sm leading-relaxed text-cursor-text-secondary">
-            {shortDescription(project.description)}
-          </p>
+          <div
+            className="max-h-24 overflow-y-auto overscroll-contain pr-1 text-sm leading-relaxed text-cursor-text-secondary [scrollbar-color:theme(colors.cursor.border)_transparent] [scrollbar-width:thin]"
+            tabIndex={0}
+          >
+            <p>{project.description}</p>
+          </div>
         </div>
 
         <div className="flex flex-wrap gap-x-4 gap-y-2 text-sm">

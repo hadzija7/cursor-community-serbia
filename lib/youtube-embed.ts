@@ -15,7 +15,7 @@ export function toYouTubeEmbedUrl(url: string): string | null {
     if (host === 'youtube.com' || host === 'm.youtube.com') {
       const v = u.searchParams.get('v')
       if (v) return `https://www.youtube.com/embed/${v}`
-      const m = u.pathname.match(/^\/embed\/([^/?]+)/)
+      const m = u.pathname.match(/^\/(?:embed|shorts|live|v)\/([^/?]+)/)
       if (m?.[1]) return `https://www.youtube.com/embed/${m[1]}`
     }
   } catch {
@@ -30,4 +30,9 @@ export function parseYouTubeVideoId(url: string): string | null {
   if (!embed) return null
   const m = embed.match(/^https:\/\/www\.youtube\.com\/embed\/([^/?]+)/)
   return m?.[1] ?? null
+}
+
+/** Reliable YouTube poster (hqdefault exists for nearly every public video). */
+export function youtubeThumbnailUrl(videoId: string): string {
+  return `https://i.ytimg.com/vi/${encodeURIComponent(videoId)}/hqdefault.jpg`
 }
