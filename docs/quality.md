@@ -39,6 +39,7 @@ Living scorecard for Cursor Community Serbia. Update after each phase.
 
 | Date       | Change                          |
 |------------|----------------------------------|
+| 2026-09-13 | Hackathon Projects: search by title, show total count; Google Drive demo URLs click-to-play like YouTube |
 | 2026-09-12 | Hackathon Showcase: signed-in email picks a free slot, can move or cancel; owner stored as `submitted_email` |
 | 2026-09-12 | Hackathon Showcase tab: 12 ten-minute demo slots 17:00–19:00; team name books the next open slot (`hackathon_showcase_slots`) |
 | 2026-09-12 | Hackathon project card: TypeScript build failed on `embed.href` (union not narrowed); external watch link uses the recording URL |

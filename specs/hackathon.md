@@ -237,7 +237,7 @@ Checked-in attendees can claim sponsor credit codes on the Stack page. Claim Cre
 
 ### Project submissions
 
-Checked-in attendees submit one project for judging via `/hackathon/submit` (header **Submit** tab). Demo recording is a URL only (YouTube / Loom / similar) — no file upload.
+Checked-in attendees submit one project for judging via `/hackathon/submit` (header **Submit** tab). Demo recording is a URL only (YouTube / Loom / Google Drive / similar) — no file upload.
 
 **Access control** (same gate as credit claims via `lib/hackathon-checkin.ts`):
 
@@ -272,7 +272,9 @@ Checked-in attendees submit one project for judging via `/hackathon/submit` (hea
 
 Public gallery at `/hackathon/projects` (header **Projects** tab). Anyone can browse cards; check-in is **not** required to view. Builds on existing `hackathon_project_submissions` (does not reimplement submit).
 
-**Card contents:** title, **full** description in a short scroll (`max-h-24`), submitter name (when present), optional teammate **display names** (never emails), demo media, prominent live demo link, optional GitHub link, favorite count (highlighted when the viewer favorited it). YouTube demos show an `i.ytimg.com` hqdefault poster (click to play the embed); if that thumbnail fails — or the recording is not YouTube/Loom — the card uses the Grok Bot poster (`/images/hackathon/grok-bot-demo-poster.jpg`). Loom still embeds directly. Judge averages, peer scores, and Convex award badges are **not** shown to the public until an admin publishes results. Teammate emails are included in the gallery API only for judges/admins.
+**Search and count:** a client-side search filters cards by project title (case-insensitive substring). The toolbar always shows the total project count (`N projects`); while searching it shows `shown of total`. Leaderboard and judge panel stay unfiltered. Helper: `filterProjectsByTitle` in `lib/project-gallery.ts`.
+
+**Card contents:** title, **full** description in a short scroll (`max-h-24`), submitter name (when present), optional teammate **display names** (never emails), demo media, prominent live demo link, optional GitHub link, favorite count (highlighted when the viewer favorited it). YouTube and Google Drive demos show a poster (YouTube: `i.ytimg.com` hqdefault; Drive: Grok Bot fallback) and click to play an iframe embed (`drive.google.com/file/d/{id}/preview` for Drive share / view / open / uc URLs). If that YouTube thumbnail fails — or the recording is not YouTube/Loom/Drive — the card uses the Grok Bot poster (`/images/hackathon/grok-bot-demo-poster.jpg`). Loom still embeds directly. Judge averages, peer scores, and Convex award badges are **not** shown to the public until an admin publishes results. Teammate emails are included in the gallery API only for judges/admins.
 
 **Judge scoring finish:**
 
@@ -332,7 +334,7 @@ Public gallery at `/hackathon/projects` (header **Projects** tab). Anyone can br
 
 - `app/hackathon/projects/page.tsx` + `components/HackathonProjectsGallery.tsx` + `components/HackathonProjectCard.tsx` + `components/HackathonCommunityLeaderboard.tsx` + `components/HackathonJudgePanel.tsx`
 - `GET /api/hackathon/projects`, `POST /api/hackathon/projects/review`, `POST /api/hackathon/projects/finish-scoring`, `POST /api/hackathon/projects/publish-results`, `POST /api/hackathon/projects/favorite`, `POST /api/hackathon/projects/final-top3`
-- `lib/hackathon-judges.ts`, `lib/project-gallery.ts`, `lib/demo-embed.ts`
+- `lib/hackathon-judges.ts`, `lib/project-gallery.ts`, `lib/demo-embed.ts`, `lib/drive-embed.ts`
 
 ### Env vars
 
@@ -369,6 +371,8 @@ The app is ready for `hackathon.cursorserbia.com`. Creating the hostname is a da
 - [ ] `/hackathon/projects` cards show teammate **names**, never emails
 - [ ] GitHub URL must be a `github.com/owner/repo` link (shape only; no live public-repo API check)
 - [ ] `/hackathon/projects` lists submission cards (or empty state); YouTube posters fall back to the Grok Bot image; long descriptions scroll in-card
+- [ ] `/hackathon/projects` search filters cards by project name and shows the total project count
+- [ ] Google Drive demo URLs (share / view / open / uc) click-to-play as an iframe preview, same as YouTube
 - [ ] `/hackathon/projects` shows community leaderboard top 3 by favorite count (ties: earlier submit, then title)
 - [ ] Judge score controls only for emails in `HACKATHON_JUDGE_EMAILS`; upsert 1–10; peers never see each other’s scores until every judge marks scoring finished; Luma check-in is **not** required to score
 - [ ] After scoring every project, a judge can mark scoring finished; further score changes return 409

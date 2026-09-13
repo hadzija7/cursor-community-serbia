@@ -1,7 +1,8 @@
+import { toDrivePreviewEmbedUrl } from '@/lib/drive-embed'
 import { parseYouTubeVideoId, toYouTubeEmbedUrl, youtubeThumbnailUrl } from '@/lib/youtube-embed'
 
 export type DemoEmbed =
-  | { kind: 'youtube' | 'loom'; embedUrl: string }
+  | { kind: 'youtube' | 'loom' | 'drive'; embedUrl: string }
   | { kind: 'external'; href: string }
 
 /** Default poster when a YouTube thumbnail is missing or fails to load. */
@@ -40,7 +41,7 @@ export function toLoomEmbedUrl(url: string): string | null {
   return null
 }
 
-/** Prefer YouTube or Loom embed; otherwise return an external link. */
+/** Prefer YouTube, Loom, or Google Drive embed; otherwise return an external link. */
 export function resolveDemoEmbed(url: string): DemoEmbed {
   const youtube = toYouTubeEmbedUrl(url)
   if (youtube) {
@@ -50,6 +51,11 @@ export function resolveDemoEmbed(url: string): DemoEmbed {
   const loom = toLoomEmbedUrl(url)
   if (loom) {
     return { kind: 'loom', embedUrl: loom }
+  }
+
+  const drive = toDrivePreviewEmbedUrl(url)
+  if (drive) {
+    return { kind: 'drive', embedUrl: drive }
   }
 
   return { kind: 'external', href: url.trim() }

@@ -56,7 +56,8 @@ function ProjectDemoMedia({
   const [thumbFailed, setThumbFailed] = useState(false)
   const posterSrc = resolveDemoPosterSrc(demoRecordingUrl, thumbFailed)
 
-  if (embed.kind === 'loom' || (embed.kind === 'youtube' && started)) {
+  const playable = embed.kind === 'youtube' || embed.kind === 'drive'
+  if (embed.kind === 'loom' || (playable && started)) {
     return (
       <iframe
         src={embed.embedUrl}
@@ -82,7 +83,7 @@ function ProjectDemoMedia({
         }}
       />
       <div className="absolute inset-0 bg-black/25" aria-hidden />
-      {embed.kind === 'youtube' ? (
+      {playable ? (
         <button
           type="button"
           onClick={() => setStarted(true)}

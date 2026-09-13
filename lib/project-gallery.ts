@@ -367,3 +367,13 @@ export function validateFinalTop3Ids(
     ],
   }
 }
+
+/** Case-insensitive substring match on project title. Empty query returns all. */
+export function filterProjectsByTitle<T extends { title: string }>(
+  projects: T[],
+  query: string,
+): T[] {
+  const needle = query.trim().toLowerCase()
+  if (!needle) return projects
+  return projects.filter((project) => project.title.toLowerCase().includes(needle))
+}

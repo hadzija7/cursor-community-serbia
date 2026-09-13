@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { signIn, useSession } from 'next-auth/react'
 import { useSearchParams } from 'next/navigation'
+import { Search, X } from 'lucide-react'
 import HackathonCommunityLeaderboard from '@/components/HackathonCommunityLeaderboard'
 import HackathonJudgePanel from '@/components/HackathonJudgePanel'
 import HackathonProjectCard from '@/components/HackathonProjectCard'
@@ -13,6 +14,7 @@ import type {
 import {
   MAX_FAVORITES_PER_USER,
   favoriteCapMessage,
+  filterProjectsByTitle,
   formatConvexTop3Cash,
   rankCommunityLeaderboard,
 } from '@/lib/project-gallery'
@@ -177,6 +179,7 @@ export default function HackathonProjectsGallery() {
   const [banner, setBanner] = useState('')
   const [previewFinished, setPreviewFinished] = useState(false)
   const [previewPublished, setPreviewPublished] = useState(false)
+  const [titleQuery, setTitleQuery] = useState('')
 
   const load = useCallback(async (options?: { silent?: boolean }) => {
     const silent = Boolean(options?.silent)
@@ -258,6 +261,18 @@ export default function HackathonProjectsGallery() {
     () => rankCommunityLeaderboard(projects),
     [projects],
   )
+  const visibleProjects = useMemo(
+    () => filterProjectsByTitle(projects, titleQuery),
+    [projects, titleQuery],
+  )
+  const countLabel = titleQuery.trim()
+    ? t('hackathon.projectsCountFiltered', {
+        shown: String(visibleProjects.length),
+        total: String(projects.length),
+      })
+    : projects.length === 1
+      ? t('hackathon.projectsCountOne')
+      : t('hackathon.projectsCount', { count: String(projects.length) })
 
   const onLogin = () => {
     void signIn('google')
@@ -678,22 +693,60 @@ export default function HackathonProjectsGallery() {
         </p>
       )}
 
-      <div className="grid gap-6 md:grid-cols-2">
-        {projects.map((project) => (
-          <HackathonProjectCard
-            key={project.id}
-            project={project}
-            isJudge={isJudge}
-            isSignedIn={isSignedIn}
-            canFavorite={canFavorite}
-            checkInPending={lumaLoading}
-            busy={busyId !== null}
-            onFavorite={onFavorite}
-            onScore={onScore}
-            onLogin={onLogin}
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+        <label className="relative block min-w-0 flex-1">
+          <span className="sr-only">{t('hackathon.projectsSearchLabel')}</span>
+          <Search
+            className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-cursor-text-faint"
+            aria-hidden
           />
-        ))}
+          <input
+            type="search"
+            value={titleQuery}
+            onChange={(event) => setTitleQuery(event.target.value)}
+            placeholder={t('hackathon.projectsSearchPlaceholder')}
+            className="w-full rounded-md border border-cursor-border bg-cursor-surface py-2.5 pl-10 pr-10 text-sm text-cursor-text placeholder:text-cursor-text-faint focus:outline-none focus:ring-2 focus:ring-cursor-text-faint"
+          />
+          {titleQuery ? (
+            <button
+              type="button"
+              onClick={() => setTitleQuery('')}
+              className="absolute right-2 top-1/2 -translate-y-1/2 rounded-md p-1 text-cursor-text-faint hover:text-cursor-text"
+              aria-label={t('hackathon.projectsSearchClear')}
+            >
+              <X className="h-4 w-4" aria-hidden />
+            </button>
+          ) : null}
+        </label>
+        <p className="shrink-0 text-sm tabular-nums text-cursor-text-muted" aria-live="polite">
+          {countLabel}
+        </p>
       </div>
+
+      {visibleProjects.length === 0 ? (
+        <div className="rounded-2xl border border-dashed border-cursor-border bg-cursor-surface/40 px-6 py-12 text-center">
+          <p className="text-cursor-text-secondary">
+            {t('hackathon.projectsSearchEmpty', { query: titleQuery.trim() })}
+          </p>
+        </div>
+      ) : (
+        <div className="grid gap-6 md:grid-cols-2">
+          {visibleProjects.map((project) => (
+            <HackathonProjectCard
+              key={project.id}
+              project={project}
+              isJudge={isJudge}
+              isSignedIn={isSignedIn}
+              canFavorite={canFavorite}
+              checkInPending={lumaLoading}
+              busy={busyId !== null}
+              onFavorite={onFavorite}
+              onScore={onScore}
+              onLogin={onLogin}
+            />
+          ))}
+        </div>
+      )}
     </div>
   )
 }

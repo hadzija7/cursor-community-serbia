@@ -179,7 +179,7 @@ export function validateProjectSubmissionFields(
   if (!isHttpUrl(demoRecordingUrl)) {
     return {
       ok: false,
-      message: 'Demo recording must be a valid http(s) URL (YouTube, Loom, or similar).',
+      message: 'Demo recording must be a valid http(s) URL (YouTube, Loom, Google Drive, or similar).',
     }
   }
   if (!liveDemoUrl) {

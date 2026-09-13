@@ -58,6 +58,7 @@
   - [x] Hackathon project submissions (`/hackathon/submit`) for checked-in Google users
   - [x] Submit form: `noValidate` so missing demo recording (and other required fields) use the in-page error, not the native black-text tooltip; `color-scheme: dark` on `html`/`body`
   - [x] Hackathon projects gallery + judge scores + community favorites (`/hackathon/projects`)
+  - [x] Hackathon Projects: search by project name + total count; Google Drive demo URLs embed like YouTube
   - [x] Hackathon Projects: community leaderboard (top 3 by favorite count); favorites require Luma check-in; max 3 enforced UI + API
   - [x] Hackathon Projects: private per-judge 1–10 scores; save updates in place (no gallery reload); all-rated aggregate top 3; tie → needs decision + final top 3 override; Convex 80k/50k/20k awards
   - [x] Hackathon judges: mark scoring finished to freeze ballots; after every judge finishes, panel sees winners + peer votes; public awards only after admin publish

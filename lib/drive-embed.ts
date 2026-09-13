@@ -1,8 +1,29 @@
-/** Extract a Google Drive file id from share or preview URLs. */
+const DRIVE_HOST = 'drive.google.com'
+
+function driveHostname(url: string): string | null {
+  try {
+    return new URL(url.trim()).hostname.replace(/^www\./, '').toLowerCase()
+  } catch {
+    return null
+  }
+}
+
+/** Extract a Google Drive file id from share, open, uc, or preview URLs. */
 export function parseDriveFileId(url: string): string | null {
   const trimmed = url.trim()
-  const match = trimmed.match(/\/file\/d\/([^/]+)/)
-  return match?.[1] ?? null
+  const host = driveHostname(trimmed)
+  if (host && host !== DRIVE_HOST) return null
+
+  const fileMatch = trimmed.match(/\/file\/d\/([^/?#]+)/)
+  if (fileMatch?.[1]) return fileMatch[1]
+
+  if (host !== DRIVE_HOST) return null
+  try {
+    const id = new URL(trimmed).searchParams.get('id')
+    return id && /^[\w-]+$/.test(id) ? id : null
+  } catch {
+    return null
+  }
 }
 
 /** Normalize a Drive share URL to an iframe-friendly preview URL. */

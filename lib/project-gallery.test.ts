@@ -16,6 +16,7 @@ import {
   isJudgeScoringFinished,
   isJudgingComplete,
   judgeHasScoredAll,
+  filterProjectsByTitle,
   rankCommunityLeaderboard,
   validateFinalTop3Ids,
   validateJudgeScore,
@@ -370,6 +371,18 @@ describe('rankCommunityLeaderboard', () => {
     expect(ranked.map((e) => e.id)).toEqual(['early', 'mid', 'late'])
   })
 
+  it('filters by project title, case-insensitive', () => {
+    const projects = [
+      { id: '1', title: 'Cursor Serbia Community' },
+      { id: '2', title: 'Grok Bot Chat' },
+      { id: '3', title: 'cursor notes' },
+    ]
+    expect(filterProjectsByTitle(projects, '  CURSOR  ').map((p) => p.id)).toEqual(['1', '3'])
+    expect(filterProjectsByTitle(projects, '')).toEqual(projects)
+    expect(filterProjectsByTitle(projects, '   ')).toEqual(projects)
+    expect(filterProjectsByTitle(projects, 'nope')).toEqual([])
+  })
+
   it('returns fewer than 3 when the gallery is smaller', () => {
     expect(
       rankCommunityLeaderboard([
@@ -392,6 +405,32 @@ describe('demo embed resolution', () => {
     expect(resolveDemoEmbed('https://www.loom.com/share/abc123')).toEqual({
       kind: 'loom',
       embedUrl: 'https://www.loom.com/embed/abc123',
+    })
+  })
+
+  it('embeds Google Drive share and preview URLs', () => {
+    const fileId = '1cIZ9ZbGAmhUO7DG9Pg1WQnEMdjXSfNTU'
+    const preview = `https://drive.google.com/file/d/${fileId}/preview`
+    expect(resolveDemoEmbed(`https://drive.google.com/file/d/${fileId}/view?usp=sharing`)).toEqual({
+      kind: 'drive',
+      embedUrl: preview,
+    })
+    expect(resolveDemoEmbed(preview)).toEqual({
+      kind: 'drive',
+      embedUrl: preview,
+    })
+    expect(resolveDemoEmbed(`https://drive.google.com/open?id=${fileId}`)).toEqual({
+      kind: 'drive',
+      embedUrl: preview,
+    })
+  })
+
+  it('does not iframe untrusted hosts that mention Drive file paths', () => {
+    expect(
+      resolveDemoEmbed('https://evil.example/file/d/1cIZ9ZbGAmhUO7DG9Pg1WQnEMdjXSfNTU/view'),
+    ).toEqual({
+      kind: 'external',
+      href: 'https://evil.example/file/d/1cIZ9ZbGAmhUO7DG9Pg1WQnEMdjXSfNTU/view',
     })
   })
 
