@@ -12,8 +12,10 @@ import { cursorCoworkingNis1Recap } from './cursor-coworking-nis-1'
 import { cursorCoworkingNovisad1Recap } from './cursor-coworking-novisad-1'
 import { cursorBelgradeHub201Meetup1Recap } from './cursor-belgrade-hub201-1'
 import { cursorCoworkingBelgrade1Recap } from './cursor-coworking-belgrade-1'
+import { grokBotSerbiaHackathon2026Recap } from './grok-bot-serbia-hackathon-2026'
 
 export const recapsBySlug: Record<string, RecapData> = {
+  [grokBotSerbiaHackathon2026Recap.slug]: grokBotSerbiaHackathon2026Recap,
   [cafeCursorBelgradeAug2026Recap.slug]: cafeCursorBelgradeAug2026Recap,
   [cursorMeetupNovisadAug2026Recap.slug]: cursorMeetupNovisadAug2026Recap,
   [cafeCursorBelgradeSummer2026Recap.slug]: cafeCursorBelgradeSummer2026Recap,
