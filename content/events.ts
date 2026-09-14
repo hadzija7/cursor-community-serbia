@@ -3,6 +3,19 @@ import { CursorEvent } from '@/lib/types'
 // REPLACE: Replace all sample events, locations, and Luma URLs with real community events.
 export const events: CursorEvent[] = [
   {
+    id: 'grok-bot-serbia-hackathon-2026',
+    title: 'Grok Bot Serbia Hackathon',
+    date: '2026-09-12',
+    time: '10:30',
+    displayDate: 'September 12, 2026',
+    attendees: 168,
+    location: 'Startit, Belgrade, Serbia',
+    recapPath: '/recaps/grok-bot-serbia-hackathon-2026',
+    thumbnail: 'https://drive.google.com/uc?export=view&id=1a7U21uo5RNx_5YwRTFQluDac1OjseDID',
+    lumaUrl: 'https://luma.com/ghvnbjlx',
+    status: 'past',
+  },
+  {
     id: 'cafe-cursor-belgrade-aug-2026',
     title: 'Cafe Cursor Belgrade — August',
     date: '2026-08-22',

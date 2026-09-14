@@ -25,6 +25,7 @@
 - [x] Add Cafe Cursor Belgrade Summer Edition recap (Jun 28, 2026); Luma https://luma.com/cursor-belgrade
 - [x] Add Cursor Meetup Novi Sad Aug 20, 2026 recap (Creative Space 75); Luma https://luma.com/kd163iko
 - [x] Add Cafe Cursor Belgrade August recap (Aug 22, 2026); Luma https://luma.com/cursor-belgrade-august
+- [x] Add Grok Bot Serbia Hackathon recap (Sep 12, 2026); Luma https://luma.com/ghvnbjlx; 18 Drive gallery photos; judging still in progress
 - [x] Hackathon landing page (`/hackathon`): sponsor marquee, sponsorship form, API route; hero + highlights layout (TUM-inspired, orange accent)
 - [x] Hackathon content: Belgrade, September 12, 2026; Luma `https://luma.com/ghvnbjlx`, CTA "Sponsor event"
 - [x] Hackathon rebrand: Grok Bot Serbia Hackathon; Grok Bot mascot next to the title on homepage promo + Overview hero (`/images/hackathon/grok-bot.png`)
