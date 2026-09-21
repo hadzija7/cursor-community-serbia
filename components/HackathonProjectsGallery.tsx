@@ -6,6 +6,7 @@ import { useSearchParams } from 'next/navigation'
 import { Search, X } from 'lucide-react'
 import HackathonCommunityLeaderboard from '@/components/HackathonCommunityLeaderboard'
 import HackathonJudgePanel from '@/components/HackathonJudgePanel'
+import HackathonJudgingResults from '@/components/HackathonJudgingResults'
 import HackathonProjectCard from '@/components/HackathonProjectCard'
 import type {
   JudgePanelSummary,
@@ -18,6 +19,7 @@ import {
   formatConvexTop3Cash,
   rankCommunityLeaderboard,
 } from '@/lib/project-gallery'
+import { prizeBadgesForProject, resolveOfficialResults } from '@/lib/hackathon-results'
 import { useHackerStatus } from '@/lib/use-hacker-status'
 import { useI18n } from '@/lib/i18n'
 
@@ -259,6 +261,10 @@ export default function HackathonProjectsGallery() {
 
   const leaderboard = useMemo(
     () => rankCommunityLeaderboard(projects),
+    [projects],
+  )
+  const officialResults = useMemo(
+    () => resolveOfficialResults(projects),
     [projects],
   )
   const visibleProjects = useMemo(
@@ -601,6 +607,8 @@ export default function HackathonProjectsGallery() {
         </p>
       ) : null}
 
+      <HackathonJudgingResults tracks={officialResults} />
+
       <HackathonCommunityLeaderboard entries={leaderboard} />
 
       {showJudgePanel ? (
@@ -743,6 +751,7 @@ export default function HackathonProjectsGallery() {
               onFavorite={onFavorite}
               onScore={onScore}
               onLogin={onLogin}
+              prizeBadges={prizeBadgesForProject(project.title)}
             />
           ))}
         </div>

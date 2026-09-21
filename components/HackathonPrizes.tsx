@@ -1,7 +1,9 @@
 'use client'
 
 import { motion } from 'framer-motion'
-import { hackathonPrizes } from '@/content/hackathon'
+import { hackathonOfficialResults, hackathonOfficialResultsPublished, hackathonPrizes } from '@/content/hackathon'
+import { officialWinnerTitleForSponsorPlace } from '@/lib/hackathon-results'
+import type { JudgeAwardPlace } from '@/lib/project-gallery'
 import { useI18n } from '@/lib/i18n'
 
 const accentStyles = {
@@ -50,6 +52,33 @@ export default function HackathonPrizes() {
         <p className="max-w-2xl text-cursor-text-secondary md:text-lg">{t('hackathon.prizesDescription')}</p>
       </div>
 
+      {hackathonOfficialResultsPublished ? (
+        <div className="space-y-3 rounded-2xl border border-cursor-accent-orange/30 bg-cursor-surface/60 p-6 md:p-8">
+          <h3 className="text-lg font-semibold tracking-tight md:text-xl">
+            {t('hackathon.projectsResultsOverall')}
+          </h3>
+          <ol className="grid gap-3 sm:grid-cols-3">
+            {(hackathonOfficialResults.find((track) => track.id === 'overall')?.winners ?? []).map(
+              (winner) => (
+                <li
+                  key={winner.place}
+                  className="rounded-xl border border-cursor-border bg-cursor-overlay px-4 py-3"
+                >
+                  <p className="text-xs font-semibold uppercase tracking-[0.14em] text-cursor-text-muted">
+                    {winner.place === 1
+                      ? t('hackathon.projectsJudgePick1st')
+                      : winner.place === 2
+                        ? t('hackathon.projectsJudgePick2nd')
+                        : t('hackathon.projectsJudgePick3rd')}
+                  </p>
+                  <p className="mt-2 font-medium text-cursor-text">{winner.title}</p>
+                </li>
+              ),
+            )}
+          </ol>
+        </div>
+      ) : null}
+
       <div className="space-y-6">
         {hackathonPrizes.map((track) => (
           <div
@@ -85,6 +114,8 @@ export default function HackathonPrizes() {
             >
               {track.places.map((prize, index) => {
                 const styles = accentStyles[prize.accent]
+                const place = (index + 1) as JudgeAwardPlace
+                const winnerTitle = officialWinnerTitleForSponsorPlace(track.sponsor, place)
 
                 return (
                   <motion.div
@@ -101,6 +132,9 @@ export default function HackathonPrizes() {
                     <p className={`mt-3 text-3xl font-bold tracking-tight md:text-4xl ${styles.value}`}>
                       {prize.amount}
                     </p>
+                    {winnerTitle ? (
+                      <p className="mt-3 text-sm font-medium text-cursor-text">{winnerTitle}</p>
+                    ) : null}
                   </motion.div>
                 )
               })}

@@ -122,7 +122,7 @@ describe('hackathon sponsor stack content', () => {
     const sponsors = hackathonPrizes.map((track) => track.sponsor)
 
     expect(sponsors).toEqual(['Convex', 'Kosmonaut', 'Daytona', 'ABC BootCamps'])
-    expect(hackathonPrizes[0]?.category).toBe('Overall winners (judge panel)')
+    expect(hackathonPrizes[0]?.category).toBe('Convex cash prize (judge panel)')
     expect(hackathonPrizes[0]?.places.map((place) => place.amount)).toEqual([
       '80.000 RSD',
       '50.000 RSD',

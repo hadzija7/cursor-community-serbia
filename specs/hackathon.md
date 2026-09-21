@@ -10,7 +10,7 @@ Hackathon mini-site with tabs (Overview, Guide, Mentors, Prizes, Stack, Submit, 
 |-------|-------|
 | Status | Implemented |
 | Verified | Partial |
-| Last updated | 2026-09-12 |
+| Last updated | 2026-09-21 |
 
 ## Page layout
 
@@ -28,7 +28,7 @@ Inspired by conference landing patterns (e.g. TUM Blockchain Conference): full-w
 | `/hackathon/stack` | Stack tab: expertise group panels + card modal |
 | `/hackathon/prizes` | Prizes tab |
 | `/hackathon/submit` | Project submission form (checked-in Google-auth hackers only) |
-| `/hackathon/projects` | Public projects gallery — community leaderboard (top 3), cards, judge scores, community favorites |
+| `/hackathon/projects` | Public projects gallery — official judge results, community leaderboard (top 3), prize labels on cards, judge scores, community favorites |
 | `/hackathon/showcase` | Demo showcase agenda (17:00–19:00, 10-minute slots) + team-name booking for the next open slot |
 | `/hackathon/sponsor` | Redirects to Overview `#special-thanks` (bookmarks / `hackathon.*` `/sponsor` rewrite) |
 | `/api/hackathon/event` | GET live date/location from Luma (static fallback) |
@@ -66,8 +66,9 @@ When `NEXT_PUBLIC_HACKATHON_SITE_URL` is set, `/hackathon` on the main domain re
 - `components/HackathonShowcase.tsx` — Team-name form + live 12-slot agenda
 - `components/HackathonGuide.tsx` — Purpose, rules, agenda, judging & criteria, guidelines, and optional idea sparks
 - `components/HackathonProjectSubmitForm.tsx` — Project submission form (login / check-in gates + fields)
-- `components/HackathonProjectsGallery.tsx` — Gallery list, community leaderboard, judge panel, favorite/score actions, empty + preview states
-- `components/HackathonProjectCard.tsx` — Project card (YouTube poster + Grok Bot fallback, scrollable full description, live/GitHub links, private my-score / award labels, controls)
+- `components/HackathonProjectsGallery.tsx` — Gallery list, official results, community leaderboard, judge panel, favorite/score actions, empty + preview states
+- `components/HackathonProjectCard.tsx` — Project card (YouTube poster + Grok Bot fallback, scrollable full description, live/GitHub links, official prize labels, private my-score, controls)
+- `components/HackathonJudgingResults.tsx` — Published official results (overall, Convex, Daytona, ABC)
 - `components/HackathonCommunityLeaderboard.tsx` — Top 3 by community favorite counts
 - `components/HackathonJudgePanel.tsx` — Judge progress, aggregate averages / needs-decision, admin-only final top-3 confirm
 - `components/HackathonPeople.tsx` — Mentor, host, and judge cards (`/hackathon/mentors`)
@@ -78,6 +79,7 @@ When `NEXT_PUBLIC_HACKATHON_SITE_URL` is set, `/hackathon` on the main domain re
 - `lib/github-repo.ts` — GitHub URL parse (`github.com/owner/repo` shape); optional public-repo helper unused by submit
 - `lib/project-submission.ts` — Field validation for project submissions
 - `lib/project-gallery.ts` — Score bounds, favorite cap, average aggregate, community leaderboard, judge all-rated / top-3 / Convex awards
+- `lib/hackathon-results.ts` — Official result matching, prize badges, sponsor-place winner lookup
 - `lib/demo-embed.ts` — YouTube / Loom embed resolution plus YouTube thumbnail poster with Grok Bot OG fallback
 - `components/HackathonHero.tsx` — Full-width hero with date/location/duration cards and CTAs; animated ink Grok Bot orb (`/bloub-cercle-neutre-encre-anime.svg` via `mascotPeekImage`) sits under the tagline on mobile and beside the title from `sm` up
 - `components/HackathonHighlights.tsx` — Stat-style highlight grid (TUM-inspired)
@@ -139,7 +141,8 @@ Edit `content/hackathon.ts` for:
 - Event title (`Grok Bot Serbia Hackathon`), tagline, `mascotImage` / `headerMark` (full-circle `/grokbot.svg`), `mascotPeekImage` (animated ink orb `/bloub-cercle-neutre-encre-anime.svg`), duration, and **Luma URL** (source of truth for live sync)
 - Static fallback `date` / `displayDate` / `location` (Belgrade, September 12, 2026 — used when Luma is unreachable)
 - Highlights grid (`hackathonStats`)
-- Prize tracks (`hackathonPrizes`: Convex cash for overall judge top 3 — 80.000 / 50.000 / 20.000 RSD, plus a small aside linking the online Convex All Gas hackathon; Kosmonaut coworking (community voting) — 15 / 10 / 5 entries per teammate on the top 3 teams, use within 3 months, claimed on their platform; Daytona credits $3,000 / $2,000 / $1,000 plus $100 for every participant (judge panel); ABC BootCamps — 50% / 40% / 30% scholarships to ABC Silicon Valley 2027 (judge panel))
+- Prize tracks (`hackathonPrizes`: Convex cash prize — 80.000 / 50.000 / 20.000 RSD, plus a small aside linking the online Convex All Gas hackathon; Kosmonaut coworking (community voting) — 15 / 10 / 5 entries per teammate on the top 3 teams, use within 3 months, claimed on their platform; Daytona credits $3,000 / $2,000 / $1,000 plus $100 for every participant (judge panel); ABC BootCamps — 50% / 40% / 30% scholarships to ABC Silicon Valley 2027 (judge panel))
+- Official results (`hackathonOfficialResults`, `hackathonOfficialResultsPublished`): overall (The Watcher / Shader Arena / Slop Casino), Convex (Shader Arena / Slop Casino / SpaceX food), Daytona (Shader Arena / SpaceX food / Golem), ABC (The Watcher / Shader Arena / Slop Casino). Shown on `/hackathon/projects` and as winner names on `/hackathon/prizes` cards. Community voting stays open.
 - Hacker guide (`hackathonGuidePurpose`, `hackathonGuideRulesIntro`, `hackathonGuideRules`, `hackathonGuideAgenda`, `hackathonGuideJudging`, `hackathonGuideJudgingCriteria`, `hackathonGuideSteps`, `hackathonGuideTopicsIntro`, `hackathonGuideTopics`) — source for `/hackathon/guide`
 - Mentors, hosts, and judges (`hackathonMentors`, `hackathonHosts`, `hackathonJudges`) — source for `/hackathon/mentors`
 - Tech partner logos (`hackathonSponsors`: Firecrawl, Render, Convex, Daytona, Wispr Flow, Exa, Fal.ai, Wonder, x.ai) — Overview heading is **Tech partners**
@@ -153,7 +156,7 @@ Edit `content/hackathon.ts` for:
 - Flat 2-column grid of sponsor cards (not a linear pipeline). Area label lives on the card (e.g. Host / infra, Voice input); details open in a modal
 - Each modal has an **Add to Cursor** button (title row) that uses the official `cursor://anysphere.cursor-deeplink/mcp/install` deeplink (same tab — do not open `https://cursor.com/en/install-mcp`, which auto-closes). Configs live on `hackathonSponsorProfiles[].mcp` and are encoded by `lib/cursor-mcp-install.ts`
 - Cursor is host, not a sponsor. Wispr Flow is a tech partner (dictation into Cursor)
-- Confirmed perks only: Daytona $100 coupon (claim via `CREDIT_CODE_DAYTONA`, redeem in app.daytona.io Billing) + winner credits (Best app that uses Daytona); Convex cash for overall judge top 3 (80.000 / 50.000 / 20.000 RSD); Kosmonaut coworking for top 3 teams (15 / 10 / 5 entries per teammate, use within 3 months, claim on kosmonaut.rs); ABC BootCamps scholarships for top 3 (50% / 40% / 30% to ABC Silicon Valley 2027); Wispr Flow 3 months Pro (claim via `CREDIT_CODE_WISPR` after check-in); Exa $50 credits each; Fal.ai $50 credits each (claim via `CREDIT_CODE_FAL`); Wonder Pro for all participants; Render promo credits for every checked-in participant (claim via `CREDIT_CODE_RENDER` after check-in; redeem at dashboard.render.com Billing → Credit Balance); SpaceXAI / x.ai ~$35 API credits per Console team (claim via `CREDIT_CODE_XAI` after check-in; redeem at console.x.ai Billing; does not work for Grok Bot)
+- Confirmed perks only: Daytona $100 coupon (claim via `CREDIT_CODE_DAYTONA`, redeem in app.daytona.io Billing) + winner credits (Best app that uses Daytona); Convex cash prize for the Convex track top 3 (80.000 / 50.000 / 20.000 RSD); Kosmonaut coworking for top 3 teams (15 / 10 / 5 entries per teammate, use within 3 months, claim on kosmonaut.rs); ABC BootCamps scholarships for top 3 (50% / 40% / 30% to ABC Silicon Valley 2027); Wispr Flow 3 months Pro (claim via `CREDIT_CODE_WISPR` after check-in); Exa $50 credits each; Fal.ai $50 credits each (claim via `CREDIT_CODE_FAL`); Wonder Pro for all participants; Render promo credits for every checked-in participant (claim via `CREDIT_CODE_RENDER` after check-in; redeem at dashboard.render.com Billing → Credit Balance); SpaceXAI / x.ai ~$35 API credits per Console team (claim via `CREDIT_CODE_XAI` after check-in; redeem at console.x.ai Billing; does not work for Grok Bot)
 - Stack path starts with **Grok Bot** (Editor / host; Cursor works too), then Firecrawl, Exa, Wonder, Daytona, Convex, Wispr, Fal.ai, x.ai, Render
 - Marketing copy prioritizes Grok Bot; Cursor remains supported and named where the product action is Cursor-specific (MCP install deeplink, Cursor Pro referral, Origin)
 - Stack area cards also cover Exa (Search / web), Wonder (Design / UI), Wispr Flow (Voice input), Fal.ai (Generate / media), x.ai (API / models), and Render (Host / infra). Wispr has no public MCP install URL — desktop app only. x.ai is Console API key only (no MCP install). Wonder MCP is `https://mcp.wonder.so/mcp` (OAuth after install)
@@ -298,7 +301,7 @@ Public gallery at `/hackathon/projects` (header **Projects** tab). Anyone can br
 
 **Publishing:** only `HACKATHON_ADMIN_EMAILS`. Requires all-finished and a unique top 3 (clear averages or a saved final). Until published, winning cards stay unmarked for the public. Unpublish hides badges again.
 
-**Convex cash awards (final top 3):** 1st **80.000 RSD**, 2nd **50.000 RSD**, 3rd **20.000 RSD** — cash prize split across overall winners by judge panel. Shown on Prizes (`Overall winners (judge panel)`) only. The admin confirm/override pickers and project cards show place only (1st / 2nd / 3rd), not the cash amount. Not claimable `CREDIT_CODE_*` promo codes. Separate from community favorites. Prizes card includes a small aside: keep building with Convex at the [online All Gas hackathon](https://luma.com/convex-allgas-hackathon?tk=122o36).
+**Official results (published):** Public gallery shows judge-panel placements from `hackathonOfficialResults` — overall, Convex cash, Daytona, and ABC — plus prize labels on the matching project cards. Community favorites / Kosmonaut voting stay live. Convex cash is 1st **80.000 RSD**, 2nd **50.000 RSD**, 3rd **20.000 RSD** on the Convex track (not the overall ranking). Not claimable `CREDIT_CODE_*` promo codes. Prizes card includes a small aside: keep building with Convex at the [online All Gas hackathon](https://luma.com/convex-allgas-hackathon?tk=122o36).
 
 **Judges (env-gated):**
 
@@ -373,6 +376,8 @@ The app is ready for `hackathon.cursorserbia.com`. Creating the hostname is a da
 - [ ] `/hackathon/projects` lists submission cards (or empty state); YouTube posters fall back to the Grok Bot image; long descriptions scroll in-card
 - [ ] `/hackathon/projects` search filters cards by project name and shows the total project count
 - [ ] Google Drive demo URLs (share / view / open / uc) click-to-play as an iframe preview, same as YouTube
+- [ ] `/hackathon/projects` shows official judge results (overall, Convex, Daytona, ABC) above the community leaderboard
+- [ ] Winning project cards show prize labels (track + place + amount when the track has one)
 - [ ] `/hackathon/projects` shows community leaderboard top 3 by favorite count (ties: earlier submit, then title)
 - [ ] Judge score controls only for emails in `HACKATHON_JUDGE_EMAILS`; upsert 1–10; peers never see each other’s scores until every judge marks scoring finished; Luma check-in is **not** required to score
 - [ ] After scoring every project, a judge can mark scoring finished; further score changes return 409

@@ -94,6 +94,8 @@
   - [x] Hackathon project cards: full description in a short in-card scroll; YouTube hqdefault poster with Grok Bot demo-poster fallback when the thumbnail cannot load
   - [x] Hackathon project card TypeScript: production `next build` no longer fails on `embed.href` (external watch uses the recording URL)
   - [x] Hackathon Showcase tab (`/hackathon/showcase`): 12×10-min demo slots 17:00–19:00; signed-in email picks a free slot, can move or cancel
+  - [x] Hackathon Projects: official judge results (overall, Convex, Daytona, ABC) above community voting; prize labels on winning cards
+  - [x] Hackathon Prizes: winner names on Convex / Daytona / ABC place cards; overall ranking block
   - [ ] Review and update content (events, ambassadors, partners) for Serbia
 
 - [ ] Ensure education resources are complete and linked correctly

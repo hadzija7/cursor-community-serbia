@@ -79,6 +79,26 @@ export interface HackathonPrizeTrack {
   places: HackathonPrizePlace[]
 }
 
+/** Published judge-panel result tracks shown on Projects + prize cards. */
+export type OfficialResultTrackId = 'overall' | 'convex' | 'daytona' | 'abc'
+
+export interface OfficialResultWinner {
+  place: 1 | 2 | 3
+  /** Canonical submission title from the gallery. */
+  title: string
+  /** Extra title fragments used when matching live submissions. */
+  aliases?: string[]
+}
+
+export interface OfficialResultTrack {
+  id: OfficialResultTrackId
+  /** i18n key under `hackathon.*`. */
+  labelKey: string
+  /** Maps to `hackathonPrizes.sponsor` when this track has a cash/credit prize. */
+  sponsor?: string
+  winners: OfficialResultWinner[]
+}
+
 export interface HackathonGuideCopy {
   title: string
   body: string

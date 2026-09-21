@@ -7,6 +7,7 @@ import {
   HackathonSpecialThanks,
   HackathonPerson,
   HackathonPrizeTrack,
+  OfficialResultTrack,
   HackathonSdlcStage,
   HackathonSponsorProfile,
   HackathonStackPick,
@@ -45,8 +46,8 @@ export const hackathonPrizes: HackathonPrizeTrack[] = [
     sponsorUrl: 'https://convex.dev',
     logoBg: '#14120b',
     logoHeight: 'h-8',
-    category: 'Overall winners (judge panel)',
-    note: 'Cash prize split across the final top 3 by judge scores (average of 1–10). Separate from community favorites.',
+    category: 'Convex cash prize (judge panel)',
+    note: 'Cash prize split across the Convex track top 3. Separate from the overall ranking and from community favorites.',
     aside: {
       prefix: 'Keep building with Convex at the ',
       href: 'https://luma.com/convex-allgas-hackathon?tk=122o36',
@@ -99,6 +100,52 @@ export const hackathonPrizes: HackathonPrizeTrack[] = [
       { place: '1st place', amount: '50% scholarship', accent: 'orange' },
       { place: '2nd place', amount: '40% scholarship', accent: 'yellow' },
       { place: '3rd place', amount: '30% scholarship', accent: 'purple' },
+    ],
+  },
+]
+
+/** When true, official judge results render on Projects and prize cards. */
+export const hackathonOfficialResultsPublished = true
+
+/** Final judge-panel placements. Titles match live gallery submissions. */
+export const hackathonOfficialResults: OfficialResultTrack[] = [
+  {
+    id: 'overall',
+    labelKey: 'hackathon.projectsResultsOverall',
+    winners: [
+      { place: 1, title: 'The Watcher', aliases: ['watcher'] },
+      { place: 2, title: 'Shader Arena' },
+      { place: 3, title: 'Slop Casino' },
+    ],
+  },
+  {
+    id: 'convex',
+    labelKey: 'hackathon.projectsResultsConvex',
+    sponsor: 'Convex',
+    winners: [
+      { place: 1, title: 'Shader Arena' },
+      { place: 2, title: 'Slop Casino' },
+      { place: 3, title: 'SpaceX food', aliases: ['space x food'] },
+    ],
+  },
+  {
+    id: 'daytona',
+    labelKey: 'hackathon.projectsResultsDaytona',
+    sponsor: 'Daytona',
+    winners: [
+      { place: 1, title: 'Shader Arena' },
+      { place: 2, title: 'SpaceX food', aliases: ['space x food'] },
+      { place: 3, title: 'Golem' },
+    ],
+  },
+  {
+    id: 'abc',
+    labelKey: 'hackathon.projectsResultsAbc',
+    sponsor: 'ABC BootCamps',
+    winners: [
+      { place: 1, title: 'The Watcher', aliases: ['watcher'] },
+      { place: 2, title: 'Shader Arena' },
+      { place: 3, title: 'Slop Casino' },
     ],
   },
 ]
@@ -828,8 +875,8 @@ export const hackathonSponsorProfiles: HackathonSponsorProfile[] = [
     perks: [
       {
         kind: 'confirmed',
-        label: 'Overall winners (judge panel)',
-        detail: 'Cash prize split on top 3: 1st 80.000 RSD · 2nd 50.000 RSD · 3rd 20.000 RSD.',
+        label: 'Convex cash prize (judge panel)',
+        detail: 'Cash prize split on the Convex track top 3: 1st 80.000 RSD · 2nd 50.000 RSD · 3rd 20.000 RSD.',
       },
       {
         kind: 'public',
